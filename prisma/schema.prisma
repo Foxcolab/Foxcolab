@@ -1,0 +1,720 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URI")
+}
+enum Role {
+  admin
+  user
+}
+enum MemberRole {
+  admin
+  moderator
+  guest
+  user
+}
+enum Status {
+  active
+  inactive
+}
+enum Type {
+  public
+  private
+}
+enum LaterStatus {
+  progress
+  archived
+  completed
+}
+enum Level {
+  easy
+  medium
+  hard
+}
+model User {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String? 
+  bio          String?
+  profilePic   String?
+  email        String         @unique
+  otp          String?
+  role         Role           @default(user)
+  googleId     String?
+  appleId      String?
+  verified     Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt   DateTime @updatedAt
+  password     String
+  // subscription Subscription[]
+  servers      Server[]
+  sections     Section[]
+  channels     Channel[]
+  memebers     Member[]
+  canvases     Canvas[]
+  groups        Group[]
+  forums        ForumsChannel[]
+  testChannels    TestChannel[]
+}
+model Server {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  name String
+  description String?
+  type Type @default(public)
+  createdAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  displayPic String?
+  coverPic String?
+  createdBy   String  @db.ObjectId
+  createdUser    User?    @relation(fields: [createdBy], references: [id], onDelete:Cascade)
+  inviteCode String?
+  defaultOpen String?
+  defaultNotification String?
+  serverType String?
+  sections Section[]
+  channels Channel[]
+  Members    Member[]
+  results    Result[]
+  tests      Test[]
+  canvases    Canvas[]
+  pinnedPost  PinnedPost[]
+  saveLater  Later[]
+  forums    Forums[]
+  Reactions   Reaction[]
+  channelManager      ChannelManager[] 
+  canvasManager      canvasManager[] 
+  forumManager      ForumManager[] 
+  testChannelManager      TestChannelManager[] 
+  // forumQuestions ForumQuestion[]
+  forumsResponses  ForumResponse[]
+  messages   Message[]
+  groups     Group[]
+  notes        Note[]
+  threads      Threads[]
+  TestChannels  TestChannel[]
+  forumsChannel ForumsChannel[]
+  Drafts    Draft[]
+  noteComments NoteComment[]
+
+}
+model Section {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  name        String
+  // d        Type @default(public)
+  createdBy   String @db.ObjectId
+  createdUser  User? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  serverId    String @db.ObjectId
+  server      Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  channels    Channel[]
+  tests       Test[]
+  results     Result[]
+  canvas   Canvas[]
+  pinnedPost  PinnedPost[]
+  saveLater  Later[]
+  forums     Forums[]
+  // forumsQuestions ForumQuestion[]
+  messages   Message[]
+  forumsResponses  ForumResponse[]
+  TestChannels  TestChannel[]
+  forumsChannel ForumsChannel[]
+ channelManager      ChannelManager[] 
+  canvasManager      canvasManager[] 
+  forumManager      ForumManager[] 
+  testChannelManager      TestChannelManager[] 
+  drafts    Draft[]
+  // forums 
+}
+model ForumsChannel {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  name        String
+  description String ? 
+  type        Type @default(public)
+  createdBy   String @db.ObjectId
+  createdUser  User? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  isEveryonePost Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  serverId    String @db.ObjectId
+  server      Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId    String @db.ObjectId
+  section      Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  memberIds  String[] @db.ObjectId
+  Members    Member[] @relation(fields: [memberIds], references: [id])
+  Forums   Forums[]
+  forumsResponse ForumResponse[]
+  reactions Reaction[]
+  manager ForumManager?
+}
+model Forums {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  fileUrl     String[]
+  // subTitle    String?
+  memberId      String @db.ObjectId
+  member       Member?  @relation(fields:[memberId], references:[id],   onDelete: Cascade)
+  serverId   String  @db.ObjectId
+  server      Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId   String? @db.ObjectId
+  section     Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  forumsChannelId   String @db.ObjectId
+  ForumsChannel     ForumsChannel? @relation(fields: [forumsChannelId], references: [id],  onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // forumsQuestions ForumQuestion[]
+  // responses    ForumsResponse[]
+  responses ForumResponse[]
+  reactions Reaction[]
+}
+
+model ForumResponse {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  forumsChannelId String? @db.ObjectId
+  forumsChannel   ForumsChannel?  @relation(fields:[forumsChannelId], references: [id])
+  forumsId     String? @db.ObjectId
+  forums       Forums? @relation(fields: [forumsId], references: [id], onDelete:Cascade)
+
+  createdBy   String? @db.ObjectId
+  member Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  serverId String @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  sectionId String @db.ObjectId
+  section Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  content     String
+  fileUrl    String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted Boolean @default(false)
+}
+
+
+
+
+
+model Channel {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  name        String
+  description String ? 
+  type        Type @default(public)
+  createdBy   String? @db.ObjectId
+  createdUser  User? @relation(fields: [createdBy], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  serverId    String? @db.ObjectId
+  server      Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId    String? @db.ObjectId
+  section      Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  sendMsg    Boolean? @default(true)
+  memberIds  String[] @db.ObjectId
+  Members    Member[] @relation(fields: [memberIds], references: [id])
+ 
+  messages   Message[]
+  pinnedPost  PinnedPost[]
+  saveLater  Later[]
+  Threads    Threads[]
+  manager ChannelManager?
+  Drafts    Draft[]
+  // Reactions  Reaction[]
+}
+model ChannelManager {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  channelId     String @db.ObjectId @unique
+  channel      Channel @relation(fields: [channelId], references: [id])
+  memberIds     String[] @db.ObjectId
+  member        Member[] @relation(fields: [memberIds], references: [id])
+  serverId       String @db.ObjectId
+  server        Server? @relation(fields: [serverId],references: [id])
+  sectionId    String? @db.ObjectId
+  section      Section? @relation(fields: [sectionId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model canvasManager {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  canvasId     String @db.ObjectId @unique
+  canvas      Canvas @relation(fields: [canvasId], references: [id])
+  memberIds     String[] @db.ObjectId
+  member        Member[] @relation(fields: [memberIds], references: [id])
+  serverId       String @db.ObjectId
+  server        Server? @relation(fields: [serverId],references: [id])
+  sectionId    String? @db.ObjectId
+  section      Section? @relation(fields: [sectionId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model TestChannelManager {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  testChannelId     String @db.ObjectId @unique
+  testChannel      TestChannel @relation(fields: [testChannelId], references: [id])
+  memberIds     String[] @db.ObjectId
+  member        Member[] @relation(fields: [memberIds], references: [id])
+  serverId       String @db.ObjectId
+  server        Server? @relation(fields: [serverId],references: [id])
+  sectionId    String? @db.ObjectId
+  section      Section? @relation(fields: [sectionId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model ForumManager {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  forumId     String @db.ObjectId @unique
+  Forum      ForumsChannel @relation(fields: [forumId], references: [id])
+  memberIds     String[] @db.ObjectId
+  member        Member[] @relation(fields: [memberIds], references: [id])
+  serverId       String @db.ObjectId
+  server        Server? @relation(fields: [serverId],references: [id])
+  sectionId    String? @db.ObjectId
+  section      Section? @relation(fields: [sectionId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Canvas {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  title String
+  description String?
+  createdBy  String @db.ObjectId
+  createdUser  User? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  // createdUser  Member @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  isEveryonePost Boolean @default(true)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId  String @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  type        Type @default(public)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  memberIds  String[] @db.ObjectId
+  Members    Member[] @relation(fields: [memberIds], references: [id])
+  notes     Note[]
+  noteComments NoteComment[]
+  manager canvasManager?
+}
+model Note {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  title String
+  content String?
+  createdBy  String @db.ObjectId
+  createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  canvasId String? @db.ObjectId
+  canvas Canvas? @relation(fields: [canvasId], references: [id], onDelete:Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  comments NoteComment[]
+
+}
+
+model NoteComment {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  content     String
+  fileUrl    String[]
+  noteId     String? @db.ObjectId
+  note       Note? @relation(fields: [noteId], references: [id], onDelete:Cascade)
+  canvasId     String? @db.ObjectId
+  canvas       Canvas? @relation(fields: [canvasId], references: [id], onDelete:Cascade)
+  createdBy   String? @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  serverId String @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  // isDeleted Boolean @default(false)
+  isUpdated Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted Boolean @default(false)
+}
+
+
+
+model Member {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  // serverRole  MemberRole @default(guest)
+  role   MemberRole @default(guest)
+
+  userId  String @db.ObjectId
+  user  User? @relation(fields: [userId], references: [id],  onDelete: Cascade)
+
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+
+  channelIds String[] @db.ObjectId
+  channels  Channel[] @relation(fields: [channelIds], references: [id])
+
+  canvasIds String[] @db.ObjectId
+  canvases  Canvas[] @relation(fields: [canvasIds], references: [id])
+
+  forumsChannelIds String[] @db.ObjectId
+  forumChannels  ForumsChannel[] @relation(fields: [forumsChannelIds], references: [id])
+
+  testChannelIds String[] @db.ObjectId
+  testChannels  TestChannel[] @relation(fields: [testChannelIds], references: [id])
+
+  groupIds String[] @db.ObjectId
+  groups   Group[] @relation(fields: [groupIds], references: [id])
+
+  managedChannelId     String[] @db.ObjectId
+  managedChannel      ChannelManager[] @relation(fields: [managedChannelId], references: [id])
+  managedCanvasId     String[] @db.ObjectId
+  managedCanvas      canvasManager[] @relation(fields: [managedCanvasId], references: [id])
+  
+  managedForumId     String[] @db.ObjectId
+  managedForums      ForumManager[] @relation(fields: [managedForumId], references: [id])
+  managedTestChannelId     String[] @db.ObjectId
+  managedTestChannel      TestChannelManager[] @relation(fields: [managedTestChannelId], references: [id])
+  messages Message[]
+  directMessages DirectMessage[]
+
+  conversationsInitiated Conversation[] @relation("MemberOne")
+  conversationsReceived Conversation[] @relation("MemberTwo")      
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tests      Test[]
+  results     Result[]
+  pinnedPost  PinnedPost[]
+  saveLater   Later[]
+  threads     Threads[]
+  questions   Question[]
+  forums      Forums[]
+  Reactions   Reaction[]
+  Mentions   Mention[]
+  CreatedMentions Mention[] @relation("CreatedMentionMember")
+  // forumsQuestions ForumQuestion[]
+  forumResponse ForumResponse[]
+  Notes     Note[]
+  Drafts    Draft[]
+  noteComments NoteComment[]
+  testResponse Response[]
+
+  // TestChannels  TestChannel[]
+  // NoteContent NoteContent[]
+  @@index([userId])
+  @@index([serverId])
+    
+}
+model Message {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  content     String
+  fileUrl    String[]
+  memberId String @db.ObjectId
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  channelId String? @db.ObjectId
+  channel Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  sectionId    String? @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id], onDelete:Cascade)
+  serverId String? @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  deleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  forwardedMessageId  String? @db.ObjectId
+  forwardedMessage    Message?  @relation("ForwardedMessages", fields: [forwardedMessageId], references: [id], onDelete:NoAction, onUpdate:NoAction)
+  forwardedMessages   Message[] @relation("ForwardedMessages")
+
+  forwardedDirectMessages DirectMessage[]
+
+  pinnedPost  PinnedPost[]
+  saveLater  Later[]
+  threads    Threads[]   
+  Reactions   Reaction[]
+  Mentions   Mention[]
+  @@index([channelId])
+  @@index([memberId])
+}
+model Reaction {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  messageId    String? @db.ObjectId
+  message      Message? @relation(fields: [messageId], references: [id], onDelete:Cascade)
+  directMessageId String? @db.ObjectId
+  directMessage DirectMessage? @relation(fields: [directMessageId], references: [id], onDelete:Cascade)
+  forumsChannelId String? @db.ObjectId
+  forumsChannel   ForumsChannel?  @relation(fields:[forumsChannelId], references: [id])
+  forumsId     String? @db.ObjectId
+  forums       Forums? @relation(fields: [forumsId], references: [id], onDelete:Cascade)
+
+  createdBy   String @db.ObjectId
+  member Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  serverId String @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  content     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted Boolean @default(false)
+}
+model Threads {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  messageId    String? @db.ObjectId
+  message      Message? @relation(fields: [messageId], references: [id], onDelete:Cascade)
+  channelId    String? @db.ObjectId
+  channel Channel? @relation(fields: [channelId], references: [id], onDelete:Cascade)
+  // forumsChannelId String? @db.ObjectId
+  // forumsChannel   ForumsChannel?  @relation(fields:[forumsChannelId], references: [id])
+  // forumsId     String? @db.ObjectId
+  // forums       Forums? @relation(fields: [forumsId], references: [id], onDelete:Cascade)
+
+  createdBy   String? @db.ObjectId
+  member Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  serverId String @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  content     String
+  fileUrl    String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted Boolean @default(false)
+
+}
+model Conversation {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  memberOneId String @db.ObjectId
+  memberOne Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+
+  memberTwoId String @db.ObjectId
+  memberTwo Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+
+  directMessages DirectMessage[]
+  Drafts   Draft[]
+  @@index([memberTwoId])
+
+  @@unique([memberOneId, memberTwoId])
+}
+model DirectMessage {
+    id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  content String
+  fileUrl String[]
+
+  memberId String @db.ObjectId
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  conversationId String @db.ObjectId
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  forwardedMessageId  String? @db.ObjectId
+  forwardedMessage  Message? @relation(fields: [forwardedMessageId], references: [id])
+
+  forwardedDirectMessageId  String? @db.ObjectId
+  forwardedDirectMessage    DirectMessage?  @relation("ForwardedDirectMessages", fields: [forwardedDirectMessageId], references: [id], onDelete:NoAction, onUpdate:NoAction)
+  forwardedMessages   DirectMessage[] @relation("ForwardedDirectMessages")
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Reactions   Reaction[]
+
+  @@index([memberId])
+  @@index([conversationId])
+}
+model TestChannel {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  name String 
+  description String?
+  type Type @default(public)
+  createdBy  String @db.ObjectId
+  createdUser  User? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  isEveryoneCreate Boolean @default(true)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId  String @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+
+  memberIds  String[] @db.ObjectId
+  Members    Member[] @relation(fields: [memberIds], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Tests     Test[]
+  questions Question[]
+  Results  Result[]
+  manager TestChannelManager?
+  
+}
+model Test {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  name String 
+  description String?
+  createdBy  String? @db.ObjectId
+  createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId  String @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  testChannelId  String @db.ObjectId
+  testChannel  TestChannel? @relation(fields: [testChannelId], references: [id],  onDelete: Cascade)
+  time    Int
+  level   Level @default(easy)
+  totalResponse Int @default(0)
+  fullMarks   Int @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  activated Boolean @default(false)
+  passmarks Int @default(0)
+  questions Question[]
+  Results  Result[]
+  responses Response[]
+}
+model Question {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  title  String
+  options String[]
+  answer  String[]
+  qType   String
+  marks    Int  @default(1)
+  explanation String?
+  testId  String @db.ObjectId
+  test  Test @relation(fields: [testId], references: [id],  onDelete: Cascade)
+  testChannelId  String @db.ObjectId
+  testChannel  TestChannel? @relation(fields: [testChannelId], references: [id],  onDelete: Cascade)
+
+  createdBy  String @db.ObjectId
+  createdUser  Member @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  results Response[]
+}
+model Result {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  name String
+  memberId  String @db.ObjectId
+  member  Member? @relation(fields: [memberId], references: [id],  onDelete: Cascade)
+  fullMarks Int @default(0)
+  obtainMarks  Int @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  serverId   String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId   String @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  submitted Boolean @default(false)
+  submitTime DateTime? 
+  attempt Int @default(1)
+  //  Boolean @default(false)
+  isUserDeleted Boolean @default(false)
+  isAdminDeleted Boolean @default(false)
+  testId  String @db.ObjectId
+  test    Test?  @relation(fields: [testId], references: [id], onDelete:Cascade)
+  testChannelId  String @db.ObjectId
+  testChannel  TestChannel? @relation(fields: [testChannelId], references: [id],  onDelete: Cascade)
+  currentState Int @default(0)
+  response   Response[]
+
+}
+model Response {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  questionId  String @db.ObjectId
+  question  Question? @relation(fields: [questionId], references: [id],  onDelete: Cascade)
+  resultId  String @db.ObjectId
+  result  Result? @relation(fields: [resultId], references: [id],  onDelete: Cascade)
+  testId   String @db.ObjectId
+  test  Test? @relation(fields: [testId], references: [id],  onDelete: Cascade)
+  createdBy  String @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  answer   String[]
+  options String[]
+  qMarks  Int
+  marks   Int
+}
+model PinnedPost {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  createdBy  String @db.ObjectId
+  createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  messageId  String @db.ObjectId
+  message  Message? @relation(fields: [messageId], references: [id],  onDelete: Cascade)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId  String @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  channelId  String @db.ObjectId
+  channel  Channel? @relation(fields: [channelId], references: [id],  onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+
+}
+model Later {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  createdBy  String @db.ObjectId
+  time   DateTime?
+  createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId  String @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+  messageId  String @db.ObjectId
+  message  Message? @relation(fields: [messageId], references: [id],  onDelete: Cascade)
+  channelId  String @db.ObjectId
+  channel  Channel? @relation(fields: [channelId], references: [id],  onDelete: Cascade)
+  status  LaterStatus @default(progress)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Group {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  handle String
+  description String?
+  createdBy    String? @db.ObjectId
+  createdUser  User? @relation(fields: [createdBy], references: [id])
+  serverId    String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  memberIds  String[]  @db.ObjectId
+  members Member[] @relation(fields: [memberIds], references: [id])
+  mentions Mention[]
+}
+model Mention {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  groupId String? @db.ObjectId
+  group Group? @relation(fields:[groupId] ,references:[id])
+  memberId   String? @db.ObjectId
+  member     Member? @relation(fields: [memberId] ,references: [id])
+  messageId   String @db.ObjectId
+  message     Message? @relation(fields: [messageId], references: [id])
+  createdBy String? @db.ObjectId
+  createdMember Member? @relation("CreatedMentionMember", fields: [createdBy] ,references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+}
+
+
+
+
+model Draft {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  content     String
+  fileUrl    String[]
+  createdBy String @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  channelId String? @db.ObjectId
+  channel Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  serverId String? @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  sectionId String? @db.ObjectId
+  Section Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  conversationId String? @db.ObjectId
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  isDeleted  Boolean @default(false)
+  isSent   Boolean @default(false)
+  ScheduledDate DateTime? 
+
+  deleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+}

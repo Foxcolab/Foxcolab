@@ -1,0 +1,116 @@
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Member, Message, User } from "@prisma/client";
+
+import { useSocket } from "@/app/(pages)/components/provider/SocketProvider";
+
+type ChatSocketProps = {
+  addKey: string;
+  updateKey: string;
+  deleteKey: string;
+  queryKey: string;
+}
+
+type MessageWithMemberWithProfile = Message & {
+  member: Member & {
+    profile: User;
+  }
+}
+
+export const useChatSocket = ({
+  addKey,
+  updateKey,
+  queryKey,
+  deleteKey
+}: ChatSocketProps) => {
+  const { socket } = useSocket();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    socket.on(updateKey, (message: MessageWithMemberWithProfile) => {
+      queryClient.setQueryData([queryKey], (oldData: any) => {
+        if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+          console.log(oldData);
+          return oldData;
+
+        }
+
+        const newData = oldData.pages.map((page: any) => {
+          return {
+            ...page,
+            items: page.items.map((item: MessageWithMemberWithProfile) => {
+              if (item.id === message.id) {
+                return message;
+              }
+              return item;
+            })
+          }
+        });
+
+        return {
+          ...oldData,
+          pages: newData,
+        }
+      })
+    });
+
+    socket.on(addKey, (message: MessageWithMemberWithProfile) => {
+      queryClient.setQueryData([queryKey], (oldData: any) => {
+        if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+          return {
+            pages: [{
+              items: [message],
+            }]
+          }
+        }
+
+        const newData = [...oldData.pages];
+
+        newData[0] = {
+          ...newData[0],
+          items: [
+            message,
+            ...newData[0].items,
+          ]
+        };
+
+        return {
+          ...oldData,
+          pages: newData,
+        };
+      });
+    });
+    socket.on(deleteKey, (message: MessageWithMemberWithProfile) => {
+      queryClient.setQueryData([queryKey], (oldData:any)=>{
+        if (!oldData ||!oldData.pages || oldData.pages.length === 0) {
+          return oldData;
+        }
+
+        const newData = oldData.pages.map((page: any) => {
+          return {
+          ...page,
+            items: page.items.filter((item: MessageWithMemberWithProfile) => {
+              return item.id!== message.id;
+            })
+          }
+        });
+
+        return {
+        ...oldData,
+          pages: newData,
+        }
+      })
+    })
+
+
+    return () => {
+      socket.off(addKey);
+      socket.off(updateKey);
+      socket.off(deleteKey);
+    }
+  }, [queryClient, addKey, queryKey, socket, updateKey]);
+}
