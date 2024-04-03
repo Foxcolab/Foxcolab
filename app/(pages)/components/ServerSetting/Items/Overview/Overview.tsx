@@ -24,6 +24,7 @@ interface Props {
 }
 function Overview({setOpen, server}:Props) {
     
+  console.log("Overview");
 
   return (
     <>
