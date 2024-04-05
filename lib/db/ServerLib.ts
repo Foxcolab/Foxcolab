@@ -4,14 +4,16 @@ import { db } from "@/prisma";
 export const getServer =async(serverId:string, userId:string)=>{
     try {
 
-        const server = await db.server.findUnique({
+        let server = await db.server.findUnique({
+          
             where:{
               id:serverId,
               Members:{
                 some:{
                   userId:userId
                 }
-              }
+              },
+              
             },
             include: {
               sections:{
@@ -67,7 +69,16 @@ export const getServer =async(serverId:string, userId:string)=>{
                   type:"public"
                 }
               },
-              groups:true
+              groups:true,
+              activityLogs:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
               // {
               //   include:{
               //     members:{
@@ -77,12 +88,27 @@ export const getServer =async(serverId:string, userId:string)=>{
               //     }
               //   }
               // }
-            }
+            },
+            // member:{}
+            
         
           });
         
       
-        
+        const currentMember = await db.member.findFirst({
+          where:{
+            userId:userId,
+            serverId:server?.id
+          },
+          include:{
+            user:true
+          }
+        });
+        if(!currentMember){
+          return null;
+        }
+        server.currentMember = currentMember;
+        // console.log(server.currentMember)
         return server;
 
 

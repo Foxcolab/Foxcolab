@@ -26,10 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body 
-      // className={cn(inter, "bg-white dark:bg-[#313338]")} 
+      className={cn(inter, "bg-white dark:bg-[#24272c]")} 
       >
 
-      {/* <ThemeProvider attribute='class' defaultTheme='Dark'  enableSystem={true} storageKey='foxcolab-key'> */}
+      <ThemeProvider attribute='class' defaultTheme='Dark'  enableSystem={true} storageKey='foxcolab-key'>
       <SocketProvider>
       <QueryProvider>
                 {children}
@@ -37,7 +37,7 @@ export default function RootLayout({
 
       </QueryProvider>
       </SocketProvider>
-        {/* </ThemeProvider>         */}
+        </ThemeProvider>        
         
         </body>
     </html>

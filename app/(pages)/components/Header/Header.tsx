@@ -14,8 +14,8 @@ interface Props {
 function Header({server}:Props) {
   return (
     <>
- <div className="flex-center-between">
-    <div className="logo dark:text-[#a54040]">
+ <div className="page_header">
+    <div className="logo ">
               <NameDropDown server={server} />
             </div>
         <div className="search">
@@ -28,8 +28,12 @@ function Header({server}:Props) {
                 </div>
             </div>
             <Link href={'/profile'} className='prof_logo pr-5' style={{marginRight:"0.5rem"}}> <span><FaUserCircle/></span> Bikram 
-            <SocketBadge/>
+
              </Link>
+            <SocketBadge/>
+
+    <button className="px-6 py-2"><ModeToggle/></button>
+
         </div>
     </div>
     

@@ -19,12 +19,10 @@ import { RiInboxArchiveFill } from 'react-icons/ri'
 
 interface Props {
     setOpen:any
-    displayPic:string
     server:Server
 }
 function Overview({setOpen, server}:Props) {
     
-  console.log("Overview");
 
   return (
     <>

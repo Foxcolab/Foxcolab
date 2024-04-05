@@ -2,6 +2,7 @@
 
 
 
+import { CreateActivityLog } from "@/app/api/activityLog/ActivityLog";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,6 +16,8 @@ export const POST =async(req:NextRequest)=>{
         const serverId = req.nextUrl.searchParams.get('serverId');
         const sectionId = req.nextUrl.searchParams.get('sectionId');
 
+        if(!serverId || !sectionId) return NextResponse.json({error:"Semething went wrong"}, {status:409});
+        
 
         const reqBody = await req.json();
         const {name, type} = reqBody;
@@ -59,7 +62,7 @@ export const POST =async(req:NextRequest)=>{
         })
 
 
-
+        await CreateActivityLog(serverId, member.id, "Created", "Test Channel", name, "" );
         return NextResponse.json({error:"Test channel created successfully", success:true}, {status:200});
 
     } catch (error) {

@@ -3,6 +3,7 @@ import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/prisma";
 import { Channel, MemberRole } from "@prisma/client";
+import { CreateActivityLog } from "../../activityLog/ActivityLog";
 
 export const POST =async(req:NextRequest)=>{
     try {
@@ -16,7 +17,7 @@ export const POST =async(req:NextRequest)=>{
 
         if(!name || !description ) return NextResponse.json({success:false ,message:"Enter the fields"}, {status:409});
         console.log(name, description);
-        
+        const discoverable = type==="public" ? true : false;
         let server = await db.server.create({
             data:{
                 name,
@@ -26,6 +27,7 @@ export const POST =async(req:NextRequest)=>{
                 coverPic,
                 inviteCode:uuidv4(),
                 createdBy:user?.id,
+                discoverable:discoverable,
                 sections:{
                     create:[
                         {name:"Welcome", createdBy:user?.id as string, 
@@ -48,58 +50,6 @@ export const POST =async(req:NextRequest)=>{
                 sections:true
             }
         });
-
-        // server = await db.server.update({
-        //     where:{
-        //         id:server.id
-        //     },
-        //     data:{
-        //         sections:{
-        //             create:[
-        //                 {name:"Welcome", createdBy:user?.id as string, 
-        //             channels:{ 
-        //                 createMany:{
-        //                     data:[
-        //                         { 
-        //                             name:"General", 
-        //                             createdBy:user?.id as string, 
-        //                             description:"this is general", 
-        //                             serverId:server.id,
-        //                             memberIds:[server.Members[0].id],
-        //                             Members:{
-        //                                 connect:[{id:member.id}]
-        //                               },
-        //                         },
-        //                         {
-        //                             name:"Random", 
-        //                             createdBy:user?.id as string, 
-        //                             description:"This is random Channel", 
-        //                             serverId:server.id,
-        //                             memberIds:[server.Members[0].id]
-        //                         },
-        //                         {
-        //                             name:"announcement", 
-        //                             createdBy:user?.id as string, 
-        //                             description:"This channel is for announcement purpose", 
-        //                             serverId:server.id,
-        //                             memberIds:[server.Members[0].id]
-        //                         },
-        //                     ]
-        //                 }
-        //             }
-        //             }
-        //             ]
-        //         },
-        //     },
-        //     include:{
-        //         sections:{
-        //             include:{
-        //                 channels:true
-        //             }
-        //         },
-        //         Members:true
-        //     }
-        // });
 
         const channel = await db.section.update({
             where:{
@@ -149,6 +99,7 @@ export const POST =async(req:NextRequest)=>{
         console.log("servers", server);
 
 
+        await CreateActivityLog(server.createdBy, "Created", "Member", name, "" );
 
 
 

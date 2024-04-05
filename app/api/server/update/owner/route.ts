@@ -77,7 +77,8 @@ export const PUT =async(req:NextRequest)=>{
             }
         });
 
-        console.log("Admin changed successfully");
+        // await CreateActivityLog(member.id, "Updated", "Server", name, "Name" );
+
         return NextResponse.json({success:true, server}, {status:200});
 
     } catch (error) {

@@ -1,4 +1,3 @@
-import { CreateActivityLog } from "@/app/api/activityLog/ActivityLog";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -19,19 +18,34 @@ export const PUT =async(req:NextRequest)=>{
             }})
         if(!member || (member.role!=="admin" && member.role!=="moderator")) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
         const reqBody = await req.json();
-        const {coverPic} = reqBody;
-        console.log("CoverPic", coverPic);
-        const server = await db.server.update({
+        let {discoverable, type} = reqBody;
+        console.log("NAME->>>>", discoverable, type);
+        if(!type) return NextResponse.json({error:"Name not found"}, {status:409});
+        discoverable = type==="private" ? false : discoverable;
+        console.log(discoverable);
+        let server = await db.server.findFirst({
+            where:{
+                id:serverId as string,
+                Members:{
+                    some:{
+                        id:member.id
+                    }
+                }
+            }
+        });
+        if(!server) return NextResponse.json({error:"Server not found"}, {status:409});
+        console.log(server.id);
+        server = await db.server.update({
             where:{
                 id:serverId as string
             },
             data:{
-                coverPic:coverPic
+                type:type,
+                discoverable:discoverable
             }
         });
-        console.log("Picture updated successfully");
-        await CreateActivityLog(serverId, member.id, "Updated", "Server", "Cover Picture", "" );
-
+        console.log(server);
+        console.log("name updated successfully");
         return NextResponse.json({success:true, server}, {status:200});
     } catch (error) {
         

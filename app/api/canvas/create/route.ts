@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { MemberRole } from "@prisma/client";
+import { CreateActivityLog } from "../../activityLog/ActivityLog";
 
 export const POST =async(req:NextRequest)=>{
     try {
@@ -9,7 +10,7 @@ export const POST =async(req:NextRequest)=>{
         const { title, type  } = reqBody;
         const serverId = req.nextUrl.searchParams.get('serverId');
         const sectionId = req.nextUrl.searchParams.get('sectionId');
-        
+        if(!serverId || !sectionId) return NextResponse.json({error:"Semething went wrong"}, {status:409});
         const userId = GetDataFromToken(req);
         const user = await db.user.findFirst({where:{id:userId}});
 
@@ -57,7 +58,7 @@ export const POST =async(req:NextRequest)=>{
 
         console.log(section);
         
-
+        await CreateActivityLog(serverId, member.id, "Created", "Canvas", title, '' );
 
         return NextResponse.json({
             success:true,

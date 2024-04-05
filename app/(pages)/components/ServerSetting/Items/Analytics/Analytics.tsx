@@ -1,10 +1,12 @@
 import React from 'react'
 import ItemHeader from '../../Components/ItemHeader'
+import { Server } from '@prisma/client'
 
 interface Props {
   setOpen: any
+  server:Server
 }
-function Analytics({setOpen}: Props) {
+function Analytics({setOpen, server}: Props) {
   return (
     <>
     

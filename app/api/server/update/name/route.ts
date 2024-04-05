@@ -1,3 +1,4 @@
+import { CreateActivityLog } from "@/app/api/activityLog/ActivityLog";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -30,6 +31,8 @@ export const PUT =async(req:NextRequest)=>{
             }
         });
         console.log("name updated successfully");
+        await CreateActivityLog(serverId, member.id, "Updated", "Server", name, "Name" );
+
         return NextResponse.json({success:true, server}, {status:200});
     } catch (error) {
         

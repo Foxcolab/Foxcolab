@@ -76,6 +76,7 @@ model Server {
   defaultOpen String?
   defaultNotification String?
   serverType String?
+  discoverable  Boolean? @default(false)
   sections Section[]
   channels Channel[]
   Members    Member[]
@@ -100,7 +101,7 @@ model Server {
   forumsChannel ForumsChannel[]
   Drafts    Draft[]
   noteComments NoteComment[]
-
+  activityLogs ActivityLog[]
 }
 model Section {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -339,7 +340,8 @@ model Member {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   // serverRole  MemberRole @default(guest)
   role   MemberRole @default(guest)
-
+  region  String?
+  language  String? @default("English")
   userId  String @db.ObjectId
   user  User? @relation(fields: [userId], references: [id],  onDelete: Cascade)
 
@@ -375,7 +377,7 @@ model Member {
 
   conversationsInitiated Conversation[] @relation("MemberOne")
   conversationsReceived Conversation[] @relation("MemberTwo")      
-
+  isDeleted Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tests      Test[]
@@ -394,7 +396,7 @@ model Member {
   Drafts    Draft[]
   noteComments NoteComment[]
   testResponse Response[]
-
+  activityLogs ActivityLog[]
   // TestChannels  TestChannel[]
   // NoteContent NoteContent[]
   @@index([userId])
@@ -670,6 +672,7 @@ model Group {
   createdUser  User? @relation(fields: [createdBy], references: [id])
   serverId    String @db.ObjectId
   server  Server? @relation(fields: [serverId], references: [id])
+  isDeactivated Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   memberIds  String[]  @db.ObjectId
@@ -711,8 +714,24 @@ model Draft {
   isDeleted  Boolean @default(false)
   isSent   Boolean @default(false)
   ScheduledDate DateTime? 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  deleted Boolean @default(false)
+
+}
+
+model ActivityLog {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  action     String?
+  name       String?
+  type       String?
+  schemaType  String?
+
+  createdBy String @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  isDeleted  Boolean @default(false)
+  serverId String? @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

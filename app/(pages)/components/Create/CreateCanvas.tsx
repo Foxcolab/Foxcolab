@@ -54,7 +54,7 @@ function CreateCanvas({serverId, sectionId}:Props) {
     <DialogTrigger asChild>
       <button  className='drpdn_ip'><FaPlusCircle/> Create Canvas</button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] " style={{zIndex:'10000 !important'}}>
+      <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>
           <DialogTitle>Create a Canvas</DialogTitle>
           <DialogDescription>

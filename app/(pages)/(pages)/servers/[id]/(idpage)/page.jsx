@@ -15,8 +15,6 @@ function page() {
      </div>
 
 
-      <EditorFooter  name={"Home"}  />
-
 
     
     </>

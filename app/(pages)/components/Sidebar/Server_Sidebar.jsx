@@ -33,7 +33,7 @@ const  Server_Sidebar =async ()=>{
         {
             servers.map((server)=>(
                 <div key={server.id} className='sing_server'>
-                    <Sidebar_item id={server.id} name={server.name} imageUrl={imageUrl} />
+                    <Sidebar_item id={server.id} name={server.name} imageUrl={server.displayPic===null ? imageUrl : server.displayPic} />
                 </div>
             )) 
         }

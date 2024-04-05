@@ -51,7 +51,7 @@ function CreateTest({sectionId, serverId}:{sectionId:string, serverId: string}) 
     <DialogTrigger asChild>
       <button className='drpdn_ip'><FaPlusCircle/> Create Test</button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] " style={{zIndex:'10000 !important'}}>
+      <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>
           <DialogTitle>Create a Test channel</DialogTitle>
           <DialogDescription>

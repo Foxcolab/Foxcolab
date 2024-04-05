@@ -96,7 +96,7 @@ async function ThreadPage({params}:ThreadProp) {
     }
   })
 
-  console.log("Threads", ThreadMessages[0].threads)
+  // console.log("Threads", ThreadMessages[0].threads)
   return (
     <>
     

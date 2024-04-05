@@ -61,7 +61,7 @@ function CreateSection({serverId, openDialog, setOpenDialog}:Props) {
 
         }
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] " style={{zIndex:'10000 !important'}}>
+      <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>
           <DialogTitle>Create a Section</DialogTitle>
           <DialogDescription>

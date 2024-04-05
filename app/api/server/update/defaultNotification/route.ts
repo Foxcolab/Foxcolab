@@ -1,3 +1,4 @@
+import { CreateActivityLog } from "@/app/api/activityLog/ActivityLog";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -29,7 +30,7 @@ export const PUT =async(req:NextRequest)=>{
                 defaultNotification:defaultNotification
             }
         });
-        console.log("Default Notifcation updated successfully");
+        // await CreateActivityLog(member.id, "Updated", "Server", "Default Notici", "" );
         return NextResponse.json({success:true, server}, {status:200});
     } catch (error) {
         

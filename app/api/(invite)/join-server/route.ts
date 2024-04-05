@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken"
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { CreateActivityLog } from "../../activityLog/ActivityLog";
 
 export const POST =async(req:NextRequest)=>{
     try {
@@ -36,19 +37,32 @@ export const POST =async(req:NextRequest)=>{
                     some:{
                         userId:user.id
                     }
-                }
+                },
             },
+            include:{
+                Members:{
+                    where:{
+                        userId:user.id
+                    },
+                    include:{
+                        user:true
+                    }
+                }
+            }
         });
-        if(exitingServer) return NextResponse.json({
+        if(exitingServer) {
+        await CreateActivityLog(server.id, exitingServer.Members[0].id, "Joined", "Member", exitingServer.Members[0].user?.name as string, "" );
+        return NextResponse.json({
             success:true,
             message:`OTP verified.`,
             serverId: server.id,
         }, {status:200}); 
+        } 
 
         
         console.log("SERVER",server);
         
-        await db.server.update({
+        const serv= await db.server.update({
             where:{
                 id:server.id
             },
@@ -58,6 +72,16 @@ export const POST =async(req:NextRequest)=>{
                         userId:user.id,
                         role:'user'
                     }]
+                }
+            },
+            include:{
+                Members:{
+                    where:{
+                        userId:user.id
+                    },
+                    include:{
+                        user:true
+                    }
                 }
             }
         })
@@ -85,6 +109,12 @@ export const POST =async(req:NextRequest)=>{
                 }
             });
         }
+
+        await CreateActivityLog(server.id, serv.Members[0].id as string, "Joined", "Server", serv.Members[0].user?.name as string, "" );
+
+        // await CreateActivityLog(server.id, serv.Members[0].user.id, "Joined", "Test Channel", name, "" );
+
+        
         return NextResponse.json({
             success:true,
             message:`OTP verified.`,
