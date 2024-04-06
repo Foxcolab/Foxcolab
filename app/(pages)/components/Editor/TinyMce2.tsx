@@ -1,6 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react'
 import React from 'react';
-
+import { useTheme } from 'next-themes';
 
 interface Props {
     setTitle:Function,
@@ -16,7 +16,9 @@ const TinyMce2 = ({setTitle, defaultValue, placeholder}:Props)=> {
     const FileLoc =  'https://cdn.jsdelivr.net/npm/@wiris/mathtype-tinymce6@8.4.0/plugin.min.js';
   
 
-    const content = defaultValue
+    const content = defaultValue;
+
+    const {resolvedTheme} = useTheme();
     
     
     
@@ -36,9 +38,11 @@ const TinyMce2 = ({setTitle, defaultValue, placeholder}:Props)=> {
           a_plugin_option: false,
           placeholder: placeholder,
           statusbar:false,
-        height: 216,
-        branding: false,
-        external_plugins: {
+          skin: resolvedTheme==="dark"? "oxide-dark" : "oxide" ,
+          content_css: resolvedTheme==='dark' ? 'dark' : 'oxide',
+          height: 216,
+          branding: false,
+          external_plugins: {
           'tiny_mce_wiris' : FileLoc
       },
        

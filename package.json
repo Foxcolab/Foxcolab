@@ -105,6 +105,7 @@
     "react-pdf": "^7.7.1",
     "react-player": "^2.14.1",
     "react-quill": "^2.0.0",
+    "react-resizable-panels": "^2.0.16",
     "shadcn-ui": "^0.4.1",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",

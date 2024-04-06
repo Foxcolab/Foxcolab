@@ -29,7 +29,8 @@ function TestContainer({test}:Props) {
         <div className='d-flex gap-5'>
 
         <div className='w-1/4'>
-            <button onClick={onHref} className='flex items-center bg-white py-2 px-3 font-bold text-gray-600 rounded-sm'> <IoChevronBackOutline/> Back</button>
+          <button onClick={onHref} className='flex items-center bg-white py-2 px-3 font-bold text-gray-600 rounded-sm'> <IoChevronBackOutline/> Back</button>
+            
             <div className="testsidebar">
         <button className='sidebutton'>{test.activated===true ? "ACTIVATED" : "SET UP IN PROGRESS"}</button>
             <button className={state==="Basic" ?"active_link":"" } onClick={()=>setState("Basic")} ><IoSettings/> Basic Setting </button>

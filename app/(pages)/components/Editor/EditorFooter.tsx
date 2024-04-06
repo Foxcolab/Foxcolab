@@ -70,7 +70,6 @@ const EditorFooter = ({apiUrl,
     drafts
   }: ChatInputProps)=> {
 
-    
     const router = useRouter();
     const [files, setFiles] = useState([]);
     const [previewUrl, setPreviewUrl] = useState( []);
@@ -104,28 +103,22 @@ const EditorFooter = ({apiUrl,
   const isLoading = form.formState.isSubmitting;
 
   const insertEmoji = (emoji:any, onChangee:any) => {
-    console.log(reactQuillRef);
-    console.log(reactQuillRef.current.getEditor());
     const quill = reactQuillRef?.current?.getEditor();
     const range = quill.getSelection(true);
     quill.insertText(range.index, emoji);
     onChangee(range.index, emoji);
-    console.log("ACTUAL VALUE", form.getValues("content"));
     // field.onChange(`${field.value}${emoji}`)}
 
   };
 
   const RemoveQuillText =()=>{
-    console.log(reactQuillRef.current.getEditor());
     const quill = reactQuillRef?.current?.getEditor();
     quill.deleteText(0, quill.getLength())
-    console.log("QUILL", quill)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       
-      console.log(values.content);
       // const res = await axios.post('/api/upload')
       const url = qs.stringifyUrl({
         url: apiUrl,
@@ -142,7 +135,6 @@ const EditorFooter = ({apiUrl,
         form.setValue('fileUrl', [videoUrl]);
       }
       
-      console.log(url)
       if(uploading) return;
       await axios.post(url, values);
       await deleteFromDatabase();
@@ -430,6 +422,8 @@ const modules2 = {
               <div className='msg_footer'>
       <div className="editor_container">
       
+     <div>
+
      
       <div id="editor_htigh">
       
@@ -442,10 +436,12 @@ const modules2 = {
             /> */}
 
             <div>
-            <ReactQuill ref={reactQuillRef} theme="snow"
+            <ReactQuill ref={reactQuillRef}
+            
+            theme={"snow"}
             
             onChange={e=>InputHandler(e)} 
-            defaultValue={drafts[0]?.content}
+            defaultValue={drafts && drafts[0]?.content}
             // placeholder={form.getValues("content")}
              placeholder={`Message to ${(type==="channel" && channelType==="public") ? "#" :(type==="channel" && channelType==="private")? "#":""}${name}`} 
             modules={{'toolbar':[
@@ -759,7 +755,7 @@ files[i]?.name.endsWith(".ppt")?
                   >
                      <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
             {/* <RiComputerFill /> Upload from local */}
-            <Plus className="text-white " />
+            <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
 
 <input type="file" id="file" onChange={handleChange} multiple
 accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt "
@@ -818,7 +814,7 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
         </div>
       </div>
       </div>
-
+      </div>
   
 
 

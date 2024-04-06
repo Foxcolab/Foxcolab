@@ -26,7 +26,7 @@ function ChannelHeader({members, name, type, description, createdBy, createdAt, 
 <>
 
 <div className="chat_section">
-        <div className="channel_title">
+        {/* <div className="channel_title">
         <div className='channel_name'>
         <div className='channel_mem'>
             <AllMembers name={name} members={members} type={type} description={description} createdBy={createdBy} createdAt={createdAt} isAdmin={isAdmin} serverMembers={serverMembers}  sendMsg = {sendMsg}
@@ -45,9 +45,24 @@ function ChannelHeader({members, name, type, description, createdBy, createdAt, 
             managers={managers}
             content={<button className=''><FaUsers/> Members {members.length}</button> }
  />
-            {/* <button><MdNoteAlt/> Canvas</button></div> */}
             <ChannelPin pinnedPosts={pinnedPosts} />
          </div>
+         </div> */}
+         <div className='channel_title'>
+         <AllMembers name={name} members={members} type={type} description={description} createdBy={createdBy} createdAt={createdAt} isAdmin={isAdmin} serverMembers={serverMembers}  sendMsg = {sendMsg}
+            messages={messages} startingState={"About"}
+            managers={managers}
+            
+            content={<button># {name} <IoIosArrowDown/></button>}
+ />
+         </div>
+         <div className='channel_memb_pin'>
+         <AllMembers name={name} members={members} type={type} description={description} createdBy={createdBy} createdAt={createdAt} isAdmin={isAdmin} serverMembers={serverMembers}  sendMsg = {sendMsg}
+            messages={messages} startingState={"Members"}
+            managers={managers}
+            content={<button className=''><FaUsers/> Members {members.length}</button> }
+ />
+            <ChannelPin pinnedPosts={pinnedPosts} />
          </div>
       </div>
       

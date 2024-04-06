@@ -35,7 +35,7 @@ function EditorEmoji({onChange, emojiDialog, setEmojiDialog}:EmojiPickerProps) {
         className="bg-transparent border-none shadow-none drop-shadow-none mb-16"
       >
         <Picker
-          theme="dark"
+          theme={resolvedTheme==="dark"? "dark" : "light"}
           data={data}
           onEmojiSelect={(emoji: any) => onChange(emoji.native) }
           skin={1}

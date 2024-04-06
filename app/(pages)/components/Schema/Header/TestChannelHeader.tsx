@@ -26,10 +26,8 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
   return (
     <>
     
-    <div className="">
+    <div className="chat_section">
         <div className="channel_title">
-        <div className='channel_name'>
-        <div className='channel_mem'>
            <SchemaDialog
             name={name}
             members={members}
@@ -50,8 +48,7 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
           
           
           </div>
-          </div>
-        <div className='channel_mem'>
+        <div className='channel_memb_pin'>
         <SchemaDialog
         name={name}
         members={members}
@@ -77,10 +74,6 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
          
           
         
-
-         </div>
-         
-          
 
          </div>
       </div>

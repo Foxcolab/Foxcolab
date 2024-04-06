@@ -5,7 +5,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
   } from "@/components/ui/hover-card";
-  import {  BiSolidMessageDetail } from "react-icons/bi";
+  import {  BiMessageSquareAdd, BiSolidMessageDetail } from "react-icons/bi";
   import { RiEditBoxFill, RiShareForwardFill } from "react-icons/ri";
   import { BsBookmark, BsBookmarkFill, BsThreeDotsVertical } from "react-icons/bs";
 import { ActionTooltip } from '../../tooolkit/Toolkit';
@@ -71,6 +71,7 @@ interface HoverMessagePops {
   savedPost:Later
   myChannels:Channel[]
   allServerMember:Member[]
+  setThreadMessage:any
 }
 
 
@@ -177,7 +178,7 @@ const timeSlots = [
 ]
 
 
-function HoverMessage({children, message, currentMember, socketUrl, socketQuery, setIsEditing, isPinnedPost, isSavedPost,savedPost, pinnedPost, myChannels, allServerMember }:HoverMessagePops) {
+function HoverMessage({children, message, currentMember, socketUrl, socketQuery, setIsEditing, isPinnedPost, isSavedPost,savedPost, pinnedPost, myChannels, allServerMember, setThreadMessage }:HoverMessagePops) {
   const [loading, setLoading] = useState(false);
   const [sloading, setsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
@@ -343,6 +344,15 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
     await SavedLater(newDate);
   }
 
+
+  const ThreadHandler =()=>{
+    setThreadMessage(message);
+    router.refresh();
+    console.log("Refreshed");
+  }
+
+
+
     return (
     <>
 
@@ -365,14 +375,18 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
                     type="hover" /></ActionTooltip> 
   {/* <ActionTooltip label='Delete' side='top' align='center'><button onClick={()=>setOpen(true)}><AiFillDelete/></button></ActionTooltip> 
    <ActionTooltip label='Edit' side='top' align='center'><button onClick={e=>setIsEditing(true)}><FaEdit/></button></ActionTooltip>  */}
-    <ThreadCom
+    {/* <ThreadCom
           message={message}
           currentMember={currentMember}
           Msg={
             <button className="text-xl" style={{fontSize:"1.3rem"}}><BiSolidMessageDetail/></button>
           }
-          /> 
- 
+          />  */}
+   <ActionTooltip label='Threads' side='top' align='center'>
+    <button onClick={()=>ThreadHandler()} style={{fontSize:"1.3rem"}}><BiMessageSquareAdd/>
+    </button></ActionTooltip> 
+
+          
  <ActionTooltip label='Save for later' side='top' align='center'><button onClick={isSavedPost ? RemoveLater :()=> SavedLater(undefined)}  className={isSavedPost ? "bookmark_icon": ''} style={{fontSize:"1.1rem !important"}}>
   {
     isSavedPost ? <BsBookmarkFill/> : <BsBookmark/>

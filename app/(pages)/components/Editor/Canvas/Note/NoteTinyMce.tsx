@@ -1,6 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react'
 import React from 'react';
-
+import { useTheme } from 'next-themes';
 
 interface Props {
     setTitle:Function,
@@ -9,6 +9,7 @@ interface Props {
 
 
 const NoteTinyMce = ({setTitle, defaultValue}:Props)=> {
+  const {resolvedTheme} = useTheme();
   const cloudName =  process.env.REACT_APP_CLIENT_NAME
     const unsignedUploadPreset = process.env.REACT_APP_UPLOAD_PRESET
 
@@ -31,12 +32,14 @@ const NoteTinyMce = ({setTitle, defaultValue}:Props)=> {
         apiKey='yyyncy8o4zxczahnhs5n0tz3ha0h7cvmrdg8jcap53vuu6wj'
          init={{
           menubar: false,
-          selector: 'textarea',
+          selector: 'textarea', //@ts-ignore
           a_plugin_option: false,
           statusbar:false,
         //   readonly:ReadOnly,
           editable_root:false,
          height: '100%',
+         skin: resolvedTheme==="dark"? "oxide-dark" : "oxide" ,
+         content_css: resolvedTheme==='dark' ? 'dark' : 'oxide',
         branding: false,
         external_plugins: {
           'tiny_mce_wiris' : FileLoc

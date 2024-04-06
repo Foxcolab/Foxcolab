@@ -144,9 +144,9 @@ export const SingleThread = ({
 
     <>
     
-    <div className="relative group flex items-center  p-4 transition w-full msg_cnbdy">
+    <div className="relative group flex items-center  p-4 transition w-full msg_cnbdy ">
       <div className="group flex gap-x-2 items-start w-full">
-        <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
+        <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition"    >
 
        {
             (member===undefined || member.user===undefined || member?.user?.profilePic===null) ? 

@@ -25,10 +25,10 @@ function Options({option, rightAns, selectedAns}:Props) {
                     >
                         <span className=' p-1 mb-1'>
                         {
-                            (isAttempted && isRight) && <span className='text-green-500 text-xl'><IoCheckmarkCircleOutline/></span>
+                            (isAttempted && isRight) && <span className='text-green-500  text-xl'><IoCheckmarkCircleOutline/></span>
                         }
                         {
-                            (isAttempted && !isRight) && <span className='text-red-500 text-xl'  ><RxCrossCircled/></span>
+                            (isAttempted && !isRight) && <span className='text-red-500  text-xl'  ><RxCrossCircled/></span>
                         }
                         {
                             !isAttempted &&  <span className=' text-xl'  ><VscBlank/></span> 
@@ -41,7 +41,7 @@ function Options({option, rightAns, selectedAns}:Props) {
 
                         <div 
                         // className='flex items-center gap-1'
-                        className={isRight && isAttempted ? "bg-green-800 flex items-center gap-1 w-full p-1 rounded mb-1" : isAttempted && !isRight ?   "flex items-center gap-1 w-full p-1 bg-red-700 rounded mb-1" : !isAttempted && isRight? "flex items-center gap-1 w-full p-1 mb-1 bg-green-900 rounded": "flex items-center gap-1 w-full p-1 mb-1" }
+                        className={isRight && isAttempted ? "bg-green-800 text-white flex items-center gap-1 w-full p-1 rounded mb-1" : isAttempted && !isRight ?   "flex items-center gap-1 w-full p-1 bg-red-700 text-white rounded mb-1" : !isAttempted && isRight? "flex items-center gap-1 w-full p-1 mb-1 bg-green-300 dark:text-black rounded": "flex items-center gap-1 w-full p-1 mb-1 " }
                         >
                         <span className='text-xl'>
                         {

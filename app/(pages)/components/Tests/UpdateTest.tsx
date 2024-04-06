@@ -48,7 +48,7 @@ function UpdateTest({test}:{test:Test}) {
     <>
       <div className='w-full '>
             <div className='q_mangr'>
-            <span className='d-flex w-full pt-4 font-semibold gap-2 rounded-md' style={{color:"rgb(224, 224, 224)"}}> Update - "{test.name}"</span>
+            <span className='d-flex w-full pt-4 font-semibold gap-2 rounded-md test_info' > Update - "{test.name}"</span>
           
             </div>
    

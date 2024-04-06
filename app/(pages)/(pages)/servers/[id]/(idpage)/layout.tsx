@@ -1,4 +1,5 @@
 import MainSidebar from "@/app/(pages)/components/Sidebar/MainSidebar";
+import ServerHome from "@/app/(pages)/components/v1/ServerHome/ServerHome";
 import { getServer } from "@/lib/db/ServerLib";
 import { myProfile } from "@/lib/db/profile";
 import { db } from "@/prisma";
@@ -24,13 +25,11 @@ export const layout =async({children, params}:HomeProps)=>{
 
     return (<>
     
-    <MainSidebar server={server}>
-    {
-        children
-    }
-    </MainSidebar>
-    
-   
+
+   <ServerHome server={server}>
+        <h1>Hii</h1>
+
+   </ServerHome>
      
     
     </>)

@@ -7,6 +7,7 @@ import SingleForums from '@/app/(pages)/components/Forum/SingleForums';
 import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
 import SchemaHeader from '@/app/(pages)/components/Schema/Header/SchemaHeader';
 import MainSidebar from '@/app/(pages)/components/Sidebar/MainSidebar';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 import { getServer } from '@/lib/db/ServerLib';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
@@ -113,7 +114,7 @@ async function ForumsId({params}:ForumsProps) {
     <>
     
 
-    <MainSidebar server={server}>
+    <ServerHome server={server}>
     <div className="body_content_container">
 
    
@@ -148,7 +149,7 @@ async function ForumsId({params}:ForumsProps) {
 
 
     </div>
-    </MainSidebar>
+    </ServerHome>
     
     
     </>

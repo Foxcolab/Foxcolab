@@ -1,20 +1,13 @@
 
-import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
-import SchemaHeader from '@/app/(pages)/components/Schema/Header/SchemaHeader';
-import TestChannelHeader from '@/app/(pages)/components/Schema/Header/TestChannelHeader';
-import MainSidebar from '@/app/(pages)/components/Sidebar/MainSidebar';
-import CreateTest from '@/app/(pages)/components/Tests/CreateTest';
-import SingleTest from '@/app/(pages)/components/Tests/SingleTest';
 import TestChannelComponent from '@/app/(pages)/components/Tests/TestChannel/TestChannelComponent';
-import TestChannelContainer from '@/app/(pages)/components/Tests/TestChannel/TestChannelContainer';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 import { getServer } from '@/lib/db/ServerLib';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
+import { Result, Test } from '@prisma/client';
 import { format } from 'date-fns';
 import { redirect } from 'next/navigation';
 import React from 'react'
-import { IoSearch } from 'react-icons/io5';
-import { MdForum } from "react-icons/md";
 
 interface ForumsProps {
   params:{
@@ -111,7 +104,24 @@ async function TestChannel({params}:ForumsProps) {
   }
   const createdAt = format(new Date(testChannel.createdAt), DATE_FORMAT);
   let sendMsg = testChannel.isEveryoneCreate !==undefined && testChannel.isEveryoneCreate!==null ? testChannel.isEveryoneCreate : true;
+  const tests = testChannel.Tests;
+  const allResults = testChannel.Results;
+  let myResults = []
+  for(let i=0; i<allResults?.length; i++){
+    if(allResults[i].memberId===member.id){
+      myResults.push(allResults[i])
+    }
+  }
+  console.log("MyResult", myResults.length)
+  function getAttemptedTests(results:Result[], tests:Test[]) {
+    const attemptedTestIds = results.map(result => result.testId);
+    const attemptedTests = tests.filter(test => attemptedTestIds.includes(test.id));
+    return attemptedTests;
+}
 
+const attemptedTests = getAttemptedTests(myResults, tests);
+console.log("Attempted Tests");
+console.log(attemptedTests);
 
   return (
     <>
@@ -122,7 +132,7 @@ async function TestChannel({params}:ForumsProps) {
       {/* <TestChannelContainer tests={testChannel.Tests} sectionId={testChannel.sectionId} /> */}
 
 
-    <MainSidebar server={server}>
+    <ServerHome server={server}>
 
    
 
@@ -142,10 +152,11 @@ async function TestChannel({params}:ForumsProps) {
       description={testChannel.description as string}
       results={testChannel.Results}
       testLength={testChannel.Tests.length}
+      attemptedTests={attemptedTests}
       
       />
 
-</MainSidebar>
+</ServerHome>
     
     
     </>

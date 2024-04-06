@@ -22,10 +22,11 @@ interface Props {
     description:string
     results:Result[]
     testLength:number
+    attemptedTests:Test[]
 }
 
 
-function TestChannelComponent({tests, sectionId, server, testChannelName, members,serverMembers, sendMsg, managers, createdAt, createdBy, type, isAdmin, description, results, testLength }:Props) {
+function TestChannelComponent({tests, sectionId, server, testChannelName, members,serverMembers, sendMsg, managers, createdAt, createdBy, type, isAdmin, description, results, testLength, attemptedTests }:Props) {
 
 
     const [showResult, setShowResult] = useState(false);
@@ -53,7 +54,7 @@ function TestChannelComponent({tests, sectionId, server, testChannelName, member
 
       {
         showResult===false ? 
-        <TestChannelContainer tests={tests} sectionId={sectionId} /> :
+        <TestChannelContainer tests={tests} sectionId={sectionId} attemptedTests={attemptedTests} /> :
         <ChannelResult results={results} />
 
       }

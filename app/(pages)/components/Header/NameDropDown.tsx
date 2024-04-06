@@ -50,7 +50,7 @@ export function NameDropDown({server}:{server:Server}) {
     
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button  className=" srvr_nm">{server.name} <IoIosArrowDown/></button>
+        <button  className=" srvr_nm">{server.name}</button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" ml-4 server_drpdwn">
         <DropdownMenuGroup>

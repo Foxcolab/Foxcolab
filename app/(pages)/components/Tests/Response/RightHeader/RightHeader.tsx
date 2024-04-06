@@ -27,7 +27,7 @@ function RightHeader({marks, time, testName, remainingTime, submitting, submitTe
   return (
     <>
     
-    <div className="question_r_header py-2 px-4 bg-[#252a2f] text-gray-300" style={{borderBottom:"1px solid #656c64"}}>
+    <div className="question_r_header py-2 px-4  " style={{borderBottom:"1px solid #656c64"}}>
         <div className="flex justify-between items-center">
             <div className='flex items-center gap-4'>
                 <div className='text-sm font-bold'> Marks: 0{marks}</div>

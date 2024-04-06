@@ -17,7 +17,6 @@ async function ViewPage({params}:Props) {
   const user = await myProfile();
   if(!user) return redirect(`/home`);
 
-  console.log("JJHJSHSHSDHSDSDSD")
   const server = await getMyserver();
   if(!server) return redirect(`/home`);
   const testChannel = await db.testChannel.findFirst({

@@ -45,7 +45,7 @@ function SingleQuestion({question, index }:QuesitonProps) {
             <span>q. {index} </span>
             <span className='d-flex gap-2'>
             <span className='text-green-500 text-sm'>Marks: {question.marks} </span>
-            <span className='text-gray-300 px-3 py-1 font-normal bg-gray-500 rounded text-sm'>{question.qType}</span>
+            <span className=' px-3 py-1 font-normal c_qtype rounded text-sm'>{question.qType}</span>
             <DeleteQuestion DeleteHandler={DeleteHandler} index={index} open={open} setOpen={setOpen} />
             <UpdateQuestion question={question} />
 

@@ -10,9 +10,10 @@ import { useParams } from 'next/navigation';
 interface Props {
     tests:Test[]
     sectionId:string
+    attemptedTests:Test[]
 }
 
-function TestChannelContainer({tests, sectionId }:Props) {
+function TestChannelContainer({tests, sectionId, attemptedTests }:Props) {
     const params = useParams();
   return (
     <>
@@ -33,7 +34,7 @@ function TestChannelContainer({tests, sectionId }:Props) {
         <div className="tstcont">
           {
             tests.map((test:Test)=>(
-              <SingleTest Test={test}   />
+              <SingleTest Test={test} attemptedTests={attemptedTests}  />
             ))
           }
           </div>

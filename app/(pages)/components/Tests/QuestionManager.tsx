@@ -15,7 +15,7 @@ function QuestionManager({questions}:Props) {
     <>
         <div className='w-full'>
             <div className='q_mangr'>
-            <span className='d-flex w-1/6 pt-4 font-semibold gap-2 rounded-md' style={{color:"rgb(224, 224, 224)"}}><MdDashboardCustomize /> Question Manager</span>
+            <span className='d-flex w-1/6 pt-4 font-semibold gap-2 rounded-md test_info'><MdDashboardCustomize /> Question Manager</span>
             <CreateQuestion  />
             </div>
    

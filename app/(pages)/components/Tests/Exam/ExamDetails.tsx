@@ -36,8 +36,8 @@ function ExamDetails({test}:{test:Test}) {
   return (
     <div className="exam_container">
         <div className='exam_con_left w-1/2'>
-            <div className='font-semibold text-4xl item-center text-yellow-300 welcome'>
-               <PiHandsPrayingLight/> Welcome
+            <div className='font-semibold text-4xl item-center text-yellow-800 dark:text-yellow-300  welcome'>
+               <PiHandsPrayingLight/> Welcome 
             </div>
             <div className="test_dts">
                 <div className='tst_title'>{test.name} </div>
@@ -92,7 +92,7 @@ function ExamDetails({test}:{test:Test}) {
                 {
                     loading ?
                     
-                    <button disabled className='d-flex items-center'>
+                    <button disabled className='d-flex items-center justify-center'>
             <ReloadIcon className="mr-2  w-4 animate-spin " />
             Starting..
           </button> 

@@ -14,6 +14,7 @@ import { RiExpandUpDownFill, RiExpandUpDownLine } from 'react-icons/ri';
 import { BiCollapseVertical } from 'react-icons/bi';
 import ResultChart from './ResultChart';
 import { useParams, useRouter } from 'next/navigation';
+import { ModeToggle } from '../../mode-toggle/Toggle';
 
 
 interface Props {
@@ -51,6 +52,7 @@ function ResultComponents({result, testChannelName, user, test}:Props) {
 
     <div className='r_des_container'>
       <Button color='r_bck_btn' onClick={()=>router.push(`/servers/${params?.id}/test-channel/${params?.testChannelId}`)}><FaAngleLeft/> Back</Button>
+
         <div className='r_des mt-4'><span>{testChannelName}</span> - {testName}</div>
         {/* <div className='r_des'>{} </div> */}
         <div className="respondent">

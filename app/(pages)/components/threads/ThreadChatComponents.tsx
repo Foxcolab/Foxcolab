@@ -6,7 +6,7 @@
 
 import { Fragment, useRef, ElementRef, useState } from "react";
 import { format } from "date-fns";
-import { Channel, Member, Message, Threads, User } from "@prisma/client";
+import { Channel, Member, Message, Server, Threads, User } from "@prisma/client";
 import { Loader2, ServerCrash } from "lucide-react";
 import { useChatQuery } from "@/hooks/useChatQuery";
 import { useChatSocket } from "@/hooks/useChatSocket";
@@ -14,6 +14,7 @@ import { useChatScroll } from "@/hooks/useChatScroll";
 import ChannelDescription from "../Channel/ChannelDescription";
 import Conversation from "../Channel/Conversation";
 import {SingleThread} from "./SingleThread";
+import { ChatItem } from "../Chat/ChatItem";
 // import Dividor from "./Dividor";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
@@ -36,6 +37,7 @@ interface ChatMessagesProps {
     paramValue: string;
     type: "channel" | "conversation" | "thread" | "forums";
     channel:Channel
+    serve:Server
   }
   
 function ThreadChatComponents({ 
@@ -48,7 +50,8 @@ function ThreadChatComponents({
     paramKey,
     paramValue,
     type,
-    channel
+    channel,
+    server
   }: ChatMessagesProps) {
     const [previous, SetPrevious] = useState('');
     const [nextprevious, SetNextPrevious] = useState('');
@@ -58,10 +61,22 @@ function ThreadChatComponents({
     
   const addKey = `chat:${chatId}:messages`;
   const updateKey = `chat:${chatId}:messages:update` 
+  const deleteKey = `chat:${chatId}:messages:delete`;
     
     
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
+
+
+    const mySavedPosts = member.saveLater;
+    const PinnedPosts = channel.pinnedPost;
+  
+    const serverMember = server.Members.filter(mem=>mem.id!==member.id);
+   
+    const channelMemberExceptMe = channel.Members.filter(mem=>mem.id!==member.id)
+
+
+
 
   const {
     data,
@@ -78,7 +93,7 @@ function ThreadChatComponents({
  
   
   
-  useChatSocket({ queryKey, addKey, updateKey });
+  useChatSocket({ queryKey, addKey, updateKey, deleteKey });
   useChatScroll({
     chatRef,
     bottomRef,
@@ -140,9 +155,30 @@ function ThreadChatComponents({
             {group.items.map((message: MessageWithMemberWithProfile) => (
               <>
                
+              <ChatItem
+              key={message.id}
+              id={message.id}
+              currentMember={member}
+              content={message.content}
+              fileUrl={message.fileUrl}
+              deleted={message.deleted}
+              timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+              isUpdated={message.updatedAt !== message.createdAt}
+              socketUrl={socketUrl}
+              socketQuery={socketQuery}
+              message={message}
+              managers={channel?.manager?.memberIds}
+              mySavedPost = {mySavedPost}
+              PinnedPosts = {PinnedPosts}
+              myChannels={myChannels}
+              allServerMember={allServerMember}
 
+              
+              
+              
+              />
                
-              <SingleThread 
+              {/* <SingleThread 
               key={message.id}
               id={message.id}
               content={message.content}
@@ -156,7 +192,7 @@ function ThreadChatComponents({
               isUpdated={message.updatedAt !== message.createdAt}
 
               
-              />
+              /> */}
     {/* <ChatItem
                 key={message.id}
                 id={message.id}

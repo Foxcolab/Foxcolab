@@ -1,6 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react'
 import React from 'react';
-
+import { useTheme } from 'next-themes';
 
 interface Props {
     setTitle:Function,
@@ -9,6 +9,9 @@ interface Props {
 
 
 const NoteTinyMce2 = ({setTitle, defaultValue}:Props)=> {
+
+  const {resolvedTheme} = useTheme();
+
   const cloudName =  process.env.REACT_APP_CLIENT_NAME
     const unsignedUploadPreset = process.env.REACT_APP_UPLOAD_PRESET
 
@@ -36,6 +39,12 @@ const NoteTinyMce2 = ({setTitle, defaultValue}:Props)=> {
         //   readonly:true,
           editable_root:true,
          height: '100%',
+        //   skin: 'oxide-dark',
+        //  content_css: 'dark',
+
+        skin: resolvedTheme==="dark"? "oxide-dark" : "oxide" ,
+        content_css: resolvedTheme==='dark' ? 'dark' : 'oxide',
+         
         branding: false,
         external_plugins: {
           'tiny_mce_wiris' : FileLoc
@@ -49,6 +58,7 @@ const NoteTinyMce2 = ({setTitle, defaultValue}:Props)=> {
             'tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry ' +
             'bullist numlist outdent indent | image | print preview media |' +
             'forecolor backcolor emoticons',
+
           // content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           
           htmlAllowedTags:  ['.*'],

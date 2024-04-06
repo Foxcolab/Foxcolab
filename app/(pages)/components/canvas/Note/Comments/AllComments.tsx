@@ -7,7 +7,6 @@ interface Props {
 }
 
 function AllComments({comments}:Props) {
-    console.log("Comments::", comments);
   return (
     <>
     {

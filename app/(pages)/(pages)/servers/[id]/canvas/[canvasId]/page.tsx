@@ -16,6 +16,7 @@ import SchemaHeader from '@/app/(pages)/components/Schema/Header/SchemaHeader';
 import { format } from 'date-fns';
 import CanvasContainer from '@/app/(pages)/components/canvas/container/CanvasContainer';
 import CanvasSearch from '@/app/(pages)/components/canvas/search/CanvasSearch';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 interface Props {
   params:{
     id:string,
@@ -108,7 +109,7 @@ async function CanvasPage({params}:Props) {
     <>
     
     
-    <MainSidebar server={server}>
+    <ServerHome server={server}>
       <SchemaHeader
       name={canvas?.title as string}
       description={canvas?.description as string}
@@ -138,7 +139,7 @@ async function CanvasPage({params}:Props) {
 
 
 
-    </MainSidebar>
+    </ServerHome>
     
     </>
   )

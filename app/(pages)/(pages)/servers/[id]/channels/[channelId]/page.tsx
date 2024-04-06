@@ -9,6 +9,7 @@ import ChatMessages from '@/app/(pages)/components/Chat/ChatMessages';
 import ChannelHeader from '@/app/(pages)/components/Channel/ChannelHeader';
 import { format } from 'date-fns';
 import { getServer } from '@/lib/db/ServerLib';
+import ChannelContainer from '@/app/(pages)/components/Channel/component/ChannelContainer';
 
 
 interface Props {
@@ -173,7 +174,7 @@ const ChannelChat =async({params}:Props)=> {
 
 
 
- <ChatComponents server={server}  >
+ {/* <ChatComponents server={server}  >
     
     <ChannelHeader members={channel.Members} name={channel.name} type={channel.type} description={channel.description as string} createdBy={channel.createdUser?.name as string}
     createdAt={createdAt}
@@ -223,7 +224,14 @@ const ChannelChat =async({params}:Props)=> {
 
     />
 
-    </ChatComponents> 
+    </ChatComponents>  */}
+
+    <ChannelContainer server={server} channel={channel} currentMember={member} isAdmin={isAdmin} myChannels={myChannels} />
+
+
+
+
+
     </>
   )
 }

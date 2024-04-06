@@ -57,7 +57,7 @@ function ServerContainer({open, setOpen, state, server}:Props) {
         <div className="server_dialog_con">
             <div className='flex h-full'>
                 <div className="serd_sidebar w-1/4">
-                    <div className='text-xs text-[#aeb1b8] dark:text-[#a6b0b5] font-bold'>SERVER SETTINGS</div>
+                    <div className='text-xs text-[#aeb1b8] dark:text-[#a6b0b5] font-bold pl-4'>SERVER SETTINGS</div>
                     <div className='serd_items'>
                         <button onClick={()=>setSelected("Overview")} className={selected==="Overview" ? "active_item" : ""}><IoBasketball/> Overview</button>
                         <button onClick={()=>setSelected("Server Analytics")} className={selected==="Server Analytics" ? "active_item" : ""}><IoIosAnalytics/> Server Analysics</button>

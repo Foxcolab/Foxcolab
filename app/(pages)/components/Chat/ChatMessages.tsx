@@ -36,6 +36,7 @@ interface ChatMessagesProps {
     mySavedPost: Later[]
     myChannels:Channel[]
     allServerMember:Member[]
+    setThreadMessage:any
   }
   
 function ChatMessages({ 
@@ -52,7 +53,8 @@ function ChatMessages({
     mySavedPost,
     PinnedPosts,
     myChannels,
-    allServerMember
+    allServerMember,
+    setThreadMessage
   }: ChatMessagesProps) {
     const [previous, SetPrevious] = useState('');
     const [nextprevious, SetNextPrevious] = useState('');
@@ -163,7 +165,8 @@ function ChatMessages({
             {group.items &&  group.items.map((message:any, j:number) => (
               <>
         {
-          message!==null && <> <ChatItem
+          message!==null && <>
+           <ChatItem
           key={message.id}
           id={message.id}
           currentMember={member}
@@ -181,6 +184,7 @@ function ChatMessages({
           PinnedPosts = {PinnedPosts}
           myChannels={myChannels}
           allServerMember={allServerMember}
+          setThreadMessage={setThreadMessage}
         /> 
         {
           CheckDividorTime(message.createdAt, group.items[j+1]?.createdAt)==true && 

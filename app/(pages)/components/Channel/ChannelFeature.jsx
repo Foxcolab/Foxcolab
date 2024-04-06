@@ -89,10 +89,10 @@ function ChannelFeature({id, sections}) {
   return (
     <>
     
-    <div className="sidecontent home">
+    {/* <div className="sidecontent home">
         <SingleSection content={home} />
                 
-            </div>
+            </div> */}
           
            <Separator className="sidebar_separator" />
         <div className='sidecontent'>

@@ -32,7 +32,7 @@ function ResultTable({results, testName, testId}:Props) {
   // const endhhmm = submitTime.getHours() + ":" + submitTime.getMinutes();
   const GetTime =(date:Date)=>{
     date = new Date(date);
-    return `${date.getHours()} : ${date.getMinutes()}`
+    return `${date.getHours()<10 ? '0' + date.getHours() : date.getHours()} : ${date.getMinutes()<10 ? '0' + date.getMinutes() : date.getMinutes()}` 
     }
     const pathName = usePathname();
     console.log(pathName);
@@ -46,7 +46,7 @@ function ResultTable({results, testName, testId}:Props) {
   return (
     <>
     <div className='w-full'>
-    <span className='d-flex w-1/6 pt-4 font-semibold gap-2 rounded-md' style={{color:"rgb(224, 224, 224)"}}><FaInfoCircle/> {testName}</span>
+    <span className='d-flex w-1/6 pt-4 font-semibold gap-2 rounded-md test_info' ><FaInfoCircle/> {testName}</span>
     <div className="testsidebar">
             <Table className='result_table'>
   {/* <TableCaption>A list of your recent invoices.</TableCaption> */}

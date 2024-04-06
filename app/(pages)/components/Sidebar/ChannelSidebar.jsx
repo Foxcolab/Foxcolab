@@ -12,6 +12,7 @@ import { MdForum } from "react-icons/md";
 import { RiSurveyFill } from "react-icons/ri";
 import { IoIosLock } from "react-icons/io";
 import { myProfile } from '@/lib/db/profile';
+import { NameDropDown } from '../Header/NameDropDown';
 
 
 const ChannelSidebar =async({server}) =>{
@@ -26,6 +27,12 @@ const ChannelSidebar =async({server}) =>{
 
         <div className='sidebgg'>
     <ScrollArea className='flex-1 w-full'>
+             <div className="server_logo">
+                <div className="">
+                <NameDropDown server={server} />
+                </div>
+              
+            </div>
             <ChannelFeature id={server.id} sections={server.sections} />
         
     <div className='channels'>

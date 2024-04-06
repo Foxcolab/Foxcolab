@@ -6,7 +6,11 @@ import { Question, Response } from '@prisma/client'
 import RightHeader from './RightHeader/RightHeader'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
 
 interface Props {
     testName:string
@@ -102,18 +106,24 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
   return (
     <>
             <div className="questionsContainer">
-        <div className="question_left w-1/2">
+        
+
+          <ResizablePanelGroup direction="horizontal">
+  <ResizablePanel minSize={30}>
+  <div className="question_left h-full">
           <LeftHeader testName={testName} qIndex={qIndex} questions={questions} length={length}  ChangeQuestion={ChangeQuestion} questionId={questionId} answer={answer}  />
-          <div className='text-gray-300 m-4 '>
+          <div className='testq_content'>
           <div dangerouslySetInnerHTML={{__html:title}} />
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Architecto ratione, sequi perferendis, soluta repudiandae tempore quaerat beatae libero omnis recusandae voluptatibus quis? Animi fugiat repellat mollitia praesentium facere, provident dolores blanditiis molestiae ea a, amet minima? Eligendi exercitationem facilis consequatur ea asperiores, deserunt nam excepturi velit sint explicabo, distinctio illum beatae officia amet doloribus nulla quaerat animi. Eligendi voluptatem quibusdam labore minus possimus soluta adipisci incidunt fugiat minima assumenda esse culpa cupiditate recusandae earum similique id dolorem ipsum dolores libero ducimus, ad consectetur amet dignissimos enim? Soluta sed a, ipsam quasi, nam reiciendis ratione nulla sint consequatur tempora, rerum sit?
           </div>
           </div>
-          
-        <div className="question_right w-1/2">
+  </ResizablePanel>
+  <ResizableHandle withHandle />
+  <ResizablePanel minSize={30}>
+  <div className="question_right h-full">
           
           <RightHeader  testName={testName} marks={marks} time={time} remainingTime={remainingTime} submitting={submitting} submitTest={submitTest} length={length}  />
-          <div className='font-bold text-lg text-gray-300 pt-6 pb-2 px-4'>
+          <div className='font-bold text-lg  pt-6 pb-2 px-4'>
           {
             qType==="Single Choice" ? <>
             Select a option...
@@ -168,7 +178,7 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
         isStarting ? 
         <>
         
-        <button className='bg-gray-200' onClick={ClearResponse}>Clear Response </button>
+        <button className='bg-gray-200 text-black' onClick={ClearResponse}>Clear Response </button>
         
         {loading ?<button disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :<button className='bg-green-500' onClick={()=>NextQuestion(questionId, answer)}>  Save & Next <IoIosArrowForward/></button>
         }
@@ -181,7 +191,7 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
 {loading ?<button disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> : <button className='bg-green-500 ' onClick={()=>PrevQuestion(questionId, answer)}><IoIosArrowBack/> Save & Previous</button>
         }
      
-      <button className='bg-gray-200'  onClick={ClearResponse}>Clear Response </button>
+      <button className='bg-gray-200 text-black'  onClick={ClearResponse}>Clear Response </button>
       
 
       {submitting ?<button disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :
@@ -195,7 +205,7 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
           <button className='bg-green-500 ' onClick={()=>PrevQuestion(questionId, answer)}><IoIosArrowBack/> Save & Previous</button>
           }
       
-      <button className='bg-gray-200'  onClick={ClearResponse}>Clear Response </button>
+      <button className='bg-gray-200 text-black'  onClick={ClearResponse}>Clear Response </button>
       {loading ?<button  disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :<button className='bg-green-500' onClick={()=>NextQuestion(questionId)}> Save & Next <IoIosArrowForward/></button>}
           </>
         }
@@ -210,6 +220,10 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
 
 
         </div>
+  </ResizablePanel>
+</ResizablePanelGroup>
+          
+        
     </div>
     
     

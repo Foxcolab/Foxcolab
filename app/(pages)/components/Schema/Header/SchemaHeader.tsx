@@ -21,10 +21,8 @@ function SchemaHeader({name, members, description, createdAt, createdBy, type, i
   return (
     <>
     
-    <div className="">
+    <div className="chat_section">
         <div className="channel_title">
-        <div className='channel_name'>
-        <div className='channel_mem'>
            <SchemaDialog
             name={name}
             members={members}
@@ -45,8 +43,7 @@ function SchemaHeader({name, members, description, createdAt, createdBy, type, i
           
           
           </div>
-          </div>
-        <div className='channel_mem'>
+        <div className='channel_memb_pin'>
         <SchemaDialog
         name={name}
         members={members}
@@ -68,7 +65,6 @@ function SchemaHeader({name, members, description, createdAt, createdBy, type, i
          
           
 
-         </div>
       </div>
     
     

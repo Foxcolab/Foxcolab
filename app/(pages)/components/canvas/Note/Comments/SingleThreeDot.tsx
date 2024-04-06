@@ -99,7 +99,7 @@ function SingleThreeDot({noteId, commentId, showOptions, setShowOptions,content 
                 loading ? <Loader/> :
                 <> 
                <Button variant={'outline'} onClick={()=>setConfirm(false)}>Cancel</Button>
-          <Button type="submit" className='bg-red-500' onClick={DeleteHandler}>Delete</Button>  </>
+          <Button type="submit" className='bg-red-500 text-white hover:bg-red-600' onClick={DeleteHandler}>Delete</Button>  </>
             }
          
         </DialogFooter> 
@@ -125,7 +125,7 @@ function SingleThreeDot({noteId, commentId, showOptions, setShowOptions,content 
             loading ? <Loader/> :
             <> 
             <Button variant={'outline'} onClick={()=>setEditDialog(false)}>Cancel</Button>
-          <Button type="submit" className='bg-green-500' onClick={EditHandler} disabled={content===editedContent}>Save</Button>
+          <Button type="submit" className='bg-green-500 text-white hover:bg-green-600' onClick={EditHandler} disabled={content===editedContent}>Save</Button>
             </>
           }
         </DialogFooter> 

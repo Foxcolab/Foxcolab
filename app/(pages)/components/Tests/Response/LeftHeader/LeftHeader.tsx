@@ -9,6 +9,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Question } from '@prisma/client'
+import { ModeToggle } from '../../../mode-toggle/Toggle'
 
 interface Props {
     testName:string
@@ -24,7 +25,7 @@ function LeftHeader({testName, qIndex, questions, length, ChangeQuestion, questi
     <>
     
     <div className="question_l_header">
-            <div className='qtest_name'>{testName}</div>
+            <div className='qtest_name'>{testName}  <ModeToggle/> </div>
           
           <div className="second_header">
             <div className='q_index'>Question {qIndex+1} of {length} </div>

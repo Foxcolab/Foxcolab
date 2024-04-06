@@ -161,7 +161,7 @@ function SingleCanvas({note}:Props) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction style={{backgroundColor:"red"}} onClick={DeleteHandler}>Delete</AlertDialogAction>
+          <AlertDialogAction className='bg-red-500 hover:bg-red-600 text-white'  onClick={DeleteHandler}>Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

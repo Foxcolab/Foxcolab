@@ -42,7 +42,10 @@ function ChannelResult({results}:Props) {
 
   return (
     <>
-     <div className='my-4 font-bold text-gray-300 decoration-underline'>My Results</div>
+    <div>
+
+   
+     <div className='m-4 font-bold  decoration-underline'>My Results</div>
     <div className="test_chann_res">
    
     <Table className='result_table'>
@@ -60,7 +63,7 @@ function ChannelResult({results}:Props) {
       
     </TableRow>
   </TableHeader>
-  <TableBody>
+  <TableBody className=''>
     {
       results && results.map((result:Result, i)=>(
         <>
@@ -81,7 +84,7 @@ function ChannelResult({results}:Props) {
   </TableBody>
     </Table>    
     </div>
-    
+    </div>
     </>
   )
 }

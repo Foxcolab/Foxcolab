@@ -4,6 +4,7 @@ import { RxCrossCircled } from 'react-icons/rx'
 import { Doughnut } from "react-chartjs-2";
 import { Progress } from "@/components/ui/progress"
 import {Chart, ArcElement} from 'chart.js'
+import { useTheme } from 'next-themes';
 Chart.register(ArcElement);
 
 interface Props {
@@ -24,6 +25,7 @@ function ResultChart({totalTime, submitTime,startingTime, attempt,isPass, totalQ
   const xValues = ["Obtain Mark", "Full Marks"];
   const yValues = [percentage, 100-percentage];
   const barColors = ["#ff7100", "white"];
+  const {resolvedTheme} = useTheme()
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -42,7 +44,8 @@ function ResultChart({totalTime, submitTime,startingTime, attempt,isPass, totalQ
                 const text = `${percentage}%`;
                 const fontSize = 30;
                 const fontFamily = 'Arial';
-                const fontColor = 'rgb(203 213 225)';
+
+                const fontColor = resolvedTheme==="dark"?'rgb(203 213 225)' : "#484a4d";
     
                 ctx.fillStyle = fontColor;
                 ctx.font = `${fontSize}px ${fontFamily}`;
@@ -55,7 +58,7 @@ function ResultChart({totalTime, submitTime,startingTime, attempt,isPass, totalQ
                 const text2 = `${totalRight}/${totalQuestion} p`;
                 const fontSize2 = 18;
                 const fontFamily2 = 'Arial';
-                const fontColor2 = '#b7c3cc';
+                const fontColor2 =resolvedTheme==="dark"? '#b7c3cc': "#808183";
       
                 ctx.fillStyle = fontColor2;
                 ctx.font = `${fontSize2}px ${fontFamily2}`;
@@ -192,7 +195,7 @@ const formattedDate = `${formattedDay}-${formattedMonth}-${year}`;
         </div>
         <div className="respondent w-1/2">
             <label htmlFor="">TIMER</label>
-            <div className='flex items-center font-bold text-xl gap-1 py-3 text-gray-300'><FaClock/>Total Time</div>
+            <div className='flex items-center font-bold text-xl gap-1 py-3 '><FaClock/>Total Time</div>
             <div className='text-lg font-semibold'>{diff} / 
             <span className='text-gray-400'> {convertMinutesToHoursMinutesSeconds(totalTime)}</span> </div>
             <div className='mt-4'>

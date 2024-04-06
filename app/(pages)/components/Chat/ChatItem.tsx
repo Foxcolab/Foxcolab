@@ -54,6 +54,7 @@ interface ChatItemProps {
   mySavedPost: Later[]
   myChannels:Channel[]
   allServerMember:Member[]
+  setThreadMessage:any
 };
 
 
@@ -90,7 +91,8 @@ export const ChatItem = ({
   PinnedPosts,
     mySavedPost ,
     myChannels,
-    allServerMember
+    allServerMember,
+    setThreadMessage
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   // const { onOpen } = useModal();
@@ -240,7 +242,7 @@ mySavedPost.forEach(p => {
      id={(isPinnedPost && isSavedPost)  ? "pinnedMsgBody": isSavedPost && !isPinnedPost ? "savedMsgBody" :  isPinnedPost && !isSavedPost ?"pinnedMsgBody":  ""}
     
     >
-    <MessageHover message={message} currentMember={currentMember} socketUrl={socketUrl} socketQuery={socketQuery} setIsEditing={setIsEditing} isPinnedPost={isPinnedPost} isSavedPost={isSavedPost} pinnedPost={pinnedPost} savedPost={savedPost} myChannels={myChannels} allServerMember={allServerMember} >
+    <MessageHover message={message} currentMember={currentMember} socketUrl={socketUrl} socketQuery={socketQuery} setIsEditing={setIsEditing} isPinnedPost={isPinnedPost} isSavedPost={isSavedPost} pinnedPost={pinnedPost} savedPost={savedPost} myChannels={myChannels} allServerMember={allServerMember} setThreadMessage={setThreadMessage} >
     
     <div className="w-full">
     
@@ -499,13 +501,10 @@ mySavedPost.forEach(p => {
         </div>
         {
           message.threads?.length>0 ?
-          <ThreadCom
-          message={message}
-          currentMember={member}
-          Msg={
-            <button className="reply_count"><AiFillMessage/> {message.threads?.length} Reply</button>
-          }
-          />         
+          
+            <button className="reply_count" onClick={()=>setThreadMessage(message)}><AiFillMessage/> {message.threads?.length} Reply</button>
+       
+
           : ''
         }
 

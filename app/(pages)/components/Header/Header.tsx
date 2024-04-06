@@ -15,8 +15,13 @@ function Header({server}:Props) {
   return (
     <>
  <div className="page_header">
-    <div className="logo ">
-              <NameDropDown server={server} />
+  <div className='header_etc'>
+
+  </div>
+  <div className='page_header_content'>
+ <div className="header_logo">
+              Foxcolab
+              {/* <NameDropDown server={server} /> */}
             </div>
         <div className="search">
             <input type="text" className="dark:bg-white" /> <button className="dark:text-black">Search</button>
@@ -36,7 +41,7 @@ function Header({server}:Props) {
 
         </div>
     </div>
-    
+    </div>
     </>
   )
 }
