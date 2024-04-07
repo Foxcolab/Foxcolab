@@ -18,6 +18,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { Editor } from '@tinymce/tinymce-react'
+import ReactQuill from 'react-quill';
 // import VideoRecorder from "../Chat/Recorder/VideoRecorder";
 
 
@@ -25,7 +26,7 @@ interface ChatInputProps {
     apiUrl: string;
     query: Record<string, any>;
     name: string;
-    type: "conversation" | "channel";
+    type: "conversation" | "channel" | "forum" | "thread";
     setisEditing:any
   }
   const formSchema = z.object({
@@ -41,7 +42,7 @@ const EditMessageEditor = ({apiUrl,
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      content: "",
+      content: name,
     }
   });
   
@@ -91,32 +92,18 @@ const EditMessageEditor = ({apiUrl,
       
      
       <div id="">
-        <Editor
-        // {...field}
-        
-        onEditorChange={e=>form.setValue('content', e)}
-        initialValue={name}
-        //  className='quill_editor'
-  
-        // value={content}
-        apiKey='yyyncy8o4zxczahnhs5n0tz3ha0h7cvmrdg8jcap53vuu6wj'
-         init={{
-          skin: 'oxide-dark',
-          content_css: 'dark',        
-          menubar:false,
-          placeholder:`Message to ${name}`,
-            selector: "textarea",
-            height:100,
-            statusbar:false,
-            plugins: [
-                  "anchor", "autolink", "charmap", "codesample", "fullscreen",
-                "help", "image", "insertdatetime", "link", "lists", "media",
-                "preview", "searchreplace", "table", "visualblocks", "emoticons",
-            ],
-            toolbar: "bold italic underline strikethrough | bullist numlist outdent indent | table codesample emoticons",
-          
-          }}
- />   
+      <ReactQuill
+          {...field}
+            theme={"snow"}
+            defaultValue={name}
+            // onChange={e=>InputHandler(e)} 
+            // placeholder={`Send a messsage in "${name}`} 
+            modules={{'toolbar':[
+              ['bold', 'italic', 'underline','strike'],
+              [{'list': 'ordered'}, {'list': 'bullet'}],
+             
+            ]}}
+            />
 </div>
           
                 

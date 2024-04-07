@@ -2,6 +2,7 @@ import ChannelHeader from '@/app/(pages)/components/Channel/ChannelHeader';
 import CreateSForums from '@/app/(pages)/components/Create/CreateSForums';
 import ForumContainer from '@/app/(pages)/components/Forum/ForumContainer';
 import ForumHeader from '@/app/(pages)/components/Forum/ForumHeader';
+import ForumsCom from '@/app/(pages)/components/Forum/ForumsCom';
 import ForumsHeaderSection from '@/app/(pages)/components/Forum/ForumsHeaderSection';
 import SingleForums from '@/app/(pages)/components/Forum/SingleForums';
 import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
@@ -57,7 +58,8 @@ async function ForumsId({params}:ForumsProps) {
                 include:{
                   user:true
                 }
-              }
+              },
+              Reactions:true
             }
           }
       },
@@ -109,46 +111,26 @@ async function ForumsId({params}:ForumsProps) {
 
   const createdAt = format(new Date(forumsChannel.createdAt), DATE_FORMAT);
   let sendMsg = forumsChannel.isEveryonePost !==undefined && forumsChannel.isEveryonePost!==null ? forumsChannel.isEveryonePost : true;
-
+  
   return (
     <>
     
 
     <ServerHome server={server}>
-    <div className="body_content_container">
-
-   
-    <SchemaHeader
-    name={forumsChannel.name}
-    members={forumsChannel.Members}
-    serverMembers={server.Members}
-    description={forumsChannel.description as string}
-    createdBy={forumsChannel.createdUser?.name as string}
-    createdAt={createdAt}
-    type={forumsChannel.type}
-    isAdmin={isAdmin}
-    schemaType="Forums"
-    managers={forumsChannel.manager}
-    sendMsg={sendMsg}
-
-    
-    
-    />
-    
-    <div className="canvas_container">
-      <ForumHeader sectionId={forumsChannel?.sectionId} />
-      <div className='cnvs_sc'>
-        <div><b>All Forums</b></div>
-       </div>
-
-      
-      <ForumContainer forums={forumsChannel?.Forums} />
-      
-
-    </div>
-
-
-    </div>
+      <ForumsCom
+      name={forumsChannel.name}
+      members={forumsChannel.Members}
+      serverMembers={server.Members}
+      description={forumsChannel.description as string}
+      createdBy={forumsChannel.createdUser?.name as string} 
+      createdAt={createdAt}
+      type={forumsChannel.type}
+      isAdmin={isAdmin}
+      sendMsg={sendMsg}
+      managers={managers}
+      forums={forumsChannel.Forums}
+      sectionId={forumsChannel.sectionId}
+      />
     </ServerHome>
     
     

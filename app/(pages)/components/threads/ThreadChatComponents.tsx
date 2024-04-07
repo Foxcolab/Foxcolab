@@ -28,21 +28,23 @@ type MessageWithMemberWithProfile = Message & {
 
 interface ChatMessagesProps {
     name: string;
-    member: Member;
     chatId: string;
     apiUrl: string;
     socketUrl: string;
     socketQuery: Record<string, string>;
-    paramKey: "channelId" | "conversationId" | 'forumId';
+    paramKey: "channelId" | "conversationId" | 'forumId' | "messageId";
     paramValue: string;
     type: "channel" | "conversation" | "thread" | "forums";
     channel:Channel
-    serve:Server
+    server:Server & {
+      Members:Member[]
+    }
+    myChannels:Channel[]
+    currentMember:Member
   }
   
 function ThreadChatComponents({ 
    
-    member,
     chatId,
     apiUrl,
     socketUrl,
@@ -51,30 +53,32 @@ function ThreadChatComponents({
     paramValue,
     type,
     channel,
-    server
+    server,
+    myChannels,
+    currentMember
   }: ChatMessagesProps) {
     const [previous, SetPrevious] = useState('');
     const [nextprevious, SetNextPrevious] = useState('');
-
 
     const queryKey = `chat:${chatId}`;
     
   const addKey = `chat:${chatId}:messages`;
   const updateKey = `chat:${chatId}:messages:update` 
   const deleteKey = `chat:${chatId}:messages:delete`;
-    
+  
     
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
 
 
-    const mySavedPosts = member.saveLater;
+    const mySavedPosts = currentMember.saveLater;
     const PinnedPosts = channel.pinnedPost;
-  
-    const serverMember = server.Members.filter(mem=>mem.id!==member.id);
+    const serverMember = server?.Members?.filter(mem=>mem.id!==currentMember.id);
    
-    const channelMemberExceptMe = channel.Members.filter(mem=>mem.id!==member.id)
+    const channelMemberExceptMe = channel.Members.filter(mem=>mem.id!==currentMember.id)
 
+    console.log("Saved Post:", mySavedPosts);
+    console.log("Pinned Post:", PinnedPosts);
 
 
 
@@ -151,14 +155,14 @@ function ThreadChatComponents({
       <div className="flex flex-col-reverse mt-auto">
         {data?.pages?.map((group, i) => (
           <Fragment key={i}>
-            {console.log("GROUPS", group)}
             {group.items.map((message: MessageWithMemberWithProfile) => (
               <>
                
               <ChatItem
               key={message.id}
               id={message.id}
-              currentMember={member}
+              currentMember={currentMember}
+              member={message.member}
               content={message.content}
               fileUrl={message.fileUrl}
               deleted={message.deleted}
@@ -168,15 +172,13 @@ function ThreadChatComponents({
               socketQuery={socketQuery}
               message={message}
               managers={channel?.manager?.memberIds}
-              mySavedPost = {mySavedPost}
+              mySavedPost = {mySavedPosts}
               PinnedPosts = {PinnedPosts}
               myChannels={myChannels}
-              allServerMember={allServerMember}
-
-              
-              
-              
+              allServerMember={serverMember}
+              schemaType="Threads"
               />
+              
                
               {/* <SingleThread 
               key={message.id}

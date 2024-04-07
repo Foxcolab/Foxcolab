@@ -9,11 +9,12 @@ import MsgFile from '../../Chat/MsgFile'
 import ThreadChatComponents from '../../threads/ThreadChatComponents'
 import ThreadEditor from '../../Editor/ThreadEditor'
 import EditorFooter from '../../Editor/EditorFooter'
+import ForumEditor from '../../Editor/Forum/ForumEditor'
 
 
 interface Props {
   message:Message
-  currentMember:Member | null
+  currentMember:Member
   setThreadMessage:any
   myChannels:Channel[]
   server:Server
@@ -27,10 +28,6 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
   const content = message?.content;
   
   // const fileType = fileUrl?.split(".").pop();
-
-  const isAdmin = currentMember?.role === MemberRole.admin;
-  const isModerator = currentMember?.role === MemberRole.moderator;
-
 
 
 
@@ -119,15 +116,22 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
             </div>
             {/* <hr /> */}
             <ThreadChatComponents
-            member={currentMember}
+            currentMember={currentMember}
             chatId={message.id}
             type='thread'
             apiUrl='/api/messages/threads'
             socketUrl='/api/socket/threads'
-            paramKey='forumId'
+            paramKey='messageId'
             paramValue={message.id}   
             server={server}    
             channel={channel}
+            myChannels={myChannels}
+            socketQuery={{
+              channelId:channel.id,
+              serverId:server.id,
+              sectionId:channel.sectionId as string,
+              messageId:message.id
+            }}
             />
 
       {/* <ThreadEditor
@@ -141,7 +145,7 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
     }}
       /> */}
 
-      <EditorFooter
+      {/* <EditorFooter
       name='Reply...'
       apiUrl='/api/socket/threads'
       query={{
@@ -150,10 +154,20 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
        serverId: message?.serverId,
        sectionId:message.sectionId
     }}
-    
-      
-      
-      />
+      /> */}
+      <ForumEditor
+         placeholder={"Reply in theads.."}
+         apiUrl="/api/socket/forum-response"
+         query={{
+          serverId: message.serverId,
+           channelId:message.channelId, 
+           sectionId:message.sectionId,
+            messageId:message.id
+          }} 
+
+/>
+
+
 
 
 

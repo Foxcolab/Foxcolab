@@ -55,6 +55,7 @@ interface ChatItemProps {
   myChannels:Channel[]
   allServerMember:Member[]
   setThreadMessage:any
+  schemaType:"Channel" | "Threads"
 };
 
 
@@ -92,7 +93,9 @@ export const ChatItem = ({
     mySavedPost ,
     myChannels,
     allServerMember,
-    setThreadMessage
+    setThreadMessage,
+    schemaType
+    
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   // const { onOpen } = useModal();
@@ -176,22 +179,39 @@ const length = fileUrl?.length;
 let isPinnedPost=false;
 let pinnedPost;
 let pinnedPostUser;
-PinnedPosts.forEach(p => {
-  if(p.messageId===message.id){
-    isPinnedPost=true;
-    // pinnedPostUser=p?.createdUser?.user;
-    pinnedPost=p;
+PinnedPosts && PinnedPosts.forEach(p => {
+  if(schemaType==="Threads"){
+    if(p.threadId===id){
+      isPinnedPost=true;
+      pinnedPost=p;
+      // pinnedPostUser=p.user;
+    }
+  }else {
+    if(p.messageId===message.id){
+      isPinnedPost=true;
+      // pinnedPostUser=p?.createdUser?.user;
+      pinnedPost=p;
+    }
   }
+  
 });
 
 let isSavedPost=false;
 let savedPost;
 
-mySavedPost.forEach(p => {
-  if(p.messageId===message.id){
-    isSavedPost=true;
-    savedPost=p;
-  }})
+mySavedPost && mySavedPost.forEach(p => {
+  if(schemaType==="Threads"){
+    if(p.threadId===message.id){
+      isSavedPost=true;
+      savedPost=p;
+    }
+  }else {
+    if(p.messageId===message.id){
+      isSavedPost=true;
+      savedPost=p;
+    }
+  }
+  })
 
 
   const CalcTime =(dt:any)=>{
@@ -236,13 +256,11 @@ mySavedPost.forEach(p => {
 
     <>
 
-    {/* className="relative group flex items-center p-4 transition w-full msg_cnbdy" */}
-    <div  className={isEditing? "relative group flex items-center py-2 px-4 my-2 transition w-full msg_cnbdy active_msg_cnbdy": "relative group flex items-center p-2 mb-2  transition w-full msg_cnbdy"}
-    //  id={isPinnedPost ? isSavedPost ? "savedMsgBody" : "pinnedMsgBody": isSavedPost ? "savedMsgBody" : ""}
-     id={(isPinnedPost && isSavedPost)  ? "pinnedMsgBody": isSavedPost && !isPinnedPost ? "savedMsgBody" :  isPinnedPost && !isSavedPost ?"pinnedMsgBody":  ""}
+    <div  className={isEditing? "relative group flex items-center py-2 px-4 my-2 transition w-full msg_cnbdy ": "relative group flex items-center p-2 mb-2  transition w-full msg_cnbdy"}
+    id={(isPinnedPost && isSavedPost)  ? "pinnedMsgBody": isSavedPost && !isPinnedPost ? "savedMsgBody" :  isPinnedPost && !isSavedPost ?"pinnedMsgBody":  ""}
     
     >
-    <MessageHover message={message} currentMember={currentMember} socketUrl={socketUrl} socketQuery={socketQuery} setIsEditing={setIsEditing} isPinnedPost={isPinnedPost} isSavedPost={isSavedPost} pinnedPost={pinnedPost} savedPost={savedPost} myChannels={myChannels} allServerMember={allServerMember} setThreadMessage={setThreadMessage} >
+    <MessageHover message={message} currentMember={currentMember} socketUrl={socketUrl} socketQuery={socketQuery} setIsEditing={setIsEditing} isPinnedPost={isPinnedPost} isSavedPost={isSavedPost} pinnedPost={pinnedPost} savedPost={savedPost} myChannels={myChannels} allServerMember={allServerMember} setThreadMessage={setThreadMessage} schemaType={schemaType} >
     
     <div className="w-full">
     
@@ -290,7 +308,21 @@ mySavedPost.forEach(p => {
 
             isEditing===true ? 
            <div className="edit_messageEditor">
-          <EditMessageEditor  
+            {
+              schemaType==="Threads" ?<EditMessageEditor  
+              name={content}
+              type="thread"
+              apiUrl={`/api/socket/threads/update/${message.id}`}
+            
+              query={{
+                channelId: message.channelId,
+                serverId: message.serverId,
+                threadId: message.id
+              }}
+              setisEditing={setIsEditing}
+              
+              /> :
+              <EditMessageEditor  
             name={content}
             type="channel"
             apiUrl={`/api/socket/messages/update/${message.id}`}
@@ -302,6 +334,10 @@ mySavedPost.forEach(p => {
             setisEditing={setIsEditing}
             
             />
+
+            }
+          
+          
            </div>
            
             
@@ -321,8 +357,6 @@ mySavedPost.forEach(p => {
               )}
             </p>
 
-
- {/* Forwarded msg  */}
 
             {
               message.forwardedMessageId &&           
@@ -422,34 +456,7 @@ mySavedPost.forEach(p => {
          
 
 
-          {/* {isImage && (
-            <a 
-              href={fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
-            >
-              <Image
-                src={fileUrl}
-                alt={content}
-                fill
-                className="object-cover"
-              />
-            </a>
-          )} */}
-          {/* {isPDF && (
-            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
-              <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
-              <a 
-                href={fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
-              >
-                PDF File
-              </a>
-            </div>
-          )} */}
+      
           {!fileUrl && !isEditing && (
             <p className={cn(
               "text-sm text-zinc-200 dark:text-zinc-300",
@@ -518,7 +525,7 @@ mySavedPost.forEach(p => {
           {reaction.content}
            </div>
         )}
-        <div className="show_emoji_picker"><EmojiPicker serverId={message.serverId} messageId={message.id} /></div>
+        <div className="show_emoji_picker"><EmojiPicker serverId={message.serverId as string} messageId={message.id} shemaType="channel" channelId={message.channelId}  /></div>
         </>
         
         : ''
@@ -530,58 +537,9 @@ mySavedPost.forEach(p => {
   
     </div>
 
-    {/* {canDeleteMessage && (
-        <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
-          {canEditMessage && (
-            <ActionTooltip label="Edit">
-              <Edit
-                onClick={() => setIsEditing(true)}
-                className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-              />
-            </ActionTooltip>
-          )}
-          <ActionTooltip label="Delete">
-            <Trash
-              // onClick={() => onOpen("deleteMessage", { 
-              //   apiUrl: `${socketUrl}/${id}`,
-              //   query: socketQuery,
-              //  })}
-              className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-            />
-          </ActionTooltip>
-        </div>
-      )}  */}
+   
 
     </>
-  //   <HoverCard>
-  //   <HoverCardTrigger >
-  //   <div className='single_message'>
-  //         <div className='sm_div'>
-  //        <UserAvatar src={member.profile===undefined ? avatar : member.profile.profilePic} />
-
-  //         <div className='msg_profile'>
-  //             <div>{!member.profile ? "User": member.profile.name} <span>{timestamp}</span></div>
-  //             {!member.profile ? "User": member.profile.name}
-  //         </div>
-  //         </div>
-  
-  //         <div className='message_text'> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae, laudantium?
-          
-  //         </div>
-  
-          
-  //     </div>
-  //   </HoverCardTrigger>
-  //   <HoverCardContent className='msg_emoji_container'>
-  //    <ActionTooltip label='completed' side='top' align='center'><button id='checkbox'><IoCheckbox/></button></ActionTooltip> 
-  //    <ActionTooltip label='Nicely done' side='top' align='start'><button><HiMiniHandThumbUp/></button></ActionTooltip> 
-  //    <ActionTooltip label='looking nice' side='top' align='start'><button><BiSolidHappyHeartEyes/></button></ActionTooltip> 
-  //    <ActionTooltip label='threads' side='top' align='start'><button><BiSolidMessageAltDetail/></button></ActionTooltip> 
-  //    <ActionTooltip label='forward' side='top' align='start'><button><RiShareForwardFill /></button></ActionTooltip> 
-  //    <ActionTooltip label='save for later' side='top' align='start'><button><MdOutlineDataSaverOn/></button></ActionTooltip> 
-  //    <ActionTooltip label='more actions' side='top' align='start'><button><BsThreeDotsVertical/></button></ActionTooltip> 
-  //   </HoverCardContent>
-  // </HoverCard>
 
 
 

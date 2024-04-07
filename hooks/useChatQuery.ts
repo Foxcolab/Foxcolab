@@ -6,7 +6,7 @@ import { useSocket } from "@/app/(pages)/components/provider/SocketProvider";
 interface ChatQueryProps {
   queryKey: string;
   apiUrl: string;
-  paramKey: "channelId" | "conversationId" | "forumId";
+  paramKey: "channelId" | "conversationId" | "forumId" | "messageId";
   paramValue: string;
 };
 

@@ -87,32 +87,62 @@ import { NextApiRequest } from "next";
         return res.status(404).json({ message: "Message not found" });
     }
     
-     await db.forums.update({
-      where:{
-        id:forumId as string,
-      },
+    //  await db.forums.update({
+    //   where:{
+    //     id:forumId as string,
+    //   },
+    //   data:{
+    //     responses:{
+    //       create:{
+    //         content,
+    //         fileUrl,
+    //         serverId:serverId as string,
+    //         sectionId:Sendmessage.sectionId as string,
+    //         forumsChannelId:forumsChannelId as string,
+    //         createdBy:member.id
+    //       }
+    //     }
+    //   },
+    //   include:{
+    //     responses:{
+    //       include:{
+    //         member:{
+    //           include:{
+    //             user:true
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // })
+    const forumRespnse = await db.forumResponse.create({
       data:{
-        responses:{
-          create:{
-            content,
-            fileUrl,
-            serverId:serverId as string,
-            sectionId:Sendmessage.sectionId as string,
-            forumsChannelId:forumsChannelId as string,
-            createdBy:member.id
+        content,
+        fileUrl,
+        serverId:serverId as string,
+        sectionId:Sendmessage.sectionId as string,
+        forumsId:forumId as string,
+        forumsChannelId:forumsChannelId as string,
+        createdBy:member.id
+      },
+      include:{
+        member:{
+          include:{
+            user:true
           }
         }
       }
     })
+
 
     console.log("CREATED SUCESSFUKKY");
     
     
     const channelKey = `chat:${Sendmessage.id}:messages`;
 
-    res?.socket?.server?.io?.emit(channelKey, Sendmessage);
+    res?.socket?.server?.io?.emit(channelKey, forumRespnse);
 
-    return res.status(200).json(Sendmessage);
+    return res.status(200).json(forumRespnse);
   } catch (error) {
     console.log(error);
     

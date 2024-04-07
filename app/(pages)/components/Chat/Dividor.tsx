@@ -1,11 +1,12 @@
 import { format } from 'date-fns'
 import React, { useState } from 'react'
-const DATE_FORMAT2 = "d MMM yyyy";
+const DATE_FORMAT2 = "MMMM dd, yyyy";
 
 interface DividorProps {
   timestamp:string,
   nextTime:string
 }
+// march 25, 2024
 
 function Dividor({timestamp}:DividorProps) {
     

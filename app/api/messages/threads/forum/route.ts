@@ -1,10 +1,10 @@
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
-import { Message, Threads } from "@prisma/client";
+import { ForumResponse, Message, Threads } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 
-const MESSAGES_BATCH = 10;
+// const MESSAGES_BATCH = 10;
 
 export async function GET(
   req: NextRequest
@@ -21,7 +21,6 @@ export async function GET(
     const forumId = searchParams.get("forumId");
     
     
-    
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -30,11 +29,11 @@ export async function GET(
         return new NextResponse("Forums ID missing", { status: 400 });
       }
 
-    let messages: Threads[] = [];
+    let messages: ForumResponse[] = [];
 
     if (cursor) {
-      messages = await db.threads.findMany({
-        take: MESSAGES_BATCH,
+      messages = await db.forumResponse.findMany({
+        // take: MESSAGES_BATCH,
         skip: 1,
         cursor: {
           id: cursor,
@@ -48,14 +47,16 @@ export async function GET(
               user: true,
             }
           },
+          Reactions:true
+
         },
         orderBy: {
           createdAt: "desc",
         }
       })
     } else {
-      messages = await db.threads.findMany({
-        take: MESSAGES_BATCH,
+      messages = await db.forumResponse.findMany({
+        // take: MESSAGES_BATCH,
         where: {
             forumsId:forumId
         },
@@ -64,7 +65,8 @@ export async function GET(
             include: {
               user: true,
             }
-          }
+          },
+          Reactions:true
         },
         orderBy: {
           createdAt: "desc",
@@ -72,15 +74,15 @@ export async function GET(
       });
     }
     
-    let nextCursor = null;
+    // let nextCursor = null;
 
-    if (messages.length === MESSAGES_BATCH) {
-      nextCursor = messages[MESSAGES_BATCH - 1].id;
-    }
+    // if (messages.length === MESSAGES_BATCH) {
+    //   nextCursor = messages[MESSAGES_BATCH - 1].id;
+    // }
 
     return NextResponse.json({
       items: messages,
-      nextCursor
+      // nextCursor
     });
   } catch (error) {
     return new NextResponse("Internal Error", { status: 500 });

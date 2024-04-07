@@ -26,11 +26,11 @@ import ForumFile from './ForumFile';
 interface Props {
   forum:Forums
   ListStyle:string
+  setForum:any
 }
-function SingleForums({forum,ListStyle}:Props) {
+function SingleForums({forum,ListStyle, setForum}:Props) {
   function getFileExtension(filename:string) {
     let data = filename.split('**').pop();
-    // console.log(data);
     if(data?.includes('application')){
         data = data?.slice( data.indexOf('/'));
     }else {
@@ -40,15 +40,16 @@ function SingleForums({forum,ListStyle}:Props) {
 }
 
 
-  console.log(forum);
 
   let count = 0;
+
+  const forumFile = forum.responses[0].fileUrl;
 
   return (
     
 
     <>
-    
+    <button onClick={()=>setForum(forum)} className='text-left w-full'>
     <div className="single_forums w-full">
       <div className='forums_description w-full'>
       <div className='forums_title'>{forum.title}</div>
@@ -62,20 +63,20 @@ function SingleForums({forum,ListStyle}:Props) {
       </div>
 
       {
-        forum.fileUrl.map((fileUrl)=>(
+       forumFile && forumFile.map((fileUrl:string)=>(
           <>
           {
             getFileExtension(fileUrl)==="image" && count===0 ?
              <div className='forums_content'>
               <span style={{display:"none"}}>{count++}</span>
-            <ForumFile fileUrl={forum.fileUrl[0]} listStyle={ListStyle}  />
+            <ForumFile fileUrl={forumFile[0]} listStyle={ListStyle}  />
             </div>
             : 
             getFileExtension(fileUrl)==="video" && count===0 ?
         
              <div className='forums_content'>
               <span style={{display:"none"}}>{count++}</span>
-            <ForumFile fileUrl={forum.fileUrl[0]} listStyle={ListStyle} />
+            <ForumFile fileUrl={forumFile[0]} listStyle={ListStyle} />
             </div>
             : ''
           }
@@ -94,6 +95,7 @@ function SingleForums({forum,ListStyle}:Props) {
       } */}
      
     </div>
+    </button>
 
 {/* <Dialog >
 <DialogTrigger asChild >

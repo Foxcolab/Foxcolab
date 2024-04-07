@@ -57,6 +57,107 @@ import ForwardMessage from './ForwardMessage';
 
 
 
+const timeSlots = [
+  "12:00 AM",
+  "12:15 AM",
+  "12:30 AM",
+  "12:45 AM",
+  "01:00 AM",
+  "01:15 AM",
+  "01:30 AM",
+  "01:45 AM",
+  "02:00 AM",
+  "02:15 AM",
+  "02:30 AM",
+  "02:45 AM",
+  "03:00 AM",
+  "03:15 AM",
+  "03:30 AM",
+  "03:45 AM",
+  "04:00 AM",
+  "04:15 AM",
+  "04:30 AM",
+  "04:45 AM",
+  "05:00 AM",
+  "05:15 AM",
+  "05:30 AM",
+  "05:45 AM",
+  "06:00 AM",
+  "06:15 AM",
+  "06:30 AM",
+  "06:45 AM",
+  "07:00 AM",
+  "07:15 AM",
+  "07:30 AM",
+  "07:45 AM",
+  "08:00 AM",
+  "08:15 AM",
+  "08:30 AM",
+  "08:45 AM",
+  "09:00 AM",
+  "09:15 AM",
+  "09:30 AM",
+  "09:45 AM",
+  "10:00 AM",
+  "10:15 AM",
+  "10:30 AM",
+  "10:45 AM",
+  "11:00 AM",
+  "11:15 AM",
+  "11:30 AM",
+  "11:45 AM",
+  "12:00 PM",
+  "12:15 PM",
+  "12:30 PM",
+  "12:45 PM",
+  "01:00 PM",
+  "01:15 PM",
+  "01:30 PM",
+  "01:45 PM",
+  "02:00 PM",
+  "02:15 PM",
+  "02:30 PM",
+  "02:45 PM",
+  "03:00 PM",
+  "03:15 PM",
+  "03:30 PM",
+  "03:45 PM",
+  "04:00 PM",
+  "04:15 PM",
+  "04:30 PM",
+  "04:45 PM",
+  "05:00 PM",
+  "05:15 PM",
+  "05:30 PM",
+  "05:45 PM",
+  "06:00 PM",
+  "06:15 PM",
+  "06:30 PM",
+  "06:45 PM",
+  "07:00 PM",
+  "07:15 PM",
+  "07:30 PM",
+  "07:45 PM",
+  "08:00 PM",
+  "08:15 PM",
+  "08:30 PM",
+  "08:45 PM",
+  "09:00 PM",
+  "09:15 PM",
+  "09:30 PM",
+  "09:45 PM",
+  "10:00 PM",
+  "10:15 PM",
+  "10:30 PM",
+  "10:45 PM",
+  "11:00 PM",
+  "11:15 PM",
+  "11:30 PM",
+  "11:45 PM",
+  
+  
+  
+  ]
 
 interface HoverMessagePops {
   message:Message,
@@ -72,113 +173,13 @@ interface HoverMessagePops {
   myChannels:Channel[]
   allServerMember:Member[]
   setThreadMessage:any
+  schemaType:string
 }
 
 
-const timeSlots = [
-"12:00 AM",
-"12:15 AM",
-"12:30 AM",
-"12:45 AM",
-"01:00 AM",
-"01:15 AM",
-"01:30 AM",
-"01:45 AM",
-"02:00 AM",
-"02:15 AM",
-"02:30 AM",
-"02:45 AM",
-"03:00 AM",
-"03:15 AM",
-"03:30 AM",
-"03:45 AM",
-"04:00 AM",
-"04:15 AM",
-"04:30 AM",
-"04:45 AM",
-"05:00 AM",
-"05:15 AM",
-"05:30 AM",
-"05:45 AM",
-"06:00 AM",
-"06:15 AM",
-"06:30 AM",
-"06:45 AM",
-"07:00 AM",
-"07:15 AM",
-"07:30 AM",
-"07:45 AM",
-"08:00 AM",
-"08:15 AM",
-"08:30 AM",
-"08:45 AM",
-"09:00 AM",
-"09:15 AM",
-"09:30 AM",
-"09:45 AM",
-"10:00 AM",
-"10:15 AM",
-"10:30 AM",
-"10:45 AM",
-"11:00 AM",
-"11:15 AM",
-"11:30 AM",
-"11:45 AM",
-"12:00 PM",
-"12:15 PM",
-"12:30 PM",
-"12:45 PM",
-"01:00 PM",
-"01:15 PM",
-"01:30 PM",
-"01:45 PM",
-"02:00 PM",
-"02:15 PM",
-"02:30 PM",
-"02:45 PM",
-"03:00 PM",
-"03:15 PM",
-"03:30 PM",
-"03:45 PM",
-"04:00 PM",
-"04:15 PM",
-"04:30 PM",
-"04:45 PM",
-"05:00 PM",
-"05:15 PM",
-"05:30 PM",
-"05:45 PM",
-"06:00 PM",
-"06:15 PM",
-"06:30 PM",
-"06:45 PM",
-"07:00 PM",
-"07:15 PM",
-"07:30 PM",
-"07:45 PM",
-"08:00 PM",
-"08:15 PM",
-"08:30 PM",
-"08:45 PM",
-"09:00 PM",
-"09:15 PM",
-"09:30 PM",
-"09:45 PM",
-"10:00 PM",
-"10:15 PM",
-"10:30 PM",
-"10:45 PM",
-"11:00 PM",
-"11:15 PM",
-"11:30 PM",
-"11:45 PM",
 
 
-
-]
-
-
-function HoverMessage({children, message, currentMember, socketUrl, socketQuery, setIsEditing, isPinnedPost, isSavedPost,savedPost, pinnedPost, myChannels, allServerMember, setThreadMessage }:HoverMessagePops) {
+function HoverMessage({children, message, currentMember, socketUrl, socketQuery, setIsEditing, isPinnedPost, isSavedPost,savedPost, pinnedPost, myChannels, allServerMember, setThreadMessage , schemaType }:HoverMessagePops) {
   const [loading, setLoading] = useState(false);
   const [sloading, setsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
@@ -204,7 +205,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
     try {
       setLoadingText("Pinning a message");
       setLoading(true);
-      const res = await axios.post(`/api/pinnedmessage?messageId=${message.id}&serverId=${params?.id}`);
+      if(schemaType==="Threads"){
+        const res = await axios.post(`/api/pinnedmessage/thread?threadId=${message.id}&serverId=${params?.id}`);
+      }else {
+        const res = await axios.post(`/api/pinnedmessage?messageId=${message.id}&serverId=${params?.id}`);
+      }
+      
       router.refresh();
       setLoading(false);
     } catch (error) {
@@ -216,7 +222,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
     try {
       setLoadingText("Unpinning a message");
       setLoading(true);
-      const res = await axios.delete(`/api/pinnedmessage?messageId=${message.id}&pinnedId=${pinnedPost.id}&serverId=${params?.id} `);
+      if(schemaType=="Threads"){
+        const res = await axios.delete(`/api/pinnedmessage/thread?threadId=${message.id}&serverId=${params?.id}`);
+      }else {
+        const res = await axios.delete(`/api/pinnedmessage?messageId=${message.id}&pinnedId=${pinnedPost.id}&serverId=${params?.id} `);
+      }
+      
 
       router.refresh();
       setLoading(false);
@@ -253,7 +264,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
       }else {
         setsLoading(true);
       }
-      const res = await axios.post(`/api/save-later?messageId=${message.id}`, {time:newDate});
+      if(schemaType==="Threads"){
+        const res = await axios.post(`/api/save-later/thread?threadId=${message.id}`, {time:newDate});
+      }else {
+        const res = await axios.post(`/api/save-later?messageId=${message.id}`, {time:newDate});
+      }
+      
       // if(res.status===200){
       //   onToast("Message has been saved for later");
       //   // setLoading(false);
@@ -277,7 +293,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
     try {
       setLoadingText("Saved for later");
       setLoading(true);
-      const res = await axios.delete(`/api/save-later?messageId=${message.id}&laterId=${savedPost.id}`);
+      if(schemaType==="Threads"){
+        const res = await axios.delete(`/api/save-later/thread?threadId=${message.id}&laterId=${savedPost.id}`);
+      }else {
+        const res = await axios.delete(`/api/save-later?messageId=${message.id}&laterId=${savedPost.id}`);
+      }
+      
       setTime(undefined);
       setClockTime(null);
       setDate(undefined)
@@ -297,6 +318,7 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   }
   const onChangeHandler=async(emoji:any)=>{
     try {
+      
       const res = await axios.post(`/api/socket/messages/reaction?serverId=${message.serverId}&messageId=${message.id}&channelId=${message.channelId}`, {content:emoji});
       // setOpen(false)
       router.refresh();
@@ -309,12 +331,17 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
 
   const DeleteHandler =async()=>{
     try {
+      // console.log("socket socketQuery)
       // /api/socket/messages?channelId=65e694aeb7822086cf43a59a&sectionId=658c21484a2dd36e8d345684&serverId=658c21484a2dd36e8d345683
+      if(schemaType==="Threads"){
+        const res = await axios.delete(`/api/socket/threads/delete/${message.id}?channelId=${message.channelId}&threadId=${message.id}&serverId=${message.serverId}`);
+      }
       const url = qs.stringifyUrl({
         url: `${socketUrl}/delete/${message.id}`,
         query: socketQuery,
       });
-      const res = axios.delete(url)
+      console.log(url)
+      // const res = axios.delete(url)
       router.refresh();
       setOpen(false);
     } catch (error) {
@@ -364,15 +391,15 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
     <HoverCardTrigger asChild onMouseEnter={()=>setMainOpen(true)}>
        {children}
       </HoverCardTrigger>
-      <HoverCardContent className="flex items-center msg_emoji_container w-72" side="top" align='end' >
+      <HoverCardContent className={cn("flex items-center msg_emoji_container ", schemaType==="Threads"?"w-64":"w-72")} side="top" align='end' >
        
         <div className='hover_emoji_item'>
         <ActionTooltip label='Completed' side='top' align='center'><button id='checkbox' onClick={()=>onChangeHandler('✅')}>✅</button></ActionTooltip> <ActionTooltip label='Taking a look..' side='top' align='center'><button id='checkbox' onClick={()=>onChangeHandler('👀')}>👀</button></ActionTooltip> 
    <ActionTooltip label='Nicely done' side='top' align='center'><button onClick={()=>onChangeHandler('👍')}>👍</button></ActionTooltip> 
    <ActionTooltip label='Find another reaction' side='top' align='center'>
     <EmojiPicker
-                   serverId={message?.serverId as string} messageId={message.id} channelId={message.channelId as string}
-                    type="hover" /></ActionTooltip> 
+                    messageId={message.id} channelId={message.channelId as string}
+                    type="hover" schemaType='channel' /></ActionTooltip> 
   {/* <ActionTooltip label='Delete' side='top' align='center'><button onClick={()=>setOpen(true)}><AiFillDelete/></button></ActionTooltip> 
    <ActionTooltip label='Edit' side='top' align='center'><button onClick={e=>setIsEditing(true)}><FaEdit/></button></ActionTooltip>  */}
     {/* <ThreadCom
@@ -382,16 +409,20 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
             <button className="text-xl" style={{fontSize:"1.3rem"}}><BiSolidMessageDetail/></button>
           }
           />  */}
-   <ActionTooltip label='Threads' side='top' align='center'>
-    <button onClick={()=>ThreadHandler()} style={{fontSize:"1.3rem"}}><BiMessageSquareAdd/>
-    </button></ActionTooltip> 
-
+          {
+            schemaType!=="Threads" &&  <ActionTooltip label='Threads' side='top' align='center'>
+            <button onClick={()=>ThreadHandler()} style={{fontSize:"1.3rem"}}><BiMessageSquareAdd/>
+            </button></ActionTooltip> 
+          }
+  
+       <ActionTooltip label='Save for later' side='top' align='center'><button onClick={isSavedPost ? RemoveLater :()=> SavedLater(undefined)}  className={isSavedPost ? "bookmark_icon": ''} style={{fontSize:"1.1rem !important"}}>
+            {
+              isSavedPost ? <BsBookmarkFill/> : <BsBookmark/>
+            }
+             </button></ActionTooltip> 
+      
           
- <ActionTooltip label='Save for later' side='top' align='center'><button onClick={isSavedPost ? RemoveLater :()=> SavedLater(undefined)}  className={isSavedPost ? "bookmark_icon": ''} style={{fontSize:"1.1rem !important"}}>
-  {
-    isSavedPost ? <BsBookmarkFill/> : <BsBookmark/>
-  }
-   </button></ActionTooltip> 
+
  
  <DropdownMenu >
   <DropdownMenuTrigger >
@@ -464,11 +495,11 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <p className='text-gray-600'>  Are you sure you want to delete this message? This action cannot be undone.</p>
+          <p className=''>  Are you sure you want to delete this message? This action cannot be undone.</p>
         </div>
         <DialogFooter>
           <Button onClick={() => setOpen(false)} variant={"outline"} autoFocus={false}>Cancel</Button>
-          <Button type="submit" className='bg-red-600' onClick={DeleteHandler} autoFocus={false}>Delete </Button>
+          <Button type="submit" className='bg-red-600 hover:bg-red-700 text-white' onClick={DeleteHandler} autoFocus={false}>Delete </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

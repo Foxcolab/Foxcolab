@@ -185,6 +185,7 @@ function ChatMessages({
           myChannels={myChannels}
           allServerMember={allServerMember}
           setThreadMessage={setThreadMessage}
+          schemaType="Channel"
         /> 
         {
           CheckDividorTime(message.createdAt, group.items[j+1]?.createdAt)==true && 

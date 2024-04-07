@@ -57,7 +57,7 @@ export const POST =async(req:NextRequest)=>{
                 Forums:{
                     create:{
                         title,
-                        fileUrl,
+                        
                         memberId:member?.id as string,
                         serverId:server.id as string,
                         sectionId:forums.sectionId as string,
@@ -65,6 +65,7 @@ export const POST =async(req:NextRequest)=>{
                             create:[
                                 {
                                     content,
+                                    fileUrl,
                                     createdBy:member?.id as string,
                                     serverId:server.id as string,
                                     sectionId:forums.sectionId as string

@@ -35,7 +35,11 @@ function ChannelPin({pinnedPosts}:PinnedProps) {
       <div className='channel_pin_container'>
         {
             pinnedPosts && pinnedPosts.map((pinned, i)=>(
-                <div className="channel_single_pin" key={i}>
+           <>
+           
+           {
+            pinned.message && <>
+      <div className="channel_single_pin" key={i}>
                                <div className="relative group flex items-center flex-col p-4 transition w-full">
       <div className="group flex gap-x-2 items-start w-full">
         <div  className="cursor-pointer hover:drop-shadow-md transition">
@@ -92,6 +96,71 @@ function ChannelPin({pinnedPosts}:PinnedProps) {
             </div>
             </div>
             </div>
+
+            </>
+           }
+
+           {
+            pinned.thread &&       <div className="channel_single_pin" key={i}>
+            <div className="relative group flex items-center flex-col p-4 transition w-full">
+<div className="group flex gap-x-2 items-start w-full">
+<div  className="cursor-pointer hover:drop-shadow-md transition">
+{
+pinned.thread?.member?.user?.profilePic!==null ? 
+<UserAvatar src={pinned.thread.member?.user?.profilePic} /> :
+<LetterAvatar 
+name={pinned.thread?.member?.user.name===undefined ? 'Y': pinned.thread.member.user.name }
+size={40}
+radius={20}
+/> 
+}
+
+</div>
+<div className="flex flex-col w-full">
+<div className="flex items-center gap-x-2 ">
+<div className="flex items-center">
+<p  className=" chat_un">
+{!pinned.thread.member?.user ? "User": pinned.thread.member?.user?.name}
+</p>
+</div>
+
+<span className=" timestamp">
+{format(new Date(pinned.thread.createdAt), DATE_FORMAT)}
+</span>
+</div>
+<p className={cn(
+"text-sm text-zinc-200 dark:text-zinc-300",
+" text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+)}>
+{/* {content} */}
+<div dangerouslySetInnerHTML={{__html:pinned.thread.content}} className="msg_contnt" />
+</p>
+
+</div>
+
+
+</div>
+
+
+<div className="w-full mt-2 channel_pin_msg">
+{pinned.thread.fileUrl?.length!==0 && 
+
+pinned.thread.fileUrl.map((file, i)=>(
+<div key={i} className='px-4'>
+{/* {file} */}
+{/* <MsgFile fileUrl={file} key={i} length={pinned.message.fileUrl.length} type="msgFile" /> */}
+<SingleMsgFile fileUrl={file} />
+
+</div>
+))
+
+}
+</div>
+</div>
+</div>
+           }
+           
+           </>
             ))
         }
             

@@ -150,13 +150,12 @@ model ForumsChannel {
   Members    Member[] @relation(fields: [memberIds], references: [id])
   Forums   Forums[]
   forumsResponse ForumResponse[]
-  reactions Reaction[]
   manager ForumManager?
 }
 model Forums {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  fileUrl     String[]
+  // fileUrl     String[]
   // subTitle    String?
   memberId      String @db.ObjectId
   member       Member?  @relation(fields:[memberId], references:[id],   onDelete: Cascade)
@@ -173,11 +172,16 @@ model Forums {
   // forumsQuestions ForumQuestion[]
   // responses    ForumsResponse[]
   responses ForumResponse[]
-  reactions Reaction[]
 }
 
 model ForumResponse {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  content     String
+  fileUrl    String[]
+  repliedResponseId  String? @db.ObjectId
+  repliedResponse    ForumResponse?  @relation("RepliedResponse", fields: [repliedResponseId], references: [id], onDelete:NoAction, onUpdate:NoAction)
+  forwardedMessages   ForumResponse[] @relation("RepliedResponse")
+
   forumsChannelId String? @db.ObjectId
   forumsChannel   ForumsChannel?  @relation(fields:[forumsChannelId], references: [id])
   forumsId     String? @db.ObjectId
@@ -189,11 +193,13 @@ model ForumResponse {
   server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
   sectionId String @db.ObjectId
   section Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  content     String
-  fileUrl    String[]
+ 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deleted Boolean @default(false)
+
+  Reactions   Reaction[]
+
 }
 
 
@@ -423,7 +429,11 @@ model Message {
   forwardedMessage    Message?  @relation("ForwardedMessages", fields: [forwardedMessageId], references: [id], onDelete:NoAction, onUpdate:NoAction)
   forwardedMessages   Message[] @relation("ForwardedMessages")
 
+  // forwardedThreadId String? @db.ObjectId
+  // forwardedThread Threads? @relation("FowardedThreads", fields: [forwardedThreadId], references: [id])
+
   forwardedDirectMessages DirectMessage[]
+
 
   pinnedPost  PinnedPost[]
   saveLater  Later[]
@@ -439,10 +449,10 @@ model Reaction {
   message      Message? @relation(fields: [messageId], references: [id], onDelete:Cascade)
   directMessageId String? @db.ObjectId
   directMessage DirectMessage? @relation(fields: [directMessageId], references: [id], onDelete:Cascade)
-  forumsChannelId String? @db.ObjectId
-  forumsChannel   ForumsChannel?  @relation(fields:[forumsChannelId], references: [id])
-  forumsId     String? @db.ObjectId
-  forums       Forums? @relation(fields: [forumsId], references: [id], onDelete:Cascade)
+  threadId     String? @db.ObjectId
+  thread       Threads? @relation(fields: [threadId], references: [id])
+  forumResponseId     String? @db.ObjectId
+  forumResponse       ForumResponse? @relation(fields: [forumResponseId], references: [id], onDelete:Cascade)
 
   createdBy   String @db.ObjectId
   member Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
@@ -456,14 +466,14 @@ model Reaction {
 model Threads {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   messageId    String? @db.ObjectId
-  message      Message? @relation(fields: [messageId], references: [id], onDelete:Cascade)
+  message      Message? @relation( fields: [messageId], references: [id], onDelete:Cascade)
   channelId    String? @db.ObjectId
   channel Channel? @relation(fields: [channelId], references: [id], onDelete:Cascade)
   // forumsChannelId String? @db.ObjectId
   // forumsChannel   ForumsChannel?  @relation(fields:[forumsChannelId], references: [id])
   // forumsId     String? @db.ObjectId
   // forums       Forums? @relation(fields: [forumsId], references: [id], onDelete:Cascade)
-
+ 
   createdBy   String? @db.ObjectId
   member Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   serverId String @db.ObjectId
@@ -473,6 +483,12 @@ model Threads {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deleted Boolean @default(false)
+
+  pinnedPost    PinnedPost[]   
+  later        Later[]
+  Reactions     Reaction[]
+  // forwarededMessage Message[]
+
 
 }
 model Conversation {
@@ -490,7 +506,7 @@ model Conversation {
   @@unique([memberOneId, memberTwoId])
 }
 model DirectMessage {
-    id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content String
   fileUrl String[]
 
@@ -633,13 +649,15 @@ model PinnedPost {
   id   String   @id @default(auto()) @map("_id")  @db.ObjectId
   createdBy  String @db.ObjectId
   createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
-  messageId  String @db.ObjectId
+  messageId  String? @db.ObjectId
   message  Message? @relation(fields: [messageId], references: [id],  onDelete: Cascade)
+  threadId  String? @db.ObjectId
+  thread  Threads? @relation(fields: [threadId], references: [id],  onDelete: Cascade)
   serverId  String @db.ObjectId
   server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
-  sectionId  String @db.ObjectId
+  sectionId  String? @db.ObjectId
   section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
-  channelId  String @db.ObjectId
+  channelId  String? @db.ObjectId
   channel  Channel? @relation(fields: [channelId], references: [id],  onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -653,11 +671,13 @@ model Later {
   createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
   serverId  String @db.ObjectId
   server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
-  sectionId  String @db.ObjectId
+  sectionId  String? @db.ObjectId
   section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
-  messageId  String @db.ObjectId
+  messageId  String? @db.ObjectId
   message  Message? @relation(fields: [messageId], references: [id],  onDelete: Cascade)
-  channelId  String @db.ObjectId
+  threadId  String? @db.ObjectId
+  threads  Threads? @relation(fields: [threadId], references: [id],  onDelete: Cascade)
+  channelId  String? @db.ObjectId
   channel  Channel? @relation(fields: [channelId], references: [id],  onDelete: Cascade)
   status  LaterStatus @default(progress)
   createdAt   DateTime @default(now())
