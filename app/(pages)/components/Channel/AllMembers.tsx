@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { FaLock } from 'react-icons/fa'
-import { ChannelManager, Member, Message } from '@prisma/client'
+import { Channel, ChannelManager, Member, Message } from '@prisma/client'
 
 import { useParams, useRouter } from 'next/navigation'
 import LetterAvatar from '../UserAvatar/LetterAvatar';
@@ -34,6 +34,7 @@ import ChannelSetting from './ChannelSetting';
 import EditDailog from './EditDialog';
 import ChannelFiles from './ChannelFiles';
 import AboutChannel from './AboutChannel';
+import SchemaRoleContainer from '../Schema/Roles/SchemaRoleContainer';
 interface HeaderProps {
     name:string,
     members: Member[]
@@ -48,8 +49,9 @@ interface HeaderProps {
     startingState:string
     content:any
     managers:ChannelManager
+    channel:Channel
 }
-function AllMembers({members, name, type, description, createdBy, createdAt, isAdmin, serverMembers, sendMsg, messages, startingState, content, managers}:HeaderProps) {
+function AllMembers({members, name, type, description, createdBy, createdAt, isAdmin, serverMembers, sendMsg, messages, startingState, content, managers, channel}:HeaderProps) {
   
   const [state, setState] = useState(startingState);
   const [loading, setLoading] = useState(false);
@@ -165,7 +167,10 @@ const DescriptionHandler =async()=>{
         <button className={state==="About"?"active_option":""}  onClick={()=>ChangeState( "About")}>About</button>
         <button className={state==="Members"?"active_option":""} onClick={()=>ChangeState("Members")}>Members {members.length}</button>
         <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
+        <button className={state==="Permissions"?"active_option":""} onClick={()=>setState("Permissions")}>Permissions</button>
         <button className={state==="Files"?"active_option":""} onClick={()=>setState("Files")}>Files</button>
+        
+        
         </div>
        
         </div>
@@ -262,6 +267,21 @@ const DescriptionHandler =async()=>{
               
               
               :
+              state==="Permissions" ? <SchemaRoleContainer schemaType={"Channel"}
+              whoCanCreateForms={channel.whoCanCreateForms}
+              whoCanCreatePolls={channel.whoCanCreatePolls}
+              whoCanDeleteMessage={channel.whoCanDeleteMessage}
+              whoCanMakePublicToPrivate={channel.whoCanMakePublicToPrivate}
+              whoCanManageManager={channel.whoCanManageManager}
+              whoCanManageMember={channel.whoCanManageMember}
+              whoCanReadMessage={channel.whoCanReadMessage}
+              whoCanSendMessage={channel.whoCanSendMessage}
+              whoCanUpdateChannel={channel.whoCanUpdateChannel}
+              whoCanUploadMedia={channel.whoCanUploadMedia}
+              type={channel.type}
+              
+              
+              /> :
               
             <ChannelFiles messages={messages}  />
               

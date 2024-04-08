@@ -331,16 +331,24 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
 
   const DeleteHandler =async()=>{
     try {
-      // console.log("socket socketQuery)
+      // console.log()
       // /api/socket/messages?channelId=65e694aeb7822086cf43a59a&sectionId=658c21484a2dd36e8d345684&serverId=658c21484a2dd36e8d345683
       if(schemaType==="Threads"){
         const res = await axios.delete(`/api/socket/threads/delete/${message.id}?channelId=${message.channelId}&threadId=${message.id}&serverId=${message.serverId}`);
-      }
-      const url = qs.stringifyUrl({
-        url: `${socketUrl}/delete/${message.id}`,
-        query: socketQuery,
-      });
+
+
+      }else {
+        const url = qs.stringifyUrl({
+          url: `${socketUrl}/delete/${message.id}`,
+          query: socketQuery,
+        });
       console.log(url)
+      await axios.delete(url)
+
+
+      }
+      
+      // console.log(url)
       // const res = axios.delete(url)
       router.refresh();
       setOpen(false);

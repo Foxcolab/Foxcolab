@@ -21,6 +21,7 @@ const ChannelSidebar =async({server}) =>{
     if(!user) redirect(`home`);
     // const server = await getMyserver
     const members = server.Members && server.Members.filter(member=>member.userId!==user.id);
+    const currentMember = server.currentMember;
     
   return (
     <>
@@ -33,7 +34,7 @@ const ChannelSidebar =async({server}) =>{
                 </div>
               
             </div>
-            <ChannelFeature id={server.id} sections={server.sections} />
+            <ChannelFeature id={server.id} sections={server.sections} member={currentMember} />
         
     <div className='channels'>
         {

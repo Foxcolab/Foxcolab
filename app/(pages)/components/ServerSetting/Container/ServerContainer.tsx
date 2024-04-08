@@ -19,7 +19,7 @@ import Bot from '../Items/Bot/Bot'
 import Language from '../Items/Language/Language'
 import Role from '../Items/Role/Role'
 import Navigation from '../Items/Navigation/Navigation'
-import { Member, Server } from '@prisma/client'
+import { ActivityLog, Member, Server } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { FaGlobeAmericas, FaUsersCog } from 'react-icons/fa'
 import { BiSolidCustomize } from 'react-icons/bi'
@@ -35,7 +35,13 @@ import { IoBasketball, IoNavigateCircleSharp } from 'react-icons/io5'
     open:boolean
     setOpen:any
     state:string
-    server:Server
+    server:Server & {
+      Members:Member[]
+    } & {
+      currentMember:Member
+    } & {
+      activityLogs:ActivityLog[]
+    }
   }
 
 function ServerContainer({open, setOpen, state, server}:Props) {
@@ -87,7 +93,7 @@ function ServerContainer({open, setOpen, state, server}:Props) {
                         selected==="Privacy" ? <Privacy discoverable={server.discoverable} setOpen={setOpen} serverType={server.type} serverId={server.id} /> :
                         selected==="Themes" ? <Themes setOpen={setOpen} server={server} /> :
                         selected==="Bots" ? <Bot setOpen={setOpen} server={server} /> :
-                        selected==="Navigation" ? <Navigation setOpen={setOpen} server={server} /> :
+                        selected==="Navigation" ? <Navigation serverId={server.id} setOpen={setOpen} currentMember={currentMember} /> :
                         selected==="Region" ? <Language setOpen={setOpen} memberLanguage={currentMember.language as string} memberRegion={currentMember.region as string} serverId={server.id} /> :
                         selected==="Roles" ? <Role setOpen={setOpen} server={server} />
 

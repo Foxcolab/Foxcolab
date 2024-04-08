@@ -30,7 +30,7 @@ function ServerHome({children, server}:Props) {
         <Server_Sidebar/>
       </div>
       <ResizablePanelGroup direction="horizontal" className='resizeable_container'>
-      <ResizablePanel  className='resize_side_panel'  defaultSize={22}>
+      <ResizablePanel  className='resize_side_panel'  defaultSize={22} minSize={20} maxSize={60} >
       <div className="w-full">
         <ChannelSidebar server={server}/> 
       </div>

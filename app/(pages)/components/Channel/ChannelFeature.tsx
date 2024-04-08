@@ -26,9 +26,17 @@ import {FaSquareThreads} from "react-icons/fa6"
 import { Separator } from '@/components/ui/separator';
 import CreateCanvas from '../Create/CreateCanvas';
 import CreateTest from '../Create/CreateTest';
+import { Member, Section } from '@prisma/client';
 
-function ChannelFeature({id, sections}) {
-    const SideContent = [
+
+interface Props {
+    id:string
+    sections:Section[]
+    member:Member
+}
+
+function ChannelFeature({id, sections, member}:Props) {
+    const allNavs = [
         {
             title:"Threads",
             url:`/servers/${id}/threads`,
@@ -56,7 +64,7 @@ function ChannelFeature({id, sections}) {
         },
         {
             title:"Drafts & Sent",
-            url:`/servers/${id}/drafts-&-sents`,
+            url:`/servers/${id}/drafts-&-sent`,
             icon:<BsFillSendFill/>
         },
         {
@@ -66,26 +74,23 @@ function ChannelFeature({id, sections}) {
         },
 
     ]
-    // const SideContent2 = [
-        
-        
-        
-    //     {
-    //         title:"Q & A",
-    //         url:`/servers/${id}/question-answer`,
-    //         icon:<FaHandsHelping />
-    //     },
-    //     {
-    //         title:"Inboxes",
-    //         url:`/servers/${id}/inboxes`,
-    //         icon:<FaHandsHelping />
-    //     }
-    // ]
-    const home = {
-        title:"Home",
-        url:`/servers/${id}`,
-        icon:<FaHome/>
+    let SideContent:any = []
+    console.log("Member Nav:", member.navigations)
+    if(member.navigations===undefined || member.navigations.length===0){
+        SideContent = allNavs;
+    }else {
+        for(let i=0; i<allNavs.length; i++){
+            for(let j=0; j<member.navigations.length; j++){
+
+                if(allNavs[i].title===member.navigations[j]){
+                    SideContent.push(allNavs[i]);
+                }
+            }
+        }
     }
+    console.log("Side",SideContent);
+
+  
   return (
     <>
     

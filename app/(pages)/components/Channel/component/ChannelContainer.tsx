@@ -23,7 +23,6 @@ function ChannelContainer({server, channel, isAdmin, currentMember, myChannels}:
   return (
     <>
         <ServerHome server={server}>
-            {/* <h1>hiii</h1> */}
             <ChannelMsgComp
             
             server={server}

@@ -93,7 +93,7 @@ function VideoRecorder({setVideoName, setVideoUrl}:ScreenProps) {
       onStop={handleStop}
       render={({ status, startRecording,  stopRecording, mediaBlobUrl, previewStream }) => (
         <div>
-       
+        
           <div className="video_preview">
             {
               status==="recording" ? <VideoPreview stream={previewStream} /> :
@@ -101,10 +101,7 @@ function VideoRecorder({setVideoName, setVideoUrl}:ScreenProps) {
               <video src={mediaBlobUrl} controls   /> :''
             }
 
-            {
-              status
-            }
-
+        
           </div>
           <div className="screenFooterButton">
     <div className='video_controls screen_control'>
@@ -121,7 +118,7 @@ function VideoRecorder({setVideoName, setVideoUrl}:ScreenProps) {
         <DialogFooter className='screenFooter'>
           {
             loading ? <Loader/> : 
-            <Button type="submit" onClick={SubmitHandler}>Upload</Button>
+            <Button type="submit" onClick={SubmitHandler} disabled>Upload</Button>
 
           }
         </DialogFooter>

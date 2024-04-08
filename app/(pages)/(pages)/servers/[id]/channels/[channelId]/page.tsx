@@ -174,58 +174,6 @@ const ChannelChat =async({params}:Props)=> {
 
 
 
- {/* <ChatComponents server={server}  >
-    
-    <ChannelHeader members={channel.Members} name={channel.name} type={channel.type} description={channel.description as string} createdBy={channel.createdUser?.name as string}
-    createdAt={createdAt}
-    isAdmin = {isAdmin}
-    serverMembers = {server.Members}
-    sendMsg = {sendMsg}
-    messages = {channel.messages}
-    managers={managers?.member}
-    schemaType={"Channel"}
-    pinnedPosts={PinnedPosts}
-    
-
-    />
-
-    
-    <ChatMessages 
-    channel={channel}
-    member={member}
-    name={channel.name}
-    chatId={channel.id}
-    type='channel'
-    apiUrl='/api/messages'
-    socketUrl="/api/socket/messages"
-    socketQuery={{channelId:channel.id, serverId:server?.id, sectionId:channel?.sectionId as string}}
-    paramKey='channelId'
-    paramValue={channel.id}
-    PinnedPosts = {PinnedPosts}
-    mySavedPost = {mySavedPosts}
-    myChannels={myChannels}
-    allServerMember={serverMember}
-    />
-
-    <EditorFooter 
-    name={channel.name}
-    type="channel"
-    apiUrl="/api/socket/messages"
-    query={{
-      channelId: channel.id,
-      serverId: server?.id,
-      sectionId:channel.sectionId
-    }}
-    channelType={channel.type}
-    channels={myChannels}
-    groups={server.groups}
-    channelMember={channelMemberExceptMe}
-    drafts={member.Drafts}
-
-    />
-
-    </ChatComponents>  */}
-
     <ChannelContainer server={server} channel={channel} currentMember={member} isAdmin={isAdmin} myChannels={myChannels} />
 
 

@@ -49,6 +49,7 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
     managers={managers?.member}
     schemaType={"Channel"}
     pinnedPosts={PinnedPosts}
+    channel={channel}
     />
 
 

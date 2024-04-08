@@ -12,10 +12,12 @@ import { FaMicrophone } from 'react-icons/fa'
 import { ReactMediaRecorder, useReactMediaRecorder } from 'react-media-recorder'
 import axios from 'axios'
 import AudioPlayer from './AudioPlayer'
+import Loader from '../../Loaders/Loader'
 
 function VoiceRecorder({setAudioUrl, setAudioName}:{setAudioUrl:any, setAudioName:any}) {
   const [audioBlob, setAudioBlob] = useState(null);
   const [blobUrl, setBlobUrl] = useState(null)
+  const [loading, setLoading] = useState(false);
     const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true });
 
@@ -25,13 +27,15 @@ function VoiceRecorder({setAudioUrl, setAudioName}:{setAudioUrl:any, setAudioNam
             formData.append('file', audioBlob);
             // console.log(formData.get(file));
 
-            
+            setLoading(true);
             const res =await axios.post('/api/upload/audio', formData);
             if(res.status===200){
               setAudioUrl(res.data.fileUrl);
               setAudioName(res.data.name)
             }
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             console.log(error);
         }
     }
@@ -105,8 +109,11 @@ function VoiceRecorder({setAudioUrl, setAudioName}:{setAudioUrl:any, setAudioNam
    
            
 
-        <DialogFooter>
-          <Button type="submit" className='bg-blue-900' onClick={SendHandler}>Add</Button>
+        <DialogFooter className=''>
+          {
+            loading ? <Loader/> : 
+          <Button type="submit" variant={"outline"}  onClick={SendHandler} disabled={blobUrl===null}>Upload</Button>
+        }
         </DialogFooter>
 
         </>

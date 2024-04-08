@@ -37,6 +37,16 @@ enum Level {
   medium
   hard
 }
+enum SchemaRole {
+  admin
+  manager
+  member // schema Member
+  serverMember
+  guest // outsider or visitor 
+}
+
+
+
 model User {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   name         String? 
@@ -77,6 +87,18 @@ model Server {
   defaultNotification String?
   serverType String?
   discoverable  Boolean? @default(false)
+
+  whoCanUpdateServer    MemberRole   @default(admin)
+  whoCanKickMember      MemberRole   @default(admin)
+  whoManageGroups       MemberRole   @default(moderator)
+  whoCreateSection      MemberRole   @default(user)
+  whoCreateChannel      MemberRole   @default(user)
+  whoCreateForum        MemberRole   @default(user)
+  whoCreateCanvas       MemberRole   @default(user)
+  whoCreateTestChannel  MemberRole   @default(user)
+  whoCreateBotResponse  MemberRole   @default(user)
+  whoCanInviteMember    MemberRole   @default(user)
+
   sections Section[]
   channels Channel[]
   Members    Member[]
@@ -169,6 +191,16 @@ model Forums {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  whoCanUpdateForums           SchemaRole @default(manager)
+  whoCanMakePublicToPrivate    SchemaRole @default(manager)
+  whoCanCreatePost             SchemaRole @default(manager)
+  whoCanManagePost             SchemaRole @default(manager)
+  whoCanUploadMediaInComment   SchemaRole @default(member)
+  whoCanDeletePost             SchemaRole @default(manager)
+  whoCanComment                SchemaRole @default(member)
+  whoCanManageMember           SchemaRole @default(manager)
+  whoCanManageManager          SchemaRole @default(manager)
+
   // forumsQuestions ForumQuestion[]
   // responses    ForumsResponse[]
   responses ForumResponse[]
@@ -222,6 +254,22 @@ model Channel {
   sendMsg    Boolean? @default(true)
   memberIds  String[] @db.ObjectId
   Members    Member[] @relation(fields: [memberIds], references: [id])
+
+
+  whoCanReadMessage           SchemaRole @default(member)
+  whoCanSendMessage           SchemaRole @default(member)
+  whoCanMakePublicToPrivate   SchemaRole @default(admin)
+  whoCanUploadMedia           SchemaRole @default(member)
+  whoCanUpdateChannel         SchemaRole @default(manager)
+  whoCanManageManager         SchemaRole @default(manager)
+  whoCanManageMember          SchemaRole @default(member)
+  whoCanDeleteMessage         SchemaRole @default(manager)
+  whoCanCreateForms           SchemaRole @default(member)
+  whoCanCreatePolls           SchemaRole @default(member)
+
+
+
+
  
   messages   Message[]
   pinnedPost  PinnedPost[]
@@ -269,6 +317,7 @@ model TestChannelManager {
   section      Section? @relation(fields: [sectionId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
 }
 model ForumManager {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -300,6 +349,22 @@ model Canvas {
   updatedAt   DateTime @updatedAt
   memberIds  String[] @db.ObjectId
   Members    Member[] @relation(fields: [memberIds], references: [id])
+  
+  
+  whoCanUpdateCanvas          SchemaRole @default(manager)
+  whoCanMakePublicToPublic    SchemaRole @default(manager)
+  whoCanCreateNote            SchemaRole @default(member)
+  whoCanManageNote            SchemaRole @default(manager)
+  whoCanUploadMediaInComment   SchemaRole @default(member)
+  whoCanDeleteNote             SchemaRole @default(manager)
+  whoCanComment                SchemaRole @default(member)
+  whoCanManageMember           SchemaRole @default(manager)
+  whoCanManageManager          SchemaRole @default(manager)
+  
+
+
+  
+  
   notes     Note[]
   noteComments NoteComment[]
   manager canvasManager?
@@ -316,6 +381,8 @@ model Note {
   canvas Canvas? @relation(fields: [canvasId], references: [id], onDelete:Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  commenting  Boolean @default(true)
+  canEveryoneUpdate Boolean @default(false)
   comments NoteComment[]
 
 }
@@ -380,7 +447,7 @@ model Member {
   managedTestChannel      TestChannelManager[] @relation(fields: [managedTestChannelId], references: [id])
   messages Message[]
   directMessages DirectMessage[]
-
+  navigations   String[]
   conversationsInitiated Conversation[] @relation("MemberOne")
   conversationsReceived Conversation[] @relation("MemberTwo")      
   isDeleted Boolean @default(false)
@@ -550,6 +617,20 @@ model TestChannel {
   Members    Member[] @relation(fields: [memberIds], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+
+  whoCanUpdateTestChannel      SchemaRole @default(manager)
+  whoCanMakePublicToPrivate    SchemaRole @default(manager)
+  whoCanCreateTest             SchemaRole @default(member)
+  whoCanManagePost             SchemaRole @default(manager)
+  whoCanGiveTest               SchemaRole @default(member)
+  whoCanManageMember           SchemaRole @default(manager)
+  whoCanManageManager          SchemaRole @default(manager)
+
+
+
+
+
   Tests     Test[]
   questions Question[]
   Results  Result[]

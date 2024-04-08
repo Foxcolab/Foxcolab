@@ -116,7 +116,7 @@ function ScreenRecording({setScreenUrl, setScreenName}:ScreenProps) {
         <DialogFooter className='screenFooter'>
           {
             loading ? <Loader/> : 
-            <Button type="submit" onClick={SubmitHandler}>Upload</Button>
+            <Button type="submit" onClick={SubmitHandler} disabled={blob===null}>Upload</Button>
 
           }
         </DialogFooter>

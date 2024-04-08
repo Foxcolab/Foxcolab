@@ -33,6 +33,8 @@ import Loader from '../../Loaders/Loader';
 import AddMember from '../../Channel/AddMember';
 import ChannelSetting from '../../Channel/ChannelSetting';
 import AboutChannel from '../../Channel/AboutChannel';
+import SchemaRoleComponents from '../Roles/SchemaRoleContainer';
+import SchemaRoleContainer from '../Roles/SchemaRoleContainer';
 interface Props {
     name:string,
     members: Member[]
@@ -264,7 +266,10 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
         <div className='all_mem_container'>
         <button className={state==="About"?"active_option":""}  onClick={()=>ChangeState( "About")}>About</button>
         <button className={state==="Members"?"active_option":""} onClick={()=>ChangeState("Members")}>Members {members.length}</button>
+        
         <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
+        <button className={state==="Permissions"?"active_option":""} onClick={()=>ChangeState("Permissions")}>Permissions</button>
+     
         </div>
        
         </div>
@@ -360,6 +365,10 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
               <ChannelSetting name={name} description={description} isAdmin={isAdmin} type={type} sendMsg={sendMsg} ChangeNameHandler={changeNameHandler} ChangeDescriptionHandler={DescriptionHandler} setName={setName} setDescription={setDescription} nameLoading={nameLoading} desciptionLoading={descriptionLoading} schemaType={schemaType} />
               
               
+              :
+              
+              state==="Permissions" ? 
+              <SchemaRoleContainer schemaType={schemaType} />
               :
             ''
               

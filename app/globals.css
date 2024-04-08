@@ -830,6 +830,11 @@
   border-radius: 0.3rem;
   font-size: 0.95rem;
   gap: 0.3rem;
+  /* text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 1;
+  margin-right: 0;
+  overflow: hidden; */
   
 }
 .sidecontent button:hover, .sidecontent a:hover {
@@ -4539,7 +4544,7 @@
     background: #0aac0a;
     font-size: 0.95rem;
     font-weight: 600;
-    color: white;
+    color:white;
     border-radius: 0.3rem;
 }
 
@@ -4551,31 +4556,56 @@
     color: white;
     border-radius: 0.3rem;
 }
-
+.audio_preview {
+  width: 20rem;
+  border: 1px solid var(--con_upper);
+  border-radius: 0.3rem;
+}
 .rhap_container {
   box-shadow: none !important;
+  background-color: transparent !important;
+  color: var(--color2) !important;
 }
-
+.rhap_time {
+  color: var(--color2) !important;
+  font-size: 0.9rem;
+}
  .rhap_repeat-button {
   display: none;
 }
 .recording__container {
   width: 30rem;
 }
+.rhap_progress-indicator {
+  width: 15px;
+  height: 15px;
+  background: var(--color2) !important;
+}
+.rhap_progress-bar-show-download {
+  background-color: var(--color2) !important;
+}
+ .rhap_button-clear {
+  color:var(--color2) !important;
+}
 
 .video_preview {
     border-radius: 0.3rem;
-    background: rgb(214 212 212);
-    height: 16.8rem;
+    background: var(--channelBg);
+    border: 1px solid var(--serverBorder);
+    min-height: 20rem;
     border-radius: 0.3rem;
     overflow: hidden;
+}
+
+.video_preview video {
+  overflow: hidden;
 }
 
 .video_controls {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #494949;
+  color: var(--color2);
   justify-content: center;
   padding: 0 0 0.5rem 0;
 }
@@ -4583,6 +4613,9 @@
   display: flex;
   align-items: center;
   font-size: 0.9rem;
+  border: 1px solid var(--color2);
+  border-radius: 0.3rem;
+  gap: 0.3rem;
 }
 
 .video_controls .record span {
@@ -6223,6 +6256,50 @@
   /* background-color: black; */
 }
 
+
+/* roles  */
+
+.roles_heading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color2);
+  margin:1rem 0;
+}
+
+.role_com_container {
+  color: var(--color2);
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  /* border-bottom: 1px solid var(--msgHover); */
+  border-bottom: 1px solid var(--channelBg);
+}
+
+.role_com_container .role_left .role_title{
+  font-weight: 600;
+  font-size: 0.96rem;
+}
+
+.role_com_container .role_left .role_subtitle {
+  font-size: 0.85rem;
+}
+
+.role_com_container .role_right button {
+  /* padding: 0.5rem !important; */
+  height: 2.2rem;
+  outline: none;
+  width:auto;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.role_com_container .role_right button:focus {
+  outline: 1px solid green;
+  outline-offset: 1px;
+}
+
+
 /* all members  */
 
 
@@ -6414,4 +6491,34 @@
 
 .forum_response_react button svg {
   font-size: 1.1rem;
+}
+
+.nav_title {
+  font-weight: 600;
+  color: var(--color2);
+  margin: 1rem 0;
+}
+.navigation_checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color2);
+  padding: 0.3rem 0;
+}
+.navigation_checkbox label {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+.navigation_checkbox input {
+  height: 1rem;
+  width: 1rem;
+}
+
+
+.schema_role_container {
+  height: 60vh;
+  /* background: red; */
+  overflow: scroll;
+  padding: 1rem 1.2rem 1rem 0rem;
 }
