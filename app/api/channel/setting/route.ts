@@ -1,6 +1,7 @@
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import SchemaActivity from "../../activityLog/schemaActivity/SchemaActivity";
 
 
 
@@ -28,40 +29,30 @@ export const PUT =async(req:NextRequest)=>{
                 manager:true
             }
         });
+        if(!channel) return NextResponse.json({error:"Channel not found"}, {status:409});
         
         const managers = channel?.manager?.memberIds;
         const isManager = managers?.some(m => m === member?.id);
         
         if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
-  
-        
-        const section = await db.section.update({
+        const updatedType = channel.type==="public" && type===true ? "private" : "public";
+        const updatedChannel = await db.channel.update({
             where:{
-                id:channel?.sectionId as string,
-                serverId:serverId as string
+                id:channelId as string,
+                serverId:serverId as string,
+                sectionId:channel.sectionId
             },
             data:{
-                channels:{
-                    update:{
-                        where:{
-                            id:channelId as string,
-                            createdBy:userId,
-                        },
-                        data:{
-                            sendMsg,
-                            type
-
-                        }
-                    }
-                }
+                type:updatedType,
+                
             }
-        });
-        console.log(`channel changed to ${channel?.sendMsg}`)
-        console.log(section); 
-        
+        })
+        if(channel?.type!==updatedChannel?.type){
+            await SchemaActivity({serverId:serverId as string, sectionId:channel?.sectionId as string, schemaId:channelId as string, activityType:"Update", schemaType:"Channel", memberId:member.id, memberId2:null, oldData:channel.type, newData:updatedChannel.type, name:"Type Change", message:`Update the test channel ${channel.type} to ${updatedChannel.type}`}); 
+        }
         return NextResponse.json({
             success:true,
-            section
+            channel:updatedChannel
         }, {status:200});
 
     } catch (error) {

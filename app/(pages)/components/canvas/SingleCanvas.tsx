@@ -147,8 +147,10 @@ function SingleCanvas({note}:Props) {
       </div>
     </button>
 
-
-    <CreateNoteContent noteDialog={editNote} setNoteDialog={setEditNote} note={note}/>
+      {
+        editNote && <CreateNoteContent noteDialog={editNote} setNoteDialog={setEditNote} note={note}/>
+      }
+    
     <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
       <AlertDialogTrigger asChild>
       </AlertDialogTrigger>

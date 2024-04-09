@@ -1,6 +1,7 @@
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import SchemaActivity from "../../activityLog/schemaActivity/SchemaActivity";
 
 
 
@@ -66,6 +67,10 @@ export const PUT =async(req:NextRequest)=>{
             }
         });
         console.log(section);
+        for(let i=0; i<members.length; i++){
+            await SchemaActivity({serverId:serverId as string, sectionId:section.id as string, schemaId:channelId as string, activityType:"Add Member", schemaType:"Channel", memberId:member.id, memberId2:members[i], oldData:null, newData:null, name:null, message:"Add a new member"});
+        }
+        
         
         // console.log(section.channels.member);
         

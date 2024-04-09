@@ -40,7 +40,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
     const [confirmation, setConfirmation] = useState(false);
     const [checked, setChecked] = useState(sendMsg);
     const defaultType = type==="private"?true : false;
-    const [newType, setNewType] = useState(defaultType); 
+    const [newType, setNewType] = useState(false); 
     const [loading, setLoading] = useState(false)
     const params = useParams()
     const router = useRouter();
@@ -172,7 +172,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
             <Button className="" onClick={()=>setConfirmation(true)} disabled={!isAdmin}><AiFillDelete/> Delete {schemaType}  </Button>
           </div>
 {
-    isAdmin && (checked!==sendMsg || defaultType!==newType )? <div className="pl-4 saved_chgs_member">
+    isAdmin && (checked!==sendMsg || newType===true )? <div className="pl-4 saved_chgs_member">
         {
             loading ? <Loader /> : <Button className="" onClick={saveChanges} > Save Changes</Button>
         }

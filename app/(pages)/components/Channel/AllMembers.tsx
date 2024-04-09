@@ -35,6 +35,7 @@ import EditDailog from './EditDialog';
 import ChannelFiles from './ChannelFiles';
 import AboutChannel from './AboutChannel';
 import SchemaRoleContainer from '../Schema/Roles/SchemaRoleContainer';
+import ActivityLogContainer from '../Schema/ActivityLogs/ActivityLogContainer';
 interface HeaderProps {
     name:string,
     members: Member[]
@@ -151,7 +152,7 @@ const DescriptionHandler =async()=>{
       <DialogTrigger asChild>
       {content}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[725px]  channel_member" >
+      <DialogContent className="sm:max-w-[825px]  channel_member" >
         <div>
           <div className="cmem_header">
         <DialogHeader>
@@ -168,6 +169,7 @@ const DescriptionHandler =async()=>{
         <button className={state==="Members"?"active_option":""} onClick={()=>ChangeState("Members")}>Members {members.length}</button>
         <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
         <button className={state==="Permissions"?"active_option":""} onClick={()=>setState("Permissions")}>Permissions</button>
+        <button className={state==="Activity Logs"?"active_option":""} onClick={()=>setState("Activity Logs")}>Activity Logs</button>
         <button className={state==="Files"?"active_option":""} onClick={()=>setState("Files")}>Files</button>
         
         
@@ -268,20 +270,12 @@ const DescriptionHandler =async()=>{
               
               :
               state==="Permissions" ? <SchemaRoleContainer schemaType={"Channel"}
-              whoCanCreateForms={channel.whoCanCreateForms}
-              whoCanCreatePolls={channel.whoCanCreatePolls}
-              whoCanDeleteMessage={channel.whoCanDeleteMessage}
-              whoCanMakePublicToPrivate={channel.whoCanMakePublicToPrivate}
-              whoCanManageManager={channel.whoCanManageManager}
-              whoCanManageMember={channel.whoCanManageMember}
-              whoCanReadMessage={channel.whoCanReadMessage}
-              whoCanSendMessage={channel.whoCanSendMessage}
-              whoCanUpdateChannel={channel.whoCanUpdateChannel}
-              whoCanUploadMedia={channel.whoCanUploadMedia}
-              type={channel.type}
+              schema={channel}
               
               
               /> :
+
+              state==="Activity Logs" ? <ActivityLogContainer schemaType={"Channel"} activityLogs={channel?.schemaActivity} /> :
               
             <ChannelFiles messages={messages}  />
               

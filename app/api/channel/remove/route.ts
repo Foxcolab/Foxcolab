@@ -6,6 +6,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { MemberRole } from "@prisma/client";
+import SchemaActivity from "../../activityLog/schemaActivity/SchemaActivity";
 
 export const PUT =async(req:NextRequest)=>{
     try {
@@ -14,7 +15,15 @@ export const PUT =async(req:NextRequest)=>{
         const channelId = req.nextUrl.searchParams.get('channelId');
        
         const userId = GetDataFromToken(req);
-        const user = await db.user.findFirst({where:{id:userId}});
+        // const user = await db.user.findFirst({where:{id:userId}});
+
+        const currentMember = await db.member.findFirst({
+          where:{
+            userId:userId as string,
+            serverId:serverId as string
+          }
+        })
+        if(!currentMember) return NextResponse.json({error:"Member not found"}, {status:409});
 
         const channel = await db.channel.findFirst({
             where:{
@@ -29,6 +38,7 @@ export const PUT =async(req:NextRequest)=>{
                 }
             }
         });
+        if(!channel) return NextResponse.json({error:"Channel not found"}, {status:409});
         const sectionId= channel?.sectionId;
         const managers = channel?.manager?.memberIds;
     
@@ -54,7 +64,7 @@ export const PUT =async(req:NextRequest)=>{
                 update:{
                     where:{
                         id:channelId as string,
-                        createdBy:user?.id,
+                        createdBy:userId,
                         
                     },
                     data:{
@@ -80,8 +90,8 @@ export const PUT =async(req:NextRequest)=>{
          }
         })
 
-        console.log(section);
-        
+
+          await SchemaActivity({serverId:serverId as string, sectionId:section.id as string, schemaId:channelId as string, activityType:"Remove Member", schemaType:"Channel", memberId:member.id, memberId2:memberId, oldData:null, newData:null, name:null, message:null});
 
 
         return NextResponse.json({

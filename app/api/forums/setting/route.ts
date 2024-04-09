@@ -1,6 +1,7 @@
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import SchemaActivity from "../../activityLog/schemaActivity/SchemaActivity";
 
 
 
@@ -28,6 +29,8 @@ export const PUT =async(req:NextRequest)=>{
                 manager:true
             }
         });
+
+        if(!forumChannel) return NextResponse.json({error:"Forum Channel not found"}, {status:409});
         
         
         const managers = forumChannel?.manager?.memberIds;
@@ -35,34 +38,28 @@ export const PUT =async(req:NextRequest)=>{
         
         if(!isAdmin) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
   
+        const updatedType = forumChannel.type==="public" && type===true ? "private" : "public";
+
         
-        const section = await db.section.update({
+        const updateForumChannel = await db.forumsChannel.update({
             where:{
-                id:forumChannel?.sectionId as string,
+                id:forumChannelId as string,
                 serverId:serverId as string
             },
             data:{
-                forumsChannel:{
-                    update:{
-                        where:{
-                            id:forumChannelId as string,
-                            createdBy:userId,
-                        },
-                        data:{
-                            isEveryonePost:sendMsg,
-                            type
-
-                        }
-                    }
-                }
+                isEveryonePost:sendMsg,
+                type:updatedType
+    
             }
-        });
+        })
         console.log(`channel changed to ${forumChannel?.isEveryonePost}`)
-        console.log(section); 
-        
+        // console.log(section); 
+        if(forumChannel?.type!==updateForumChannel?.type){
+            await SchemaActivity({serverId:serverId as string, sectionId:forumChannel?.sectionId as string, schemaId:forumChannelId as string, activityType:"Update", schemaType:"Test Channel", memberId:member.id, memberId2:null, oldData:forumChannel.type, newData:updateForumChannel.type, name:"Type Change", message:`Update the test channel ${forumChannel.type} to ${updateForumChannel.type}`}); 
+        }
         return NextResponse.json({
             success:true,
-            section
+            forumChannel:updateForumChannel
         }, {status:200});
 
     } catch (error) {

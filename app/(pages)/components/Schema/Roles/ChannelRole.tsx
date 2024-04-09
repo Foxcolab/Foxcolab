@@ -32,7 +32,7 @@ function ChannelRole({whoCanReadMessage, whoCanSendMessage, whoCanMakePublicToPr
     const router = useRouter();
     const onChangeHandler =async(title:string, schemaValue:string)=>{
         try {
-            const res =await axios.put(`/api/channel/role?serverId=${params?.id}&channelId=${params?.channelId}`, {title, schemaValue});
+            const res =await axios.put(`/api/channel/role?serverId=${params?.id}&channel=${params?.channelId}`, {title, schemaValue});
             router.refresh();
 
         } catch (error) {

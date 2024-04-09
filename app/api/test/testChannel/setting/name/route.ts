@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -39,29 +40,41 @@ try {
 
   if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
 
-    const section = await db.section.update({
+    // const section = await db.section.update({
+    //     where:{
+    //         id:testChannel?.sectionId as string,
+    //         serverId:serverId as string
+    //     },
+    //     data:{
+    //         TestChannels:{
+    //             update:{
+    //                 where:{
+    //                     id:testChannelId as string,
+    //                     createdBy:userId,
+    //                 },
+    //                 data:{
+    //                     name:name
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+    
+    const updatedTestChannel = await db.testChannel.update({
         where:{
-            id:testChannel?.sectionId as string,
+            id:testChannelId as string,
             serverId:serverId as string
         },
         data:{
-            TestChannels:{
-                update:{
-                    where:{
-                        id:testChannelId as string,
-                        createdBy:userId,
-                    },
-                    data:{
-                        name:name
-                    }
-                }
-            }
+            name:name
         }
-    });
-    
+    })
+
+    await SchemaActivity({serverId:serverId as string, sectionId:testChannel.sectionId as string, schemaId:testChannelId as string, activityType:"Update", schemaType:"Test Channel", memberId:member.id, memberId2:null, oldData:testChannel.name, newData:updatedTestChannel.name, name:"Name", message:"Updated test channel name"});
+
     return NextResponse.json({
         success:true,
-        section
+        TestChannel:updatedTestChannel
     }, {status:200});
 
 

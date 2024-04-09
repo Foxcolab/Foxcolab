@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -9,7 +10,9 @@ try {
     const serverId = req.nextUrl.searchParams.get('serverId');
     const reqBdoy = await req.json();
     const {name} = reqBdoy;
-
+    if(!channelId || !serverId || !name) return NextResponse.json({
+        error:"ChannelId, ServerId and Name are required"
+    }, {status:409})
     console.log(channelId, serverId, name)
     const userId = await GetDataFromToken(req);
     const member = await db.member.findFirst({
@@ -37,30 +40,20 @@ try {
  
     if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
 
-    const section = await db.section.update({
+    const updatedChannel = await db.channel.update({
         where:{
-            id:channel?.sectionId as string,
-            serverId:serverId as string
+            id:channelId,
+            serverId:serverId as string,
+            sectionId:channel.sectionId
         },
         data:{
-            channels:{
-                update:{
-                    where:{
-                        id:channelId as string,
-                        createdBy:userId,
-                    },
-                    data:{
-                        name
-
-                    }
-                }
-            }
+            name:name
         }
-    });
-    
+    })
+    await SchemaActivity({serverId:serverId as string, sectionId:channel.sectionId as string, schemaId:channelId as string, activityType:"Update", schemaType:"Channel", memberId:member.id, memberId2:null, oldData:channel.name, newData:updatedChannel.name, name:"Name", message:"Updated the channel name"});
     return NextResponse.json({
         success:true,
-        section
+        updatedChannel
     }, {status:200});
 
 

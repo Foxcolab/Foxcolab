@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -37,30 +38,43 @@ try {
     
     if(!isAdmin) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
 
-    const section = await db.section.update({
+    // const section = await db.section.update({
+    //     where:{
+    //         id:forumChannel?.sectionId as string,
+    //         serverId:serverId as string
+    //     },
+    //     data:{
+    //         forumsChannel:{
+    //             update:{
+    //                 where:{
+    //                     id:forumChannelId as string,
+    //                     createdBy:userId,
+    //                 },
+    //                 data:{
+    //                     description
+
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+    const updateForumChannel = await db.forumsChannel.update({
         where:{
-            id:forumChannel?.sectionId as string,
+            id:forumChannelId as string,
             serverId:serverId as string
         },
         data:{
-            forumsChannel:{
-                update:{
-                    where:{
-                        id:forumChannelId as string,
-                        createdBy:userId,
-                    },
-                    data:{
-                        description
+            description
 
-                    }
-                }
-            }
         }
-    });
-    
+    })
+
+
+
+    await SchemaActivity({serverId:serverId as string, sectionId:forumChannel.sectionId as string, schemaId:forumChannelId as string, activityType:"Update", schemaType:"Forum Channel", memberId:member.id, memberId2:null, oldData:forumChannel.description, newData:updateForumChannel.description, name:"Description", message:"Updated the description"});
     return NextResponse.json({
         success:true,
-        section
+        ForumChannel:updateForumChannel
     }, {status:200});
 
 

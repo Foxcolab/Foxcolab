@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -23,7 +24,7 @@ export const PUT =async(req:NextRequest)=>{
         const canvas = await db.canvas.findFirst({
             where:{
                 id:canvasId as string,
-                // serverId:serverId as string
+                serverId:serverId as string
             },
             include:{
                 manager:{
@@ -33,6 +34,8 @@ export const PUT =async(req:NextRequest)=>{
                 }
             }
         });
+        if(!canvas) return NextResponse.json({error:"Canvas not found"}, {status:409});
+
         
         const managers = canvas?.manager?.memberIds;
     
@@ -66,7 +69,10 @@ export const PUT =async(req:NextRequest)=>{
             }
         });
         console.log(section);
-        
+
+         for(let i=0; i<members.length; i++){
+            await SchemaActivity({serverId:serverId as string, sectionId:canvas?.sectionId as string, schemaId:canvasId as string, activityType:"Add Member", schemaType:"Canvas", memberId:member.id as string, memberId2:members[i], oldData:null, newData:null, name:null, message:"Added a new member"});
+        }
         // console.log(section.channels.member);
         
         return NextResponse.json({

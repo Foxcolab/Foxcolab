@@ -5,6 +5,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 
 export const PUT =async(req:NextRequest)=>{
     try {
@@ -81,7 +82,7 @@ export const PUT =async(req:NextRequest)=>{
 
         console.log(section);
         
-
+        await SchemaActivity({serverId:serverId as string, sectionId:forumChannel?.sectionId as string, schemaId:forumChannelId as string, activityType:"Left", schemaType:"Forum Channel", memberId:member.id as string, memberId2:null, oldData:null, newData:null, name:"Member", message:"Left the forum"});
 
         return NextResponse.json({
             success:true,

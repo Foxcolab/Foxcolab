@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { FaLock } from 'react-icons/fa'
-import { ChannelManager, Member, Message } from '@prisma/client'
+import { Canvas, ChannelManager, ForumsChannel, Member, Message, TestChannel } from '@prisma/client'
 
 import { useParams, useRouter } from 'next/navigation'
 import LetterAvatar from '../../UserAvatar/LetterAvatar';
@@ -35,6 +35,7 @@ import ChannelSetting from '../../Channel/ChannelSetting';
 import AboutChannel from '../../Channel/AboutChannel';
 import SchemaRoleComponents from '../Roles/SchemaRoleContainer';
 import SchemaRoleContainer from '../Roles/SchemaRoleContainer';
+import ActivityLogContainer from '../ActivityLogs/ActivityLogContainer';
 interface Props {
     name:string,
     members: Member[]
@@ -49,8 +50,9 @@ interface Props {
     managers:ChannelManager
     sendMsg:boolean
     schemaType:string
+    schema:ForumsChannel | Canvas | TestChannel
 }
-function SchemaDialog({name, members, serverMembers, type, description, createdAt, createdBy, isAdmin, content, managers, startingState, sendMsg, schemaType }:Props) {
+function SchemaDialog({name, members, serverMembers, type, description, createdAt, createdBy, isAdmin, content, managers, startingState, sendMsg, schemaType, schema }:Props) {
   
   const [state, setState] = useState(startingState);
     const [loading, setLoading] = useState(false);
@@ -269,7 +271,10 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
         
         <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
         <button className={state==="Permissions"?"active_option":""} onClick={()=>ChangeState("Permissions")}>Permissions</button>
-     
+        <button className={state==="Activity Logs"?"active_option":""} onClick={()=>setState("Activity Logs")}>Activity Logs</button>
+       
+       
+        {/* schemaActivity */}
         </div>
        
         </div>
@@ -366,9 +371,20 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
               
               
               :
+              state==="Activity Logs" ? 
+              <ActivityLogContainer schemaType={schemaType} activityLogs={schema?.schemaActivity} /> :
               
               state==="Permissions" ? 
-              <SchemaRoleContainer schemaType={schemaType} />
+              <SchemaRoleContainer
+               schemaType={schemaType}
+               schema={schema}
+               
+               
+               
+               
+               
+               
+               />
               :
             ''
               

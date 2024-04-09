@@ -1,4 +1,4 @@
-import { ForumManager, Member, TestChannelManager, canvasManager } from '@prisma/client'
+import { Canvas, ForumManager, ForumsChannel, Member, TestChannel, TestChannelManager, canvasManager } from '@prisma/client'
 import React from 'react'
 import SchemaDialog from '../SchemaDialog/SchemaDialog'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -16,8 +16,9 @@ interface Props {
   managers: ForumManager | TestChannelManager | canvasManager
   serverMembers:Member[]
   sendMsg:boolean
+  schema:ForumsChannel | Canvas | TestChannel
 }
-function SchemaHeader({name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg}:Props) {
+function SchemaHeader({name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, schema}:Props) {
   return (
     <>
     
@@ -38,6 +39,7 @@ function SchemaHeader({name, members, description, createdAt, createdBy, type, i
           }
            serverMembers={serverMembers}
            sendMsg={sendMsg}
+           schema={schema}
 
            />
           
@@ -58,6 +60,8 @@ function SchemaHeader({name, members, description, createdAt, createdBy, type, i
         content={<button className=''><FaUsers/> Members {members.length}</button> }
         serverMembers={serverMembers}
         sendMsg={sendMsg}
+        schema={schema}
+
         />
         
 

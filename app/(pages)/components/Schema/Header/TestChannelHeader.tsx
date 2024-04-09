@@ -1,5 +1,5 @@
 "use client";
-import { ForumManager, Member, TestChannelManager, canvasManager } from '@prisma/client'
+import { ForumManager, Member, TestChannel, TestChannelManager, canvasManager } from '@prisma/client'
 import React from 'react'
 import SchemaDialog from '../SchemaDialog/SchemaDialog'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -21,8 +21,9 @@ interface Props {
   showResult:boolean
   resultLength:number
   testLength:number
+  schema:TestChannel
 }
-function TestChannelHeader({name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, setShowResult, showResult, resultLength, testLength}:Props) {
+function TestChannelHeader({name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, setShowResult, showResult, resultLength, testLength, schema}:Props) {
   return (
     <>
     
@@ -43,7 +44,7 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
           }
            serverMembers={serverMembers}
            sendMsg={sendMsg}
-
+          schema={schema}
            />
           
           
@@ -63,6 +64,7 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
         content={<button className=''><FaUsers/> Members {members.length}</button> }
         serverMembers={serverMembers}
         sendMsg={sendMsg}
+        schema={schema}
         />
         {
             showResult ? <button onClick={()=>setShowResult(false)}>

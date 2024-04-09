@@ -1,5 +1,5 @@
 "use client";
-import { ForumManager, Forums, Member } from '@prisma/client'
+import { ForumManager, Forums, ForumsChannel, Member } from '@prisma/client'
 import React, { useState } from 'react'
 import SingleForums from './SingleForums'
 import {
@@ -27,9 +27,9 @@ interface Props {
   sectionId:string
   setForum:any
   listStyle:string
-
+  schema:ForumsChannel
 }
-function ForumContainer({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums, setForum, listStyle}:Props) {
+function ForumContainer({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums, setForum, listStyle,schema}:Props) {
     
 
   return (
@@ -51,7 +51,7 @@ isAdmin={isAdmin}
 schemaType="Forums"
 managers={managers}
 sendMsg={sendMsg}
-
+schema={schema}
 
 
 />

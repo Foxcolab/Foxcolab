@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -35,31 +36,27 @@ try {
     const managers = channel?.manager?.memberIds;
     const isManager = managers?.some(m => m === member?.id);
     if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
+    const prevDesc = channel.description;
 
-    const section = await db.section.update({
+
+
+    const updatedChannel = await db.channel.update({
         where:{
-            id:channel?.sectionId as string,
-            serverId:serverId as string
+            id:channelId as string,
+            serverId:serverId as string,
         },
         data:{
-            channels:{
-                update:{
-                    where:{
-                        id:channelId as string,
-                        createdBy:userId,
-                    },
-                    data:{
-                        description
-
-                    }
-                }
-            }
+            description
         }
-    });
+    })
+
+
+        await SchemaActivity({serverId:serverId as string, sectionId:channel.sectionId as string, schemaId:channelId as string, activityType:"Update", schemaType:"Channel", memberId:member.id, memberId2:null, oldData:prevDesc, newData:updatedChannel.description, name:"Description", message:"Updated the description"});
+    
     
     return NextResponse.json({
         success:true,
-        section
+        updatedChannel
     }, {status:200});
 
 

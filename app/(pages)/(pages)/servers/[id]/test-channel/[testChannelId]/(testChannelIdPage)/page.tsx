@@ -48,6 +48,26 @@ async function TestChannel({params}:ForumsProps) {
       // serverId:params.id
     },
     include:{
+      schemaActivity:{
+        where:{
+          testChannelId:params.testChannelId
+        },
+        include:{
+          member:{
+            include:{
+              user:true
+            }
+          },
+          member2:{
+            include:{
+              user:true
+            }
+          }
+        },
+        orderBy:{
+          createdAt:"desc"
+        }
+      },
       Tests:{
         include:{
           createdUser:{
@@ -112,7 +132,6 @@ async function TestChannel({params}:ForumsProps) {
       myResults.push(allResults[i])
     }
   }
-  console.log("MyResult", myResults.length)
   function getAttemptedTests(results:Result[], tests:Test[]) {
     const attemptedTestIds = results.map(result => result.testId);
     const attemptedTests = tests.filter(test => attemptedTestIds.includes(test.id));
@@ -120,8 +139,7 @@ async function TestChannel({params}:ForumsProps) {
 }
 
 const attemptedTests = getAttemptedTests(myResults, tests);
-console.log("Attempted Tests");
-console.log(attemptedTests);
+
 
   return (
     <>
@@ -153,7 +171,8 @@ console.log(attemptedTests);
       results={testChannel.Results}
       testLength={testChannel.Tests.length}
       attemptedTests={attemptedTests}
-      
+      schema={testChannel}
+    
       />
 
 </ServerHome>

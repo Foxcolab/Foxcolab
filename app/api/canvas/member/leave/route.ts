@@ -5,6 +5,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 
 export const PUT =async(req:NextRequest)=>{
     try {
@@ -81,7 +82,7 @@ export const PUT =async(req:NextRequest)=>{
 
         console.log(section);
         
-
+        await SchemaActivity({serverId:serverId as string, sectionId:canvas?.sectionId as string, schemaId:canvasId as string, activityType:"Left", schemaType:"Canvas", memberId:member.id as string, memberId2:null, oldData:null, newData:null, name:"Member", message:"Added a new member"});
 
         return NextResponse.json({
             success:true,

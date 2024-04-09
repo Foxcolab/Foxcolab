@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -39,29 +40,42 @@ try {
 
   if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
 
-    const section = await db.section.update({
+    // const section = await db.section.update({
+    //     where:{
+    //         id:canvas?.sectionId as string,
+    //         serverId:serverId as string
+    //     },
+    //     data:{
+    //         canvas:{
+    //             update:{
+    //                 where:{
+    //                     id:canvasId as string,
+    //                     createdBy:userId,
+    //                 },
+    //                 data:{
+    //                     title:name
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+
+    const  updatedCanvas = await db.canvas.update({
         where:{
-            id:canvas?.sectionId as string,
+            id:canvasId as string,
             serverId:serverId as string
         },
         data:{
-            canvas:{
-                update:{
-                    where:{
-                        id:canvasId as string,
-                        createdBy:userId,
-                    },
-                    data:{
-                        title:name
-                    }
-                }
-            }
+            title:name
+
         }
-    });
-    
+    })
+
+
+    await SchemaActivity({serverId:serverId as string, sectionId:canvas.sectionId as string, schemaId:canvasId as string, activityType:"Update", schemaType:"Canvas", memberId:member.id, memberId2:null, oldData:canvas.title, newData:updatedCanvas.title, name:"Name", message:"Updated the name"});
     return NextResponse.json({
         success:true,
-        section
+        updatedCanvas
     }, {status:200});
 
 

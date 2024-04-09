@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { LiaEthereum } from "react-icons/lia";
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 
 
 export const POST =async(req:NextRequest)=>{
@@ -80,7 +81,9 @@ export const POST =async(req:NextRequest)=>{
         })
 
         console.log(note);
-        
+
+            await SchemaActivity({serverId:serverId as string, sectionId:canvas?.sectionId as string, schemaId:canvasId as string, activityType:"Create", schemaType:"Canvas", memberId:member.id as string, memberId2:null, oldData:null, newData:title, name:"Note", message:"Create a new note"});
+  
 
         return NextResponse.json({
             success:true,

@@ -39,6 +39,26 @@ const ChannelChat =async({params}:Props)=> {
     },
     include:{
       createdUser:true,
+      schemaActivity:{
+        where:{
+          channelId:params.channelId
+        },
+        include:{
+          member:{
+            include:{
+              user:true
+            }
+          },
+          member2:{
+            include:{
+              user:true
+            }
+          }
+        },
+        orderBy:{
+          createdAt:"desc"
+        }
+      },
       messages: {
         where:{
           fileUrl:{
@@ -155,19 +175,9 @@ const ChannelChat =async({params}:Props)=> {
     }
   }
 
-  const createdAt = format(new Date(channel.createdAt), DATE_FORMAT);
   const isAdmin = profile.id===channel.createdBy;
-  let sendMsg = channel.sendMsg !==undefined && channel.sendMsg!==null ? channel.sendMsg : true;
 
-  const managers = channel.manager;
-
-
-  const mySavedPosts = member.saveLater;
-  const PinnedPosts = channel.pinnedPost;
-
-  const serverMember = server.Members.filter(mem=>mem.id!==member.id);
- 
-  const channelMemberExceptMe = channel.Members.filter(mem=>mem.id!==member.id)
+  console.log("SchemaActivity::", channel.schemaActivity)
 
   return (
     <>

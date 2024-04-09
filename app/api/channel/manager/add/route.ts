@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,6 +23,7 @@ export const POST =async(req:NextRequest)=>{
                 serverId:serverId as string
             }
         });
+        if(!member) return NextResponse.json({error:"You are not a authorized member"}, {status:200})
 
         const channel = await db.channel.findFirst({
             where:{
@@ -33,6 +35,7 @@ export const POST =async(req:NextRequest)=>{
             }
 
         });
+        if(!channel) return NextResponse.json({error:"Channel not found"}, {status:200})
         const managers = channel?.manager?.memberIds;
         console.log(managers)
         const isManager = managers?.some(m => m === member?.id);
@@ -62,6 +65,9 @@ export const POST =async(req:NextRequest)=>{
             }
         });
 
+        for(let i=0; i<managerIds.length; i++){
+            await SchemaActivity({serverId:serverId as string, sectionId:channel?.sectionId as string, schemaId:channelId as string, activityType:"Make Manager", schemaType:"Channel", memberId:member.id as string, memberId2:managerIds[i], oldData:null, newData:null, name:null, message:null});
+        }
         return NextResponse.json({
             success:true
         }, {status:200});

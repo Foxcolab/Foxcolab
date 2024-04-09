@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,6 +23,8 @@ export const POST =async(req:NextRequest)=>{
                 serverId:serverId as string
             }
         });
+
+        if(!member) return NextResponse.json({error:"You are not a authorized member"}, {status:409})
 
         const testChannel = await db.testChannel.findFirst({
             where:{
@@ -61,6 +64,10 @@ export const POST =async(req:NextRequest)=>{
                 }
             }
         });
+
+        for(let i=0; i<managerIds.length; i++){
+            await SchemaActivity({serverId:serverId as string, sectionId:testChannel?.sectionId as string, schemaId:testChannelId as string, activityType:"Make Manager", schemaType:"Test Channel", memberId:member.id as string, memberId2:managerIds[i], oldData:null, newData:null, name:null, message:"Make a new manager"});
+        }
 
         return NextResponse.json({
             success:true

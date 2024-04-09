@@ -6,6 +6,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { MemberRole } from "@prisma/client";
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 
 export const PUT =async(req:NextRequest)=>{
     try {
@@ -82,7 +83,7 @@ export const PUT =async(req:NextRequest)=>{
 
         console.log(section);
         
-
+        await SchemaActivity({serverId:serverId as string, sectionId:section.id as string, schemaId:testChannelId as string, activityType:"Remove Member", schemaType:"Test Channel", memberId:member.id, memberId2:memberId, oldData:null, newData:null, name:null, message:"Remove a member"});
 
         return NextResponse.json({
             success:true,

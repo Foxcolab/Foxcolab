@@ -6522,3 +6522,23 @@
   overflow: scroll;
   padding: 1rem 1.2rem 1rem 0rem;
 }
+
+
+.single_schema_activity {
+  display: flex;
+  gap: 0.3rem;
+  color: var(--color2);
+  border: 1px solid var(--editorBorder);
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.single_schema_activity span {
+  font-weight: 600;
+}

@@ -51,6 +51,26 @@ async function CanvasPage({params}:Props) {
       serverId:server.id
     },
     include:{
+      schemaActivity:{
+        where:{
+          canvasId:params.canvasId
+        },
+        include:{
+          member:{
+            include:{
+              user:true
+            }
+          },
+          member2:{
+            include:{
+              user:true
+            }
+          }
+        },
+        orderBy:{
+          createdAt:"desc"
+        }
+      },
       createdUser:true,
       notes:{
         orderBy:{
@@ -122,6 +142,7 @@ async function CanvasPage({params}:Props) {
       isAdmin={isAdmin}
       type={canvas.type}
       sendMsg={sendMsg}
+      schema={canvas}
 
       />
     

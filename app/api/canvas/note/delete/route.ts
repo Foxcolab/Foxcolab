@@ -1,3 +1,4 @@
+import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity";
 import { GetDataFromToken } from "@/middlewares/getDataFromToken";
 import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -59,7 +60,7 @@ export const DELETE =async(req:NextRequest)=>{
         
         
 
-         await db.note.delete({
+        const note =  await db.note.delete({
             where:{
                 id:noteId as string,
                 serverId:serverId as string,
@@ -74,7 +75,7 @@ export const DELETE =async(req:NextRequest)=>{
                 serverId: serverId as string
             }
         })
-
+        await SchemaActivity({serverId:serverId as string, sectionId:canvas?.sectionId as string, schemaId:canvasId as string, activityType:"Delete", schemaType:"Canvas", memberId:member.id as string, memberId2:null, oldData:null, newData:note.title, name:"Note", message:"Delete a note"});
         // console.log("**** UPDATED SUCCESSFULLY***", note);
         
         return NextResponse.json({

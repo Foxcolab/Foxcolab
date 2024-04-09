@@ -124,6 +124,7 @@ model Server {
   Drafts    Draft[]
   noteComments NoteComment[]
   activityLogs ActivityLog[]
+  schemaActivity  SchemaActivity[]
 }
 model Section {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -152,6 +153,7 @@ model Section {
   forumManager      ForumManager[] 
   testChannelManager      TestChannelManager[] 
   drafts    Draft[]
+  schemaActivity  SchemaActivity[]
   // forums 
 }
 model ForumsChannel {
@@ -170,8 +172,21 @@ model ForumsChannel {
   section      Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
   memberIds  String[] @db.ObjectId
   Members    Member[] @relation(fields: [memberIds], references: [id])
+ 
+   whoCanUpdateForums           SchemaRole @default(manager)
+  whoCanMakePublicToPrivate    SchemaRole @default(manager)
+  whoCanCreatePost             SchemaRole @default(manager)
+  whoCanManagePost             SchemaRole @default(manager)
+  whoCanUploadMediaInComment   SchemaRole @default(member)
+  whoCanDeletePost             SchemaRole @default(manager)
+  whoCanComment                SchemaRole @default(member)
+  whoCanManageMember           SchemaRole @default(manager)
+  whoCanManageManager          SchemaRole @default(manager)
+
+ 
   Forums   Forums[]
   forumsResponse ForumResponse[]
+  schemaActivity   SchemaActivity[]
   manager ForumManager?
 }
 model Forums {
@@ -191,15 +206,7 @@ model Forums {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  whoCanUpdateForums           SchemaRole @default(manager)
-  whoCanMakePublicToPrivate    SchemaRole @default(manager)
-  whoCanCreatePost             SchemaRole @default(manager)
-  whoCanManagePost             SchemaRole @default(manager)
-  whoCanUploadMediaInComment   SchemaRole @default(member)
-  whoCanDeletePost             SchemaRole @default(manager)
-  whoCanComment                SchemaRole @default(member)
-  whoCanManageMember           SchemaRole @default(manager)
-  whoCanManageManager          SchemaRole @default(manager)
+
 
   // forumsQuestions ForumQuestion[]
   // responses    ForumsResponse[]
@@ -277,6 +284,7 @@ model Channel {
   Threads    Threads[]
   manager ChannelManager?
   Drafts    Draft[]
+  schemaActivity  SchemaActivity[]
   // Reactions  Reaction[]
 }
 model ChannelManager {
@@ -358,6 +366,7 @@ model Canvas {
   whoCanUploadMediaInComment   SchemaRole @default(member)
   whoCanDeleteNote             SchemaRole @default(manager)
   whoCanComment                SchemaRole @default(member)
+  whoCanUpdateNote             SchemaRole @default(manager)
   whoCanManageMember           SchemaRole @default(manager)
   whoCanManageManager          SchemaRole @default(manager)
   
@@ -367,6 +376,7 @@ model Canvas {
   
   notes     Note[]
   noteComments NoteComment[]
+  schemaActivity  SchemaActivity[]
   manager canvasManager?
 }
 model Note {
@@ -470,6 +480,9 @@ model Member {
   noteComments NoteComment[]
   testResponse Response[]
   activityLogs ActivityLog[]
+  schemaActivity  SchemaActivity[] @relation("CreatedBy")
+  removedSchemaActivity  SchemaActivity[] @relation("RemovedMember")
+  
   // TestChannels  TestChannel[]
   // NoteContent NoteContent[]
   @@index([userId])
@@ -622,7 +635,7 @@ model TestChannel {
   whoCanUpdateTestChannel      SchemaRole @default(manager)
   whoCanMakePublicToPrivate    SchemaRole @default(manager)
   whoCanCreateTest             SchemaRole @default(member)
-  whoCanManagePost             SchemaRole @default(manager)
+  whoCanManageTest             SchemaRole @default(manager)
   whoCanGiveTest               SchemaRole @default(member)
   whoCanManageMember           SchemaRole @default(manager)
   whoCanManageManager          SchemaRole @default(manager)
@@ -634,6 +647,7 @@ model TestChannel {
   Tests     Test[]
   questions Question[]
   Results  Result[]
+  schemaActivity SchemaActivity[]
   manager TestChannelManager?
   
 }
@@ -836,5 +850,40 @@ model ActivityLog {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+
+}
+
+model SchemaActivity {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  message             String?
+  activityType        String
+  schemaType          String 
+  name                String?
+  oldData             String?
+  newData             String?
+  memberId            String? @db.ObjectId
+  member              Member? @relation("CreatedBy", fields: [memberId], references: [id])
+  memberId2           String? @db.ObjectId
+  member2             Member? @relation("RemovedMember", fields: [memberId2], references: [id])
+  
+  channelId           String? @db.ObjectId
+  channel             Channel? @relation(fields: [channelId], references: [id])
+
+  forumChannelId      String? @db.ObjectId
+  forumChannel        ForumsChannel? @relation(fields: [forumChannelId], references: [id])
+
+  canvasId            String? @db.ObjectId
+  canvas              Canvas? @relation(fields: [canvasId], references: [id])
+
+  testChannelId       String? @db.ObjectId
+  testChannel         TestChannel? @relation(fields:[testChannelId] ,references :[id])
+
+  sectionId           String? @db.ObjectId
+  section             Section? @relation(fields:[sectionId] ,references :[id])
+
+  serverId            String  @db.ObjectId
+  server              Server?  @relation(fields: [serverId], references: [id])
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
 }

@@ -82,17 +82,17 @@ function Role({setOpen, server}:Props) {
     <SchemaRoles title="Create Forums" subTitle='Allows you to create forums in the channel.' type='Channel' />
    
 
-    <div className="roles_heading pt-8">Forums Permissions</div>
+    <div className="roles_heading pt-8">Forum Channel Permissions</div>
 
     
-    <SchemaRoles title="Update Forums" subTitle='Allows you to update forum basic setting.' type='Forums' />
-    <SchemaRoles title="Update public Forums to private Forums" subTitle="Allows you to change public forums to private forums." type='Forums' />
-    <SchemaRoles title="Manage Post" subTitle='Allows you to create new post, edit and delete post in the forums.' type='Forums' />
+    <SchemaRoles title="Update Forum Channel" subTitle='Allows you to update forum channel basic setting.' type='Forums' />
+    <SchemaRoles title="Update public Forum Channel to private Forum Channel" subTitle="Allows you to change public forum channel to private forum channel." type='Forums' />
+    <SchemaRoles title="Manage Forums" subTitle='Allows you to create new forum, edit and delete forum in the forum channel.' type='Forums' />
     <SchemaRoles title="Upload media in post's comment" subTitle="Allow you to upload media in post's comment." type='Forums' />
    
     <SchemaRoles title="Manage comment" subTitle="Allows you to delete comments from forums post." type='Forums' />
-    <SchemaRoles title="Manage Member" subTitle="Allows you to add new member to the forums and remove existing members from forums" type='Forums' />
-    <SchemaRoles title="Manage Forums Managers" subTitle="Allows you to make new forums managers and remove existing managers from the managers list." type='Forums' />
+    <SchemaRoles title="Manage Member" subTitle="Allows you to add new member to the forum channel and remove existing members from forum channel" type='Forums' />
+    <SchemaRoles title="Manage Forum Chanel Managers" subTitle="Allows you to make new forum channel managers and remove existing managers from the managers list." type='Forums' />
 
 
       {/* CANVAS  */}
@@ -102,6 +102,8 @@ function Role({setOpen, server}:Props) {
     <SchemaRoles title="Manage Canvas Managers" subTitle="Allows you to make new canvas manager and remove existing managers from the canvas list" type='Canvas'  />
     <SchemaRoles title="Manage Canvas Members" subTitle="Allows you to add new canvas members and remove existing canvas members." type='Canvas'  />
     <SchemaRoles title="Update public Canvas to private Canvas" subTitle="Allows you to change public canvas to private canvas." type='Canvas' />
+    <SchemaRoles title="Create Note" subTitle="Allows you to create new canvas note." type='Canvas'  />
+    <SchemaRoles title="Delete Note" subTitle="Allows you to delete existing canvas note." type='Canvas'  />
     <SchemaRoles title="Manage Note" subTitle="Allows you to create new note, edit or delete existing canvas note." type='Canvas'  />
     <SchemaRoles title="Upload Media" subTitle="Allows you to upload media on notes's comment" type='Canvas'  />
     <SchemaRoles title="Update note" subTitle="Allows you to update existing note in the canvas"  type='Canvas' />
@@ -115,8 +117,8 @@ function Role({setOpen, server}:Props) {
     <SchemaRoles title="Manage Test Channel Managers" subTitle="Allows you to make new managers and remove existing managers from manager list" type='Test Channel' />
     <SchemaRoles title="Manage Test Channel Member" subTitle="Allows you to add new members and remove existing member from the Test Channels"  type='Test Channel'/>
     <SchemaRoles title="Public Test Channel to Private Test Channel" subTitle="Allows you to make public test channels to private channels."  type='Test Channel'/>
-
-    <SchemaRoles title="Manage Test" subTitle="Allows you to create new tests, update exiting tests and delete existing tests from test channels"  type='Test Channel'/>
+    <SchemaRoles title="Create Test" subTitle="Allows you to create new tests in test channels"  type='Test Channel'/>
+    <SchemaRoles title="Manage Test" subTitle="Allows you to create  update and delete existing tests from test channels"  type='Test Channel'/>
     <SchemaRoles title="Give Test" subTitle="Allows you to give test on availble tests in the test channels" type='Test Channel' />
     
 

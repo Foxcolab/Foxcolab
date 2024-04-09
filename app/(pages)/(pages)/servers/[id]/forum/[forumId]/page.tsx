@@ -45,6 +45,26 @@ async function ForumsId({params}:ForumsProps) {
       serverId:server.id
     },
     include:{
+      schemaActivity:{
+        where:{
+          forumChannelId:params.forumId
+        },
+        include:{
+          member:{
+            include:{
+              user:true
+            }
+          },
+          member2:{
+            include:{
+              user:true
+            }
+          }
+        },
+        orderBy:{
+          createdAt:"desc"
+        }
+      },
       Forums:{
         include:{
           member: {
@@ -130,6 +150,7 @@ async function ForumsId({params}:ForumsProps) {
       managers={managers}
       forums={forumsChannel.Forums}
       sectionId={forumsChannel.sectionId}
+      schema={forumsChannel}
       />
     </ServerHome>
     

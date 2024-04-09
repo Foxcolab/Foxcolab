@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react'
 import TestChannelContainer from './TestChannelContainer'
-import { Member, Result, Server, Test, TestChannelManager } from '@prisma/client'
+import { Member, Result, Server, Test, TestChannel, TestChannelManager } from '@prisma/client'
 import MainSidebar from '../../Sidebar/MainSidebar'
 import TestChannelHeader from '../../Schema/Header/TestChannelHeader'
 import ChannelResult from '../ResultTable/ChannelResult/ChannelResult';
@@ -9,7 +9,6 @@ import ChannelResult from '../ResultTable/ChannelResult/ChannelResult';
 interface Props {
     tests:Test[]
     sectionId:string
-    server:Server
     testChannelName:string
     members:Member[]
     managers:TestChannelManager[]
@@ -23,10 +22,11 @@ interface Props {
     results:Result[]
     testLength:number
     attemptedTests:Test[]
+    schema:TestChannel
 }
 
 
-function TestChannelComponent({tests, sectionId, server, testChannelName, members,serverMembers, sendMsg, managers, createdAt, createdBy, type, isAdmin, description, results, testLength, attemptedTests }:Props) {
+function TestChannelComponent({tests, sectionId, testChannelName, members,serverMembers, sendMsg, managers, createdAt, createdBy, type, isAdmin, description, results, testLength, attemptedTests, schema }:Props) {
 
 
     const [showResult, setShowResult] = useState(false);
@@ -50,6 +50,7 @@ function TestChannelComponent({tests, sectionId, server, testChannelName, member
       setShowResult={setShowResult}
       resultLength={results.length}
       testLength={testLength}
+      schema={schema}
       />
 
       {

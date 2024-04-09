@@ -23,8 +23,9 @@ interface Props {
     managers:ForumManager
     forums:Forums[]
     sectionId:string
+    schema:ForumsChannel
 }
-function ForumsCom({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums}:Props) {
+function ForumsCom({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums, schema}:Props) {
     const [listStyle, setListStyle] = useState("list");
     const [forum, setForum] = useState<null | Forums>(null);
   return (
@@ -32,12 +33,12 @@ function ForumsCom({name, members, serverMembers, description, createdBy, create
 
         {
             forum===null ? <>
-            <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} />
+            <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} schema={schema} />
              </> : 
             <>
      <ResizablePanelGroup direction="horizontal">
   <ResizablePanel>
-  <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} />
+  <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} schema={schema} />
   </ResizablePanel>
   <ResizableHandle />
   <ResizablePanel>
