@@ -21,8 +21,7 @@ function ChannelMsgComp({server, channel, currentMember, isAdmin, myChannels}:Pr
     const [threadMessage, setThreadMessage] = useState<null | Message>(null);
   
     const [open, setOpen] = useState(false);
-  console.log("Channel Msg Com[")
-    console.log("Thread message: " + threadMessage?.id, threadMessage===null);
+
 
   // useEffect(()=>{
 
@@ -30,9 +29,7 @@ function ChannelMsgComp({server, channel, currentMember, isAdmin, myChannels}:Pr
 
     const leftDefault = (threadMessage===null || undefined )? 100 :70;
     const rightDefault = threadMessage===null ? 0 : 30;
-    // const leftDefault = 70;
-    // const rightDefault =  30;
-    console.log(leftDefault, rightDefault)
+ 
 
   return (
     <>

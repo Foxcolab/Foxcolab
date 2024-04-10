@@ -75,7 +75,6 @@ function ChannelFeature({id, sections, member}:Props) {
 
     ]
     let SideContent:any = []
-    console.log("Member Nav:", member.navigations)
     if(member.navigations===undefined || member.navigations.length===0){
         SideContent = allNavs;
     }else {
@@ -88,7 +87,6 @@ function ChannelFeature({id, sections, member}:Props) {
             }
         }
     }
-    console.log("Side",SideContent);
 
   
   return (

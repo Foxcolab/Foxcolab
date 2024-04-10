@@ -78,6 +78,18 @@ export const getServer =async(serverId:string, userId:string)=>{
                     }
                   }
                 }
+              },
+              botResponses:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                },
+                orderBy:{
+                  updatedAt:"desc"
+                }
               }
               // {
               //   include:{

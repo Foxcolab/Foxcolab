@@ -9,11 +9,13 @@ import {
     PopoverTrigger,
   } from "@/components/ui/popover";
   import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
   interface EmojiPickerProps {
     onChange: (value: string) => void;
     emojiDialog:boolean
     setEmojiDialog:any
+    // editorType:string | null
   }
 function EditorEmoji({onChange, emojiDialog, setEmojiDialog}:EmojiPickerProps) {
     const { resolvedTheme } = useTheme();
@@ -23,10 +25,12 @@ function EditorEmoji({onChange, emojiDialog, setEmojiDialog}:EmojiPickerProps) {
      <Popover open={emojiDialog} onOpenChange={setEmojiDialog}>
      <PopoverTrigger 
       
-      className={"h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"}
+      // className={"h-[24px] w-[24px]  "}
+      className={cn("transition rounded-full p-1 flex items-center justify-center", "h-[24] w-[24]" )}
+
       // className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"
       >
-      <SmilePlus size={20} />
+      <SmilePlus size={ 20} />
     
       </PopoverTrigger>
       <PopoverContent 

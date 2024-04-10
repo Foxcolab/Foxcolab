@@ -18,6 +18,20 @@ export const POST =async(req:NextRequest)=>{
         if(!name || !description ) return NextResponse.json({success:false ,message:"Enter the fields"}, {status:409});
         console.log(name, description);
         const discoverable = type==="public" ? true : false;
+
+        const bot = await db.user.findFirst({
+            where:{
+                role:MemberRole.bot,
+                name:"FoxcolabBot"
+            }
+        });
+
+        if(!bot) return NextResponse.json({
+            error:"Bot not found",
+            success:false
+        }, {status:409});
+
+
         let server = await db.server.create({
             data:{
                 name,
@@ -40,7 +54,11 @@ export const POST =async(req:NextRequest)=>{
                             userId:user?.id as string,
                             role:MemberRole.admin,
                             
-                            }
+                        }, 
+                        {
+                            userId:bot.id as string,
+                            role:MemberRole.bot
+                        }
                     ]
                 }
                 

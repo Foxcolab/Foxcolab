@@ -177,7 +177,6 @@ const ChannelChat =async({params}:Props)=> {
 
   const isAdmin = profile.id===channel.createdBy;
 
-  console.log("SchemaActivity::", channel.schemaActivity)
 
   return (
     <>

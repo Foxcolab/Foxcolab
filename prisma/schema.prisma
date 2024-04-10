@@ -12,12 +12,14 @@ datasource db {
 enum Role {
   admin
   user
+  bot
 }
 enum MemberRole {
   admin
   moderator
   guest
   user
+  bot
 }
 enum Status {
   active
@@ -44,6 +46,12 @@ enum SchemaRole {
   serverMember
   guest // outsider or visitor 
 }
+
+enum BotTriggeredType {
+  fullText
+  specificText
+}
+
 
 
 
@@ -125,6 +133,7 @@ model Server {
   noteComments NoteComment[]
   activityLogs ActivityLog[]
   schemaActivity  SchemaActivity[]
+  botResponses   BotResponse[]
 }
 model Section {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -215,7 +224,8 @@ model Forums {
 
 model ForumResponse {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
-  content     String
+  content      String
+  contentText  String?
   fileUrl    String[]
   repliedResponseId  String? @db.ObjectId
   repliedResponse    ForumResponse?  @relation("RepliedResponse", fields: [repliedResponseId], references: [id], onDelete:NoAction, onUpdate:NoAction)
@@ -482,6 +492,7 @@ model Member {
   activityLogs ActivityLog[]
   schemaActivity  SchemaActivity[] @relation("CreatedBy")
   removedSchemaActivity  SchemaActivity[] @relation("RemovedMember")
+  BotResponses   BotResponse[]
   
   // TestChannels  TestChannel[]
   // NoteContent NoteContent[]
@@ -492,6 +503,7 @@ model Member {
 model Message {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content     String
+  contentText  String?
   fileUrl    String[]
   memberId String @db.ObjectId
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
@@ -545,6 +557,9 @@ model Reaction {
 }
 model Threads {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  content     String
+  contentText  String?
+  fileUrl    String[]
   messageId    String? @db.ObjectId
   message      Message? @relation( fields: [messageId], references: [id], onDelete:Cascade)
   channelId    String? @db.ObjectId
@@ -558,8 +573,6 @@ model Threads {
   member Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   serverId String @db.ObjectId
   server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
-  content     String
-  fileUrl    String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deleted Boolean @default(false)
@@ -588,6 +601,7 @@ model Conversation {
 model DirectMessage {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content String
+  contentText  String?
   fileUrl String[]
 
   memberId String @db.ObjectId
@@ -815,6 +829,7 @@ model Mention {
 model Draft {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content     String
+  contentText  String?
   fileUrl    String[]
   createdBy String @db.ObjectId
   createdMember Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
@@ -887,3 +902,24 @@ model SchemaActivity {
   updatedAt           DateTime @updatedAt
 
 }
+
+
+model BotResponse {
+  id             String   @id @default(auto())  @map("_id") @db.ObjectId
+  triggeredText     String
+  responseText      String
+  responseFileUrl   String[]
+  triggeredType    BotTriggeredType @default(specificText)
+  createdBy        String @db.ObjectId
+  createdMember    Member?  @relation(fields: [createdBy], references: [id])
+  serverId         String @db.ObjectId
+  server           Server?  @relation(fields:[serverId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+
+}
+
+
+
+// model 

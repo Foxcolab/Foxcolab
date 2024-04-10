@@ -92,7 +92,7 @@ function ServerContainer({open, setOpen, state, server}:Props) {
                         selected==="Notification" ? <Notification setOpen={setOpen} server={server} /> :
                         selected==="Privacy" ? <Privacy discoverable={server.discoverable} setOpen={setOpen} serverType={server.type} serverId={server.id} /> :
                         selected==="Themes" ? <Themes setOpen={setOpen} server={server} /> :
-                        selected==="Bots" ? <Bot setOpen={setOpen} server={server} /> :
+                        selected==="Bots" ? <Bot setOpen={setOpen} botResponse={server.botResponses} /> :
                         selected==="Navigation" ? <Navigation serverId={server.id} setOpen={setOpen} currentMember={currentMember} /> :
                         selected==="Region" ? <Language setOpen={setOpen} memberLanguage={currentMember.language as string} memberRegion={currentMember.region as string} serverId={server.id} /> :
                         selected==="Roles" ? <Role setOpen={setOpen} server={server} />

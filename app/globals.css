@@ -6332,6 +6332,11 @@
   border-radius: 0.3rem;
 }
 
+.member_operations button svg {
+  font-size: 1.1rem;
+}
+
+
 /* ************************************* V1 ****************************************************** */
 
 
@@ -6541,4 +6546,197 @@
 
 .single_schema_activity span {
   font-weight: 600;
+}
+
+
+/* bot */
+
+
+.addBotBtn {
+  padding: 0.35rem 1rem;
+  background: #069b06;
+  border-radius: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+.addBotBtn:hover {
+  background-color: #13a513;
+}
+
+.botRes_inp_con {
+  padding: 0.5rem 0;
+}
+.botRes_inp_con label {
+  font-size: 1rem;
+  color: var(--color2);
+  font-weight: 600;
+}
+
+.botRes_inp_con .botInp_con {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.botRes_inp_con .botInp_con .bot_usr_logo {
+  height: 4rem;
+  width: 4rem;
+  /* background: #3e3ef9; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.3rem;
+  flex: none;
+  margin-top: 0.1rem;
+}
+
+.botRes_inp_con .botInp_con .bot_usr_logo svg {
+  font-size: 2.5rem;
+  color:white;
+}
+
+.botRes_inp_con .botInp_con .bot_user_inpt {
+  border: 1px solid var(--color3);
+  border-radius: 0.3rem;
+  width: 100%;
+  height: 5rem;
+}
+.botRes_inp_con .botInp_con .bot_user_inpt:focus-within {
+  border: 1px solid var(--color4);
+  outline: 1px solid white;
+  outline-offset: 1px;
+}
+.botRes_inp_con .botInp_con .bot_user_inpt textarea {
+  resize: none;
+  width: 100%;
+  background: transparent;
+  outline: none;
+  border: none;
+  padding: 0.3rem;
+}
+
+#bot_res_inp {
+  border: 1px solid var(--color3);
+  border-radius: 0.3rem;
+  width: 100%;
+  min-height: 5rem;
+}
+#bot_res_inp textarea{
+  border: none;
+  resize: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  padding:0.3rem;
+}
+#bot_res_inp textarea:focus, #bot_res_inp textarea:focus-visible {
+  border: none !important;
+  outline: none !important;
+
+}
+#bot_res_inp textarea:focus, #bot_res_inp:focus-within{
+  border: 1px solid var(--color4);
+  outline: 1px solid white;
+  outline-offset: 1px;
+ }
+
+ .response_btns {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem;
+ }
+
+ .response_btns button {
+  /* padding: 0.3rem; */
+  /* padding: 0.3rem; */
+  background: var(--noteLeftBackground);
+  border-radius: 50%;
+  border: 1px solid var(--headerBorderBottom);
+ }
+
+
+.bot_res_header {
+  padding: 1rem;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid var(--editorBorder);
+  background: var(--channelHeader);
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+
+.bot_res_header .bot_res_up_txt {
+
+}
+
+
+
+.bot_res_header .bot_res_up_txt .bot_tg_title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color2);
+  margin-bottom: 0.5rem;
+}
+
+.bot_res_header .bot_res_up_txt .bot_tg_type {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--color3);
+  margin-bottom: 0.5rem;
+}
+
+.bot_res_header .bot_creation {
+  display: flex;
+  align-items: center;
+  align-items: baseline;
+}
+.bot_res_header .bot_creation  .profile {
+  display: flex;
+  align-items: baseline;
+  color: var(--logoColor);
+  gap: 0.3rem;
+  font-size: 1.1rem;
+
+}
+.bot_res_header .bot_creation  .profile svg {
+  font-size: 1.8rem;
+
+}
+
+.bot_res_content {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+
+}
+
+.bot_res_header .bot_creation .timesmp {
+  font-size: 0.8rem;
+  color: var(--color3);
+}
+
+.bot_res_content .resp_text {
+
+}
+.bot_res_content .bot_msg_file {
+
+}
+.resp_logo {
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  border-radius: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+
+}
+.resp_logo svg {
+  font-size: 2.1rem;
+  
+}
+.bot_res_table_row tr:hover {
+  background-color: var(--testBtnActive) !important;
 }

@@ -38,7 +38,6 @@ import 'react-quill/dist/quill.snow.css';
 import 'quill-mention';
 import QuillMention from 'quill-mention'
 import 'quill-mention/dist/quill.mention.css';
-
 interface ChatInputProps {
     apiUrl: string;
     query: Record<string, any>;
@@ -52,11 +51,13 @@ interface ChatInputProps {
   }
   const formSchema = z.object({
     content: z.string().optional(),
+    contentText:z.string().optional(),
     fileUrl: z.string().array().optional()
   });
 
 
   Quill.register('modules/mentions', QuillMention)
+  // Quill.import(Delta)
 
 
 const EditorFooter = ({apiUrl,
@@ -87,7 +88,6 @@ const EditorFooter = ({apiUrl,
     const [emojiDialog, setEmojiDialog] = useState(false);
     const reactQuillRef = useRef(null);
     const [toolBarToogle, setToolBarToogle] = useState(false);
-
 
     const params = useParams();
 
@@ -124,6 +124,8 @@ const EditorFooter = ({apiUrl,
         url: apiUrl,
         query,
       });
+
+      console.log(url, values);
 
       if(screenUrl){
         form.setValue('fileUrl', [screenUrl]);
@@ -210,7 +212,6 @@ const EditorFooter = ({apiUrl,
     // let data = `${<span className="mention" data-index="0" data-denotation-char="@" data-id="1" data-value="Fredrik Sundqvist">&#xFEFF;<span contentEditable="false">@{e}</span>&#xFEFF;</span>}`
     // e=`@${e}`;
     const range = quill.getSelection(true);
-    console.log("Range From On Group Select", range);
     // quill.insertText(range.index, data);
     quill.insertEmbed(range.index, "mention", {
       id: 1,
@@ -218,7 +219,6 @@ const EditorFooter = ({apiUrl,
       value: e,
     });
     onChangee(range.index, `@${e}`);
-    console.log("ACTUAL VALUE", form.getValues("content"));
   }
 
 
@@ -239,88 +239,88 @@ const EditorFooter = ({apiUrl,
   }
 
 
- const  modules = {
-  // mention: {
-  //   allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-  //   mentionDenotationChars: ["@", "#"],
-  //   source: function (searchTerm:string, renderItem:any, mentionChar:string) {
-  //     // This is where you fetch your mention data and render it
-  //     // Example:
-  //     console.log(groups);
-  //     let values:Array<Object> = [];
+//  const  modules = {
+//   // mention: {
+//   //   allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+//   //   mentionDenotationChars: ["@", "#"],
+//   //   source: function (searchTerm:string, renderItem:any, mentionChar:string) {
+//   //     // This is where you fetch your mention data and render it
+//   //     // Example:
+//   //     console.log(groups);
+//   //     let values:Array<Object> = [];
 
-  //     if(mentionChar==="@"){
-  //       for(let i=0; i<channelMember.length; i++){
-  //         values.push({
-  //           id: channelMember[i].id,
-  //           value: channelMember[i]?.user?.name,
-  //           type:"member"
-  //         })
-  //       }
-  //       for(let i=0; i<groups.length; i++) {
-  //         values.push({
-  //           id: groups[i].id,
-  //           value: groups[i].handle,
-  //           name:groups[i].name,
-  //           type:"group"
-  //         })
-  //       }
-  //     }else {
-  //       for(let i=0; i<channels.length; i++){
-  //         values.push({
-  //           id: channels[i].id,
-  //           value:`${channels[i].name}` ,
-  //           name:`#${channels[i].name}` ,
+//   //     if(mentionChar==="@"){
+//   //       for(let i=0; i<channelMember.length; i++){
+//   //         values.push({
+//   //           id: channelMember[i].id,
+//   //           value: channelMember[i]?.user?.name,
+//   //           type:"member"
+//   //         })
+//   //       }
+//   //       for(let i=0; i<groups.length; i++) {
+//   //         values.push({
+//   //           id: groups[i].id,
+//   //           value: groups[i].handle,
+//   //           name:groups[i].name,
+//   //           type:"group"
+//   //         })
+//   //       }
+//   //     }else {
+//   //       for(let i=0; i<channels.length; i++){
+//   //         values.push({
+//   //           id: channels[i].id,
+//   //           value:`${channels[i].name}` ,
+//   //           name:`#${channels[i].name}` ,
             
-  //         })
-  //       }
-  //     }
+//   //         })
+//   //       }
+//   //     }
    
-  //     console.log("Search Item Length:", searchTerm.length);
-  //     if (searchTerm.length === 0) {
-  //       renderItem(values, searchTerm);
-  //     } else {
-  //       const matches = [];
-  //       console.log("Values Length", values.length);
-  //       for (let i = 0; i < values.length; i++) {
-  //         console.log("Values", i, values);
-  //         // Check against any relevant attribute for filtering
-  //         if (
-  //           ~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())
-  //           // ~values[i].email.toLowerCase().indexOf(searchTerm.toLowerCase())
-  //         ) {
-  //           matches.push(values[i]);
-  //           console.log(values[i])
-  //         }
-  //       }
-  //       renderItem(matches, searchTerm);
-  //     }
-  //   },
-  // },
-  toolbar: [
-    ['bold', 'italic', 'underline','strike'],
-    [{'list': 'ordered'}, {'list': 'bullet'}],
-    ['blockquote'],['code-block'],
-    ['clean']
-  ],
-  // keyboard: {
-  //   bindings: {
-  //     shift_enter: {
-  //       key: 13,
-  //       shiftKey: true,
-  //       handler: (range, ctx) => {
-  //         console.log(range, ctx); // if you want to see the output of the binding
-  //         this.editor.insertText(range.index, '\n');
-  //       }
-  //     },
-  //     enter: {
-  //       key: 13,
-  //       handler: onsubmit
-  //     }
-  //   }
-  // }
+//   //     console.log("Search Item Length:", searchTerm.length);
+//   //     if (searchTerm.length === 0) {
+//   //       renderItem(values, searchTerm);
+//   //     } else {
+//   //       const matches = [];
+//   //       console.log("Values Length", values.length);
+//   //       for (let i = 0; i < values.length; i++) {
+//   //         console.log("Values", i, values);
+//   //         // Check against any relevant attribute for filtering
+//   //         if (
+//   //           ~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())
+//   //           // ~values[i].email.toLowerCase().indexOf(searchTerm.toLowerCase())
+//   //         ) {
+//   //           matches.push(values[i]);
+//   //           console.log(values[i])
+//   //         }
+//   //       }
+//   //       renderItem(matches, searchTerm);
+//   //     }
+//   //   },
+//   // },
+//   toolbar: [
+//     ['bold', 'italic', 'underline','strike'],
+//     [{'list': 'ordered'}, {'list': 'bullet'}],
+//     ['blockquote'],['code-block'],
+//     ['clean']
+//   ],
+//   // keyboard: {
+//   //   bindings: {
+//   //     shift_enter: {
+//   //       key: 13,
+//   //       shiftKey: true,
+//   //       handler: (range, ctx) => {
+//   //         console.log(range, ctx); // if you want to see the output of the binding
+//   //         this.editor.insertText(range.index, '\n');
+//   //       }
+//   //     },
+//   //     enter: {
+//   //       key: 13,
+//   //       handler: onsubmit
+//   //     }
+//   //   }
+//   // }
 
-}
+// }
  
 
 const modules2 = {
@@ -367,16 +367,56 @@ const modules2 = {
     };
   }, [draftContent]); 
 
+
+  useEffect(()=>{
+    if(reactQuillRef.current){
+      const quill = reactQuillRef.current.editor;
+      quill.keyboard.addBinding({
+        key: 'S', // The key you want to use for the shortcut
+        ctrlKey: true, // Whether the Ctrl key should be pressed
+        handler: () => {
+          console.log('Ctrl+S pressed'); // Perform any action you want here
+        }
+      });
+
+      quill.keyboard.addBinding({
+        key: 'Z',
+        ctrlKey: true,
+        handler: () => {
+          console.log('Ctrl+Z pressed');
+        }
+      });
+      // quill.keyboard.addBinding({
+      //   key: 'Enter',
+      //   handler: (range: any, context: any) => {
+      //     if (!range) {
+      //       console.log('Enter pressed without selection');
+      //       return true;
+      //     }
+      //     return false; 
+      //   }
+      // });
+
+    }
+  }, [])
+
+
+
+
   const InputHandler = (event:any) => {
     form.setValue("content", event);
+    // console.log(event);
+    const editorRef = reactQuillRef.current.getEditor();
+    // console.log(editorRef.getText())
+    form.setValue("contentText", editorRef.getText())
+    
     setDraftContent(event);
     if (stripHtmlTags(event)==="") {
       deleteFromDatabase();
     }
   };
   const saveToDatabase = async() => {
-    console.log('Saving to database:', draftContent);
-    console.log("Length: ", drafts.length)
+    
     try {
       if(drafts.length===0){
         const res = await axios.post(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&sectionId=${query?.sectionId}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
@@ -386,11 +426,10 @@ const modules2 = {
       
       router.refresh();
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   };
   const deleteFromDatabase = async() => {
-    console.log('Deleting from database');
     try {
       const res = await axios.delete(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`);
       router.refresh();
@@ -401,10 +440,47 @@ const modules2 = {
   };
   const stripHtmlTags = (html:any) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
-    console.log("HTML TAG", doc.body.textContent)
+
     return doc.body.textContent || "";
   };
 
+  const modules = {
+    'toolbar':[
+      ['bold', 'italic', 'underline','strike'],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
+      ['blockquote'],['code-block'],
+      ['clean']
+    ],
+    
+    // 'keyboard': {
+    //   bindings: {
+    //     // shift_enter: {
+    //     //   key: 13,
+    //     //   shiftKey: true,
+    //     //   handler: (range, ctx) => {
+    //     //     console.log(range, ctx); // if you want to see the output of the binding
+    //     //     // this.editor.insertText(range.index, '\n');
+    //     //   }
+    //     // },
+    //     // enter: {
+    //     //   key: 13,
+    //     //   handler: () => console.log("Submit Form")
+    //     // }
+    //   }
+    // }
+    
+  }
+
+
+  const KeyPressHandler =()=>{
+    const quill = reactQuillRef.current.getEditor();
+    console.log(quill.root.innerText)
+    // console.log(quill.root.in)
+    if (quill) {
+      return quill.root.innerHTML;
+    }
+    return '';
+  }
 
   return(
     <>
@@ -441,15 +517,37 @@ const modules2 = {
             theme={"snow"}
             
             onChange={e=>InputHandler(e)} 
+            // onKeyPress={()=>KeyPressHandler()}
             defaultValue={drafts && drafts[0]?.content}
             // placeholder={form.getValues("content")}
              placeholder={`Message to ${(type==="channel" && channelType==="public") ? "#" :(type==="channel" && channelType==="private")? "#":""}${name}`} 
-            modules={{'toolbar':[
-              ['bold', 'italic', 'underline','strike'],
-              [{'list': 'ordered'}, {'list': 'bullet'}],
-              ['blockquote'],['code-block'],
-              ['clean']
-            ]}}
+            modules={{
+              toolbar:[
+                ['bold', 'italic', 'underline','strike'],
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                ['blockquote'],['code-block'],
+                ['clean']
+              ],
+              // keyboard: {
+              //   bindings: {
+              //     // shift_enter: {
+              //     //   key: 13,
+              //     //   shiftKey: true,
+              //     //   handler: (range, ctx) => {
+              //     //     console.log(range, ctx); // if you want to see the output of the binding
+              //     //     // this.editor.insertText(range.index, '\n');
+              //     //   }
+              //     // },
+              //     enter: {
+              //       key: 13,
+              //       handler: () => {
+              //         console.log("Submitted Form")
+              //       }
+              //     }
+              //   }
+              // }
+      
+            }}
             />
             </div>
         
