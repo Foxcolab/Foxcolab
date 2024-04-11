@@ -19,7 +19,7 @@ interface Props {
     schemaType:string
 }
 function SingleRoleCompoents({title, subTitle, state, onChangeHandler, disabled, schemaType}:Props) {
-  console.log("Schema Doan;e", title, disabled)
+
   return (
     <>
     

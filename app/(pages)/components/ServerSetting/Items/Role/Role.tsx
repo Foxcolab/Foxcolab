@@ -9,8 +9,9 @@ import SchemaRoles from './components/SchemaRoles'
 interface Props {
     setOpen: any
     server:Server
+    isAdmin:boolean
   }
-function Role({setOpen, server}:Props) {
+function Role({setOpen, server, isAdmin}:Props) {
 
   const [serverUpdate, setServerUpdate] = useState(server.whoCanUpdateServer);
   const [invite, setInvite] = useState(server.whoCanInviteMember);
@@ -78,6 +79,7 @@ function Role({setOpen, server}:Props) {
     <SchemaRoles title="Manage Channel Managers" subTitle='Allows you to add new channel manager and remove exising one from channel manager list' type='Channel' />
     <SchemaRoles title="Manage Channel Members" subTitle='Allows you to add new channel member or remove existing one from this channel.' type='Channel' />
     <SchemaRoles title="Manage Messages" subTitle='Allows you to delete channel messages.' type='Channel' />
+    <SchemaRoles title="Pin Message" subTitle='Allows you to pin a messsage in the channel.'  type='Channel' />
     <SchemaRoles title="Create Polls" subTitle='Allows you to create polls in the channel.' type='Channel' />
     <SchemaRoles title="Create Forums" subTitle='Allows you to create forums in the channel.' type='Channel' />
    

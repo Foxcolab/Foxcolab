@@ -11,31 +11,38 @@ export const PUT =async(req:NextRequest)=>{
         if(!serverId) return NextResponse.json({error:"Server Id not found"}, {status:409});
         const userId = await GetDataFromToken(req);
         if(!userId) return NextResponse.json({success:false, message:"You are not authorized"}, {status:401});
-        const member = await db.member.findFirst({
-            where:{
-                userId:userId,
-                serverId:serverId as string
-            
-            }})
-        if(!member || (member.role!=="admin" && member.role!=="moderator")) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
-        const reqBody = await req.json();
+         const reqBody = await req.json();
         const { memberId} = reqBody;
-        console.log("NAME->>>>", memberId);
         if(!memberId) return NextResponse.json({error:"Name not found"}, {status:409});
 
         const server = await db.server.findFirst({
             where:{
-                id:serverId as string
+                id:serverId as string,
+                Members:{
+                    some:{
+                        userId:userId
+                    }
+                },
+            },
+            include:{
+                Members:{
+                    where:{
+                        userId:userId
+                    }
+                }
             }
-        });
-        if(!server) return NextResponse.json({error:"Server not found"}, {status:409});
-        const isOwner = server.createdBy===member.userId;
-        const isAdmin = member.role==="admin" || member.role==="moderator";
-        const ownerId = member.id;
-        if(ownerId===memberId) return NextResponse.json({
-            error:"You cannot remove the owner of this server"
-        }, {status:409});
-        if(!isAdmin && !isOwner) return NextResponse.json({error:"You are not authorized"}, {status:409});
+        })
+        if(!server) return NextResponse.json({success:false, message:"Server not found"}, {status:409});
+
+        const member = server.Members[0];
+        let hasPermission = false;
+        const whoCanUpdate = server.whoCanKickMember;
+        if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+            hasPermission = true;
+        }
+
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+
         let removeMember = await db.member.findFirst({
             where:{
                 id: memberId,

@@ -11,11 +11,10 @@ export const POST =async(req:NextRequest)=>{
         const serverId = req.nextUrl.searchParams.get('serverId');
         const canvasId = req.nextUrl.searchParams.get('canvasId');
         const managerId = req.nextUrl.searchParams.get('managerId');
-        console.log(serverId, canvasId, managerId);
         const reqBody = await req.json();
         const {managerIds} = reqBody;
         if(managerIds.length===0) return NextResponse.json({error:"Member not found"}, {status:200})
-        console.log(managerIds)
+ 
         if(!serverId || canvasId) return NextResponse.json({error:"Something went wrong"}, {status:409});
         const userId = await GetDataFromToken(req);
         const member = await db.member.findFirst({
@@ -38,13 +37,17 @@ export const POST =async(req:NextRequest)=>{
 
         });
         if(!canvas) return NextResponse.json({error:"Canvas not found"}, {status:409});
+        let hasPermission = false;
+        const whoHavePermission = canvas?.whoCanManageManager;
         const managers = canvas?.manager?.memberIds;
-        console.log(managers)
         const isManager = managers?.some(m => m === member?.id);
-        console.log(isManager)
-
-        if(!isManager) return NextResponse.json({error:"You are not authorized to add this member"}, {status:403});
-
+        const isAdmin = canvas.createdBy===member.id;
+        const isMember = canvas.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
         await db.canvas.update({
             where:{
                 id:canvasId as string,

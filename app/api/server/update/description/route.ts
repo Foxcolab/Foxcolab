@@ -11,19 +11,41 @@ export const PUT =async(req:NextRequest)=>{
         if(!serverId) return NextResponse.json({error:"Server Id not found"}, {status:409});
         const userId = await GetDataFromToken(req);
         if(!userId) return NextResponse.json({success:false, message:"You are not authorized"}, {status:401});
-        const member = await db.member.findFirst({
-            where:{
-                userId:userId,
-                serverId:serverId as string
-            
-            }})
-        if(!member || (member.role!=="admin" && member.role!=="moderator")) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
         const reqBody = await req.json();
         const {description} = reqBody;
         console.log("DESCRIPTION::", description);
         if(!description) return NextResponse.json({error:"description not found"}, {status:409});
+        
+        const server = await db.server.findFirst({
+            where:{
+                id:serverId as string,
+                Members:{
+                    some:{
+                        userId:userId
+                    }
+                },
+            },
+            include:{
+                Members:{
+                    where:{
+                        userId:userId
+                    }
+                }
+            }
+        });
 
-        const server = await db.server.update({
+        if(!server ) return NextResponse.json({success:false, message:"Server not found"}, {status:409});
+
+        const member = server.Members[0];
+        let hasPermission = false;
+        const whoCanUpdate = server.whoCanUpdateServer;
+        if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+            hasPermission = true;
+        }
+
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+
+        const updatedServer = await db.server.update({
             where:{
                 id:serverId as string
             },
@@ -33,7 +55,7 @@ export const PUT =async(req:NextRequest)=>{
         });
         await CreateActivityLog(serverId, member.id, "Updated", "Server", "Description", "" );
 
-        return NextResponse.json({success:true, server}, {status:200});
+        return NextResponse.json({success:true, server:updatedServer}, {status:200});
     } catch (error) {
         
     }

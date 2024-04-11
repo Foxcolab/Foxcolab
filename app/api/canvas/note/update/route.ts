@@ -53,9 +53,9 @@ export const PUT =async(req:NextRequest, params:{noteId:String})=>{
                 createdUser:true
             }
         });
-        console.log("Note Id",note?.id);
+        if(!note) return NextResponse.json({error:"Note not found"}, {status:409});
         
-        if(member.id!==note?.createdBy && (member?.role!=='admin' || member?.role!=="moderator")){
+        if(member.id!==note?.createdBy && note.canEveryoneUpdate===false ){
             return NextResponse.json({message:"You are not authorized to edit this note.", status:401, success:false}, {status:401})
         }
 

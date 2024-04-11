@@ -35,8 +35,9 @@ import axios from 'axios'
 interface Props {
     setOpen: any
     botResponse:BotResponse[]
+    hasPermission:boolean
   }
-function Bot({setOpen, botResponse}:Props) {
+function Bot({setOpen, botResponse, hasPermission}:Props) {
   const params = useParams();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [response, setResponse] = useState<null | BotResponse>(null);
@@ -85,8 +86,10 @@ function Bot({setOpen, botResponse}:Props) {
         <ItemHeader setOpen={setOpen} title='Bots' />
         <div className="setting_section" style={{borderBottom:"none"}}>
         <div className="setting_section_title">Slackbot can automatically respond to messages that members of your server send in channels. </div>
-
-        <CreateResponse  serverId={params?.id as string} />
+        {
+          hasPermission && <CreateResponse  serverId={params?.id as string} />
+        }
+        
         {/* <SingleOpenBot/> */}
 
 
@@ -99,7 +102,10 @@ function Bot({setOpen, botResponse}:Props) {
           {/* <TableHead>No of File</TableHead> */}
           <TableHead>Created By</TableHead>
           <TableHead>Timestamp</TableHead>
-          <TableHead>Operations</TableHead>
+          {
+            hasPermission && <TableHead>Operations</TableHead>
+          }
+          
 
 
         </TableRow>
@@ -113,11 +119,13 @@ function Bot({setOpen, botResponse}:Props) {
               {/* <TableCell>{response.responseFileUrl.length}</TableCell> */}
               <TableCell onClick={()=>onClickHandler(response)}>{response.createdMember.user.name}</TableCell>
               <TableCell onClick={()=>onClickHandler(response)}>{format(new Date(response.updatedAt), 'dd MMM, yyyy')}</TableCell>
-              <TableCell className='member_operations' >
-              <button className='bg-gray-500 text-white' onClick={()=>EditHandler(response)}><RiEditBoxFill/></button>
-              <button className='bg-red-500 text-white' onClick={()=>RemovedHandler(response.id, response.triggeredText)}><AiFillDelete/></button>
-
+              {
+                hasPermission && <TableCell className='member_operations' >
+                <button className='bg-gray-500 text-white' onClick={()=>EditHandler(response)}><RiEditBoxFill/></button>
+                <button className='bg-red-500 text-white' onClick={()=>RemovedHandler(response.id, response.triggeredText)}><AiFillDelete/></button>
                 </TableCell>
+              }
+              
 
 
             </TableRow>

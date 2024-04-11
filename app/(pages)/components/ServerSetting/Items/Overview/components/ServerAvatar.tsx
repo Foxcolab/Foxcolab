@@ -1,4 +1,5 @@
 import Loader from '@/app/(pages)/components/Loaders/Loader';
+import { MemberRole } from '@prisma/client';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import axios from 'axios';
 import Image from 'next/image';
@@ -9,8 +10,11 @@ interface Props {
     serverId:string
     displayPic:string 
     coverPic:string
+    whoCanUpdate:MemberRole
+    hasPermission:boolean
+
 }
-function ServerAvatar({displayPic,coverPic, serverId}:Props) {
+function ServerAvatar({displayPic,coverPic, serverId, hasPermission}:Props) {
     const [preview, setPreview] = useState<null | string>(displayPic);
 
     const [dp, setDp] = useState<null | any>(null);
@@ -66,12 +70,16 @@ function ServerAvatar({displayPic,coverPic, serverId}:Props) {
         // setPreview(fileUrl);
     }
 
+ 
+
   return (
     <>
      <div className="setting_section">
             
             <div className="setting_section_title">Server Avatar</div>
-            <div className="setting_section_content">
+            {
+                hasPermission ? <>
+                 <div className="setting_section_content">
                 <div className="setting_avt">
                     <>
                     <div className='server_ndp' onMouseEnter={()=>setShowOpt(true)} onMouseLeave={()=>setShowOpt(false)}>
@@ -96,7 +104,32 @@ function ServerAvatar({displayPic,coverPic, serverId}:Props) {
                 </div>
     
             </div>
+            </>
+             :
+
+            <div className="setting_section_content">
+                <div className="setting_avt">
+                    <>
+                    <div className='server_ndp' >
+                    {
+                        preview && <Image src={preview} height={100} width={100} alt='image' />
+                    }
+                     
+                    
+                    </div>
+                   
+                    
+                    </>
+
+                   
+                </div>
+    
             </div>
+
+                
+            }
+    </div>
+           
     
 
 

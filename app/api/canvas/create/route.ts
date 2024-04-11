@@ -14,15 +14,36 @@ export const POST =async(req:NextRequest)=>{
         const userId = GetDataFromToken(req);
         const user = await db.user.findFirst({where:{id:userId}});
 
-
-        const member = await db.member.findFirst({
+        const server = await db.server.findFirst({
             where:{
-                userId:userId,
-                serverId: serverId as string
+                id:serverId as string,
+                Members:{
+                    some:{
+                        userId:userId
+                    }
+                },
+
+            },
+            include:{
+                Members:{
+                    where:{
+                        userId:userId
+                    }
+                }
             }
         })
-        if(!member){return NextResponse.json({error:"You are not authorized to create a channel"}, {status:500})};
 
+        if(!server ) return NextResponse.json({success:false, message:"Server not found"}, {status:409});
+
+        const member = server.Members[0];
+        let hasPermission = false;
+        const whoCanUpdate = server.whoCreateCanvas;
+        if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+            hasPermission = true;
+        }
+
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
 
 
         const section = await db.section.update({
@@ -35,7 +56,7 @@ export const POST =async(req:NextRequest)=>{
                     create: {
                         title,
                         type,
-                        createdBy:user?.id as string,
+                        createdBy:member.id as string,
                         serverId:serverId as string,
                         memberIds:[member.id],
                         Members:{
@@ -45,7 +66,12 @@ export const POST =async(req:NextRequest)=>{
                             create:{
                                 serverId:serverId as string,
                                 sectionId:sectionId as string,
-                                memberIds:[member.id]
+                                memberIds:[member.id],
+                                member:{
+                                    connect:[{
+                                        id:member.id
+                                    }]
+                                }
                             }
                         }
                         

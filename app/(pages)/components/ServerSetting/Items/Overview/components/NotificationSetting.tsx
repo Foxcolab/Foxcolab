@@ -6,8 +6,9 @@ import React, { useState } from 'react'
 interface Props {
   serverId:string
   defaultNotification:string
+  hasPermission:boolean
 }
-function NotificationSetting({serverId, defaultNotification}:Props) {
+function NotificationSetting({serverId, defaultNotification, hasPermission}:Props) {
 
   const [defaultNoti, setDefaultNoti] = useState(defaultNotification);
   const [loading, setLoading] = useState(false);
@@ -37,10 +38,10 @@ function NotificationSetting({serverId, defaultNotification}:Props) {
             <div className="server_set_inp">
               <div className="">
                 <div className='ser_radio_sec'>
-                <input type="radio" value={"All Messages"} name="default_noti" defaultChecked={defaultNoti==="All Messages"} onChange={e=>setDefaultNoti(e.target.value)} /> All Messages
+                <input type="radio" value={"All Messages"} name="default_noti" defaultChecked={defaultNoti==="All Messages"} onChange={e=>setDefaultNoti(e.target.value)} disabled={!hasPermission} /> All Messages
               </div>
               <div className="ser_radio_sec">
-                <input type="radio" value={"All Mentions"} name="default_noti" defaultChecked={defaultNoti==="All Mentions"} onChange={e=>setDefaultNoti(e.target.value)} /> All Mentions
+                <input type="radio" value={"All Mentions"} name="default_noti" defaultChecked={defaultNoti==="All Mentions"} onChange={e=>setDefaultNoti(e.target.value)} disabled={!hasPermission} /> All Mentions
               </div>
             </div>
            

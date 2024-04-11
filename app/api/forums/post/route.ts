@@ -53,37 +53,24 @@ export const POST =async(req:NextRequest)=>{
                         userId:userId
                     }
                 }
+            },
+            include:{
+                manager:true
             }
         });
         if(!forumChannel) return NextResponse.json({error:"Forums not found"}, {status:409});
 
-        // await db.forumsChannel.update({
-        //     where:{
-        //         id:forums.id as string,
-        //     },
-        //     data:{
-        //         Forums:{
-        //             create:{
-        //                 title,
-                        
-        //                 memberId:member?.id as string,
-        //                 serverId:server.id as string,
-        //                 sectionId:forums.sectionId as string,
-        //                 responses:{
-        //                     create:[
-        //                         {
-        //                             content,
-        //                             fileUrl,
-        //                             createdBy:member?.id as string,
-        //                             serverId:server.id as string,
-        //                             sectionId:forums.sectionId as string
-        //                         }
-        //                     ]
-        //                 }
-        //             }
-        //         }
-        //     }
-        // });
+        let hasPermission = false;
+        const whoHavePermission = forumChannel?.whoCanCreatePost;
+        const managers = forumChannel?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = forumChannel.createdBy===member.id;
+        const isMember = forumChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
 
         const forums = await db.forums.create({
             data:{
@@ -176,10 +163,25 @@ export const DELETE =async(req:NextRequest)=>{
                         id:forumId,
                         forumsChannelId:forumChannelId
                     }
-                }
+                },
+                manager:true
             }
         });
         if(!forumChannel) return NextResponse.json({error:"Forums not found"}, {status:409});
+
+        let hasPermission = false;
+        const whoHavePermission = forumChannel?.whoCanDeletePost;
+        const managers = forumChannel?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = forumChannel.createdBy===member.id || forumChannel.Forums[0].memberId===member.id;
+        const isMember = forumChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
+
+
 
        const forum  = await db.forums.delete({
         where:{

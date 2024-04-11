@@ -13,15 +13,54 @@ import { RiSurveyFill } from "react-icons/ri";
 import { IoIosLock } from "react-icons/io";
 import { myProfile } from '@/lib/db/profile';
 import { NameDropDown } from '../Header/NameDropDown';
+import { Member, Server } from '@prisma/client';
 
 
-const ChannelSidebar =async({server}) =>{
+interface Props {
+    server:Server & {
+        currentMember:Member
+    } & {
+        Members:Member[]
+    }
     
-    const user = await myProfile();
-    if(!user) redirect(`home`);
+}
+
+const ChannelSidebar =async({server}:Props) =>{
+    
+    // const user = await myProfile();
+    // if(!user) redirect(`home`);
     // const server = await getMyserver
-    const members = server.Members && server.Members.filter(member=>member.userId!==user.id);
     const currentMember = server.currentMember;
+    const members = server.Members && server.Members.filter(member=>member.userId!==currentMember.userId);
+
+
+
+    let createChannel = false;
+    let createForum = false;
+    let createCanvas = false;
+    let createTestChannel = false;
+    let createSection = false;
+
+    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateChannel==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateChannel==="moderator") || (currentMember.role==="admin" && server.whoCreateChannel==="admin")  ){
+        createChannel = true;
+    }
+    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="moderator") || (currentMember.role==="admin" && server.whoCreateForum==="admin")  ){
+        createForum = true;
+    }
+    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateCanvas==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateCanvas==="moderator") || (currentMember.role==="admin" && server.whoCreateCanvas==="admin")  ){
+        createCanvas = true;
+    }
+    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="moderator") || (currentMember.role==="admin" && server.whoCreateForum==="admin")  ){
+        createTestChannel = true;
+    }
+    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSection==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSection==="moderator") || (currentMember.role==="admin" && server.whoCreateSection==="admin")  ){
+        createSection = true;
+    }
+
+  
+
+
+
     
   return (
     <>
@@ -30,11 +69,11 @@ const ChannelSidebar =async({server}) =>{
     <ScrollArea className='flex-1 w-full'>
              <div className="server_logo">
                 <div className="">
-                <NameDropDown server={server} />
+                <NameDropDown server={server} createSection={createSection} />
                 </div>
               
             </div>
-            <ChannelFeature id={server.id} sections={server.sections} member={currentMember} />
+            <ChannelFeature id={server.id} sections={server.sections} member={currentMember} whoCreateSection={server.whoCreateSection} />
         
     <div className='channels'>
         {
@@ -45,7 +84,12 @@ const ChannelSidebar =async({server}) =>{
                         <div>
                         <FaDharmachakra/>{section.name}
                         </div>
-                            <SectionPlus sectionId={section.id} serverId={server.id} />                       
+                            {
+                                createChannel===false && createCanvas===false && createForum===false && createTestChannel===false ? 
+                                "" : 
+                                <SectionPlus sectionId={section.id} serverId={server.id} createChannel={createChannel} createCanvas={createCanvas} createForum={createForum} createTestChannel={createTestChannel}  />  
+                            }
+                                                 
                        </div>
                   
         <div className='sidecontent '>

@@ -11,9 +11,10 @@ interface Props {
     setOpen: any
     serverType:string
     serverId:string
-    discoverable:string
+    discoverable:boolean
+    hasPermission:boolean
   }
-function Privacy({setOpen, serverType, serverId, discoverable}:Props) {
+function Privacy({setOpen, serverType, serverId, discoverable, hasPermission}:Props) {
   const [type, setType] = useState(serverType);
   const [discover, setDiscover] = useState(discoverable);
   const [loading, setLoading] = useState(false);
@@ -42,7 +43,7 @@ function Privacy({setOpen, serverType, serverId, discoverable}:Props) {
               <div className="">
                 <div className='ser_radio_sec2'>
                   <div className=''>
-                <input type="radio" value={"public"} name="server_type" defaultChecked={type==="public"} onChange={e=>setType(e.target.value)} /> 
+                <input type="radio" value={"public"} name="server_type" defaultChecked={type==="public"} onChange={e=>setType(e.target.value)} disabled={!hasPermission} /> 
                 </div> 
                 <div>
                  Public
@@ -54,7 +55,7 @@ function Privacy({setOpen, serverType, serverId, discoverable}:Props) {
               </div>
               <div className="ser_radio_sec2">
                 <div>
-                <input type="radio" value={"private"} name="server_type" defaultChecked={type==="private"} onChange={e=>setType(e.target.value)} /> 
+                <input type="radio" value={"private"} name="server_type" defaultChecked={type==="private"} onChange={e=>setType(e.target.value)} disabled={!hasPermission} /> 
                 </div>
                 <div>
                 Private
@@ -75,7 +76,7 @@ function Privacy({setOpen, serverType, serverId, discoverable}:Props) {
       </div>
       </div>
 
-      <Switch id="airplane-mode" disabled={type==="private"} onCheckedChange={(e:any)=>setDiscover(e)} />
+      <Switch id="airplane-mode" disabled={type==="private" || !hasPermission} onCheckedChange={(e:any)=>setDiscover(e)} checked={discover} />
 
     </div>
         <div className='privacy_save py-2'>

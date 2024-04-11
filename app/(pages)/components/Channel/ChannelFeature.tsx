@@ -26,16 +26,17 @@ import {FaSquareThreads} from "react-icons/fa6"
 import { Separator } from '@/components/ui/separator';
 import CreateCanvas from '../Create/CreateCanvas';
 import CreateTest from '../Create/CreateTest';
-import { Member, Section } from '@prisma/client';
+import { Member, MemberRole, Section } from '@prisma/client';
 
 
 interface Props {
     id:string
     sections:Section[]
     member:Member
+    whoCreateSection:MemberRole
 }
 
-function ChannelFeature({id, sections, member}:Props) {
+function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
     const allNavs = [
         {
             title:"Threads",
@@ -88,6 +89,11 @@ function ChannelFeature({id, sections, member}:Props) {
         }
     }
 
+    let hasPermission = false;
+    if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCreateSection==="user") || ((member.role==="moderator" || member.role==="admin") && whoCreateSection==="moderator") || (member.role==="admin" && whoCreateSection==="admin")  ){
+        hasPermission = true;
+    }
+
   
   return (
     <>
@@ -119,16 +125,16 @@ function ChannelFeature({id, sections, member}:Props) {
         
 <Separator className='sidebar_separator'  />
 
+        {
+            hasPermission &&  <>
             <div className="sidecontent">
-                <CreateSection serverId={id}  />
-                {/* <CreateChannel serverId={id} sections={sections} />
-                <CreateForums serverId={id} sections={sections} />
-                <CreateCanvas serverId={id} sections={sections} />
-                <CreateTest serverId={id} sections={sections} /> */}
+                <CreateSection serverId={id} hasPermission={hasPermission}  />
             </div>
 
 
            <Separator className='sidebar_separator' />
+            </>
+        }
 
         </div>
     

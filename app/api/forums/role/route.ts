@@ -20,12 +20,20 @@ export const PUT =async(req:NextRequest)=>{
                 serverId:serverId as string
             
             }})
-        if(!member || (member.role!=="admin")) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        if(!member ) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
         const reqBody = await req.json();
         const {title, schemaValue} = reqBody;
       
         if(!title || !schemaValue) return NextResponse.json({error:"Something went wrong"}, {status:409});
         
+        const forumChannel = await db.forumsChannel.findFirst({
+            where:{
+                id:forumChannelId,
+                serverId:serverId as string
+            },
+            
+        });
+        if(!forumChannel || forumChannel.createdBy!==member.id) return NextResponse.json({success:false, message:"Channel not found"}, {status:409});
         
         // let schemaType;
         // if(title==="Update Forum Channel"){

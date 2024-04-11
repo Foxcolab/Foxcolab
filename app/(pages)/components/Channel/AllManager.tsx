@@ -127,6 +127,7 @@ function AllManager({isAdmin, managers, name, type,channelMember, managerId, sch
         setConfirmation(true);
         setRemoveId(e);
       }
+
   return (
     <>
       <Dialog>

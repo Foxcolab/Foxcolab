@@ -24,6 +24,8 @@ import EditDailog from './EditDialog';
 
 interface ChannelSettingProps {
     isAdmin:boolean
+    updatePermission:boolean
+    publicToPrivate:boolean
     type:string,
     name:string,
     description:string,
@@ -36,7 +38,7 @@ interface ChannelSettingProps {
     ChangeDescriptionHandler:any
     schemaType:string
 }
-function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, setDescription, ChangeNameHandler, ChangeDescriptionHandler,nameLoading , desciptionLoading, schemaType }:ChannelSettingProps) {
+function ChannelSetting({isAdmin, publicToPrivate, updatePermission, type, name, description, sendMsg, setName, setDescription, ChangeNameHandler, ChangeDescriptionHandler,nameLoading , desciptionLoading, schemaType }:ChannelSettingProps) {
     const [confirmation, setConfirmation] = useState(false);
     const [checked, setChecked] = useState(sendMsg);
     const defaultType = type==="private"?true : false;
@@ -44,15 +46,16 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
     const [loading, setLoading] = useState(false)
     const params = useParams()
     const router = useRouter();
-    // isAdmin=false;
+    // updatePermission=false;
     const RemoveChannel =()=>{
 
     }
     const saveChanges=async()=>{
         try {
-            setLoading(true);
+            
             {
               schemaType==="Forums" && 
+              setLoading(true);
               axios.put(`/api/forums/setting?serverId=${params?.id}&forumChannelId=${params?.forumId}`,{type:newType, sendMsg:checked}).then(res=>{
                 setLoading(false);
                 router.refresh();
@@ -60,6 +63,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
             }
             {
               schemaType==="Canvas" && 
+              setLoading(true);
               axios.put(`/api/canvas/setting?serverId=${params?.id}&canvasId=${params?.canvasId}`,{type:newType, sendMsg:checked}).then(res=>{
                 setLoading(false);
                 router.refresh();
@@ -67,6 +71,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
             }
             {
               schemaType==="Test Channel" && 
+              setLoading(true);
               axios.put(`/api/test/testChannel/setting?serverId=${params?.id}&testChannelId=${params?.testChannelId}`,{type:newType, sendMsg:checked}).then(res=>{
                 setLoading(false);
                 router.refresh();
@@ -74,6 +79,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
             }
             {
               schemaType==="Channel" && 
+              setLoading(true);
               axios.put(`/api/channel/setting?serverId=${params?.id}&channelId=${params?.channelId}`, {type:newType, sendMsg:checked}).then(res=>{
                 setLoading(false);
                 router.refresh();
@@ -98,7 +104,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
 <div className="about_channel_item">
   <div className="sup_text d-flex text-center justify-between"><span>{schemaType} Name</span> 
   {
-    isAdmin ? 
+    updatePermission ? 
     <EditDailog title={`${schemaType} Name`} submitHandler={ChangeNameHandler} setName={setName} type={"input"} description='Names must be lower case, without spaces or full stops, and can’t be longer than 80 characters.' defaultValue={name} loading={nameLoading} schemaType={schemaType}  />
     // <button className='text-blue-700 font-semibold hover:decoration-solid'>Edit</button>
      :
@@ -116,7 +122,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
 <div className="about_channel_item">
   <div className="sup_text d-flex text-center justify-between"><span>Description</span> 
   {
-    isAdmin ? 
+    updatePermission ? 
     <EditDailog title='Description' submitHandler={ChangeDescriptionHandler} setName={setDescription} type={"textarea"} description={`Let people know what this ${schemaType} is for. `} defaultValue={description} loading={desciptionLoading} />
      :
      <ActionTooltip label={`You don't have permission to change this setting for this ${schemaType}`} side='top' align='center'>
@@ -134,7 +140,7 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
 <div className="about_channel_item2">
   <div className="sup_text d-flex text-center justify-between"><span>Change to a {type==="public"? "Private":"Public"} {schemaType}</span> 
   {
-    isAdmin ? 
+    publicToPrivate ? 
     <Switch checked={newType} onCheckedChange={()=>setNewType(!newType)} />
      :
      <ActionTooltip label={`You don't have permission to change this setting for this ${schemaType}`} side='top' align='center'>
@@ -143,14 +149,14 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
   }
   </div>
 </div>
-<div className="about_channel_item2">
+{/* <div className="about_channel_item2">
     
             <div className="sup_text d-flex text-center justify-between">
               {schemaType==="Channel" ? `Allow member to send messages in this ${schemaType}` : `Allow member to create ${schemaType==="Forums"? "forum": schemaType==="Canvas"? "note" : schemaType==="Test" ? "test" : ''} in this ${schemaType}`}
 
             <div>
             {
-    isAdmin ? <Switch checked={checked} onCheckedChange={()=>setChecked(!checked)} />
+    updatePermission ? <Switch checked={checked} onCheckedChange={()=>setChecked(!checked)} />
      :
      <ActionTooltip label={`You don't have permission to change this setting for this ${schemaType}`} side='top' align='center'>
       <button className=''><BsFillQuestionCircleFill/></button>
@@ -166,13 +172,19 @@ function ChannelSetting({isAdmin, type, name, description, sendMsg, setName, set
             "Now only admin can send message"
         }
             </div>
- </div>          
+ </div>           */}
+
+
+
 <div className="flex items-center justify-between pr-4">
 <div className="pl-4 leave_div">
-            <Button className="" onClick={()=>setConfirmation(true)} disabled={!isAdmin}><AiFillDelete/> Delete {schemaType}  </Button>
+              {
+
+              }
+            <Button className="" onClick={()=>setConfirmation(true)} disabled={!updatePermission}><AiFillDelete/> Delete {schemaType}  </Button>
           </div>
 {
-    isAdmin && (checked!==sendMsg || newType===true )? <div className="pl-4 saved_chgs_member">
+    updatePermission && (checked!==sendMsg || newType===true )? <div className="pl-4 saved_chgs_member">
         {
             loading ? <Loader /> : <Button className="" onClick={saveChanges} > Save Changes</Button>
         }

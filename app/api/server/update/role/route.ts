@@ -172,17 +172,6 @@ export const PUT =async(req:NextRequest)=>{
             return NextResponse.json({success:true, server}, {status:200});
         }
 
-
-        // // const server = await db.server.update({
-        // //     where:{
-        // //         id:serverId as string
-        // //     },
-        // //     data:{
-                
-        // //     }
-        // // });
-        // await CreateActivityLog(serverId, member.id, "Updated", "Server", serverType, "Server Type" );
-        // return NextResponse.json({success:true, server}, {status:200});
     } catch (error) {
         
     }

@@ -44,7 +44,7 @@ export const POST =async(req:NextRequest)=>{
                 discoverable:discoverable,
                 sections:{
                     create:[
-                        {name:"Welcome", createdBy:user?.id as string, 
+                        {name:"General", createdBy:user?.id as string, 
                     }
                     ]
                 },
@@ -69,6 +69,26 @@ export const POST =async(req:NextRequest)=>{
             }
         });
 
+        const updateServer = await db.server.update({
+            where:{
+                id:server.id
+            },
+            data
+            :{
+                groups:{
+                    create:{
+                        name:"Owner",
+                        handle:"owner",
+                        createdBy:server.Members[0].id,
+                        memberIds:[server.Members[0].id],
+                        members:{
+                            connect:[{id:server.Members[0].id}]
+                        },
+                    }
+                }
+            }
+        })
+
         const channel = await db.section.update({
             where:{
                 id:server.sections[0].id,
@@ -76,40 +96,96 @@ export const POST =async(req:NextRequest)=>{
             },
             data:{
                 channels:{
-                    create:[{
-                        name:"General", 
-                        createdBy:user?.id as string, 
-                        description:"this is general", 
-                        serverId:server.id,
-                        memberIds:[server.Members[0].id],
-                        Members:{
-                            connect:[{id:server.Members[0].id}]
-                        },
-                    },
-                    {
+                    create:{
                         name:"Random", 
-                        createdBy:user?.id as string, 
-                        description:"This is random Channel", 
+                        // createdBy:user?.id as string, 
+                        createdBy:server.Members[0].id,
+                        description:"This is random channel. This is automatically created at the time of server creation.", 
                         serverId:server.id,
                         memberIds:[server.Members[0].id],
                         Members:{
                             connect:[{id:server.Members[0].id}]
                         },
-                    },
-                    {
-                        name:"announcement", 
-                        createdBy:user?.id as string, 
-                        description:"This channel is for announcement purpose", 
-                        serverId:server.id,
+                        manager:{
+                            create:{
+                                serverId:server.id,
+                                sectionId:server.sections[0].id,
+                                memberIds:[server.Members[0].id],
+                                member:{
+                                    connect:[{id:server.Members[0].id}]
+                                },
+                            }
+                        }
+                    }                    
+                },
+                canvas:{
+                    create: {
+                        title:"Canvas",
+                        description:"This is canvas. This is automatically created at the time of server creation.",
+                        createdBy:server.Members[0].id,
                         memberIds:[server.Members[0].id],
+                        serverId:server.id as string,
                         Members:{
                             connect:[{id:server.Members[0].id}]
                         },
-                    },                
-                
-                
-                ]                       
+                        manager:{
+                            create:{
+                                serverId:server.id,
+                                sectionId:server.sections[0].id,
+                                memberIds:[server.Members[0].id],
+                                member:{
+                                    connect:[{id:server.Members[0].id}]
+                                },
+                            }
+                        }
                     }
+                },
+                forumsChannel:{
+                    create: {
+                        name:"Forum",
+                        description:"This is Forum. This is automatically created at the time of server creation.",
+                        createdBy:server.Members[0].id,
+                        memberIds:[server.Members[0].id],
+                        serverId:server.id as string,
+                        Members:{
+                            connect:[{id:server.Members[0].id}]
+                        },
+                        manager:{
+                            create:{
+                                serverId:server.id,
+                                sectionId:server.sections[0].id,
+                                memberIds:[server.Members[0].id],
+                                member:{
+                                    connect:[{id:server.Members[0].id}]
+                                },
+                            }
+                        }
+                    }
+                },
+                TestChannels:{
+                    create: {
+                        name:"Test",
+                        description:"This is test. This is automatically created at the time of server creation.",
+                        createdBy:server.Members[0].id,
+                        memberIds:[server.Members[0].id],
+                        serverId:server.id as string,
+                        Members:{
+                            connect:[{id:server.Members[0].id}]
+                        },
+                        manager:{
+                            create:{
+                                serverId:server.id,
+                                sectionId:server.sections[0].id,
+                                memberIds:[server.Members[0].id],
+                                member:{
+                                    connect:[{id:server.Members[0].id}]
+                                },
+                            }
+                        }
+                    }
+                },
+            
+                
                 
             }
         })
@@ -117,7 +193,7 @@ export const POST =async(req:NextRequest)=>{
         console.log("servers", server);
 
 
-        await CreateActivityLog(server.createdBy, "Created", "Member", name, "" );
+        // await CreateActivityLog(server.createdBy, "Created", "Member", name, "" );
 
 
 

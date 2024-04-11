@@ -1,4 +1,4 @@
-import { Channel, Member, Server } from '@prisma/client'
+import { Channel, ChannelManager, Later, Member, PinnedPost, Server } from '@prisma/client'
 import React from 'react'
 import ThreadComponents from '../../v1/Thread/ThreadComponents'
 import ChannelHeader from '../ChannelHeader'
@@ -7,9 +7,19 @@ import ChatMessages from '../../Chat/ChatMessages'
 import EditorFooter from '../../Editor/EditorFooter'
 
 interface Props {
-    server:Server
-    channel:Channel
-    member:Member
+    server:Server & {
+      Members:Member[]
+    }
+    channel:Channel & {
+      Members:Member[]
+    } & {
+      manager:ChannelManager
+    }& {
+      pinnedPost:PinnedPost[]
+    } 
+    member:Member & {
+      saveLater:Later[]
+    }
     isAdmin:boolean
     myChannels:Channel[]
     setThreadMessage:any
@@ -31,29 +41,54 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
   
     const serverMember = server.Members.filter(mem=>mem.id!==member.id);
    
-    const channelMemberExceptMe = channel.Members.filter(mem=>mem.id!==member.id)
+    const channelMemberExceptMe = channel.Members.filter(mem=>mem.id!==member.id);
+
+
+    let sendMessage = false;
+    let uploadMedia = false;
+    let createForms  = false;
+    let createPolls = false;
+
+    const isManger = managers.memberIds.includes(member.id);
+    const isMember = channel.memberIds.includes(member.id);
+
+    if(((isAdmin || isManger || isMember) && channel.whoCanUploadMedia==="member") || ((isManger || isAdmin) && channel.whoCanUploadMedia==="manager") || (isAdmin && channel.whoCanUploadMedia==="admin") ){
+      uploadMedia = true;
+    }
+    if(((isAdmin || isManger || isMember) && channel.whoCanSendMessage==="member") || ((isManger || isAdmin) && channel.whoCanSendMessage==="manager") || (isAdmin && channel.whoCanSendMessage==="admin") ){
+      sendMessage = true;
+    }
+    if(((isAdmin || isManger || isMember) && channel.whoCanCreateForms==="member") || ((isManger || isAdmin) && channel.whoCanCreateForms==="manager") || (isAdmin && channel.whoCanCreateForms==="admin") ){
+      createForms = true;
+    }
+    if(((isAdmin || isManger || isMember) && channel.whoCanCreatePolls==="member") || ((isManger || isAdmin) && channel.whoCanCreatePolls==="manager") || (isAdmin && channel.whoCanCreatePolls==="admin") ){
+      createPolls = true;
+    }
+
+
 
   return (
     <>
-    <div className='channel_chats'>
-    <div className='channel_messages'>
+    {/* <div className='channel_chats'>
+    <div className='channel_messages'> */}
+
+    <div className="forum_msg_container">
 
     
-   
-         <ChannelHeader members={channel.Members} name={channel.name} type={channel.type} description={channel.description as string} createdBy={channel.createdUser?.name as string}
+    <ChannelHeader members={channel.Members} name={channel.name} type={channel.type} description={channel.description as string} createdBy={channel.createdMember?.user.name as string}
     createdAt={createdAt}
     isAdmin = {isAdmin}
     serverMembers = {server.Members}
     sendMsg = {sendMsg}
     messages = {channel.messages}
-    managers={managers?.member}
+    managers={managers}
     schemaType={"Channel"}
     pinnedPosts={PinnedPosts}
     channel={channel}
     />
 
 
-    
+    <div className="forum_messages">
     <ChatMessages 
     channel={channel}
     member={member}
@@ -72,6 +107,11 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
     setThreadMessage={setThreadMessage}
     />
 </div>
+
+
+
+
+<div className="forum_editor">
     <EditorFooter
     name={channel.name}
     type="channel"
@@ -86,9 +126,10 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
     groups={server.groups}
     channelMember={channelMemberExceptMe}
     drafts={member.Drafts}
-
+    uploadMedia={uploadMedia}
+    sendMessage={sendMessage}
     />
-
+</div>
 </div>
     </>
   )

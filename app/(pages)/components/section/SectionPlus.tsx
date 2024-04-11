@@ -22,7 +22,16 @@ import CreateTest from '../Create/CreateTest';
 import CreateForums from '../Create/CreateForums';
    
 
-function SectionPlus({sectionId, serverId}:{sectionId:string, serverId: string}) {
+interface Props {
+  serverId:string
+  sectionId:string
+  createChannel:boolean
+  createForum:boolean
+  createCanvas:boolean
+  createTestChannel:boolean
+}
+
+function SectionPlus({sectionId, serverId, createCanvas, createChannel, createForum, createTestChannel}:Props) {
 
  
   return (
@@ -37,22 +46,33 @@ function SectionPlus({sectionId, serverId}:{sectionId:string, serverId: string})
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 dro_contnt">
         <DropdownMenuGroup>
-          <DropdownMenuItem className='drpdn_ip' asChild>
-            {/* <button onClick={OpenChannel}>Create Channel</button> */}
-          <CreateChannel sectionId={sectionId} serverId={serverId}  />
-          </DropdownMenuItem>
+          {
+            createChannel && <DropdownMenuItem className='drpdn_ip' asChild>
+            <CreateChannel sectionId={sectionId} serverId={serverId}  />
+            </DropdownMenuItem>
+          }
+          {
+            createCanvas && <DropdownMenuItem className='drpdn_ip' asChild>
+            <CreateCanvas sectionId={sectionId} serverId={serverId} /> 
+            </DropdownMenuItem>
+          }
+          {
+            createForum && <DropdownMenuItem className='drpdn_ip' asChild>
+            <CreateForums sectionId={sectionId} serverId={serverId} /> 
+            </DropdownMenuItem>
+          }
+          {
+            createTestChannel && <DropdownMenuItem className='drpdn_ip' asChild>
+            <CreateTest sectionId={sectionId} serverId={serverId} /> 
+            </DropdownMenuItem>
+          }
+          
 
-          <DropdownMenuItem className='drpdn_ip' asChild>
-          <CreateCanvas sectionId={sectionId} serverId={serverId} /> 
-          </DropdownMenuItem>
+          
 
-          <DropdownMenuItem className='drpdn_ip' asChild>
-          <CreateTest sectionId={sectionId} serverId={serverId} /> 
-          </DropdownMenuItem>
+          
 
-          <DropdownMenuItem className='drpdn_ip' asChild>
-          <CreateForums sectionId={sectionId} serverId={serverId} /> 
-          </DropdownMenuItem>
+          
         </DropdownMenuGroup>
      
       </DropdownMenuContent>

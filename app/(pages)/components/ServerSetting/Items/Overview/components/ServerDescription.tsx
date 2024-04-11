@@ -6,8 +6,10 @@ import React, { useState } from 'react'
 interface Props {
   serverDescription:string
   serverId:string
+  hasPermission:boolean
+
 }
-function ServerDescription({serverDescription, serverId}:Props) {
+function ServerDescription({serverDescription, serverId, hasPermission}:Props) {
     const [description, setDescription] = useState(serverDescription);
     const [loading, setloading] = useState(false);
     const router = useRouter();
@@ -33,7 +35,7 @@ function ServerDescription({serverDescription, serverId}:Props) {
         <div className="setting_section_title">Server Description</div>
         <div className="setting_section_content">   
             <div className="server_set_inp">
-              <textarea name="" id="" cols={5} rows={5}  onChange={(e)=>setDescription(e.target.value)} defaultValue={description}></textarea>
+              <textarea name="" id="" cols={5} rows={5}  onChange={(e)=>setDescription(e.target.value)} defaultValue={description} disabled={!hasPermission} ></textarea>
               {
                 serverDescription===description ? "" :
                 <>

@@ -34,12 +34,16 @@ try {
 
     if(!canvas) return NextResponse.json({error:"Forum Channel not found"}, {status:409});
 
+    let hasPermission = false;
+    const whoHavePermission = canvas?.whoCanUpdateCanvas;
     const managers = canvas?.manager?.memberIds;
     const isManager = managers?.some(m => m === member?.id);
-   
-
-  if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
-
+    const isAdmin = canvas.createdBy===member.id;
+    const isMember = canvas.memberIds.includes(member.id);
+    if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+        hasPermission = true;
+    }
+    if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
     // const section = await db.section.update({
     //     where:{
     //         id:canvas?.sectionId as string,

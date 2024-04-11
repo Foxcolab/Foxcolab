@@ -30,12 +30,9 @@ export const PUT =async(req:NextRequest)=>{
                 }
             }
         });
+        if(!testChannel) return NextResponse.json({error:"Test Channel not found"}, {status:409});
         const sectionId= testChannel?.sectionId;
-        const managers = testChannel?.manager?.memberIds;
     
-        const isAdmin = managers?.some(m => m === member?.id);
-        if(!isAdmin) return NextResponse.json({error:"You are not authorized to remove this member"}, {status:403});
-
         const member = await db.member.findFirst({
           where:{
             id:memberId as string,
@@ -44,6 +41,17 @@ export const PUT =async(req:NextRequest)=>{
         });
         if(!member){return NextResponse.json({error:"Member not found"}, {status:400})};
       
+        let hasPermission = false;
+        const whoHavePermission = testChannel?.whoCanManageMember;
+        const managers = testChannel?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = testChannel.createdBy===member.id;
+        const isMember = testChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
         
         const section = await db.section.update({
           where:{

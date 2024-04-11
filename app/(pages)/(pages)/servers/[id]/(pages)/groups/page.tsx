@@ -38,6 +38,15 @@ async function Groups({params}:PinnedProps) {
       }
     });
     console.log(groups);
+
+    
+    let hasPermission = false;
+    const whoCanUpdate = server.whoManageGroups;
+    const member = server.currentMember;
+    if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+    
+        hasPermission = true;
+    }
     
   return (
     <>
@@ -48,7 +57,7 @@ async function Groups({params}:PinnedProps) {
         <SectionHeader icon={<MdGroups/>} name={"People & user groups"} />
 
 
-        <GroupContent serverId={server.id} members={server.Members} groups={groups} />
+        <GroupContent serverId={server.id} members={server.Members} groups={groups} hasPermission={hasPermission} />
 
 
 

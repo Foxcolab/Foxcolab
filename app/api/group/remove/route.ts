@@ -13,7 +13,6 @@ export const PUT =async(req:NextRequest)=>{
 
         const reqBody =await req.json();
         const {memberId} = reqBody; 
-        console.log(serverId, groupId, memberId);
 
         if(!memberId) return NextResponse.json({error:"Please enter a member Id"}, {status:400});
         const member = await db.member.findFirst({

@@ -25,7 +25,7 @@ import CreateSection from "../Create/CreateSection";
 import { useParams } from "next/navigation";
 import { Server } from "@prisma/client";
 
-export function NameDropDown({server}:{server:Server}) {
+export function NameDropDown({server, createSection}:{server:Server, createSection:boolean}) {
   const [state, setState] = useState("");
   const [open, setOpen] = useState(false);
   const [openSection, setOpenSection] = useState(false);
@@ -60,10 +60,13 @@ export function NameDropDown({server}:{server:Server}) {
             <DropdownMenuItem onClick={()=>onClickHandler("Customize Server")} className="serv_dpdn_item"><span>Customize Server</span><span className="serv_dp_icon"><IoSettings/></span></DropdownMenuItem>
             <DropdownMenuItem onClick={()=>onClickHandler("Manage Member")} className="serv_dpdn_item"><span>Manage Member</span><span className="serv_dp_icon"><MdManageAccounts/></span></DropdownMenuItem>
             
-            
-            <Separator className="bg-[#535d62]" />
-            <DropdownMenuItem onClick={()=>setOpenSection(true)} className="serv_dpdn_item"><span>Create Section</span> <span className="serv_dp_icon"><MdAddCircle/></span></DropdownMenuItem>
-            <Separator className="bg-[#535d62]" />
+            {
+              createSection && <>
+             <Separator className="bg-[#535d62]" />
+            <DropdownMenuItem onClick={()=>setOpenSection(true)} className="serv_dpdn_item"><span>Create Section</span> <span className="serv_dp_icon"><MdAddCircle/></span></DropdownMenuItem>  
+              </>
+            }
+           <Separator className="bg-[#535d62]" />
             <DropdownMenuItem onClick={()=>InviteHandler()} className="serv_dpdn_item"><span>Invite</span> <span className="serv_dp_icon"><IoMdPersonAdd/></span></DropdownMenuItem>
             <Separator className="bg-[#535d62]" />
             <DropdownMenuItem onClick={()=>LeaveHandler()} className="serv_dpdn_item text-red-500 leave_item"><span>Leave Server</span><span className="serv_dp_icon"><IoIosExit/></span></DropdownMenuItem>

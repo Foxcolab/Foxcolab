@@ -40,11 +40,18 @@ export const PUT =async(req:NextRequest)=>{
         });
         if(!channel) return NextResponse.json({error:"Channel not found"}, {status:409});
         const sectionId= channel?.sectionId;
-        const managers = channel?.manager?.memberIds;
-    
-        const isAdmin = managers?.some(m => m === member?.id);
-        if(!isAdmin) return NextResponse.json({error:"You are not authorized to remove this member"}, {status:403});
 
+        let hasPermission = false;
+        const whoHavePermission = channel?.whoCanManageMember;
+        const managers = channel?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = channel.createdBy===currentMember.id;
+        const isMember = channel.memberIds.includes(currentMember.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
         const member = await db.member.findFirst({
           where:{
             id:memberId as string,

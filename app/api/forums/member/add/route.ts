@@ -34,14 +34,21 @@ export const PUT =async(req:NextRequest)=>{
                 }
             }
         });
+        if(!forumChannel){
+            return NextResponse.json({error:"Forum channel not found"}, {status:409});
+        }
         
+        let hasPermission = false;
+        const whoHavePermission = forumChannel?.whoCanManageMember;
         const managers = forumChannel?.manager?.memberIds;
-    
-        const isAdmin = managers?.some(m => m === member?.id);
-
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = forumChannel.createdBy===member.id;
+        const isMember = forumChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
         
-        if(!isAdmin) return NextResponse.json({error:"You are not authorized to add this member"}, {status:403});
-
         const section = await db.section.update({
             where:{
                 id:forumChannel?.sectionId as string,

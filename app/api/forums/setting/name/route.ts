@@ -11,7 +11,6 @@ try {
     const reqBdoy = await req.json();
     const {name} = reqBdoy;
 
-    console.log(forumChannelId, serverId, name)
     const userId = await GetDataFromToken(req);
     const member = await db.member.findFirst({
         where:{
@@ -34,32 +33,17 @@ try {
 
     if(!forumChannel) return NextResponse.json({error:"Forum Channel not found"}, {status:409});
 
+    let hasPermission = false;
+    const whoHavePermission = forumChannel?.whoCanUpdateForums;
     const managers = forumChannel?.manager?.memberIds;
-    const isAdmin = managers?.some(m => m === member?.id);
+    const isManager = managers?.some(m => m === member?.id);
+    const isAdmin = forumChannel.createdBy===member.id;
+    const isMember = forumChannel.memberIds.includes(member.id);
+    if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+        hasPermission = true;
+    }
+    if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
     
-    if(!isAdmin) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
-
-    // const section = await db.section.update({
-    //     where:{
-    //         id:forumChannel?.sectionId as string,
-    //         serverId:serverId as string
-    //     },
-    //     data:{
-    //         forumsChannel:{
-    //             update:{
-    //                 where:{
-    //                     id:forumChannelId as string,
-    //                     createdBy:userId,
-    //                 },
-    //                 data:{
-    //                     name
-
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
-
     const updateForumChannel = await db.forumsChannel.update({
         where:{
             id:forumChannelId as string,

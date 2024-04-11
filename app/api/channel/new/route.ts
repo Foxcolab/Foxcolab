@@ -13,27 +13,82 @@ export const POST =async(req:NextRequest)=>{
         if(!serverId || !sectionId) return NextResponse.json({error:"Semething went wrong"}, {status:409});
         
         const userId = GetDataFromToken(req);
-      
-        const member = await db.member.findFirst({
+        const server = await db.server.findFirst({
           where:{
-            userId:userId,
-            serverId: serverId as string
-          }
-        });
-        if(!member){return NextResponse.json({error:"You are not authorized to create a channel"}, {status:500})};
-        const section = await db.section.update({
-          where:{
-            id:sectionId as string,
-            serverId:member.serverId 
+              id:serverId as string,
+              Members:{
+                  some:{
+                      userId:userId
+                  }
+              },
+
           },
-            data:{
-              channels:{
-                create:{
+          include:{
+              Members:{
+                  where:{
+                      userId:userId
+                  }
+              }
+          }
+      })
+
+      if(!server ) return NextResponse.json({success:false, message:"Server not found"}, {status:409});
+
+      const member = server.Members[0];
+      let hasPermission = false;
+      const whoCanUpdate = server.whoCreateChannel;
+      if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+          hasPermission = true;
+      }
+
+      if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+            
+        // const section = await db.section.update({
+        //   where:{
+        //     id:sectionId as string,
+        //     serverId:member.serverId 
+        //   },
+        //     data:{
+        //       channels:{
+        //         create:{
+        //           name,
+        //           description,
+        //           type,
+        //           createdBy:userId as string,
+        //           serverId:serverId as string,
+        //           memberIds:[member.id],
+        //           Members:{
+        //             connect:[{id:member.id}]
+        //           },
+        //           manager:{
+        //             create:{
+        //               serverId:serverId as string,
+        //               sectionId:sectionId as string,
+        //               memberIds:[member.id]
+        //             }
+        //           }
+        //           },
+                  
+        //         }
+        //       },
+        //       include:{
+        //         channels:{
+
+        //         }
+        //       }
+              
+            
+        //  }
+        // )
+
+        const channel = await db.channel.create({
+          data:{
                   name,
                   description,
                   type,
-                  createdBy:userId as string,
+                  createdBy:member.id as string,
                   serverId:serverId as string,
+                  sectionId:sectionId as string,
                   memberIds:[member.id],
                   Members:{
                     connect:[{id:member.id}]
@@ -42,25 +97,32 @@ export const POST =async(req:NextRequest)=>{
                     create:{
                       serverId:serverId as string,
                       sectionId:sectionId as string,
-                      memberIds:[member.id]
+                      memberIds:[member.id],
+                      member:{
+                        connect:{
+                          id:member.id
+                        }
+                      }
                     }
                   }
-                  },
-                  
-                }
+          },
+          include:{
+            manager:{
+              include:{
+                member:true
               }
-            
-         }
-        )
+            }
+          }
+        })
  
        
-        
+        console.log(channel)
         await CreateActivityLog(serverId, member.id, "Created", "Channel", name, '' );
 
 
         return NextResponse.json({
             success:true,
-            section
+            channel
         }, {status:200})
 
     } catch (error:any) {

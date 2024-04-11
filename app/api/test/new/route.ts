@@ -41,32 +41,25 @@ export const POST =async(req:NextRequest)=>{
                 id:testChannelId as string,
                 serverId:serverId as string,
                 sectionId:sectionId as string
+            },
+            include:{
+                manager:true
             }
         });
         if(!testChannel) return NextResponse.json({error:"Test Channel not found"}, {status:409});
 
+        let hasPermission = false;
+        const whoHavePermission = testChannel?.whoCanCreateTest;
+        const managers = testChannel?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = testChannel.createdBy===member.id;
+        const isMember = testChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
 
-        // await db.testChannel.update({
-        //     where:{
-        //         id:testChannel.id,
-        //         serverId:serverId as string,
-        //         sectionId:sectionId as string
-        //     },
-        //     data:{
-        //         Tests:{
-        //             create:{
-        //                name, 
-        //                serverId:server.id,
-        //                sectionId:sectionId as string  ,
-        //                level,
-        //                time:parseInt(time),
-        //                description,
-        //                createdBy:member.id,
-        //                passmarks:parseInt(passmarks)
-        //             }
-        //         }
-        //     }
-        // })
         const test = await db.test.create({
             data:{
             name, 
@@ -140,9 +133,16 @@ export const PUT =async(req:NextRequest)=>{
                         id:testId as string
                     }
                 }
+            },
+            include:{
+                Tests:{
+                    where:{
+                        id:testId as string
+                    }
+                }
             }
         });
-        if(!testChannel) return NextResponse.json({error:"Test Channel not found"}, {status:409});
+        if(!testChannel || testChannel.Tests[0].createdBy!==member.id) return NextResponse.json({error:"Test Channel not found"}, {status:409});
 
  
 
@@ -228,38 +228,31 @@ export const DELETE =async(req:NextRequest)=>{
                         id:testId as string
                     }
                 }
+            },
+            include:{
+                manager:true,
+                Tests:{
+                    where:{
+                        id:testId as string
+                    }
+                }
             }
         });
         if(!testChannel) return NextResponse.json({error:"Test Channel not found"}, {status:409});
 
- 
+        let hasPermission = false;
+        const whoHavePermission = testChannel?.whoCanManageTest;
+        const managers = testChannel?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = testChannel.createdBy===member.id || testChannel.Tests[0].id===member.id;
+        const isMember = testChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
 
-        // await db.testChannel.update({
-        //     where:{
-        //         id:testChannel.id,
-        //         serverId:serverId as string,
-        //         // sectionId:sectionId as string
-        //     },
-        //     data:{
-        //         Tests:{
-        //             update:{
-        //                where:{
-        //                 id:testId as string
-        //                },
-        //                data:{
-        //                 name, 
-        //                serverId:server.id,
-        //                sectionId:testChannel.sectionId  ,
-        //                level,
-        //                time:parseInt(time),
-        //                description,
-        //                createdBy:member.id,
-        //                passmarks:parseInt(passmarks)
-        //                }
-        //             }
-        //         }
-        //     }
-        // })
+
         const test = await db.test.delete({
             where:{
                 id:testId as string,

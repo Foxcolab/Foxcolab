@@ -20,12 +20,21 @@ export const PUT =async(req:NextRequest)=>{
                 serverId:serverId as string
             
             }})
-        if(!member || (member.role!=="admin")) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        // console.log
+        if(!member) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
         const reqBody = await req.json();
         const {title, schemaValue} = reqBody;
-      
+        console.log(title, schemaValue);
         if(!title || !schemaValue) return NextResponse.json({error:"Something went wrong"}, {status:409});
         
+        const channel = await db.channel.findFirst({
+            where:{
+                id:channelId,
+                serverId:serverId as string
+            },
+            
+        });
+        if(!channel || channel.createdBy!==member.id) return NextResponse.json({success:false, message:"Channel not found"}, {status:409});
         
         let schemaType;
         if(title==="Read Message"){
@@ -48,7 +57,10 @@ export const PUT =async(req:NextRequest)=>{
             schemaType="whoCanCreatePolls";
           }else if(title==="Create Forms"){
             schemaType="whoCanCreateForms";
-          }else {
+          }else if(title==="Pin Message"){
+            schemaType="whoCanPinnedPost";
+          }
+          else {
             return NextResponse.json({error:"Something went wrong"}, {status:409});
           }
 
@@ -165,7 +177,18 @@ export const PUT =async(req:NextRequest)=>{
             // await CreateActivityLog(channelId, member.id, "Updated", "channel", schemaType, schemaValue );
             return NextResponse.json({success:true, channel}, {status:200});
         }
-
+        else if(schemaType==="whoCanPinnedPost"){
+            const channel = await db.channel.update({
+                where:{
+                    id:channelId as string
+                },
+                data:{
+                    whoCanPinnedPost:schemaValue
+                }
+            });
+            // await CreateActivityLog(channelId, member.id, "Updated", "channel", schemaType, schemaValue );
+            return NextResponse.json({success:true, channel}, {status:200});
+        }
 
        
     } catch (error) {

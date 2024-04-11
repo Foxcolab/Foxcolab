@@ -48,6 +48,7 @@ function SchemaRoleContainer({schemaType,  schema }:Props) {
        whoCanSendMessage={schema?.whoCanSendMessage}
        whoCanUpdateChannel={schema?.whoCanUpdateChannel}
        whoCanUploadMedia={schema?.whoCanUploadMedia}
+       whoCanPinnedPost={schema.whoCanPinnedPost}
        type={schema.type}
         />
         :

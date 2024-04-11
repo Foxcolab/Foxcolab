@@ -8,8 +8,10 @@ import React, { useState } from 'react'
 interface Props {
     serverId:string
     coverPic:any 
+    hasPermission:boolean
+
 }
-function ServerCover({coverPic, serverId}:Props) {
+function ServerCover({coverPic, serverId, hasPermission}:Props) {
     const [previewc, setPreviewc] = useState<null | string>(coverPic);
     const [cover, setCover] = useState<null | any>(null);
     const [loading, setLoading] = useState(false);
@@ -70,19 +72,13 @@ function ServerCover({coverPic, serverId}:Props) {
             
             <div className="setting_section_title">Server Cover</div>
             <div className="setting_section_content">
-                <div className="setting_avt">
+                {
+                    hasPermission ? <div className="setting_avt">
                     <>
                     <div className='server_cover' onMouseEnter={()=>setShowOptc(true)} onMouseLeave={()=>setShowOptc(false)}>
-                    {/* <label className="custum-file-upload flex items-center justify-center  gap-1" htmlFor="file" id='cover_file'>
-                    {   showOptc && <span>Change Cover</span> }
-                    { previewc && !showOptc && <Image src={previewc} height={100} width={100} alt='image' /> }
-                    <input type="file" id="file" 
-                    accept="image/jpeg,image/png,image/webp,image/gif" onChange={onCoverHandler}
-                    />
-                    </label> */}
+                    
                     <label htmlFor="fileInput">
             
-            {/* JJJJJJSDSD */}
             {   showOptc && <span>Change Cover</span> }
             
                     { previewc && !showOptc && <Image src={previewc} height={100} width={100} alt='image' /> }
@@ -98,22 +94,24 @@ function ServerCover({coverPic, serverId}:Props) {
                 coverPic===previewc ? "" : <> {loading ? <Loader/> :  <button onClick={onSubmitHandler}>Change</button>} </>
               }
                     </div>
+                </div> :
+
+
+                <div className="setting_avt">
+                <>
+                <div className='server_cover' >           
+                    {
+                        previewc && <Image src={previewc} height={100} width={100} alt='image' /> 
+                    }
                 </div>
+                </>
+                </div>
+            }
     
             </div>
             </div>
 
 
-    {/* <div id="customFileUpload"> */}
-    {/* <label htmlFor="fileInput">
-            
-            JJJJJJSDSD
-
-    </label>
-    <input type="file" id="fileInput" onChange={(e)=>handleFileSelect(e)} />
-    <div id="fileName"></div> */}
-    {/* <button onClick={uploadFile}>Upload</button> */}
-{/* </div> */}
 
     
     </>

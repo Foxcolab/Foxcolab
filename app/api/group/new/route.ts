@@ -13,20 +13,40 @@ export const POST =async(req:NextRequest)=>{
         const serverId = req.nextUrl.searchParams.get('serverId');
         const reqBody = await req.json();
         const { name, description, handle, members} = reqBody;
-        console.log(name, description, handle);
-        const member = await db.member.findFirst({
-            where:{
-                userId:userId,
-                serverId:serverId as string
-            }
-        });
+
+ 
         if(!serverId ) return NextResponse.json({error:"Semething went wrong"}, {status:409});
         
-        if(!member ) return NextResponse.json({error:"You a not member", success:false}, {status:200});
+        const server = await db.server.findFirst({
+            where:{
+                id:serverId as string,
+                Members:{
+                    some:{
+                        userId:userId
+                    }
+                },
 
-        if(member.role!=="admin" && member.role!=="moderator"){
-            return NextResponse.json({error:'You are not authorized to create a group',success:false}, {status:403})
+            },
+            include:{
+                Members:{
+                    where:{
+                        userId:userId
+                    }
+                }
+            }
+        })
+
+        if(!server ) return NextResponse.json({success:false, message:"Server not found"}, {status:409});
+
+        const member = server.Members[0];
+        let hasPermission = false;
+        const whoCanUpdate = server.whoManageGroups;
+        if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+            hasPermission = true;
         }
+
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
         
         const existing = await db.group.findFirst({
             where:{
@@ -34,7 +54,6 @@ export const POST =async(req:NextRequest)=>{
                 serverId:serverId as string
             }
         });
-        console.log("existing", existing);
         
         if(existing) return NextResponse.json({error:"Handle name already exists"}, {status:409});
 
@@ -44,7 +63,7 @@ export const POST =async(req:NextRequest)=>{
             data:{
                 name,
                 description,
-                createdBy:userId as string,
+                createdBy:member.id as string,
                 serverId:serverId as string,
                 handle:handle,
                 memberIds:members

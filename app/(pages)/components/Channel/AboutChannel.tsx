@@ -19,7 +19,8 @@ import Loader from '../Loaders/Loader'
 
 
 interface AboutProps {
-    isAdmin:boolean
+    
+    hasPermission:boolean
     nameLoading:boolean
     descriptionLoading:boolean
     changeNameHandler:any
@@ -31,13 +32,15 @@ interface AboutProps {
     description:string
     createdBy:string
     createdAt:string
-    managers: ForumManager | TestChannelManager | canvasManager | ChannelManager
+    managers: ChannelManager
     channelMember:Member[]
     schemaType:string
+    whoCanManageManager:boolean
+    isAdmin:boolean
 }
 
 
-function AboutChannel({isAdmin, nameLoading, changeNameHandler, setName, name, type, description, createdBy, descriptionLoading, DescriptionHandler, setDescription, createdAt, managers, channelMember, schemaType}:AboutProps) {
+function AboutChannel({hasPermission, nameLoading, changeNameHandler, setName, name, type, description, createdBy, descriptionLoading, DescriptionHandler, setDescription, createdAt, managers, channelMember, schemaType, whoCanManageManager, isAdmin}:AboutProps) {
     const [loading, setLoading] = useState(false);
     const params = useParams();
     const router = useRouter();
@@ -89,7 +92,7 @@ function AboutChannel({isAdmin, nameLoading, changeNameHandler, setName, name, t
 <div className="about_channel_item">
   <div className="sup_text d-flex text-center justify-between"><span>{schemaType} Name</span>
 {
-isAdmin ?
+hasPermission ?
 <EditDailog title={`${schemaType} Name`} loading={nameLoading} submitHandler={changeNameHandler} setName={setName} type={"input"} description='Names must be lower case, without spaces or full stops, and can’t be longer than 80 characters.' defaultValue={name} />
 :
 <ActionTooltip label={`You don't have permission to change this setting for this ${schemaType}`} side='top' align='center'>
@@ -107,7 +110,7 @@ isAdmin ?
 <div className="about_channel_item">
   <div className="sup_text d-flex text-center justify-between"><span>Description</span>
   {
-isAdmin ? 
+hasPermission ? 
 <EditDailog title='Description' submitHandler={DescriptionHandler} setName={setDescription} type={"textarea"} description={`Let people know what this ${schemaType} is for.` } loading={descriptionLoading} defaultValue={description} />
 :
 <ActionTooltip label={`You don't have permission to change this setting for this ${schemaType}`} side='top' align='center'>
@@ -162,11 +165,11 @@ isAdmin ?
 
   </span>
   {
-isAdmin ? 
+hasPermission ? 
 
 <AllManager
 
-    isAdmin={isAdmin}
+    hasPermission={hasPermission}
     managers={managers.member}
     name={name}
     type={type}
@@ -205,13 +208,15 @@ isAdmin ?
     
     </div>
 </div>
-
-<div className="pl-4 leave_div">
-    {
-        loading ? <Loader/> : 
-        <button className="" onClick={LeaveChannelHandler}>Leave {schemaType} <IoIosExit/> </button>
+{
+  !isAdmin && <div className="pl-4 leave_div">
+  {
+      loading ? <Loader/> : 
+      <button className="" onClick={LeaveChannelHandler}>Leave {schemaType} <IoIosExit/> </button>
 }
 </div>
+}
+
 
 </div>   
     

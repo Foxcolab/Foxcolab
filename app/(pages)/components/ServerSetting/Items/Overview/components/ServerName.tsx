@@ -6,8 +6,10 @@ import React, { useState } from 'react'
 interface Props {
   serverName:string
   serverId:string
+  hasPermission:boolean
+
 }
-function ServerName({serverName, serverId}:Props) {
+function ServerName({serverName, serverId, hasPermission}:Props) {
     const [name, setName] = useState(serverName);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -23,6 +25,8 @@ function ServerName({serverName, serverId}:Props) {
       }
     }
 
+    // console.log(hasPermission);
+
   return (
     <>
     
@@ -30,7 +34,7 @@ function ServerName({serverName, serverId}:Props) {
         <div className="setting_section_title">Server Name</div>
         <div className="setting_section_content">   
             <div className="server_set_inp">
-                <input type="text" onChange={(e)=>setName(e.target.value)} defaultValue={name} />
+                <input type="text" onChange={(e)=>setName(e.target.value)} defaultValue={name} disabled={!hasPermission} />
                 {
                 serverName===name ? "" : <> {loading ? <Loader/> :  <button onClick={NameHandler}>Save</button>} </>
               }

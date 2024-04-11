@@ -146,6 +146,35 @@ const DescriptionHandler =async()=>{
     
   }
 }
+
+const member:Member = channel.currentMember;
+console.log(member);
+  let whoCanUpdateChannel = false;
+  let whoCanManageManager = false;
+  let whoCanManageMember = false;
+  let whoCanMakePublicToPrivate = false;
+  const isManager = managers.memberIds.includes(member.id);
+  const isMember = channel.memberIds.includes(member.id);
+
+
+  if(((isAdmin || isManager || isMember) && channel.whoCanUpdateChannel==="member") || ((isManager || isAdmin) && channel.whoCanUpdateChannel==="manager") || (isAdmin && channel.whoCanUpdateChannel==="admin") ){
+  whoCanUpdateChannel = true;
+} 
+if(((isAdmin || isManager || isMember) && channel.whoCanManageManager==="member") || ((isManager || isAdmin) && channel.whoCanManageManager==="manager") || (isAdmin && channel.whoCanManageManager==="admin") ){
+  whoCanManageManager = true;
+} 
+if(((isAdmin || isManager || isMember) && channel.whoCanManageMember==="member") || ((isManager || isAdmin) && channel.whoCanManageMember==="manager") || (isAdmin && channel.whoCanManageMember==="admin") ){
+  whoCanManageMember = true;
+} 
+if(((isAdmin || isManager || isMember) && channel.whoCanMakePublicToPrivate==="member") || ((isManager || isAdmin) && channel.whoCanMakePublicToPrivate==="manager") || (isAdmin && channel.whoCanMakePublicToPrivate==="admin") ){
+  whoCanManageMember = true;
+} 
+
+
+
+
+
+
   return (
     <>
     <Dialog>
@@ -167,10 +196,17 @@ const DescriptionHandler =async()=>{
         <div className='all_mem_container'>
         <button className={state==="About"?"active_option":""}  onClick={()=>ChangeState( "About")}>About</button>
         <button className={state==="Members"?"active_option":""} onClick={()=>ChangeState("Members")}>Members {members.length}</button>
-        <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
-        <button className={state==="Permissions"?"active_option":""} onClick={()=>setState("Permissions")}>Permissions</button>
-        <button className={state==="Activity Logs"?"active_option":""} onClick={()=>setState("Activity Logs")}>Activity Logs</button>
-        <button className={state==="Files"?"active_option":""} onClick={()=>setState("Files")}>Files</button>
+        {
+          whoCanUpdateChannel && whoCanMakePublicToPrivate && <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
+        }
+        {
+          isAdmin && <>
+           <button className={state==="Permissions"?"active_option":""} onClick={()=>setState("Permissions")}>Permissions</button>
+           <button className={state==="Activity Logs"?"active_option":""} onClick={()=>setState("Activity Logs")}>Activity Logs</button>
+        
+          </>
+        }
+       <button className={state==="Files"?"active_option":""} onClick={()=>setState("Files")}>Files</button>
         
         
         </div>
@@ -186,8 +222,8 @@ const DescriptionHandler =async()=>{
               <>
 
             <AboutChannel
-            
-            isAdmin={isAdmin}
+            whoCanManageManager={whoCanManageManager}
+            hasPermission={whoCanUpdateChannel}
             nameLoading={nameLoading}
             descriptionLoading={descriptionLoading}
             changeNameHandler={changeNameHandler}
@@ -202,15 +238,19 @@ const DescriptionHandler =async()=>{
             managers={managers}
             channelMember={members}
             schemaType="Channel"
+            isAdmin={isAdmin}
              />
               
               </>
              
               : state==="Members" ?
               <>
-            <div className="add_member">
-              <button onClick={AddMemberHandler}><IoPersonAdd/> Add Member</button>
-            </div>
+              {
+                whoCanManageMember && <div className="add_member">
+                <button onClick={AddMemberHandler}><IoPersonAdd/> Add Member</button>                           
+             </div>
+              }
+            
              <div className="all_member_profile">
 
              <Command className="rounded-lg border shadow-md overflow-scroll">
@@ -260,22 +300,22 @@ const DescriptionHandler =async()=>{
               
               </>
 
-              : state==="Setting" ? 
+              : state==="Setting" && whoCanUpdateChannel && whoCanMakePublicToPrivate ? 
               
               
               
               
-              <ChannelSetting name={name} description={description} isAdmin={isAdmin} type={type} sendMsg={sendMsg} ChangeNameHandler={changeNameHandler} ChangeDescriptionHandler={DescriptionHandler} setName={setName} setDescription={setDescription} nameLoading={nameLoading} desciptionLoading={descriptionLoading} schemaType='Channel' />
+              <ChannelSetting name={name} description={description} isAdmin={isAdmin} type={type} sendMsg={sendMsg} ChangeNameHandler={changeNameHandler} ChangeDescriptionHandler={DescriptionHandler} setName={setName} setDescription={setDescription} nameLoading={nameLoading} desciptionLoading={descriptionLoading} schemaType='Channel' publicToPrivate={whoCanMakePublicToPrivate} updatePermission={whoCanUpdateChannel} />
               
               
               :
-              state==="Permissions" ? <SchemaRoleContainer schemaType={"Channel"}
+              state==="Permissions" && isAdmin ? <SchemaRoleContainer schemaType={"Channel"}
               schema={channel}
               
               
               /> :
 
-              state==="Activity Logs" ? <ActivityLogContainer schemaType={"Channel"} activityLogs={channel?.schemaActivity} /> :
+              state==="Activity Logs" && isAdmin ? <ActivityLogContainer schemaType={"Channel"} activityLogs={channel?.schemaActivity} /> :
               
             <ChannelFiles messages={messages}  />
               

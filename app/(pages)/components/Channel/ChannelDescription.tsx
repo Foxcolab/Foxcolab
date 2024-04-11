@@ -15,13 +15,14 @@ function ChannelDescription({channel}:ChannelProps) {
         }).replace(/ /g, ' ');
         return formattedDate;
       }
+
     
   return (
     <>
     
     <div className="channel_desc">
         <h1># {channel.name}</h1>
-        <p><span className='chann_cb'>@{channel.createdUser.name}</span> created this channel on {getDate(channel.createdAt)}.
+        <p><span className='chann_cb'>@{channel.createdMember.user.name}</span> created this channel on {getDate(channel.createdAt)}.
         {/* {channel.description===''|| undefined||null ? <>` */}
         This is very begining of <b> #{channel.name} </b>
         <button className='add_Ds'>Add Description</button> 

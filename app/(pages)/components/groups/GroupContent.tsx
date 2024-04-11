@@ -8,10 +8,11 @@ interface Props{
     members:Member[],
     serverId:string,
     groups:Group[]
+    hasPermission:boolean
 }
 
 
-function GroupContent({members, serverId, groups}:Props) {
+function GroupContent({members, serverId, groups, hasPermission}:Props) {
     const [section, setSection] = useState(1);
 
 
@@ -38,7 +39,7 @@ function GroupContent({members, serverId, groups}:Props) {
 
 
         {
-            section===1 ? <GroupSection members={members} serverId={serverId} groups={groups} /> : <MemberSection members={members} />
+            section===1 ? <GroupSection members={members} serverId={serverId} groups={groups} hasPermission={hasPermission} /> : <MemberSection members={members} />
         }
     
     

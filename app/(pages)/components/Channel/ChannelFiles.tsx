@@ -39,9 +39,11 @@ function ChannelFiles({messages}:ChannelProps) {
         
         )
     }
-    <div className='see_more_file'>
-    <button className=''>Show more</button>
-    </div>
+    {
+        !Urls &&  <div className='see_more_file'>
+        <button className=''>Show more</button>
+        </div>
+    }
     
     </>
   )

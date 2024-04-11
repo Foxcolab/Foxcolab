@@ -36,13 +36,18 @@ export const POST =async(req:NextRequest)=>{
             }
 
         });
+        if(!testChannel) return NextResponse.json({error:"Test Channel not found"}, {status:409});
+        let hasPermission = false;
+        const whoHavePermission = testChannel?.whoCanManageManager;
         const managers = testChannel?.manager?.memberIds;
-        console.log(managers)
         const isManager = managers?.some(m => m === member?.id);
-        console.log(isManager)
-
-        if(!isManager) return NextResponse.json({error:"You are not authorized to add this member"}, {status:403});
-
+        const isAdmin = testChannel.createdBy===member.id;
+        const isMember = testChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
         await db.testChannel.update({
             where:{
                 id:testChannelId as string,

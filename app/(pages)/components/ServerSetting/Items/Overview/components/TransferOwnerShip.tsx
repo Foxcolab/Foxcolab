@@ -30,6 +30,7 @@ import { RiUserSharedFill } from 'react-icons/ri';
 interface Props {
     serverMembers:Member[]
     serverId:string
+    
 }
 
 function TransferOwnerShip({ serverMembers, serverId}:Props) {

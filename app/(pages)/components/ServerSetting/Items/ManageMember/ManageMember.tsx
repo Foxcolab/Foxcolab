@@ -36,9 +36,10 @@ interface Props {
     members:Member[]
     serverId:string
     ownerId:string
+    hasPermission:boolean
   }
   const DATE_FORMAT = "d MMM yyyy";
-  function ManageMember({setOpen, members, serverId, ownerId}:Props) {
+  function ManageMember({setOpen, members, serverId, ownerId, hasPermission}:Props) {
   console.log(members[0].role)
   const [loading, setLoading] = useState(false);
   const [removeDialog, setRemovedDialog] = useState(false);
@@ -119,7 +120,10 @@ interface Props {
           <TableHead>Name</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Joined At</TableHead>
-          <TableHead>Operation</TableHead>
+          {
+            hasPermission && <TableHead>Operation</TableHead>
+          }
+          
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -138,16 +142,14 @@ interface Props {
                           </div>
             </TableCell>
             <TableCell>
-            {member.role}
+            Owner
             </TableCell>
             <TableCell>{format(new Date(member.createdAt), DATE_FORMAT)}</TableCell>
-            <TableCell className='member_operations'>
-              {/* <button className='bg-gray-500 text-white' onClick={()=>RoleHandler(member.id, member.user.name, "admin")}>Role</button>
-              <button className='bg-red-500 text-white' onClick={()=>RemovedHandler(member.id, member.user.name)}>Remove</button> */}
-
-              {/* <button className='text-center' onClick={()=>RemovedHandler(member.id, member.user.name, member.role)}><BsThreeDotsVertical/></button> */}
-              
+            {
+              hasPermission && <TableCell className='member_operations'>
               </TableCell>
+            }
+            
           </TableRow>
         ))}
 
@@ -166,16 +168,15 @@ interface Props {
                           </div>
             </TableCell>
             <TableCell>
-            {member.role}
+            Administrator
             </TableCell>
             <TableCell>{format(new Date(member.createdAt), DATE_FORMAT)}</TableCell>
-            <TableCell className='member_operations'>
+            {
+              hasPermission && <TableCell className='member_operations'>
               <button className='bg-gray-500 text-white' onClick={()=>RoleHandler(member.id, member.user.name, "user")}>User</button>
               <button className='bg-red-500 text-white' onClick={()=>RemovedHandler(member.id, member.user.name)}>Remove</button>
-
-              {/* <button className='text-center' onClick={()=>RemovedHandler(member.id, member.user.name, member.role)}><BsThreeDotsVertical/></button> */}
-              
               </TableCell>
+            }
           </TableRow>
         ))}
 
@@ -194,16 +195,16 @@ interface Props {
                           </div>
             </TableCell>
             <TableCell>
-            {member.role}
+            Regular Member
             </TableCell>
             <TableCell>{format(new Date(member.createdAt), DATE_FORMAT)}</TableCell>
-            <TableCell className='member_operations'>
+            {
+              hasPermission && <TableCell className='member_operations'>
               <button className='bg-gray-500 text-white' onClick={()=>RoleHandler(member.id, member.user.name, "moderator")}>Moderator</button>
               <button className='bg-red-500 text-white' onClick={()=>RemovedHandler(member.id, member.user.name)}>Remove</button>
-
-              {/* <button className='text-center' onClick={()=>RemovedHandler(member.id, member.user.name, member.role)}><BsThreeDotsVertical/></button> */}
               
               </TableCell>
+            }
           </TableRow>
         ))}
       </TableBody>

@@ -21,9 +21,10 @@ interface Props {
   serverId:string
   openDialog:boolean
   setOpenDialog:any
+  hasPermission:boolean
 }
 
-function CreateSection({serverId, openDialog, setOpenDialog}:Props) {
+function CreateSection({serverId, openDialog, setOpenDialog, hasPermission}:Props) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [open, setOpen] = useState(false);
@@ -55,9 +56,10 @@ function CreateSection({serverId, openDialog, setOpenDialog}:Props) {
     <>
         <Dialog open={open || openDialog} onOpenChange={ (openDialog==true || openDialog===false) ? setOpenDialog : setOpen}> 
       <DialogTrigger asChild>
+        
         {
           (openDialog===false || openDialog===true ) ? '': 
-      <button className='csec_btn'><FaPlusCircle/> Create Section</button>
+      <button className='csec_btn' disabled={!hasPermission}><FaPlusCircle/> Create Section</button>
 
         }
       </DialogTrigger>

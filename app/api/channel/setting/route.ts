@@ -31,11 +31,23 @@ export const PUT =async(req:NextRequest)=>{
         });
         if(!channel) return NextResponse.json({error:"Channel not found"}, {status:409});
         
+        let hasPermission = false;
+        const whoHavePermission = channel?.whoCanMakePublicToPrivate;
         const managers = channel?.manager?.memberIds;
         const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = channel.createdBy===member.id;
+        const isMember = channel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
         
-        if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
         const updatedType = channel.type==="public" && type===true ? "private" : "public";
+
+        if(!isAdmin && updatedType==="public"){
+            return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        }
+        
         const updatedChannel = await db.channel.update({
             where:{
                 id:channelId as string,
@@ -43,8 +55,7 @@ export const PUT =async(req:NextRequest)=>{
                 sectionId:channel.sectionId
             },
             data:{
-                type:updatedType,
-                
+                type:updatedType,                
             }
         })
         if(channel?.type!==updatedChannel?.type){

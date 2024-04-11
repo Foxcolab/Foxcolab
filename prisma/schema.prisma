@@ -72,12 +72,12 @@ model User {
   // subscription Subscription[]
   servers      Server[]
   sections     Section[]
-  channels     Channel[]
+  // channels     Channel[]
   memebers     Member[]
-  canvases     Canvas[]
-  groups        Group[]
-  forums        ForumsChannel[]
-  testChannels    TestChannel[]
+  // canvases     Canvas[]
+  // groups        Group[]
+  // forums        ForumsChannel[]
+  // testChannels    TestChannel[]
 }
 model Server {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -96,7 +96,7 @@ model Server {
   serverType String?
   discoverable  Boolean? @default(false)
 
-  whoCanUpdateServer    MemberRole   @default(admin)
+  whoCanUpdateServer    MemberRole   @default(moderator)
   whoCanKickMember      MemberRole   @default(admin)
   whoManageGroups       MemberRole   @default(moderator)
   whoCreateSection      MemberRole   @default(user)
@@ -171,7 +171,7 @@ model ForumsChannel {
   description String ? 
   type        Type @default(public)
   createdBy   String @db.ObjectId
-  createdUser  User? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  createdMember  Member? @relation("CreatedForum", fields: [createdBy], references: [id],  onDelete: Cascade)
   isEveryonePost Boolean @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -180,7 +180,7 @@ model ForumsChannel {
   sectionId    String @db.ObjectId
   section      Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
   memberIds  String[] @db.ObjectId
-  Members    Member[] @relation(fields: [memberIds], references: [id])
+  Members    Member[] @relation("Members", fields: [memberIds], references: [id])
  
    whoCanUpdateForums           SchemaRole @default(manager)
   whoCanMakePublicToPrivate    SchemaRole @default(manager)
@@ -260,8 +260,9 @@ model Channel {
   name        String
   description String ? 
   type        Type @default(public)
-  createdBy   String? @db.ObjectId
-  createdUser  User? @relation(fields: [createdBy], references: [id])
+  createdBy   String @db.ObjectId
+  createdMember Member? @relation("CreatedChannel", fields: [createdBy], references: [id])
+  // createdUser  User? @relation(fields: [createdBy], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   serverId    String? @db.ObjectId
@@ -270,7 +271,7 @@ model Channel {
   section      Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
   sendMsg    Boolean? @default(true)
   memberIds  String[] @db.ObjectId
-  Members    Member[] @relation(fields: [memberIds], references: [id])
+  Members    Member[] @relation("Members", fields: [memberIds], references: [id])
 
 
   whoCanReadMessage           SchemaRole @default(member)
@@ -283,7 +284,7 @@ model Channel {
   whoCanDeleteMessage         SchemaRole @default(manager)
   whoCanCreateForms           SchemaRole @default(member)
   whoCanCreatePolls           SchemaRole @default(member)
-
+  whoCanPinnedPost            SchemaRole @default(member)
 
 
 
@@ -355,7 +356,7 @@ model Canvas {
   title String
   description String?
   createdBy  String @db.ObjectId
-  createdUser  User? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  createdMember  Member? @relation("CreatedCanvas", fields: [createdBy], references: [id],  onDelete: Cascade)
   // createdUser  Member @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
   isEveryonePost Boolean @default(true)
   serverId  String @db.ObjectId
@@ -366,7 +367,7 @@ model Canvas {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   memberIds  String[] @db.ObjectId
-  Members    Member[] @relation(fields: [memberIds], references: [id])
+  Members    Member[] @relation("Members", fields: [memberIds], references: [id])
   
   
   whoCanUpdateCanvas          SchemaRole @default(manager)
@@ -442,20 +443,27 @@ model Member {
   server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
 
   channelIds String[] @db.ObjectId
-  channels  Channel[] @relation(fields: [channelIds], references: [id])
+  channels  Channel[] @relation("Members" ,fields: [channelIds], references: [id])
+
+  createdChannels Channel[] @relation("CreatedChannel")
 
   canvasIds String[] @db.ObjectId
-  canvases  Canvas[] @relation(fields: [canvasIds], references: [id])
+  canvases  Canvas[] @relation("Members", fields: [canvasIds], references: [id])
+  createdCanvas  Canvas[] @relation("CreatedCanvas")
 
   forumsChannelIds String[] @db.ObjectId
-  forumChannels  ForumsChannel[] @relation(fields: [forumsChannelIds], references: [id])
+  forumChannels  ForumsChannel[] @relation("Members", fields: [forumsChannelIds], references: [id])
+
+  createdForumChannels ForumsChannel[] @relation("CreatedForum")
+
+
 
   testChannelIds String[] @db.ObjectId
-  testChannels  TestChannel[] @relation(fields: [testChannelIds], references: [id])
-
+  testChannels  TestChannel[] @relation("Members", fields: [testChannelIds], references: [id])
+  createdTestChannels TestChannel[] @relation("CreatedTestChannel")
   groupIds String[] @db.ObjectId
-  groups   Group[] @relation(fields: [groupIds], references: [id])
-
+  groups   Group[] @relation("Members", fields: [groupIds], references: [id])
+  createdGroups Group[] @relation("CreatedGroup")
   managedChannelId     String[] @db.ObjectId
   managedChannel      ChannelManager[] @relation(fields: [managedChannelId], references: [id])
   managedCanvasId     String[] @db.ObjectId
@@ -494,7 +502,7 @@ model Member {
   removedSchemaActivity  SchemaActivity[] @relation("RemovedMember")
   BotResponses   BotResponse[]
   
-  // TestChannels  TestChannel[]
+  // TestChanneƒls  TestChannel[]
   // NoteContent NoteContent[]
   @@index([userId])
   @@index([serverId])
@@ -633,7 +641,7 @@ model TestChannel {
   description String?
   type Type @default(public)
   createdBy  String @db.ObjectId
-  createdUser  User? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  createdMember  Member? @relation("CreatedTestChannel",fields: [createdBy], references: [id],  onDelete: Cascade)
   isEveryoneCreate Boolean @default(true)
   serverId  String @db.ObjectId
   server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
@@ -641,7 +649,7 @@ model TestChannel {
   section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
 
   memberIds  String[] @db.ObjectId
-  Members    Member[] @relation(fields: [memberIds], references: [id])
+  Members    Member[] @relation("Members", fields: [memberIds], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -798,14 +806,14 @@ model Group {
   handle String
   description String?
   createdBy    String? @db.ObjectId
-  createdUser  User? @relation(fields: [createdBy], references: [id])
+  createdUser  Member? @relation("CreatedGroup", fields: [createdBy], references: [id])
   serverId    String @db.ObjectId
   server  Server? @relation(fields: [serverId], references: [id])
   isDeactivated Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   memberIds  String[]  @db.ObjectId
-  members Member[] @relation(fields: [memberIds], references: [id])
+  members Member[] @relation("Members", fields: [memberIds], references: [id])
   mentions Mention[]
 }
 model Mention {

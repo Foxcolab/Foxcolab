@@ -28,17 +28,28 @@ const ChannelChat =async({params}:Props)=> {
   if(!server) redirect('/home')
 
   
-  const channel = await db.channel.findUnique({
+  let channel = await db.channel.findUnique({
     where: {
       id: params?.channelId ,
-      // Members:{
-      //   some:{
-      //     userId:profile?.id
+      // OR:[
+      //   {
+      //     type:"public"
+      //   },
+      //   {
+      //     Members:{
+      //       some:{
+      //         userId:profile.id
+      //       }
+      //     }
       //   }
-      // }
+      // ]
     },
     include:{
-      createdUser:true,
+      createdMember:{
+        include:{
+          user:true
+        }
+      },
       schemaActivity:{
         where:{
           channelId:params.channelId
@@ -100,23 +111,26 @@ const ChannelChat =async({params}:Props)=> {
               }
             }
           }
+
           
         },
         
       }
     }
   });
+
+
   if(!channel) redirect(`/servers/${params.id}`);
 
   const member = await db.member.findFirst({
     where: {
       serverId: params.id,
       userId: profile?.id,
-      channels: {
-        some:{
-          id:params.channelId
-        }
-      }
+      // channels: {
+      //   some:{
+      //     id:params.channelId
+      //   }
+      // }
 
       // channelIds:{
       //   has:params.channelId
@@ -133,7 +147,7 @@ const ChannelChat =async({params}:Props)=> {
     }
   });
 
-  if ( !member) {
+  if (!member) {
     redirect(`/servers/${params.id}`);
   }
 
@@ -175,7 +189,9 @@ const ChannelChat =async({params}:Props)=> {
     }
   }
 
-  const isAdmin = profile.id===channel.createdBy;
+  const isAdmin = member.id===channel.createdBy;
+  channel.currentMember = member;
+
 
 
   return (

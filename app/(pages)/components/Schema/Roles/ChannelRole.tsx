@@ -15,9 +15,11 @@ interface Props {
     whoCanDeleteMessage :SchemaRole
     whoCanCreateForms:SchemaRole   
     whoCanCreatePolls:SchemaRole    
+    whoCanPinnedPost:SchemaRole    
+
     type:string   
 }
-function ChannelRole({whoCanReadMessage, whoCanSendMessage, whoCanMakePublicToPrivate, whoCanUploadMedia, whoCanUpdateChannel, whoCanCreateForms, whoCanCreatePolls, whoCanDeleteMessage, whoCanManageManager, whoCanManageMember, type}:Props) {
+function ChannelRole({whoCanReadMessage, whoCanSendMessage, whoCanMakePublicToPrivate, whoCanUploadMedia, whoCanUpdateChannel, whoCanCreateForms, whoCanCreatePolls, whoCanDeleteMessage, whoCanManageManager, whoCanManageMember, type, whoCanPinnedPost}:Props) {
     const [read, setRead] = useState(whoCanReadMessage);
     const [sendMsg, setSendMsg] = useState(whoCanSendMessage);
     const [publicToPrivate, setPublicToPrivate] = useState(whoCanMakePublicToPrivate);
@@ -28,11 +30,12 @@ function ChannelRole({whoCanReadMessage, whoCanSendMessage, whoCanMakePublicToPr
     const [deleteMessage, setDeleteMessage] = useState(whoCanDeleteMessage);
     const [createForms, setCreateForms] = useState(whoCanCreateForms);
     const [createPolls, setCreatePolls] = useState(whoCanCreatePolls);
+    const [pin, setPin] = useState(whoCanPinnedPost)
     const params = useParams();
     const router = useRouter();
     const onChangeHandler =async(title:string, schemaValue:string)=>{
         try {
-            const res =await axios.put(`/api/channel/role?serverId=${params?.id}&channel=${params?.channelId}`, {title, schemaValue});
+            const res =await axios.put(`/api/channel/role?serverId=${params?.id}&channelId=${params?.channelId}`, {title, schemaValue});
             router.refresh();
 
         } catch (error) {
@@ -44,8 +47,8 @@ function ChannelRole({whoCanReadMessage, whoCanSendMessage, whoCanMakePublicToPr
 
     <div className='schema_role_container'>
 
-  
-        <SingleRoleCompoents title="Read Message" subTitle='Allow you to read messages without becoming member of the public channels.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={type==="public" ? true :false} state={read}  />
+{/*   
+        <SingleRoleCompoents title="Read Message" subTitle='Allow you to read messages without becoming member of the public channels.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={type==="public" ? true :false} state={read}  /> */}
     <SingleRoleCompoents title="Send Message" subTitle='Allows you to send messages in the channel.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={sendMsg} />
     <SingleRoleCompoents title="Upload Media" subTitle='Allows you to upload media in the channel' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={uploadMedia} />
     <SingleRoleCompoents title="Update Channel" subTitle='Allows you to update channel basic setting.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={update} />
@@ -53,8 +56,11 @@ function ChannelRole({whoCanReadMessage, whoCanSendMessage, whoCanMakePublicToPr
     <SingleRoleCompoents title="Manage Channel Managers" subTitle='Allows you to add new channel manager and remove exising one from channel manager list' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={manageManager} />
     <SingleRoleCompoents title="Manage Channel Members" subTitle='Allows you to add new channel member or remove existing one from this channel.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={manageMember} />
     <SingleRoleCompoents title="Manage Messages" subTitle='Allows you to delete channel messages.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={deleteMessage} />
+    
+    <SingleRoleCompoents title="Pin Message" subTitle='Allows you to pin a messsage to the channel.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={pin} />
+
     <SingleRoleCompoents title="Create Polls" subTitle='Allows you to create polls in the channel.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={createPolls} />
-    <SingleRoleCompoents title="Create Forms" subTitle='Allows you to create forums in the channel.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={createForms} />
+    <SingleRoleCompoents title="Create Forms" subTitle='Allows you to create forms in the channel.' schemaType='Channel'  onChangeHandler={onChangeHandler} disabled={false} state={createForms} />
    
     </div>
     </>

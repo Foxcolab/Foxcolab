@@ -33,9 +33,18 @@ try {
 
     if(!channel) return NextResponse.json({error:"Channel not found"}, {status:409});
 
+    let hasPermission = false;
+    const whoHavePermission = channel?.whoCanUpdateChannel;
     const managers = channel?.manager?.memberIds;
     const isManager = managers?.some(m => m === member?.id);
-    if(!isManager) return NextResponse.json({error:"You are not authorized to change the setting"}, {status:403});
+    const isAdmin = channel.createdBy===member.id;
+    const isMember = channel.memberIds.includes(member.id);
+    if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+        hasPermission = true;
+    }
+    if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+
+    
     const prevDesc = channel.description;
 
 

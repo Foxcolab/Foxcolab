@@ -6,8 +6,10 @@ import React, { useState } from 'react'
 interface Props {
   serverId:string
   serverType:string
+  hasPermission:boolean
+
 }
-function ServerType({serverId, serverType}:Props) {
+function ServerType({serverId, serverType, hasPermission}:Props) {
   const [type, setType] = useState(serverType);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -28,7 +30,7 @@ function ServerType({serverId, serverType}:Props) {
         <div className="setting_section_title">Server Type</div>
         <div className="setting_section_content">   
             <div className="server_set_inp">
-              <select name="" id="" defaultValue={type} onChange={e=>setType(e.target.value)}>
+              <select name="" id="" defaultValue={type} onChange={e=>setType(e.target.value)} disabled={!hasPermission} >
                 <option selected={type===""} value="">Select--</option>
                 <option selected={type==="Artificial Intelligence"} value="Artificial Intelligence">Artificial Intelligence</option>
                 <option selected={type==="Science"} value="Science">Science</option>

@@ -56,6 +56,8 @@ interface ChatItemProps {
   allServerMember:Member[]
   setThreadMessage:any
   schemaType:"Channel" | "Threads"
+  whoCanDeleteMessage:boolean
+  whoCanPinnedPost:boolean
 };
 
 
@@ -94,7 +96,9 @@ export const ChatItem = ({
     myChannels,
     allServerMember,
     setThreadMessage,
-    schemaType
+    schemaType,
+    whoCanPinnedPost,
+    whoCanDeleteMessage
     
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -260,7 +264,7 @@ mySavedPost && mySavedPost.forEach(p => {
     id={(isPinnedPost && isSavedPost)  ? "pinnedMsgBody": isSavedPost && !isPinnedPost ? "savedMsgBody" :  isPinnedPost && !isSavedPost ?"pinnedMsgBody":  ""}
     
     >
-    <MessageHover message={message} currentMember={currentMember} socketUrl={socketUrl} socketQuery={socketQuery} setIsEditing={setIsEditing} isPinnedPost={isPinnedPost} isSavedPost={isSavedPost} pinnedPost={pinnedPost} savedPost={savedPost} myChannels={myChannels} allServerMember={allServerMember} setThreadMessage={setThreadMessage} schemaType={schemaType} >
+    <MessageHover message={message} currentMember={currentMember} socketUrl={socketUrl} socketQuery={socketQuery} setIsEditing={setIsEditing} isPinnedPost={isPinnedPost} isSavedPost={isSavedPost} pinnedPost={pinnedPost} savedPost={savedPost} myChannels={myChannels} allServerMember={allServerMember} setThreadMessage={setThreadMessage} schemaType={schemaType} whoCanPinnedPost={whoCanPinnedPost} whoCanDeleteMessage={whoCanDeleteMessage}  >
     
     <div className="w-full">
     

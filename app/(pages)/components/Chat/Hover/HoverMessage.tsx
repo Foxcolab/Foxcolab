@@ -174,12 +174,14 @@ interface HoverMessagePops {
   allServerMember:Member[]
   setThreadMessage:any
   schemaType:string
+  whoCanPinnedPost:boolean
+  whoCanDeleteMessage:boolean
 }
 
 
 
 
-function HoverMessage({children, message, currentMember, socketUrl, socketQuery, setIsEditing, isPinnedPost, isSavedPost,savedPost, pinnedPost, myChannels, allServerMember, setThreadMessage , schemaType }:HoverMessagePops) {
+function HoverMessage({children, message, currentMember, socketUrl, socketQuery, setIsEditing, isPinnedPost, isSavedPost,savedPost, pinnedPost, myChannels, allServerMember, setThreadMessage , schemaType , whoCanDeleteMessage, whoCanPinnedPost}:HoverMessagePops) {
   const [loading, setLoading] = useState(false);
   const [sloading, setsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
@@ -387,6 +389,8 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   }
 
 
+    const isAdmin = message.memberId===currentMember.id;
+
 
     return (
     <>
@@ -439,11 +443,14 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   <DropdownMenuContent className="more_drop sm:max-w-[425px]" >
 
             <DropdownMenuItem className='dpdn_it' onClick={MarkUnread}> <MdMarkunreadMailbox/> Marks unread </DropdownMenuItem>
-            <DropdownMenuItem className='dpdn_it' onClick={isPinnedPost ? RemovePinnedMsg : PinnedMsg}><MdOutlinePushPin/>
+            {
+              whoCanPinnedPost && <DropdownMenuItem className='dpdn_it' onClick={isPinnedPost ? RemovePinnedMsg : PinnedMsg}><MdOutlinePushPin/>
               {
                 isPinnedPost ? "Unpin from channel": "Pinned a message"
               }
              </DropdownMenuItem>
+            }
+            
 
 
              <DropdownMenuSub>
@@ -475,10 +482,21 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
             <RiShareForwardFill /> Forward
 
             </DropdownMenuItem>
-
-            <DropdownMenuSeparator className='bg-gray-500' />
-           <DropdownMenuItem className='dpdn_it' onClick={()=>setIsEditing(true)}><RiEditBoxFill/> Edit Message </DropdownMenuItem>
-           <DropdownMenuItem className='dpdn_it dodn_delete' onClick={()=>setOpen(true)}><AiFillDelete/> Delete Message </DropdownMenuItem>
+            {isAdmin || whoCanDeleteMessage &&  <DropdownMenuSeparator className='bg-gray-500' />}
+            {
+              
+              isAdmin &&
+            <>
+            
+           
+              <DropdownMenuItem className='dpdn_it' onClick={()=>setIsEditing(true)}><RiEditBoxFill/> Edit Message </DropdownMenuItem>
+            </>
+            }
+           
+           {
+            (isAdmin || whoCanDeleteMessage) && <DropdownMenuItem className='dpdn_it dodn_delete' onClick={()=>setOpen(true)}><AiFillDelete/> Delete Message </DropdownMenuItem>
+           }
+           
 
       
   </DropdownMenuContent>

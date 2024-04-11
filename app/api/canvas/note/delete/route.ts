@@ -20,20 +20,8 @@ export const DELETE =async(req:NextRequest)=>{
         console.log("Member Id", member?.id);
         
         if(!member) return NextResponse.json({success:false, error:"You are not a member"}, {status:400});
-        
-        const server = await db.server.findFirst({
-            where:{
-                id:serverId as string,
-                Members:{
-                    some:{
-                        userId:userId
-                    }
-                }
-            },
-        });
-        
-        if(!server)return NextResponse.json({success:false, error:"Server not found"}, {status:400});
 
+  
         const canvas = await db.canvas.findFirst({
             where:{
                 id:canvasId as string,
@@ -48,19 +36,36 @@ export const DELETE =async(req:NextRequest)=>{
                 manager:true
             }
         })
+        if(!canvas) return NextResponse.json({error:"Canvas not found"}, {status:409});
 
-        console.log("Found Canvas:::::", canvas);
-        const isAdmin = canvas?.createdBy===member.id;
-        const isManager = canvas?.manager?.memberIds?.some(m => m === member?.id);
-        
-        if(!isAdmin && !isManager){
-            return NextResponse.json({message:"You are not authorized to delete this note.", status:401, success:false}, {status:401})
+        const note = await db.note.findFirst({
+            where:{
+                id:noteId, 
+                canvasId:canvasId as string,
+                serverId:serverId as string
+            }
+        });
+
+        if(!note) return NextResponse.json({error:"Note not found"}, {status:409});
+
+
+
+        let hasPermission = false;
+        const whoHavePermission = canvas?.whoCanCreateNote;
+        const managers = canvas?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = canvas.createdBy===member.id || note.createdBy===member.id;
+        const isMember = canvas.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
         }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+
 
         
         
 
-        const note =  await db.note.delete({
+         await db.note.delete({
             where:{
                 id:noteId as string,
                 serverId:serverId as string,

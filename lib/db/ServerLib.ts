@@ -19,21 +19,78 @@ export const getServer =async(serverId:string, userId:string)=>{
               sections:{
                   include:{
                       channels:{
+                        where:{
+                          OR:[
+                            {
+                              type:"public"
+                            },
+                            {
+                              Members:{
+                                some:{
+                                  userId:userId
+                                }
+                              }
+                            }
+                          ]
+
+                        },
                           orderBy:{
                               createdAt:"desc"
                           }
                       },
                       canvas:{
+                        where:{
+                          OR:[
+                            {
+                              type:"public"
+                            },
+                            {
+                              Members:{
+                                some:{
+                                  userId:userId
+                                }
+                              }
+                            }
+                          ]
+                        },
                           orderBy:{
                               createdAt:"desc"
                           }
                       },
                       forumsChannel:{
+                        where:{
+                          OR:[
+                            {
+                              type:"public"
+                            },
+                            {
+                              Members:{
+                                some:{
+                                  userId:userId
+                                }
+                              }
+                            }
+                          ]
+                        },
                           orderBy:{
                               createdAt:"desc"
                           }
                       },
                       TestChannels:{
+                        where:{
+                          OR:[
+                            {
+                              type:"public"
+                            },
+                            {
+                              Members:{
+                                some:{
+                                  userId:userId
+                                }
+                              }
+                            }
+                          ]
+                        },
                           orderBy:{
                               createdAt:"desc"
                           }
@@ -42,6 +99,9 @@ export const getServer =async(serverId:string, userId:string)=>{
                   }
               },
               Members: {
+                where:{
+                  role:{not:"bot"}
+                },
                 include: {
                   user: true,
                 },

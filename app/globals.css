@@ -392,7 +392,7 @@
     padding: 0 .5em;
     line-height: 1.5em;
     color: var(--textColor);
-    background-color: var(--background);
+    background-color: var(--channelBg);
   }
 }
 .hr-white {
@@ -6739,4 +6739,26 @@
 }
 .bot_res_table_row tr:hover {
   background-color: var(--testBtnActive) !important;
+}
+
+
+
+
+.editor_not_permit_container {
+  padding:1rem ;
+  width: 100%;
+}
+.editor_not_permit_container div {
+  cursor: not-allowed;
+  background: var(--activeTheme);
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--color2);
+  border: 1px solid var(--testBg);
+}
+
+.channel_media_plus {
+  cursor: not-allowed;
 }

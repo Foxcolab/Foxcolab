@@ -13,14 +13,39 @@ export const POST =async(req:NextRequest)=>{
         console.log(serverId);
 
         const userId = GetDataFromToken(req);
-        const member = await db.member.findFirst({
+        const server = await db.server.findFirst({
           where:{
-            userId:userId as string,
-            serverId:serverId as string
+              id:serverId as string,
+              Members:{
+                  some:{
+                      userId:userId
+                  }
+              },
+
+          },
+          include:{
+              Members:{
+                  where:{
+                      userId:userId
+                  }
+              }
           }
-        })
-        if(!member) return NextResponse.json({success:false, message:"Member not found"}, {status:409});
-       const server = await db.server.update({
+      })
+
+      if(!server ) return NextResponse.json({success:false, message:"Server not found"}, {status:409});
+
+      const member = server.Members[0];
+      let hasPermission = false;
+      const whoCanUpdate = server.whoCreateSection;
+      if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+          hasPermission = true;
+      }
+
+      if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+      
+    
+    
+       server = await db.server.update({
         where: {
           id: serverId,
           Members: {

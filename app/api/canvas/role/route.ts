@@ -26,7 +26,15 @@ export const PUT =async(req:NextRequest)=>{
       
         if(!title || !schemaValue) return NextResponse.json({error:"Something went wrong"}, {status:409});
         
-
+        const canvas = await db.canvas.findFirst({
+            where:{
+                id:canvasId,
+                serverId:serverId as string
+            },
+            
+        });
+        if(!canvas || canvas.createdBy!==member.id) return NextResponse.json({success:false, message:"Channel not found"}, {status:409});
+        
 
 
         console.log(title, schemaValue);

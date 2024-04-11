@@ -22,17 +22,36 @@ export const POST =async(req:NextRequest)=>{
         const reqBody = await req.json();
         const {name, type} = reqBody;
         if(!name) return NextResponse.json({error:"Please enter the test channel name"}, {status:409});
-        const member = await db.member.findFirst({
+        const server = await db.server.findFirst({
             where:{
-                userId:userId,
-                serverId:serverId as string
+                id:serverId as string,
+                Members:{
+                    some:{
+                        userId:userId
+                    }
+                },
+
             },
             include:{
-                user:true
+                Members:{
+                    where:{
+                        userId:userId
+                    }
+                }
             }
-        });
-        if(!member) return NextResponse.json({error:"You are not authorized member"}, {status:409});
+        })
 
+        if(!server ) return NextResponse.json({success:false, message:"Server not found"}, {status:409});
+
+        const member = server.Members[0];
+        let hasPermission = false;
+        const whoCanUpdate = server.whoCreateTestChannel;
+        if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
+            hasPermission = true;
+        }
+
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
         const testChannel = await db.section.update({
             where:{
                 id:sectionId as string,
@@ -43,7 +62,7 @@ export const POST =async(req:NextRequest)=>{
                     create:{
                         name,
                         type,
-                        createdBy:userId,
+                        createdBy:member.id as string,
                         serverId:serverId as string,
                         memberIds:[member.id],
                         Members:{
@@ -53,14 +72,16 @@ export const POST =async(req:NextRequest)=>{
                             create:{
                                 serverId:serverId as string,
                                 sectionId:sectionId as string,
-                                memberIds:[member.id]
+                                memberIds:[member.id],
+                                member:{
+                                    connect:[{id:member.id}]
+                                  },
                             }
                         }
                     }
                 }
             }
         })
-
 
         await CreateActivityLog(serverId, member.id, "Created", "Test Channel", name, "" );
         return NextResponse.json({error:"Test channel created successfully", success:true}, {status:200});

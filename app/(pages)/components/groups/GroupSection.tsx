@@ -9,8 +9,9 @@ interface Props{
     members:Member[],
     serverId:string,
     groups:Group[]
+    hasPermission:boolean
 }
-function GroupSection({members, serverId, groups}:Props) {
+function GroupSection({members, serverId, groups, hasPermission}:Props) {
   return (
     <>
     
@@ -22,7 +23,10 @@ function GroupSection({members, serverId, groups}:Props) {
       <hr style={{borderTop:"1px solid #6d6e6d"}} />
       <div className='cnvs_sc mt-3'>
         <div><b>All Groups</b></div>
-        <CreateGroup  members={members} serverId={serverId} />
+        {
+          hasPermission && <CreateGroup  members={members} serverId={serverId} />
+        }
+        
       </div>
 
       <div className="">

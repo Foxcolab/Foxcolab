@@ -30,7 +30,7 @@ export const POST =async(req:NextRequest)=>{
                 testChannelId:testChannelId as string
             }
         });
-        if(!test) return NextResponse.json({error:"Test not found"}, {status:409});
+        if(!test || test.createdBy!==member.id) return NextResponse.json({error:"Test not found"}, {status:409});
 
         const fullMark = test.fullMarks + marks;
        

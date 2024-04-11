@@ -40,6 +40,7 @@ interface ChatMessagesProps {
   }
   
 function ChatMessages({ 
+  
     name,
     member,
     chatId,
@@ -123,6 +124,26 @@ function ChatMessages({
     if(time1===time2) return false;
     return true;
   }
+
+
+  const isAdmin = member.id === channel.createdBy ;
+  // console.log(isAdmin);
+  const isManager = channel.manager.memberIds.includes(member.id);
+  const isMember = channel.memberIds.includes(member.id);
+  console.log("A M MEM",isAdmin, isManager, isMember)
+  let whoCanDeleteMessage = false;
+  let whoCanPinnedPost = false;
+
+  if(((isAdmin || isManager || isMember) && channel.whoCanDeleteMessage==="member") || ((isManager || isAdmin) && channel.whoCanDeleteMessage==="manager") || (isAdmin && channel.whoCanDeleteMessage==="admin") ){
+    whoCanDeleteMessage = true;
+  }
+
+  if(((isAdmin || isManager || isMember) && channel.whoCanPinnedPost==="member") || ((isManager || isAdmin) && channel.whoCanPinnedPost==="manager") || (isAdmin && channel.whoCanPinnedPost==="admin") ){
+    whoCanPinnedPost = true;
+  }
+  
+
+  console.log("Delet Pinn", whoCanDeleteMessage, whoCanPinnedPost)
      
 
 
@@ -186,6 +207,8 @@ function ChatMessages({
           allServerMember={allServerMember}
           setThreadMessage={setThreadMessage}
           schemaType="Channel"
+          whoCanPinnedPost={whoCanPinnedPost}
+          whoCanDeleteMessage={whoCanDeleteMessage}
         /> 
         {
           CheckDividorTime(message.createdAt, group.items[j+1]?.createdAt)==true && 

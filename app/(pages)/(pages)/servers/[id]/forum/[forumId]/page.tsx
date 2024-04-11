@@ -45,6 +45,11 @@ async function ForumsId({params}:ForumsProps) {
       serverId:server.id
     },
     include:{
+      createdMember:{
+        include:{
+          user:true
+        }
+      },
       schemaActivity:{
         where:{
           forumChannelId:params.forumId
@@ -101,7 +106,6 @@ async function ForumsId({params}:ForumsProps) {
         }
       }
     },
-    createdUser:true
   }});
   if(!forumsChannel) redirect(`/severs/${params.id}`);
 
@@ -121,13 +125,13 @@ async function ForumsId({params}:ForumsProps) {
   }
   // const isAdmin = member.id===forumsChannel.createdBy;
   const managers = forumsChannel.manager?.member;
-  let isAdmin = false;
-  for(let i=0; i<forumsChannel?.manager?.memberIds?.length; i++){
-    if(forumsChannel.manager?.memberIds[i]===member.id){
-      isAdmin=true;
-      break;
-    }
-  }
+  let isAdmin = forumsChannel.createdBy = member.id;
+  // for(let i=0; i<forumsChannel?.manager?.memberIds?.length; i++){
+  //   if(forumsChannel.manager?.memberIds[i]===member.id){
+  //     isAdmin=true;
+  //     break;
+  //   }
+  // }
 
   const createdAt = format(new Date(forumsChannel.createdAt), DATE_FORMAT);
   let sendMsg = forumsChannel.isEveryonePost !==undefined && forumsChannel.isEveryonePost!==null ? forumsChannel.isEveryonePost : true;

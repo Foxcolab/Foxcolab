@@ -36,18 +36,17 @@ export const PUT =async(req:NextRequest)=>{
 
         });
         if(!forumChannel) return NextResponse.json({error:"Channel not found"}, {status:409});
-
-        const isAdmin = forumChannel.memberIds[0]===managerIds;
-        if(isAdmin) return NextResponse.json({error:"You are not authorized to remove the admin from channel manager"}, {status:400});
-        
+        let hasPermission = false;
+        const whoHavePermission = forumChannel?.whoCanManageManager;
         const managers = forumChannel?.manager?.memberIds;
-        console.log(managers);
-        
         const isManager = managers?.some(m => m === member?.id);
-        console.log(isManager)
-
-        if(!isManager) return NextResponse.json({error:"You are not authorized to add this member"}, {status:403});
-
+        const isAdmin = forumChannel.createdBy===member.id;
+        const isMember = forumChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
         await db.forumsChannel.update({
             where:{
                 id:forumChannelId as string,
