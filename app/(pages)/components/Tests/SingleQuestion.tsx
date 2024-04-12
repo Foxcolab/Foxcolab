@@ -37,6 +37,11 @@ function SingleQuestion({question, index }:QuesitonProps) {
             
         }
     }
+
+    const updateHref =()=>{
+        router.push(`${params?.testId}/${question.id}`);
+      }
+
   return (
     <>
     
@@ -47,7 +52,7 @@ function SingleQuestion({question, index }:QuesitonProps) {
             <span className='text-green-500 text-sm'>Marks: {question.marks} </span>
             <span className=' px-3 py-1 font-normal c_qtype rounded text-sm'>{question.qType}</span>
             <DeleteQuestion DeleteHandler={DeleteHandler} index={index} open={open} setOpen={setOpen} />
-            <UpdateQuestion question={question} />
+            <button onClick={updateHref}><BiSolidEdit/></button>
 
             </span>
             

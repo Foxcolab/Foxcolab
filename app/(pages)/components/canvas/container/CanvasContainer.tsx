@@ -1,15 +1,30 @@
 "use client";
-import { Note } from '@prisma/client'
+import { Canvas, Member, Note, canvasManager } from '@prisma/client'
 import React, { useState } from 'react'
 import SingleCanvas from '../SingleCanvas';
 
 interface Props {
-    notes:Note[]
+    canvas:Canvas & {
+        manager:canvasManager
+    } &  {
+        notes: Note[]
+    }
+    member:Member
+    isAdmin:boolean 
 }
-function CanvasContainer({notes}:Props) {
+function CanvasContainer({canvas, isAdmin, member}:Props) {
     const [listStyle, setListStyle] = useState('list');
-    console.log("Notes", notes);
-    console.log("Notes Length:", notes.length);
+    
+    let DeletePermission =false;
+    const isManager = canvas.manager?.memberIds.includes(member.id);
+    const isMember = canvas.memberIds.includes(member.id);
+    if(((isAdmin || isManager || isMember) && canvas?.whoCanDeleteNote==="member") || ((isManager || isAdmin) && canvas?.whoCanDeleteNote==="manager") || (isAdmin && canvas?.whoCanDeleteNote==="admin") ){
+        DeletePermission = true;
+  } 
+
+  const notes = canvas?.notes;
+
+
   return (
     <>
     
@@ -21,7 +36,7 @@ function CanvasContainer({notes}:Props) {
             {
             notes.length!==0 && notes.map((note:Note)=>(
                 <>
-                <SingleCanvas note={note}   />
+                <SingleCanvas note={note} isAdmin={isAdmin} whoCanDeleteNote={DeletePermission} memberId={member.id} managerIds={canvas.manager.memberIds} memberIds={canvas.memberIds} />
                 </>
             ))
             }

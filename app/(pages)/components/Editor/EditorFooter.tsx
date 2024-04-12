@@ -868,8 +868,28 @@ files[i]?.name.endsWith(".ppt")?
 
 
           {
-            uploadMedia===true ? 
+            uploadMedia===false ? 
+            <HoverCard>
+            <HoverCardTrigger>
             <button
+             disabled
+             type="button"
+             className=" h-[24px] w-[24px] channel_media_plus transition rounded-full p-1 flex items-center justify-center"
+           >
+     {/* <RiComputerFill /> Upload from local */}
+     
+     <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
+  
+             
+           </button>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              You don't have permission to upload media in this channel
+            </HoverCardContent>
+          </HoverCard> :
+           <>
+           
+           <button
             type="button"
             className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"
           >
@@ -883,25 +903,10 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
 />
 </label>
             
-          </button> :
-          <HoverCard>
-          <HoverCardTrigger>
-          <button
-           disabled
-           type="button"
-           className=" h-[24px] w-[24px] channel_media_plus transition rounded-full p-1 flex items-center justify-center"
-         >
-   {/* <RiComputerFill /> Upload from local */}
-   
-   <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
-
+          </button> 
            
-         </button>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            You don't have permission to upload media in this channel
-          </HoverCardContent>
-        </HoverCard>
+           </>
+        
           
           }
 

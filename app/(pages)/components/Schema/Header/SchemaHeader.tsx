@@ -7,6 +7,7 @@ import { FaUsers } from 'react-icons/fa'
 interface Props {
   name: string
   members: Member[]
+  member:Member
   description:string
   createdBy:string
   createdAt:string
@@ -18,7 +19,7 @@ interface Props {
   sendMsg:boolean
   schema:ForumsChannel | Canvas | TestChannel
 }
-function SchemaHeader({name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, schema}:Props) {
+function SchemaHeader({member, name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, schema}:Props) {
   return (
     <>
     
@@ -40,7 +41,7 @@ function SchemaHeader({name, members, description, createdAt, createdBy, type, i
            serverMembers={serverMembers}
            sendMsg={sendMsg}
            schema={schema}
-
+           member={member}
            />
           
           
@@ -61,7 +62,7 @@ function SchemaHeader({name, members, description, createdAt, createdBy, type, i
         serverMembers={serverMembers}
         sendMsg={sendMsg}
         schema={schema}
-
+        member={member}
         />
         
 

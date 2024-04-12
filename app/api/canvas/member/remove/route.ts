@@ -15,7 +15,7 @@ export const PUT =async(req:NextRequest)=>{
         const canvasId = req.nextUrl.searchParams.get('canvasId');
        
         const userId = GetDataFromToken(req);
-        const user = await db.user.findFirst({where:{id:userId}});
+        // const user = await db.user.findFirst({where:{id:userId}});
 
         const canvas = await db.canvas.findFirst({
             where:{
@@ -33,7 +33,7 @@ export const PUT =async(req:NextRequest)=>{
         if(!canvas) return NextResponse.json({error:"Canvas not found"}, {status:409});
         const member = await db.member.findFirst({
           where:{
-            id:memberId as string,
+            userId:userId as string,
             serverId: serverId as string
           }
         });
@@ -50,51 +50,76 @@ export const PUT =async(req:NextRequest)=>{
             hasPermission = true;
         }
         if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
-
+        console.log(hasPermission)
         
-        const section = await db.section.update({
-          where:{
-            id:sectionId as string,
-            serverId:serverId as string,
-          },
-            data:{
-              canvas:{
-                update:{
-                    where:{
-                        id:canvasId as string,
-                        createdBy:user?.id,
+        // const section = await db.section.update({
+        //   where:{
+        //     id:sectionId as string,
+        //     serverId:serverId as string,
+        //   },
+        //     data:{
+        //       canvas:{
+        //         update:{
+        //             where:{
+        //                 id:canvasId as string,
+        //                 createdBy:user?.id,
                         
-                    },
-                    data:{
-                        memberIds:{
-                          set: canvas?.memberIds.filter((id)=>id!==memberId)
-                        },
-                        manager:{
-                          update:{
-                            where:{
-                              canvasId:canvasId as string,
-                            },
-                            data:{
-                              memberIds:{
-                                set: canvas?.manager?.memberIds.filter((id)=>id!==memberId)
-                              }
-                            }
-                          }
-                        }
-                    }
+        //             },
+        //             data:{
+        //                 memberIds:{
+        //                   set: canvas?.memberIds.filter((id)=>id!==memberId)
+        //                 },
+        //                 manager:{
+        //                   update:{
+        //                     where:{
+        //                       canvasId:canvasId as string,
+        //                     },
+        //                     data:{
+        //                       memberIds:{
+        //                         set: canvas?.manager?.memberIds.filter((id)=>id!==memberId)
+        //                       }
+        //                     }
+        //                   }
+        //                 }
+        //             }
+        //         }
+        //       }
+            
+        //  }
+        // })
+        const Updatecanvas = await db.canvas.update({
+          where:{
+            id:canvasId as string,
+            serverId:serverId as string
+          },
+          data:{
+            memberIds:{
+              set: canvas?.memberIds.filter((id)=>id!==memberId)
+            },
+            manager:{
+              update:{
+                where:{
+                  canvasId:canvasId as string,
+                },
+                data:{
+                  memberIds:{
+                    set: canvas?.manager?.memberIds.filter((id)=>id!==memberId)
+                  }
                 }
               }
-            
-         }
+            }
+          
+        }
+          
         })
 
-        console.log(section);
+        console.log(Updatecanvas);
         await SchemaActivity({serverId:serverId as string, sectionId:canvas?.sectionId as string, schemaId:canvasId as string, activityType:"Remove Member", schemaType:"Canvas", memberId:member.id as string, memberId2:memberId, oldData:null, newData:null, name:"Member", message:"Removed a member"});
 
 
         return NextResponse.json({
             success:true,
-            section
+            Updatecanvas
         }, {status:200})
 
     } catch (error:any) {

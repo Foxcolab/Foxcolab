@@ -123,9 +123,45 @@ async function ForumsId({params}:ForumsProps) {
   if ( !member) {
     redirect("/");
   }
-  // const isAdmin = member.id===forumsChannel.createdBy;
-  const managers = forumsChannel.manager?.member;
-  let isAdmin = forumsChannel.createdBy = member.id;
+
+  const memberId = forumsChannel.memberIds.some((id)=>id===member.id);
+  if(!memberId){
+    if(forumsChannel.type==="private"){
+      redirect(`/servers/${server.id}`);
+    }else {
+      await db.section.update({
+        where:{
+          id:forumsChannel.sectionId as string
+        },
+        data:{
+          forumsChannel:{
+            update:{
+              where:{
+                id:forumsChannel.id
+              },
+              data:{
+                Members:{
+                  connect:{
+                    id:member.id
+                  }
+                },
+                memberIds: {
+                  push:member.id
+                }
+              }
+            }
+          }
+        }
+      })
+    }
+  }
+
+
+
+
+
+ 
+  let isAdmin = forumsChannel.createdBy === member.id;
   // for(let i=0; i<forumsChannel?.manager?.memberIds?.length; i++){
   //   if(forumsChannel.manager?.memberIds[i]===member.id){
   //     isAdmin=true;
@@ -146,15 +182,17 @@ async function ForumsId({params}:ForumsProps) {
       members={forumsChannel.Members}
       serverMembers={server.Members}
       description={forumsChannel.description as string}
-      createdBy={forumsChannel.createdUser?.name as string} 
+      createdBy={forumsChannel.createdMember?.user?.name as string} 
       createdAt={createdAt}
       type={forumsChannel.type}
       isAdmin={isAdmin}
       sendMsg={sendMsg}
-      managers={managers}
+      managers={forumsChannel.manager}
       forums={forumsChannel.Forums}
       sectionId={forumsChannel.sectionId}
       schema={forumsChannel}
+      member={member}
+      
       />
     </ServerHome>
     

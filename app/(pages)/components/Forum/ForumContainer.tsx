@@ -28,9 +28,26 @@ interface Props {
   setForum:any
   listStyle:string
   schema:ForumsChannel
+  member:Member
 }
-function ForumContainer({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums, setForum, listStyle,schema}:Props) {
+function ForumContainer({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums, setForum, listStyle,schema, member}:Props) {
     
+  let canCreateForum = false;
+  let canDeleteForum = false;
+  let uploadMediaInComment = false;
+  const isManager = managers.memberIds.includes(member.id);
+  const isMember = schema.memberIds.includes(member.id);
+  console.log(schema.memberIds);
+
+  if(((isAdmin || isManager || isMember) && schema?.whoCanCreatePost==="member") || ((isManager || isAdmin) && schema?.whoCanCreatePost==="manager") || (isAdmin && schema?.whoCanCreatePost==="admin") ){
+    canCreateForum = true;
+  } 
+  if(((isAdmin || isManager || isMember) && schema?.whoCanDeletePost==="member") || ((isManager || isAdmin) && schema?.whoCanDeletePost==="manager") || (isAdmin && schema?.whoCanDeletePost==="admin") ){
+    canDeleteForum = true;
+  } 
+  if(((isAdmin || isManager || isMember) && schema?.whoCanUploadMediaInComment==="member") || ((isManager || isAdmin) && schema?.whoCanUploadMediaInComment==="manager") || (isAdmin && schema?.whoCanUploadMediaInComment==="admin") ){
+    uploadMediaInComment = true;
+  } 
 
   return (
     <>
@@ -52,12 +69,13 @@ schemaType="Forums"
 managers={managers}
 sendMsg={sendMsg}
 schema={schema}
+member={member}
 
 
 />
 
 <div className="canvas_container">
-  <ForumHeader sectionId={sectionId} />
+  <ForumHeader sectionId={sectionId} canCreateForum={canCreateForum} />
   <div className='cnvs_sc'>
     <div><b>All Forums</b></div>
    </div>

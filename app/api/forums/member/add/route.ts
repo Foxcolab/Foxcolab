@@ -59,7 +59,7 @@ export const PUT =async(req:NextRequest)=>{
                     update:{
                         where:{
                             id:forumChannelId as string,
-                            createdBy:userId,
+                            // createdBy:userId,
                         },
                         data:{
                             memberIds:{

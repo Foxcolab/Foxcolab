@@ -38,6 +38,12 @@ import 'react-quill/dist/quill.snow.css';
 import 'quill-mention';
 import QuillMention from 'quill-mention'
 import 'quill-mention/dist/quill.mention.css';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
 
 const formSchema = z.object({
     content: z.string().optional(),
@@ -50,10 +56,12 @@ interface Props {
   placeholder:string
     apiUrl:string
     query: Record<string, any>;
+    whoCanUploadMediaInComment:boolean
+    whoCanComment:boolean
     
 }
   
-function ForumEditor({placeholder, apiUrl, query}:Props) {
+function ForumEditor({placeholder, apiUrl, query, whoCanUploadMediaInComment, whoCanComment}:Props) {
     const router = useRouter();
     const [files, setFiles] = useState([]);
     const [previewUrl, setPreviewUrl] = useState([]);
@@ -74,6 +82,8 @@ function ForumEditor({placeholder, apiUrl, query}:Props) {
 
 
     const params = useParams();
+
+    console.log(whoCanUploadMediaInComment, whoCanComment)
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -224,8 +234,12 @@ function ForumEditor({placeholder, apiUrl, query}:Props) {
 
   return (
     <div className='forum_editor'>
-
-<Form {...form}>
+      {
+        whoCanComment===false ? <div className="editor_not_permit_container">
+        <div>
+        You don't have permission to post in this forum.
+        </div>
+       </div>  : <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
@@ -562,20 +576,45 @@ files[i]?.name.endsWith(".ppt")?
                     <div className='editor_footer'>
 
           <div className="footer_action">
-          <button
-                    type="button"
-                    className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"
-                  >
-                     <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
-            {/* <RiComputerFill /> Upload from local */}
-            <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
+
+            {
+              whoCanUploadMediaInComment===false ? 
+
+              <HoverCard>
+            <HoverCardTrigger>
+            <button
+             disabled
+             type="button"
+             className=" h-[24px] w-[24px] channel_media_plus transition rounded-full p-1 flex items-center justify-center"
+           >
+     <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
+  
+             
+           </button>
+            </HoverCardTrigger>
+            <HoverCardContent >
+              <div className="text-md flex items-center justify-center">You don't have permission to upload media in this forum</div>
+            </HoverCardContent>
+          </HoverCard>  : 
+           <button
+           type="button"
+           className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"
+         >
+            <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
+   {/* <RiComputerFill /> Upload from local */}
+   <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
 
 <input type="file" id="file" onChange={handleChange} multiple
 accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt "
 />
 </label>
-                    
-                  </button>
+           
+         </button>
+            }
+
+
+
+         
          
           <button className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center" ><AiOutlineFullscreen/></button>
           <div className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center overflow-hidden">
@@ -600,9 +639,16 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
           className=" h-[24px] w-[24px] transition rounded-full p-1 flex items-center justify-center"
           ><GoMention /></button> */}
           {/* <Mention open={mentionDialog} setOpen={setMentionDialog}  groups={groups} onSelectHandler={(e:any)=>onGroupSelect(e, field.onChange)}  /> */}
-          <VideoRecorder setVideoName={setVideoName} setVideoUrl={setVideoUrl} />
+          {
+            whoCanUploadMediaInComment && <>
+            
+            <VideoRecorder setVideoName={setVideoName} setVideoUrl={setVideoUrl} />
           <VoiceRecorder setAudioUrl={setAudioUrl} setAudioName={setaudioName} />
           <ScreenRecording setScreenName={setScreenName} setScreenUrl={setScreenUrl}  />
+            </>
+          }
+          
+          
 
           {/* <button
           className=" h-[24px] w-[24px] transition rounded-full p-1 flex items-center justify-center"
@@ -639,6 +685,9 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
         />
       </form>
     </Form>
+      }
+
+
 
 
 

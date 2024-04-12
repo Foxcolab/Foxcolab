@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react'
+import { Plus, SmilePlus } from 'lucide-react'
 import React, { useState } from 'react'
 import EditorEmoji from '../../Emoji/EditorEmoji'
 import { useParams, useRouter } from 'next/navigation';
@@ -7,13 +7,15 @@ import { IoSend } from 'react-icons/io5';
 
 import CommentFiles from './CommentFiles';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { cn } from '@/lib/utils';
 
 interface Props {
     noteId:string
+    canComment:boolean
 
 }
 
-function CommentEditor({noteId}:Props) {
+function CommentEditor({noteId, canComment}:Props) {
     const [emojiDialog, setEmojiDialog] = useState(false);
     const [content, setContent] = useState('');
     const [fileUrl, setFileUrl] = useState([]);
@@ -44,8 +46,10 @@ function CommentEditor({noteId}:Props) {
     const AddComment = async()=>{
         try {
             setLoading(true);
-            
-            const uploadedFiles = await UploadFile();
+            let uploadedFiles = []
+            if(files.length>0){
+                uploadedFiles = await UploadFile();
+            }
             const res = await axios.post(`/api/canvas/note/comment/add?serverId=${params?.id}&canvasId=${params?.canvasId}&noteId=${noteId}`, {content, fileUrl:uploadedFiles});
           
             setContent('');
@@ -109,62 +113,79 @@ function CommentEditor({noteId}:Props) {
 
   return (
     <>
-
-
-        <div className="comment_editor_div">
-            <div className="comment_input">
-                <textarea name="" id=""  rows={3} placeholder='Write a comment..'
-                onChange={e=>setContent(e.target.value)} value={content}
-                />
-            </div>
-
-            <CommentFiles files={files} previewUrl={previewUrl} RemoveImage={RemoveImage}
-            loading={uploading}
-            />
-           
+{/* comment_editor_container */}
      
-            <div className='comment_btns'>
-                <div className='comment_left_btns'>
-                <div className='comment_plus_icon'>
-                    <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
-                        <Plus className="" size={20}/>
-                        <input type="file" id="file" onChange={handleChange} multiple
-                        accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt "/>
-                    </label>
-                </div>
-                <div className="comment_emoji">
-                    <EditorEmoji  
-                    onChange={(emoji)=>InputHandler(emoji)}
-                    emojiDialog={emojiDialog}
-                    setEmojiDialog={setEmojiDialog}
+            <div className={cn("comment_editor_container", !canComment && "cursor-not-allowed")} >
+            <div className="comment_editor_div">
+                <div className="comment_input">
+                    <textarea name="" id=""  rows={3} placeholder='Write a comment..'
+                    onChange={e=>setContent(e.target.value)} value={content}
+                    disabled={!canComment}
                     />
                 </div>
+    
+                <CommentFiles files={files} previewUrl={previewUrl} RemoveImage={RemoveImage}
+                loading={uploading}
+                />
+               
+         
+                <div className='comment_btns'>
+                    <div className='comment_left_btns'>
+                    <div className={canComment ? "comment_plus_icon" :"cursor-not-allowed"}>
+                       {
+                        canComment ?  <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
+                        <Plus className="" size={20}/>
+                                                 <input type="file" id="file" onChange={handleChange} multiple
+                            accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt "/>
+                        
+                    </label> :
+                        <button className='cursor-not-allowed transition rounded-full p-1 flex items-center justify-center h-[24] w-[24]'><Plus className="" size={20}/></button>
+                        
+
+                       }
+                    </div>
+                    <div className="comment_emoji">
+                        {
+                            canComment ? <EditorEmoji  
+                            onChange={(emoji)=>InputHandler(emoji)}
+                            emojiDialog={emojiDialog}
+                            setEmojiDialog={setEmojiDialog}
+                            /> : 
+      
+      <button className='cursor-not-allowed transition rounded-full p-1 flex items-center justify-center h-[24] w-[24]'><SmilePlus size={ 20} /></button>
+
+                        }
+                    </div>
+                    </div>
+                    {/* <div className="comment_send">
+                        {
+                            loading
+                        }
+                        <button ><IoSend/></button>
+                    </div> */}
+    
+    
+                    <div  className={(loading || ( content==="" && fileUrl.length===0))?' text-gray-500':"send_msg ssdnBg comment_send"}  >
+                <button onClick={AddComment} disabled={loading || (content==="" && fileUrl.length===0)}  >
+                    
+                  {
+                    loading ? <ReloadIcon  className='className="mr-2 h-4 w-4 animate-spin "' /> :  <IoSend/>
+                  }
+                 
+                  
+                  
+                  </button>
+              </div>
+    
+    
+    
+    
                 </div>
-                {/* <div className="comment_send">
-                    {
-                        loading
-                    }
-                    <button ><IoSend/></button>
-                </div> */}
-
-
-                <div  className={(loading || ( content==="" && fileUrl.length===0))?' text-gray-500':"send_msg ssdnBg comment_send"}  >
-            <button onClick={AddComment} disabled={loading || (content==="" && fileUrl.length===0)}  >
-                
-              {
-                loading ? <ReloadIcon  className='className="mr-2 h-4 w-4 animate-spin "' /> :  <IoSend/>
-              }
-             
-              
-              
-              </button>
-          </div>
-
-
-
-
             </div>
-        </div>
+            </div>
+
+
+
 
 
 

@@ -167,7 +167,7 @@ if(((isAdmin || isManager || isMember) && channel.whoCanManageMember==="member")
   whoCanManageMember = true;
 } 
 if(((isAdmin || isManager || isMember) && channel.whoCanMakePublicToPrivate==="member") || ((isManager || isAdmin) && channel.whoCanMakePublicToPrivate==="manager") || (isAdmin && channel.whoCanMakePublicToPrivate==="admin") ){
-  whoCanManageMember = true;
+  whoCanMakePublicToPrivate = true;
 } 
 
 

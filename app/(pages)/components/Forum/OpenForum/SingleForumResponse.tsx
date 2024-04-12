@@ -107,18 +107,19 @@ function SingleForumResponse({id, content, member, timestamp, fileUrl, deleted, 
 
   
   const Reply:ForumResponse = forumResponse?.repliedResponse;
-  const isAdmin = currentMember.role === MemberRole.admin;
-  const isModerator = currentMember.role === MemberRole.moderator;
-  const isOwner = currentMember.id === member?.id;
-   const isManager = managers?.some(m => m === member?.id);
-  const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner || isManager);
-  const canEditMessage = !deleted && isOwner && !fileUrl;
+  // const isAdmin = currentMember.role === MemberRole.admin;
+  // const isModerator = currentMember.role === MemberRole.moderator;
+  // const isOwner = currentMember.id === member?.id;
+  //  const isManager = managers?.some(m => m === member?.id);
+  // const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner || isManager);
+  // const canEditMessage = !deleted && isOwner && !fileUrl;
   // const isPDF = fileType === "pdf" && fileUrl;
   // const isImage = !isPDF && fileUrl;
 
   const [loading, setLoading] = useState(false);
 
-const length = fileUrl?.length;
+  const length = fileUrl?.length;
+
 
 
     
@@ -137,7 +138,8 @@ const length = fileUrl?.length;
     }
 }
   
-  
+  const isMsgCreator = currentMember.id === member.id;
+  console.log("MSG CREATOR", currentMember.user.name, member.id, isMsgCreator);
   
   return (
     <>
@@ -159,7 +161,7 @@ const length = fileUrl?.length;
     </>
    }
   
-   <HoverResponse forumResponse={forumResponse} setIsEditing={setIsEditing} setDOpen={setOpen} dOpen={open}>
+   <HoverResponse forumResponse={forumResponse} setIsEditing={setIsEditing} setDOpen={setOpen} dOpen={open} isMsgCreator={isMsgCreator} >
    <div  
 
   

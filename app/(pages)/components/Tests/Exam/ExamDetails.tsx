@@ -24,7 +24,7 @@ function ExamDetails({test}:{test:Test}) {
             console.log(res);
             
             if(res.status===200){
-                router.push(`/servers/${test.serverId}/test-channel/${params?.testChannelId}/${test.id}/${res.data.resultId}`);
+                router.push(`/servers/${test.serverId}/test-channel/${params?.testChannelId}/${test.id}/result/${res.data.resultId}`);
             }
             setLoading(false);
 

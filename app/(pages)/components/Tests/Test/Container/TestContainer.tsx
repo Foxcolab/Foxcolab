@@ -45,7 +45,7 @@ function TestContainer({test}:Props) {
           
           {
             state=="Basic" ? <BasicSetting test={test} /> :
-            state==="Questions" ? <QuestionManager questions={test?.questions} /> :
+            state==="Questions" ? <QuestionManager questions={test?.questions} testId={test.id} /> :
             state==="Update" ?
             <UpdateTest test={test} />
             : <ResultTable results={test.Results} testName={test.name} testId={test.id} />

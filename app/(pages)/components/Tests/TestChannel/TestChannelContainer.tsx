@@ -11,9 +11,10 @@ interface Props {
     tests:Test[]
     sectionId:string
     attemptedTests:Test[]
+    whoCanCreateTest:boolean
 }
 
-function TestChannelContainer({tests, sectionId, attemptedTests }:Props) {
+function TestChannelContainer({tests, sectionId, attemptedTests, whoCanCreateTest }:Props) {
     const params = useParams();
   return (
     <>
@@ -25,7 +26,10 @@ function TestChannelContainer({tests, sectionId, attemptedTests }:Props) {
       </div>
       <div className='cnvs_sc'>
         <div><b>All Test</b></div>
-       <CreateTest serverId={params?.id as string} testChannelId={params?.testChannelId as string} sectionId={sectionId} />
+        {
+          whoCanCreateTest && <CreateTest serverId={params?.id as string} testChannelId={params?.testChannelId as string} sectionId={sectionId} />
+        }
+       
       </div>
 
       {

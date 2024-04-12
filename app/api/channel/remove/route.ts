@@ -71,7 +71,7 @@ export const PUT =async(req:NextRequest)=>{
                 update:{
                     where:{
                         id:channelId as string,
-                        createdBy:userId,
+                        // createdBy:userId,
                         
                     },
                     data:{

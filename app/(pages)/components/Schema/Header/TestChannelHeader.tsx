@@ -22,8 +22,9 @@ interface Props {
   resultLength:number
   testLength:number
   schema:TestChannel
+  member:Member
 }
-function TestChannelHeader({name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, setShowResult, showResult, resultLength, testLength, schema}:Props) {
+function TestChannelHeader({name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, setShowResult, showResult, resultLength, testLength, schema, member}:Props) {
   return (
     <>
     
@@ -45,6 +46,7 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
            serverMembers={serverMembers}
            sendMsg={sendMsg}
           schema={schema}
+          member={member}
            />
           
           
@@ -65,6 +67,7 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
         serverMembers={serverMembers}
         sendMsg={sendMsg}
         schema={schema}
+        member={member}
         />
         {
             showResult ? <button onClick={()=>setShowResult(false)}>

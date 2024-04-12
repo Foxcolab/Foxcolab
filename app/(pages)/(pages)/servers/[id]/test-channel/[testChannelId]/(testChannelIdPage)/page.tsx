@@ -90,7 +90,11 @@ async function TestChannel({params}:ForumsProps) {
           submitTime:"desc"
         }
       },
-      createdUser:true,
+      createdMember:{
+        include:{
+          user:true
+        }
+      },
       Members:{
         include:{
           user:true
@@ -112,16 +116,49 @@ async function TestChannel({params}:ForumsProps) {
  
   if(!testChannel) redirect(`/severs/${params.id}`);
 
+
+  const memberId = testChannel.memberIds.some((id)=>id===member.id);
+  if(!memberId){
+    if(testChannel.type==="private"){
+      redirect(`/servers/${server.id}`);
+    }else {
+      await db.section.update({
+        where:{
+          id:testChannel.sectionId as string
+        },
+        data:{
+          TestChannels:{
+            update:{
+              where:{
+                id:testChannel.id
+              },
+              data:{
+                Members:{
+                  connect:{
+                    id:member.id
+                  }
+                },
+                memberIds: {
+                  push:member.id
+                }
+              }
+            }
+          }
+        }
+      })
+    }
+  }
+
+
+
+
+
+
+
   const members = testChannel?.Members;
   const managers = testChannel?.manager;
 
-  let isAdmin = false;
-  for(let i=0; i<testChannel?.manager?.memberIds?.length; i++){
-    if(testChannel.manager?.memberIds[i]===member.id){
-      isAdmin=true;
-      break;
-    }
-  }
+  let isAdmin = testChannel.createdBy===member.id;
   const createdAt = format(new Date(testChannel.createdAt), DATE_FORMAT);
   let sendMsg = testChannel.isEveryoneCreate !==undefined && testChannel.isEveryoneCreate!==null ? testChannel.isEveryoneCreate : true;
   const tests = testChannel.Tests;
@@ -164,7 +201,7 @@ const attemptedTests = getAttemptedTests(myResults, tests);
       sendMsg={sendMsg}
       managers={managers}
       createdAt={createdAt}
-      createdBy={testChannel.createdUser?.name as string}
+      createdBy={testChannel.createdMember?.user?.name as string}
       type={testChannel.type}
       isAdmin={isAdmin}
       description={testChannel.description as string}
@@ -172,6 +209,7 @@ const attemptedTests = getAttemptedTests(myResults, tests);
       testLength={testChannel.Tests.length}
       attemptedTests={attemptedTests}
       schema={testChannel}
+      member={member}
     
       />
 

@@ -11,7 +11,13 @@ import { BsFileEarmarkZipFill, BsFiletypeDocx, BsFiletypeTxt, BsFiletypeXls, BsF
 import Image from 'next/image';
 import { FaFileCsv } from 'react-icons/fa';
 
-function ForumHeader({sectionId}:{sectionId:string}) {
+
+interface Props {
+  sectionId:string
+  canCreateForum:boolean
+}
+
+function ForumHeader({sectionId, canCreateForum}:Props) {
     const [search, setSearch] = useState(false);
     const [emojiDialog, setEmojiDialog] = useState(false);
     const [title, setTitle] = useState('');
@@ -133,7 +139,10 @@ function ForumHeader({sectionId}:{sectionId:string}) {
         <div className='cnvs_sch'>
         <button><IoSearch/></button>
         <input type='search' placeholder='Search for forums..' />
-        <button className='new_forums' onClick={()=>setSearch(true)}><FaHeartCirclePlus/>New Post </button>
+        {
+          canCreateForum &&  <button className='new_forums' onClick={()=>setSearch(true)}><FaHeartCirclePlus/>New Post </button>
+        }
+       
       </div>
         </> :
         <>

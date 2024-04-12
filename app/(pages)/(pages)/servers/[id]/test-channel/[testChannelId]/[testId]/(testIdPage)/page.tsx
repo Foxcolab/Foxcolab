@@ -52,13 +52,18 @@ async function TestIdPage({params}:ParamsProps) {
     if(!test) redirect(`/servers/${params.id}/test-channel/${params.testChannelId}`);
     const member = await db.member.findFirst({
         where:{
-            userId:profile.id
+            userId:profile.id,
+            serverId:test.serverId
+        },
+        include:{
+            user:true
         }
     });
     if(!member) redirect(`/servers/${params.id}/test-channel/${params.testChannelId}`);
+    // console.log()
 
-    // const isAdmin = member.id === test.createdBy;
-    const isAdmin = false;
+    const isAdmin = test.createdBy ===member.id;
+
   return (
     <>
     

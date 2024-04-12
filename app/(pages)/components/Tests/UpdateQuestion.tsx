@@ -123,7 +123,7 @@ function UpdateQuestion({question}:Props) {
     <Dialog open={open} onOpenChange={setOpen}> 
     <DialogTrigger asChild>
       
-      <button><BiSolidEdit/></button>
+      
 
       </DialogTrigger>
       <DialogContent className="" style={{zIndex:'10000 !important', height:"98vh", maxWidth:"99vw"}}>

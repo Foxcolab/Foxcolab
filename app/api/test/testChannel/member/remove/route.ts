@@ -13,9 +13,10 @@ export const PUT =async(req:NextRequest)=>{
         const serverId = req.nextUrl.searchParams.get('serverId');
         const memberId = req.nextUrl.searchParams.get('memberId');
         const testChannelId = req.nextUrl.searchParams.get('testChannelId');
+
        
         const userId = GetDataFromToken(req);
-        const user = await db.user.findFirst({where:{id:userId}});
+        if(!userId) return NextResponse.json({error:"User Id not found"}, {status:409});
 
         const testChannel = await db.testChannel.findFirst({
             where:{
@@ -31,11 +32,12 @@ export const PUT =async(req:NextRequest)=>{
             }
         });
         if(!testChannel) return NextResponse.json({error:"Test Channel not found"}, {status:409});
+        console.log(testChannel.id)
         const sectionId= testChannel?.sectionId;
     
         const member = await db.member.findFirst({
           where:{
-            id:memberId as string,
+            userId:userId as string,
             serverId: serverId as string
           }
         });
@@ -63,7 +65,7 @@ export const PUT =async(req:NextRequest)=>{
                 update:{
                     where:{
                         id:testChannelId as string,
-                        createdBy:user?.id,
+                        serverId:serverId as string,
                         
                     },
                     data:{

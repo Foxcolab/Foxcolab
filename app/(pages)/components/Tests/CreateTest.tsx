@@ -64,14 +64,16 @@ function CreateTest({serverId, sectionId, testChannelId}:Props) {
       <DialogTrigger asChild>
       <button className='cnvs_cnote'><FaPlusCircle/> Create Test</button>
       </DialogTrigger>
-      <DialogContent className="" style={{zIndex:'10000 !important', height:"72vh", width:"60vw"}}>
+      <DialogContent className="" style={{zIndex:'10000 !important', height:"650px", maxWidth:"650px"}}>
         <DialogHeader>
           <DialogTitle>Create a Test</DialogTitle>
           <DialogDescription>
           Please fill out the form below to create a new test.
           </DialogDescription>
         </DialogHeader>
-        <div className='tt_ss overflow-scroll p-4'>
+        <hr />
+
+        <div className='tt_ss overflow-scroll px-4 py-0'>
         <div className="create_ss">
             <label className='font-semibold' htmlFor="">Name</label>
             <Input id="username" placeholder={`Write the test name...`} className="col-span-3" onChange={e=>setName(e.target.value)}  />
@@ -107,7 +109,7 @@ function CreateTest({serverId, sectionId, testChannelId}:Props) {
         <div className="create_ss">
             <label htmlFor="" className='font-semibold'>Pass Mark (%)</label>
             <div className='d-flex items-center w-full gap-2'>
-              <Input type="text" onChange={(e)=>setPassmarks(e.target.value)} defaultValue={passmarks} />
+              <Input type="text" onChange={(e)=>setPassmarks(e.target.value)} defaultValue={passmarks} max={100} min={0} />
             </div>
           
         </div>

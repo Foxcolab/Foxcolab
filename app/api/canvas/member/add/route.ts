@@ -57,7 +57,7 @@ export const PUT =async(req:NextRequest)=>{
                     update:{
                         where:{
                             id:canvasId as string,
-                            createdBy:userId,
+                            // createdBy:userId,
                         },
                         data:{
                             memberIds:{

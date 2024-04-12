@@ -20,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 interface Props {
     children:React.ReactNode
@@ -27,9 +28,10 @@ interface Props {
     setIsEditing:any
     setDOpen:any
     dOpen:boolean
+    isMsgCreator:boolean
 }
 
-function HoverResponse({children, forumResponse, setIsEditing, setDOpen, dOpen}:Props) {
+function HoverResponse({children, forumResponse, setIsEditing, setDOpen, dOpen, isMsgCreator}:Props) {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -40,7 +42,6 @@ function HoverResponse({children, forumResponse, setIsEditing, setDOpen, dOpen}:
     const DeleteDialogHandler =()=>{
         setDeleteDialog(true);
     }
-    
   return (
     <>
 
@@ -49,7 +50,7 @@ function HoverResponse({children, forumResponse, setIsEditing, setDOpen, dOpen}:
     <HoverCardTrigger asChild onMouseEnter={()=>setOpen(true)}>
        {children}
       </HoverCardTrigger>
-      <HoverCardContent className="flex items-center msg_emoji_container hover_response_container w-36" side="top" align='end' >
+      <HoverCardContent className={cn("flex items-center msg_emoji_container hover_response_container", isMsgCreator ? "w-36" :"w-12 flex justify-center items-center") } side="top" align='end' >
        
         <div className='hover_emoji_item'>
         <ActionTooltip label='Add Reaction' side='top' align='center'>
@@ -57,13 +58,17 @@ function HoverResponse({children, forumResponse, setIsEditing, setDOpen, dOpen}:
                     messageId={forumResponse.id} channelId={forumResponse.forumsId as string}
                     type="hover" schemaType='forum' />
         </ActionTooltip> 
-
-        <ActionTooltip label='Edit Comment'>
+        {
+          isMsgCreator && <>
+          <ActionTooltip label='Edit Comment'>
             <button onClick={()=>setIsEditing(true)}><BiEdit/></button>
         </ActionTooltip>
         <ActionTooltip label='Delete comment'>
             <button onClick={()=>setDOpen(true)}><AiFillDelete/></button>
         </ActionTooltip>
+          </>
+        }
+        
 
 
 

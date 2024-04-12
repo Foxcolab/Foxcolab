@@ -1,4 +1,5 @@
 import { Editor } from '@tinymce/tinymce-react'
+import { useTheme } from 'next-themes';
 import React from 'react';
 
 
@@ -21,6 +22,8 @@ const TinyMce = ({setTitle, defaultValue, ReadOnly}:Props)=> {
     // const editble = !ReadOnly
 
     console.log(ReadOnly)
+    const {resolvedTheme} = useTheme();
+
     
   return(
     <>
@@ -40,6 +43,8 @@ const TinyMce = ({setTitle, defaultValue, ReadOnly}:Props)=> {
           editable_root:ReadOnly,
          height: 216,
         branding: false,
+        skin: resolvedTheme==="dark"? "oxide-dark" : "oxide" ,
+          content_css: resolvedTheme==='dark' ? 'dark' : 'oxide',
         external_plugins: {
           'tiny_mce_wiris' : FileLoc
       },

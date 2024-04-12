@@ -3,20 +3,28 @@ import {MdDashboardCustomize} from "react-icons/md"
 import CreateQuestion from './CreateQuestion'
 import { Question } from '@prisma/client'
 import SingleQuestion from './SingleQuestion'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+import { FaPlusCircle } from 'react-icons/fa'
 
 interface Props {
     questions:Question[]
+    testId:string
   }
   
-function QuestionManager({questions}:Props) {
+function QuestionManager({questions, testId}:Props) {
   const params = useParams();
+  const router = useRouter();
+  const hrefHandler =()=>{
+    router.push(`${testId}/add-question`);
+  }
+
   return (
     <>
         <div className='w-full'>
             <div className='q_mangr'>
             <span className='d-flex w-1/6 pt-4 font-semibold gap-2 rounded-md test_info'><MdDashboardCustomize /> Question Manager</span>
-            <CreateQuestion  />
+            <button className='cnvs_cnote' onDoubleClick={hrefHandler}><FaPlusCircle/> Create Question</button>
+            {/* <CreateQuestion  /> */}
             </div>
    
     <div className="testsidebar">

@@ -7,15 +7,19 @@ import ForumEditor from '../../Editor/Forum/ForumEditor';
 interface Props {
     forum:Forums
     managerIds: string[]
+    whoCanComment:boolean
+    whoCanDelete:boolean
+    whoCanUploadMediaInComment:boolean
+    member:Member
 }
-function ForumMessageContainer({forum, managerIds}:Props) {
+function ForumMessageContainer({forum, managerIds, whoCanComment, whoCanDelete, whoCanUploadMediaInComment, member}:Props) {
   const messages = []
-  const createdBy:Member = forum.member;
+  // const createdBy:Member = forum.member;
   return (
     <>
 
     <ForumMessages
-    member={createdBy}
+    member={member}
     chatId={forum.id}
     apiUrl='/api/messages/threads/forum'
     socketUrl='/api/socket/threads/forum'
@@ -26,7 +30,6 @@ function ForumMessageContainer({forum, managerIds}:Props) {
     paramValue={forum.id}
     forum={forum}
     ManagerIds={managerIds}
-  
     
     
     />
@@ -42,6 +45,8 @@ function ForumMessageContainer({forum, managerIds}:Props) {
      serverId: forum?.serverId,
      sectionId:forum?.sectionId
       }} 
+      whoCanUploadMediaInComment={whoCanUploadMediaInComment} 
+      whoCanComment={whoCanComment}
      
      />
 

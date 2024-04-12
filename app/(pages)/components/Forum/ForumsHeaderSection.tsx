@@ -2,6 +2,7 @@ import { Member } from '@prisma/client'
 import React from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 
+
 interface Props {
     name:string
     Members:Member[]
@@ -15,7 +16,9 @@ function ForumsHeaderSection({name, Members}:Props) {
         <div className='channel_name'>
         <div className='channel_mem'>
            
- <button># {name} <IoIosArrowDown/></button>
+
+    
+ <button>{name} <span style={{fontSize:"0.9rem"}}><IoIosArrowDown/></span></button>
           
           
           </div>

@@ -27,6 +27,7 @@ interface Props {
   forum:Forums
   ListStyle:string
   setForum:any
+  
 }
 function SingleForums({forum,ListStyle, setForum}:Props) {
   function getFileExtension(filename:string) {

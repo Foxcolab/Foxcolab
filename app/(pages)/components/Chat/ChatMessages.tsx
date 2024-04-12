@@ -130,7 +130,7 @@ function ChatMessages({
   // console.log(isAdmin);
   const isManager = channel.manager.memberIds.includes(member.id);
   const isMember = channel.memberIds.includes(member.id);
-  console.log("A M MEM",isAdmin, isManager, isMember)
+  // console.log("A M MEM",isAdmin, isManager, isMember)
   let whoCanDeleteMessage = false;
   let whoCanPinnedPost = false;
 
@@ -143,7 +143,7 @@ function ChatMessages({
   }
   
 
-  console.log("Delet Pinn", whoCanDeleteMessage, whoCanPinnedPost)
+  // console.log("Delet Pinn", whoCanDeleteMessage, whoCanPinnedPost)
      
 
 

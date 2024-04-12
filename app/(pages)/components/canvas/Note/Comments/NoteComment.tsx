@@ -6,20 +6,24 @@ import AllComments from './AllComments'
 
 interface Props {
     note:Note
+    canComment:boolean
+    memberId:string
+
 }
-function NoteComment({note}:Props) {
+function NoteComment({note, canComment, memberId}:Props) {
+
   return (
     <>
         <div className='note_right_container'>
             <div className="note_comments">Comments</div>
             <Separator orientation='horizontal' />
             <div className="all_comments">
-              <AllComments comments={note?.comments} />
+              <AllComments comments={note?.comments} memberId={memberId} />
             </div>
 
-        <div className="comment_editor_container">
-            <CommentEditor noteId={note?.id} />
-        </div>
+       
+            <CommentEditor noteId={note?.id} canComment={canComment} />
+       
 
         </div>
        

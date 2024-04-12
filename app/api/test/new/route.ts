@@ -76,7 +76,7 @@ export const POST =async(req:NextRequest)=>{
 
         await SchemaActivity({serverId:serverId as string, sectionId:testChannel?.sectionId as string, schemaId:testChannelId as string, activityType:"Create", schemaType:"Test Channel", memberId:member.id as string, memberId2:null, oldData:null, newData:test.name, name:"Test", message:"Created a test"});
 
-
+        console.log(test);
 
         return NextResponse.json({
             success:true,

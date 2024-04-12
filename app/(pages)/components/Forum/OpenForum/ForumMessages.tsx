@@ -26,6 +26,7 @@ interface Props {
     paramValue:string
     ManagerIds:string[]
     forum:Forums
+    // whoCanDelete:boolean
 }
 
 function ForumMessages({
@@ -37,7 +38,10 @@ function ForumMessages({
     paramKey,
     paramValue,
     ManagerIds,
-    forum
+    forum ,
+    
+    // whoCanDelete
+    
 }:Props) {
     const queryKey = `chat:${chatId}`;
     
@@ -151,6 +155,7 @@ function ForumMessages({
             totallength={group.items.length}
             forumId={forum.id}
             Reactions={forumResponse.Reactions}
+            // canDelete={canDelete}
             />
          {
           CheckDividorTime(forumResponse.createdAt, group.items[j+1]?.createdAt)==true && 

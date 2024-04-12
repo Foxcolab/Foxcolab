@@ -111,14 +111,12 @@ export const DELETE =async(req:NextRequest)=>{
     try {
         const userId = await GetDataFromToken(req);
         const serverId =  req.nextUrl.searchParams.get('serverId');
-        const sectionId =  req.nextUrl.searchParams.get('sectionId');
         const forumChannelId =  req.nextUrl.searchParams.get('forumChannelId');
         const forumId =  req.nextUrl.searchParams.get('forumId');
-        if(!forumChannelId || !serverId || !sectionId || !forumId) return NextResponse.json({
+        if(!forumChannelId || !serverId || !forumId) return NextResponse.json({
             error:"Something went wrong"
         }, {status:409});
 
- 
 
         const server = await db.server.findFirst({
             where:{
@@ -143,9 +141,9 @@ export const DELETE =async(req:NextRequest)=>{
 
         const forumChannel = await db.forumsChannel.findFirst({
             where:{
-                id:forumId as string,
+                id:forumChannelId as string,
                 serverId:server.id,
-                sectionId:sectionId as string,
+                // sectionId:sectionId as string,
                 Members:{
                     some:{
                         userId:userId
@@ -197,6 +195,116 @@ export const DELETE =async(req:NextRequest)=>{
         return NextResponse.json({
             success:true,
             error:"Post created successfully"
+        }, {status:200});
+
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+export const PUT =async(req:NextRequest)=>{
+    try {
+        const userId = await GetDataFromToken(req);
+        const serverId =  req.nextUrl.searchParams.get('serverId');
+        const forumChannelId =  req.nextUrl.searchParams.get('forumChannelId');
+        const forumId =  req.nextUrl.searchParams.get('forumId');
+        if(!forumChannelId || !serverId  || !forumId) return NextResponse.json({
+            error:"Something went wrong"
+        }, {status:409});
+
+        const reqBody = await req.json();
+        const {title} = reqBody;
+
+        const server = await db.server.findFirst({
+            where:{
+                id:serverId as string,
+                Members:{
+                    some:{
+                        userId:userId
+                    }
+                }
+            }
+        });
+        if(!server) return NextResponse.json({error:"Server not found"}, {status:409});
+
+        const member = await db.member.findFirst({
+            where:{
+                userId:userId,
+                serverId:serverId as string
+            }
+        })
+        if(!member) return NextResponse.json({error:"Member not found"}, {status:409});
+
+
+        const forumChannel = await db.forumsChannel.findFirst({
+            where:{
+                id:forumChannelId as string,
+                serverId:server.id,
+                Members:{
+                    some:{
+                        userId:userId
+                    }
+                }
+            },
+            include:{
+                Forums:{
+                    where:{
+                        id:forumId,
+                        forumsChannelId:forumChannelId
+                    }
+                },
+                manager:true
+            }
+        });
+        if(!forumChannel) return NextResponse.json({error:"Forums not found"}, {status:409});
+
+        let hasPermission = false;
+        const whoHavePermission = forumChannel?.whoCanDeletePost;
+        const managers = forumChannel?.manager?.memberIds;
+        const isManager = managers?.some(m => m === member?.id);
+        const isAdmin = forumChannel.createdBy===member.id || forumChannel.Forums[0].memberId===member.id;
+        const isMember = forumChannel.memberIds.includes(member.id);
+        if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
+            hasPermission = true;
+        }
+        if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
+        
+
+
+
+       const forum  = await db.forums.update({
+        where:{
+            id:forumId as string,
+            forumsChannelId:forumChannelId as string,
+            serverId:serverId as string,
+            
+        },
+        data:{
+            title
+        },
+
+        include:{
+            responses:{
+                include:{
+                    member:{
+                        include:{
+                            user:true
+                        }
+                    }
+                }
+            }
+        }
+
+
+       })
+
+        await SchemaActivity({serverId:serverId as string, sectionId:forumChannel?.sectionId as string, schemaId:forumId as string, activityType:"Delete", schemaType:"Forum Channel", memberId:member.id as string, memberId2:null, oldData:null, newData:forumChannel.Forums[0].title, name:"Forum", message:"Deleted a forum"});
+        console.log("Updated Successfully");
+        return NextResponse.json({
+            success:true,
+            error:"Post updated successfully",
+            forum
         }, {status:200});
 
     } catch (error) {

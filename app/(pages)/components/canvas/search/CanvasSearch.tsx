@@ -20,20 +20,23 @@ import {
 } from "@/components/ui/dialog"
 interface Props {
   sectionId:string
+  whoCanCreateNote:boolean
 }
-function CanvasSearch({sectionId}:Props) {
+function CanvasSearch({sectionId, whoCanCreateNote}:Props) {
     const [search, setSearch] = useState(true);
     const [value, setValue] = useState('');
 
-  
+    console.log("Serach", whoCanCreateNote)
   return (
     <>
     
     <div className='cnvs_sch'>
         <button><IoSearch/></button>
         <input type='search' placeholder='Search for canvas..' />
-
-        <CreateNote sectionId={sectionId} />
+        {
+          whoCanCreateNote && <CreateNote sectionId={sectionId} />
+        }
+        
       </div>
     {/* <button onClick={()=>setSearch(true)}>Open</button> */}
  

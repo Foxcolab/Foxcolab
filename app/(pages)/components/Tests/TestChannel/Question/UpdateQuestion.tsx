@@ -1,35 +1,47 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { FaPlus, FaPlusCircle } from 'react-icons/fa'
 import axios from 'axios';
-import Loader from '../Loaders/Loader';
+import Loader from '../../../Loaders/Loader';
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import TinyMce from '../Editor/TinyMce2';
+import TinyMce from '../../../Editor/TinyMce';
 import { useParams, useRouter } from 'next/navigation';
 import { IoIosArrowBack } from 'react-icons/io';
 
 import {  RxCrossCircled } from 'react-icons/rx';
 import { RiDeleteBin5Line } from 'react-icons/ri';
+import { Question } from '@prisma/client';
 
 
 interface Props {
   testTitle:string
   testId:string
+  question:Question
 }
 
-function CreateQuestion({testId, testTitle}:Props) {
-    const [name, setName] = useState('')
+function UpdateQuestion({testId, testTitle, question}:Props) {
+    const [name, setName] = useState(question.title)
     const [loading, setLoading] = useState(false);
-    const [type, setType] = useState('Single Choice');
-    const [marks, setMarks] = useState(1);
+    const [type, setType] = useState(question.qType);
+    const [marks, setMarks] = useState(question.marks);
+    const [answer, setAnswer] = useState(question.answer);
+  
 
-    const [inputFields, setInputFields] = useState([{ value: '' }]);
+
+    const [inputFields, setInputFields] = useState([{value:""}]);
+    useEffect(()=>{
+        let ans = []
+        for(let i=0; i<question.options.length; i++){
+            ans.push({value:question.options[i]})
+        }
+        setInputFields(ans);
+    }, [])
 
 
-    const [explanation, setExplanation] = useState('');
+    const [explanation, setExplanation] = useState(question.explanation);
     const router = useRouter();
     const params = useParams();
 
@@ -62,7 +74,7 @@ function CreateQuestion({testId, testTitle}:Props) {
       }
     
         
-        const res = await axios.post(`/api/test/question/new?serverId=${params?.id}&testChannelId=${params?.testChannelId}&testId=${params?.testId}`, {title:name, qType:type, marks, options, answer:answers, explanation });
+        const res = await axios.put(`/api/test/question/new?serverId=${params?.id}&testChannelId=${params?.testChannelId}&testId=${params?.testId}&questionId=${question?.id}`, {title:name, qType:type, marks, options, answer:answers, explanation });
         setLoading(false);
         console.log(res);
         if(res.status===200){
@@ -135,107 +147,28 @@ function CreateQuestion({testId, testTitle}:Props) {
       setInputFields(values);
     };
 
+    const RadioOnClick =(value:string)=>{
+        console.log("Clicked");
+        setAnswer([value]);
+    }
 
 
+    console.log(answer)
+
+    const CheckBoxClick = (event:any) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            setAnswer([...answer, value]);
+        } else {
+            setAnswer(answer.filter(item => item !== value));
+        }
+      };
+    
   
   return (
     <>
     
     
-    {/* <Dialog open={open} onOpenChange={setOpen}> 
-    <DialogTrigger asChild>
-      <button className='cnvs_cnote' onClick={()=>setOpen(true)}><FaPlusCircle/> Create Question</button>
-      </DialogTrigger>
-      <DialogContent className="" style={{zIndex:'10000 !important', height:"98vh", maxWidth:"99vw"}}>
-        <DialogHeader>
-          <DialogTitle>Create a Question</DialogTitle>
-          
-        </DialogHeader>
-        <div className='tt_ss overflow-scroll p-4'>
-            <div className="create_ss">
-                <label htmlFor="" className='font-semibold fontsize-xl'>Question title</label>
-                <div className='create_ss_editor'>
-                <TinyMce setTitle={setName} placeholder='Enter the question..' />
-                </div>
-               
-            </div>
-            <div className="create_ss">
-                <label htmlFor="" className='font-semibold fontsize-xl'>Question Type</label>
-                <Select onValueChange={e=>setTypeHanlder(e)}>
-                    <SelectTrigger className="">
-                       <SelectValue placeholder="Select--" />
-                    </SelectTrigger>
-                <SelectContent>
-                     <SelectGroup>
-                     
-                  <SelectItem value='Single Choice' >Single Choice</SelectItem>
-                  <SelectItem value='Multiple Choice'>Multiple Choice</SelectItem>
-               
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-            </div>
-            <div className="create_ss">
-                <label htmlFor="" className='font-semibold fontsize-xl'>Marks</label>
-                <Input onChange={e=>setMarks(e.target.value)} defaultValue={1} placeholder='eg. 1 ' />
-            </div>
-        <div className="create_ss">
-            <label htmlFor="" className='font-semibold'>Answer</label>
-            <RadioGroup defaultValue="comfortable">
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value={option1} className='radio'  id="r1" />
-        <input type="checkbox"  value={option1}  className='checkbox'  style={{display:'none'}}  />
-        <div className="create_ss_editor">
-        <TinyMce setTitle={setOption1} placeholder='Enter the option 1..' />
-        </div>
-        
-      </div>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value={option2} className='radio' id="r2" />
-        <input type="checkbox"  value={option2}  className='checkbox'  style={{display:'none'}}  />
-        <div className="create_ss_editor">
-        <TinyMce setTitle={setOption2} placeholder='Enter the option 2 ..' />
-        </div>
-
-      </div>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value={option3} className='radio' id="r3" />
-        <input type="checkbox"  value={option3}  className='checkbox'  style={{display:'none'}}  />
-        <div className="create_ss_editor">
-        <TinyMce setTitle={setOption3} placeholder='Enter the option 3' />
-        </div>
-
-      </div>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value={option4} className='radio' id="r3" />
-        <input type="checkbox"  value={option4}  className='checkbox'  style={{display:'none'}}  />
-        <div className="create_ss_editor">
-        <TinyMce setTitle={setOption4} placeholder='Enter the option 4'  />
-        </div>
-
-      </div>
-      <div className="create_ss">
-                <label htmlFor="" className='font-semibold fontsize-xl'>Explantion</label>
-               <div className="create_ss_editor">
-               <TinyMce setTitle={setExplanation} placeholder='Justify the answer' />
-               </div>
-            </div>
-    </RadioGroup>
-        </div>
-        
-
-        </div>
-        <DialogFooter>
-          {
-            loading ? <Loader/> : 
-          <Button type="submit" onClick={SubmitHandler}>Create</Button>
-
-          }
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-    
-     */}
     <div className="add_question_container">
      <div className="px-20 py-8">
       <button onClick={hrefHandler} className='font-bold flex items-center gap-1 py-[0.3rem] px-3 rounded bg-gray-300   dark:bg-black/80 border'><IoIosArrowBack/>Back</button>
@@ -248,15 +181,15 @@ function CreateQuestion({testId, testTitle}:Props) {
             <div className="create_ss">
                 <label htmlFor="" className='font-semibold fontsize-xl'>Question title</label>
                 <div className='create_ss_editor'>
-                <TinyMce setTitle={setName} placeholder='Enter the question..' />
+                <TinyMce setTitle={setName} defaultValue={name} />
                 </div>
                
             </div>
             <div className="create_ss">
                 <label htmlFor="" className='font-semibold fontsize-xl'>Question Type</label>
                 <select name="" id="" onChange={(e)=>setTypeHanlder(e.target.value)} className='bg-[#222F3E] px-3 py-2  rounded-md border border-input'>
-                  <option value="Single Choice">Single Choice</option>
-                  <option value="Multiple Choice">Multiple Choice</option>
+                  <option value="Single Choice" selected={"Single Choice"===type}>Single Choice</option>
+                  <option value="Multiple Choice" selected={"Multiple Choice"===type}>Multiple Choice</option>
                 </select>
                 {/* <Select onValueChange={e=>setTypeHanlder(e)} >
                     <SelectTrigger className="">
@@ -274,7 +207,7 @@ function CreateQuestion({testId, testTitle}:Props) {
             </div>
             <div className="create_ss">
                 <label htmlFor="" className='font-semibold fontsize-xl'>Marks</label>
-                <Input onChange={e=>setMarks(e.target.value)} defaultValue={1} placeholder='eg. 1 ' className='bg-[#222F3E]' />
+                <Input onChange={e=>setMarks(e.target.value)} defaultValue={marks} placeholder='eg. 1 ' className='bg-[#222F3E]'  />
             </div>
         <div className="create_ss">
             <label htmlFor="" className='font-semibold'>Answer</label>
@@ -287,10 +220,10 @@ function CreateQuestion({testId, testTitle}:Props) {
         <div key={index} className='flex items-center gap-4 mb-4'>
 
 <div className="flex items-center space-x-2">
-        <RadioGroupItem value={inputField.value} className='radio'   id="r1" />
-        <input type="checkbox"  value={inputField.value}  className='checkbox'  style={{display:'none'}}  />
+        <RadioGroupItem value={inputField.value} className='radio'   id="r1"  checked={answer.includes(inputField.value)}  onClick={()=>RadioOnClick(inputField.value)} />
+        <input type="checkbox"  value={inputField.value}  className='checkbox' onClick={CheckBoxClick}  style={{display:'none'}} checked={answer.includes(inputField.value)} />
         <div className="create_ss_editor">
-        <TinyMce setTitle={(value:string)=>handleChangeInput(index, value)} placeholder={`Enter the option ${index}`} />
+        <TinyMce setTitle={(value:string)=>handleChangeInput(index, value)} defaultValue={inputField.value}  />
         
         </div>
       </div>
@@ -322,7 +255,7 @@ function CreateQuestion({testId, testTitle}:Props) {
       <div className="create_ss">
                 <label htmlFor="" className='font-semibold fontsize-xl'>Explantion</label>
                <div className="create_ss_editor">
-               <TinyMce setTitle={setExplanation} placeholder='Justify the answer' />
+               <TinyMce setTitle={setExplanation} placeholder='Justify the answer' defaultValue={explanation} />
                </div>
             </div>
     </RadioGroup>
@@ -333,8 +266,7 @@ function CreateQuestion({testId, testTitle}:Props) {
             loading ? <Loader/> :
             <>
             
-            <button className='py-2 px-4 rounded-md font-semibold bg-green-500 text-white text-md flex items-center gap-1' onClick={()=>SubmitHandler("Save")}>Save</button>
-          <button className='py-2 px-4 rounded-md font-semibold bg-green-500 text-white  text-md flex items-center gap-1' onClick={()=>SubmitHandler("AddNext")}>Save and Add Next</button>
+            <button className='py-2 px-4 rounded-md font-semibold bg-green-500 text-white text-md flex items-center gap-1' onClick={()=>SubmitHandler("Save")}>Update</button>
           <button className='py-2 px-4 rounded-md font-semibold border text-md flex items-center gap-1' onClick={hrefHandler}>Cancel</button>
             </>
           }
@@ -349,4 +281,4 @@ function CreateQuestion({testId, testTitle}:Props) {
   )
 }
 
-export default CreateQuestion 
+export default UpdateQuestion; 

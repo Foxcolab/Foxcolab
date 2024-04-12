@@ -44,6 +44,7 @@ export const PUT =async(req:NextRequest)=>{
         const isManager = managers?.some(m => m === member?.id);
         const isAdmin = testChannel.createdBy===member.id;
         const isMember = testChannel.memberIds.includes(member.id);
+        console.log(isManager, isAdmin, isMember, whoHavePermission);
         if((whoHavePermission==="member" && (isManager || isAdmin || isMember)) || (whoHavePermission==="manager" && (isAdmin || isManager)) || (whoHavePermission==="admin" && isAdmin)){
             hasPermission = true;
         }
@@ -60,7 +61,7 @@ export const PUT =async(req:NextRequest)=>{
                     update:{
                         where:{
                             id:testChannelId as string,
-                            createdBy:userId,
+                            // createdBy:userId,
                         },
                         data:{
                             memberIds:{

@@ -15,10 +15,9 @@ export const PUT =async(req:NextRequest)=>{
         const forumChannelId = req.nextUrl.searchParams.get('forumChannelId');
        
         const userId = GetDataFromToken(req);
-        const user = await db.user.findFirst({where:{id:userId}});
         const member = await db.member.findFirst({
           where:{
-            id:memberId as string,
+            userId:userId as string,
             serverId: serverId as string
           }
         });
@@ -64,7 +63,7 @@ export const PUT =async(req:NextRequest)=>{
                 update:{
                     where:{
                         id:forumChannelId as string,
-                        createdBy:user?.id,
+                        // createdBy:user?.id,
                         
                     },
                     data:{

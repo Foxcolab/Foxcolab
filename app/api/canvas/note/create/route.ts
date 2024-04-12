@@ -11,8 +11,8 @@ export const POST =async(req:NextRequest)=>{
     try {
         const userId = GetDataFromToken(req);
         const reqBody = await req.json();
-        const {title} = reqBody;
-        console.log("CABBBVVVASSSS", title);
+        const {title, commenting, canEveryoneUpdate} = reqBody;
+        // console.log("CABBBVVVASSSS", title);
         
         if(!title) return NextResponse.json({error:"Please write something", success:false}, {status:400});
 
@@ -71,12 +71,12 @@ export const POST =async(req:NextRequest)=>{
         const note =await db.note.create({
             data:{
                 title,
+                canEveryoneUpdate:canEveryoneUpdate,
+                commenting:commenting,
                 content:"",
                 createdBy:member?.id as string,
                 serverId:serverId as string,
                 canvasId:canvasId as string,
-
-
             }
         })
 

@@ -22,9 +22,11 @@ interface Props {
     showOptions:boolean
     setShowOptions:any
     content:string
+    canDelete:boolean
+    canEdit:boolean
 }
 
-function SingleThreeDot({noteId, commentId, showOptions, setShowOptions,content }:Props) {
+function SingleThreeDot({noteId, commentId, showOptions, setShowOptions,content, canEdit, canDelete }:Props) {
     const [loading, setLoading] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const [editDialog, setEditDialog] = useState(false);
@@ -62,17 +64,25 @@ function SingleThreeDot({noteId, commentId, showOptions, setShowOptions,content 
     <>
         <DropdownMenu open={showOptions} onOpenChange={setShowOptions}>
       <DropdownMenuTrigger asChild>
-      <button><BsThreeDotsVertical/></button>
+        {
+          (canEdit || canDelete) &&  <button><BsThreeDotsVertical/></button>
+        }
+     
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40">
 
         <DropdownMenuGroup>
-          < DropdownMenuItem className='flex items-center gap-2' onClick={()=>setEditDialog(true)}>
+          {
+            canEdit && < DropdownMenuItem className='flex items-center gap-2' onClick={()=>setEditDialog(true)}>
             <MdEditSquare/>  Edit
           </DropdownMenuItem>
-          <DropdownMenuItem className='flex items-center gap-2' onClick={()=>setConfirm(true)}>
-           <AiFillDelete/> Delete
-          </DropdownMenuItem>
+          }
+          
+          {
+            canDelete && <DropdownMenuItem className='flex items-center gap-2' onClick={()=>setConfirm(true)}>
+            <AiFillDelete/> Delete
+           </DropdownMenuItem>
+          }
         </DropdownMenuGroup>
  
 

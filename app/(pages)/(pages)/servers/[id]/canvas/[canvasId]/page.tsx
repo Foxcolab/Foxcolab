@@ -71,7 +71,11 @@ async function CanvasPage({params}:Props) {
           createdAt:"desc"
         }
       },
-      createdUser:true,
+      createdMember:{
+        include:{
+          user:true
+        }
+      },
       notes:{
         orderBy:{
           createdAt:"desc"
@@ -111,19 +115,59 @@ async function CanvasPage({params}:Props) {
     }
   });
   if(!canvas) redirect(`/servers/${params.id}`);
+
+  const memberId = canvas.memberIds.some((id)=>id===member.id);
+  if(!memberId){
+    if(canvas.type==="private"){
+      redirect(`/servers/${server.id}`);
+    }else {
+      await db.section.update({
+        where:{
+          id:canvas.sectionId as string
+        },
+        data:{
+          canvas:{
+            update:{
+              where:{
+                id:canvas.id
+              },
+              data:{
+                Members:{
+                  connect:{
+                    id:member.id
+                  }
+                },
+                memberIds: {
+                  push:member.id
+                }
+              }
+            }
+          }
+        }
+      })
+    }
+  }
+
+
+
+
+
+
+
   const members = canvas?.Members;
   const managers = canvas?.manager;
 
-  let isAdmin = false;
-  for(let i=0; i<canvas?.manager?.memberIds?.length; i++){
-    if(canvas.manager?.memberIds[i]===member.id){
-      isAdmin=true;
-      break;
-    }
-  }
+  let isAdmin = canvas.createdBy===member.id;
+
   const createdAt = format(new Date(canvas.createdAt), DATE_FORMAT);
   let sendMsg = canvas.isEveryonePost !==undefined && canvas.isEveryonePost!==null ? canvas.isEveryonePost : true;
 
+  let whoCanCreateNote =false;
+  const isManager = canvas.manager?.memberIds.includes(member.id);
+  const isMember = canvas.memberIds.includes(member.id);
+  if(((isAdmin || isManager || isMember) && canvas?.whoCanCreateNote==="member") || ((isManager || isAdmin) && canvas?.whoCanCreateNote==="manager") || (isAdmin && canvas?.whoCanCreateNote==="admin") ){
+    whoCanCreateNote = true;
+} 
 
   return (
     <>
@@ -137,23 +181,24 @@ async function CanvasPage({params}:Props) {
       managers={canvas.manager}
       serverMembers={server.Members}
       createdAt={createdAt}
-      createdBy={canvas?.createdUser?.name as string}
+      createdBy={canvas?.createdMember?.user?.name as string}
       schemaType="Canvas"
       isAdmin={isAdmin}
       type={canvas.type}
       sendMsg={sendMsg}
       schema={canvas}
+      member={member}
 
       />
     
 
     <div className="canvas_container">
-      <CanvasSearch sectionId={canvas.sectionId} />
+      <CanvasSearch sectionId={canvas.sectionId} whoCanCreateNote={whoCanCreateNote}  />
     <div className='cnvs_sc'>
         <div><b>All Canvases</b></div>
        </div>
     
-    <CanvasContainer notes={canvas.notes} />
+    <CanvasContainer canvas={canvas} isAdmin={isAdmin} member={member} />
 
     </div>
 

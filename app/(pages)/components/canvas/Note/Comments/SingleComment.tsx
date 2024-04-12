@@ -9,11 +9,12 @@ import SingleThreeDot from './SingleThreeDot'
 
 interface Props {
     comment:NoteComment
+    memberId:string
 }
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 
-function SingleComment({comment}:Props) {
+function SingleComment({comment, memberId}:Props) {
     const [isEditing, setIsEditing] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
 
@@ -21,6 +22,8 @@ function SingleComment({comment}:Props) {
     const member = comment?.createdMember;
     const fileUrl = comment?.fileUrl;
     const isEdited = comment?.isUpdated===undefined ? false : comment.isUpdated;
+    const canEdit = comment.createdBy ===memberId;
+    const canDelete = comment.createdBy ===memberId ;
   return (
     <>
     
@@ -48,7 +51,7 @@ function SingleComment({comment}:Props) {
             </div>
           </div>
           <div className="single_head_r">
-            <SingleThreeDot noteId={comment.noteId as string} commentId={comment.id} showOptions={showOptions} setShowOptions={setShowOptions} content={comment.content } />
+            <SingleThreeDot noteId={comment.noteId as string} commentId={comment.id} showOptions={showOptions} setShowOptions={setShowOptions} content={comment.content } canEdit={canEdit} canDelete={canDelete} />
           </div>
         </div>
         <div className="single_c_content_con">

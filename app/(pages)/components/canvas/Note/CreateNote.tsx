@@ -17,7 +17,8 @@ import CreateNoteContent from './CreateNoteContent'
 import { Separator } from '@/components/ui/separator'
 import Loader from '../../Loaders/Loader'
 import { Note } from '@prisma/client'
-
+import { Switch } from "@/components/ui/switch"
+import UpdateNoteContent from './UpdateNoteContent'
 interface Props {
   sectionId:string
 }
@@ -25,6 +26,8 @@ function CreateNote({sectionId}:Props) {
   const [open, setOpen] = useState(false);
   const [noteDialog, setNoteDialog] = useState(false);
   const [title, setTitle] = useState('');
+  const [canEveryoneUpdate, setCanEveryoneUpdate] = useState(false);
+  const [commenting, setCommenting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState<null | Note>(null);
   const params = useParams();
@@ -33,7 +36,8 @@ function CreateNote({sectionId}:Props) {
     try {
       if(title==="") return;
       setLoading(true);
-      const res = await axios.post(`/api/canvas/note/create?serverId=${params?.id}&canvasId=${params?.canvasId}&sectionId=${sectionId}`, {title});
+      console.log(title, canEveryoneUpdate, commenting)
+      const res = await axios.post(`/api/canvas/note/create?serverId=${params?.id}&canvasId=${params?.canvasId}&sectionId=${sectionId}`, {title, commenting, canEveryoneUpdate});
       if(res.status===200){
         console.log(res);
         setNote(res.data.note);
@@ -56,18 +60,29 @@ function CreateNote({sectionId}:Props) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
-          <DialogTitle className='font-bold text-lg text-gray-700'>New Note</DialogTitle>
+          <DialogTitle className='font-bold text-lg '>New Note</DialogTitle>
           <Separator />
         </DialogHeader>
 
         <div className="py-4">
           <div className=''>
-            <label htmlFor="" className='font-semibold' style={{color:"#45515d"}}>Note Title</label>
+            <label htmlFor="" className='' style={{color:"var(--color2)", fontWeight:"600"}}>Note Title</label>
             <Input id="" placeholder='eg. Project Note' className="col-span-3 mt-2" onChange={e=>setTitle(e.target.value)} />
           </div>
         </div>
-
-        
+        <div className="pb-2">
+          <div className='flex items-center justify-between'>
+            <label htmlFor="" className='' style={{color:"var(--color2)", fontWeight:"600"}}>Can Everyone Update</label>
+            <Switch id="airplane-mode" defaultChecked={false} onCheckedChange={e=>setCanEveryoneUpdate(e)} />
+             </div>
+        </div>
+        <div className="pb-2">
+          <div className='flex items-center justify-between'>
+            <label htmlFor="" className='' style={{color:"var(--color2)", fontWeight:"600"}}>Can Everyone Comment</label>
+            <Switch id="airplane-mode" defaultChecked={true} defaultChecked={false} onCheckedChange={e=>setCommenting(e)} />
+            </div>
+        </div>
+        <hr />
         <DialogFooter>
           {
             loading ? <Loader/> : <>
@@ -81,7 +96,8 @@ function CreateNote({sectionId}:Props) {
     </Dialog>
     {
       note && 
-      <CreateNoteContent noteDialog={noteDialog} setNoteDialog={setNoteDialog} note={note} />
+      <CreateNoteContent noteDialog={noteDialog} setNoteDialog={setNoteDialog} note={note}   />
+      // <UpdateNoteContent noteDialog={noteDialog} setNoteDialog={setNoteDialog} note={note} canComment={commenting} canEdit={canEveryoneUpdate} />
     }
    
     

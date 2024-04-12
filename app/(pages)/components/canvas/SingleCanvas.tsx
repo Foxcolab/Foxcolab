@@ -1,6 +1,6 @@
 
 "use client";
-import {  Note } from '@prisma/client'
+import {  Member, Note } from '@prisma/client'
 import { format } from 'date-fns';
 import React, { useState } from 'react'
 import { FaNoteSticky } from "react-icons/fa6";
@@ -26,15 +26,24 @@ import {
   import { CiCalendarDate } from "react-icons/ci";
 import CreateNoteContent from './Note/CreateNoteContent';
 import { useRouter } from 'next/navigation';
+import UpdateNoteContent from './Note/UpdateNoteContent';
 
 interface Props {
-    note:Note,
+    note:Note & {
+      createdUser:Member
+    },
+    isAdmin:boolean,
+    whoCanDeleteNote:boolean
+    memberId:string
+    managerIds:string[]
+    memberIds:string[]
+
 }
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 
-function SingleCanvas({note}:Props) {
+function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, managerIds}:Props) {
     
     const [loading, setLoading] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(false);
@@ -56,75 +65,25 @@ function SingleCanvas({note}:Props) {
             
         }
     }
+    const creator = note.createdBy===memberId;
+
+    // let DeletePermission =false;
+    const isManager = managerIds.includes(memberId);
+    const isMember = memberIds.includes(memberId);
+  //   if(((isAdmin || isManager || isMember) && canvas?.whoCanDeleteNote==="member") || ((isManager || isAdmin) && canvas?.whoCanDeleteNote==="manager") || (isAdmin && canvas?.whoCanDeleteNote==="admin") ){
+  //       DeletePermission = true;
+  // } 
+
+  const canEdit = note.canEveryoneUpdate===true || creator;
+  const canComment = note.commenting===true || creator;
+
+
+
+
   return (
     <>
     
-        {/* <div className='sing_notec'>
-            <div className='note_left'>
-            <div className='note_icon'><FaNoteSticky/> </div>
-            <div className='note_title'>
-                <div className='note_tt'>{note.title}</div>
-                <div className='note_dt'>{format(new Date(note.createdAt), DATE_FORMAT)}</div>
-            </div>
-            </div>
-            <div className='note_operations'>
-                <ActionTooltip label='Edit note' side='top' align='center'>
-                <Update note={note}  />
-                </ActionTooltip>
-                
-                
-                    
-                <AlertDialog>
-      <AlertDialogTrigger asChild>
-      <button ><MdDelete/></button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete this note.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction style={{backgroundColor:"red"}} onClick={DeleteHandler}>Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-
-                    
-                   
-
-
-                <AlertDialog>
-      <AlertDialogTrigger asChild>
-      <button><FaInfoCircle/></button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{note.title}</AlertDialogTitle>
-          <AlertDialogDescription>
-          <p className='note_created'><CiCalendarDate/> Created At: {format(new Date(note.createdAt), DATE_FORMAT)}</p>
-          <p>Last Updated {format(new Date(note.updatedAt), DATE_FORMAT)}</p>
-            <p> Created By: {note.createdUser.user.name}</p>
-       
-
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogAction >Okay</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-
-
-
-
-
-            </div>
-            
-        </div> */}
-        {/* <hr className='note_hr' /> */}
+  
 
 
             
@@ -141,14 +100,19 @@ function SingleCanvas({note}:Props) {
         </div>
       </div>
       <div className='w-1/12 canvas_operation'>
-        <button onClick={()=>setDeleteDialog(true)}><MdDelete/></button>
-        <button onClick={()=>setEditNote(true)}><IoIosCreate/></button>
+        {
+       
+       (whoCanDeleteNote || creator) &&  <button onClick={()=>setDeleteDialog(true)}><MdDelete/></button>
+
+        }
+        
+        <button onClick={()=>setEditNote(true)}>{canEdit ? <IoIosCreate/> : <FaComment/>}</button>
       </div>
       </div>
     </button>
 
       {
-        editNote && <CreateNoteContent noteDialog={editNote} setNoteDialog={setEditNote} note={note}/>
+        editNote && <UpdateNoteContent noteDialog={editNote} setNoteDialog={setEditNote} note={note} canComment={canComment} canEdit={canEdit} memberId={memberId}  />
       }
     
     <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>

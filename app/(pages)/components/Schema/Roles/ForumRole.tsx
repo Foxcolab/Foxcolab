@@ -54,7 +54,7 @@ function ForumRole({whoCanUpdateForums, whoCanMakePublicToPrivate, whoCanCreateP
 <SingleRoleCompoents title="Manage Forums" subTitle='Allows you to  edit and delete forum in the forum channel.' schemaType='Forum'  onChangeHandler={onChangeHandler} disabled={false} state={managePost} />
 <SingleRoleCompoents title="Upload media in Forums's comment" subTitle="Allow you to upload media in forums's comment."  schemaType='Forum'  onChangeHandler={onChangeHandler} disabled={false} state={uploadMedia} />
 <SingleRoleCompoents title="Delete Forums" subTitle="Allow you to delete forum in forums's comment."  schemaType='Forum'  onChangeHandler={onChangeHandler} disabled={false} state={deletePost} />
-<SingleRoleCompoents title="Manage comment" subTitle="Allows you to delete comments from forums post." schemaType='Forum'  onChangeHandler={onChangeHandler} disabled={false} state={createComment} />
+<SingleRoleCompoents title="Manage comment" subTitle="Allows you to add comments in the forums post." schemaType='Forum'  onChangeHandler={onChangeHandler} disabled={false} state={createComment} />
 <SingleRoleCompoents title="Manage Member" subTitle="Allows you to add new member to the forum channel and remove existing members from forum channel"  schemaType='Forum'  onChangeHandler={onChangeHandler} disabled={false} state={manageManager} />
 <SingleRoleCompoents title="Manage Forum Channel Managers" subTitle="Allows you to make new forum channel managers and remove existing managers from the managers list."  schemaType='Forum'  onChangeHandler={onChangeHandler} disabled={false} state={manageMember} />
 

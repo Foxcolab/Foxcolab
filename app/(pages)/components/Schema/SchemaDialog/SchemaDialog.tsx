@@ -51,8 +51,9 @@ interface Props {
     sendMsg:boolean
     schemaType:string
     schema:ForumsChannel | Canvas | TestChannel
+    member:Member
 }
-function SchemaDialog({name, members, serverMembers, type, description, createdAt, createdBy, isAdmin, content, managers, startingState, sendMsg, schemaType, schema }:Props) {
+function SchemaDialog({member, name, members, serverMembers, type, description, createdAt, createdBy, isAdmin, content, managers, startingState, sendMsg, schemaType, schema }:Props) {
   
   const [state, setState] = useState(startingState);
     const [loading, setLoading] = useState(false);
@@ -247,6 +248,66 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
     }
   }
 
+  console.log(member);
+    let whoCanUpdateSchema = false;
+    let whoCanManageManager = false;
+    let whoCanManageMember = false;
+    let whoCanMakePublicToPrivate = false;
+    const isManager = managers.memberIds.includes(member.id);
+    const isMember = schema.memberIds.includes(member.id);
+    console.log(schema.memberIds);
+    // canvas 
+  if(schemaType==="Canvas"){
+    if(((isAdmin || isManager || isMember) && schema?.whoCanUpdateCanvas==="member") || ((isManager || isAdmin) && schema?.whoCanUpdateCanvas==="manager") || (isAdmin && schema?.whoCanUpdateCanvas==="admin") ){
+      whoCanUpdateSchema = true;
+  } 
+  if(((isAdmin || isManager || isMember) && schema?.whoCanManageMember==="member") || ((isManager || isAdmin) && schema?.whoCanManageMember==="manager") || (isAdmin && schema?.whoCanManageMember==="admin") ){
+    whoCanManageMember = true;
+} 
+if(((isAdmin || isManager || isMember) && schema?.whoCanManageManager==="member") || ((isManager || isAdmin) && schema?.whoCanManageManager==="manager") || (isAdmin && schema?.whoCanManageManager==="admin") ){
+  whoCanManageManager = true;
+} 
+
+if(((isAdmin || isManager || isMember) && schema?.whoCanMakePublicToPublic==="member") || ((isManager || isAdmin) && schema?.whoCanMakePublicToPublic==="manager") || (isAdmin && schema?.whoCanMakePublicToPublic==="admin") ){
+  whoCanMakePublicToPrivate = true;
+} 
+  }
+
+
+ // forums 
+if(schemaType==="Forums"){
+  if(((isAdmin || isManager || isMember) && schema?.whoCanUpdateForums==="member") || ((isManager || isAdmin) && schema?.whoCanUpdateForums==="manager") || (isAdmin && schema?.whoCanUpdateForums==="admin") ){
+    whoCanUpdateSchema = true;
+  } 
+  if(((isAdmin || isManager || isMember) && schema?.whoCanManageMember==="member") || ((isManager || isAdmin) && schema?.whoCanManageMember==="manager") || (isAdmin && schema?.whoCanManageMember==="admin") ){
+  whoCanManageMember = true;
+  } 
+  if(((isAdmin || isManager || isMember) && schema?.whoCanManageManager==="member") || ((isManager || isAdmin) && schema?.whoCanManageManager==="manager") || (isAdmin && schema?.whoCanManageManager==="admin") ){
+  whoCanManageManager = true;
+  } 
+  
+  if(((isAdmin || isManager || isMember) && schema?.whoCanMakePublicToPrivate==="member") || ((isManager || isAdmin) && schema?.whoCanMakePublicToPrivate==="manager") || (isAdmin && schema?.whoCanMakePublicToPrivate==="admin") ){
+  whoCanMakePublicToPrivate = true;
+  } 
+}
+
+if(schemaType==="Test Channel"){
+  if(((isAdmin || isManager || isMember) && schema?.whoCanUpdateTestChannel==="member") || ((isManager || isAdmin) && schema?.whoCanUpdateTestChannel==="manager") || (isAdmin && schema?.whoCanUpdateTestChannel==="admin") ){
+    whoCanUpdateSchema = true;
+  } 
+  if(((isAdmin || isManager || isMember) && schema?.whoCanManageMember==="member") || ((isManager || isAdmin) && schema?.whoCanManageMember==="manager") || (isAdmin && schema?.whoCanManageMember==="admin") ){
+  whoCanManageMember = true;
+  } 
+  if(((isAdmin || isManager || isMember) && schema?.whoCanManageManager==="member") || ((isManager || isAdmin) && schema?.whoCanManageManager==="manager") || (isAdmin && schema?.whoCanManageManager==="admin") ){
+  whoCanManageManager = true;
+  } 
+  
+  if(((isAdmin || isManager || isMember) && schema?.whoCanMakePublicToPrivate==="member") || ((isManager || isAdmin) && schema?.whoCanMakePublicToPrivate==="manager") || (isAdmin && schema?.whoCanMakePublicToPrivate==="admin") ){
+  whoCanMakePublicToPrivate = true;
+  } 
+}
+
+
   return (
     <>
         <Dialog>
@@ -268,10 +329,17 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
         <div className='all_mem_container'>
         <button className={state==="About"?"active_option":""}  onClick={()=>ChangeState( "About")}>About</button>
         <button className={state==="Members"?"active_option":""} onClick={()=>ChangeState("Members")}>Members {members.length}</button>
-        
-        <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
-        <button className={state==="Permissions"?"active_option":""} onClick={()=>ChangeState("Permissions")}>Permissions</button>
+        {
+          (whoCanMakePublicToPrivate || whoCanUpdateSchema ) && 
+          <button className={state==="Setting"?"active_option":""} onClick={()=>ChangeState("Setting")}>Setting</button>
+        }
+        {
+          isAdmin && <>
+          <button className={state==="Permissions"?"active_option":""} onClick={()=>ChangeState("Permissions")}>Permissions</button>
         <button className={state==="Activity Logs"?"active_option":""} onClick={()=>setState("Activity Logs")}>Activity Logs</button>
+          
+          </>
+        }
        
        
         {/* schemaActivity */}
@@ -304,15 +372,21 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
             managers={managers}
             channelMember={members}
             schemaType={schemaType}
+            hasPermission={whoCanUpdateSchema}
+            whoCanManageManager={whoCanManageManager}
+
              />
               
               </>
              
               : state==="Members" ?
               <>
-            <div className="add_member">
-              <button onClick={AddMemberHandler}><IoPersonAdd/> Add Member</button>
-            </div>
+              {
+                whoCanManageMember && <div className="add_member">
+                <button onClick={AddMemberHandler}><IoPersonAdd/> Add Member</button>
+              </div>
+              }
+            
              <div className="all_member_profile">
 
              <Command className="rounded-lg border shadow-md overflow-scroll">
@@ -362,19 +436,24 @@ function SchemaDialog({name, members, serverMembers, type, description, createdA
               
               </>
 
-              : state==="Setting" ? 
+              :
+              
+              state==="Setting" && (whoCanUpdateSchema || whoCanMakePublicToPrivate) ? 
               
               
               
               
-              <ChannelSetting name={name} description={description} isAdmin={isAdmin} type={type} sendMsg={sendMsg} ChangeNameHandler={changeNameHandler} ChangeDescriptionHandler={DescriptionHandler} setName={setName} setDescription={setDescription} nameLoading={nameLoading} desciptionLoading={descriptionLoading} schemaType={schemaType} />
+              <ChannelSetting name={name} description={description} isAdmin={isAdmin} type={type} sendMsg={sendMsg} ChangeNameHandler={changeNameHandler} ChangeDescriptionHandler={DescriptionHandler} setName={setName} setDescription={setDescription} nameLoading={nameLoading} desciptionLoading={descriptionLoading} schemaType={schemaType} 
+              updatePermission={whoCanUpdateSchema} publicToPrivate={whoCanMakePublicToPrivate}
+              
+              />
               
               
               :
-              state==="Activity Logs" ? 
+              state==="Activity Logs" && isAdmin ? 
               <ActivityLogContainer schemaType={schemaType} activityLogs={schema?.schemaActivity} /> :
               
-              state==="Permissions" ? 
+              state==="Permissions" && isAdmin ? 
               <SchemaRoleContainer
                schemaType={schemaType}
                schema={schema}

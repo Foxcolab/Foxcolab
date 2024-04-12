@@ -11,7 +11,7 @@ interface Props {
     sectionId:string
     testChannelName:string
     members:Member[]
-    managers:TestChannelManager[]
+    managers:TestChannelManager
     serverMembers:Member[]
     createdAt:string
     createdBy:string
@@ -23,13 +23,22 @@ interface Props {
     testLength:number
     attemptedTests:Test[]
     schema:TestChannel
+    member:Member
 }
 
 
-function TestChannelComponent({tests, sectionId, testChannelName, members,serverMembers, sendMsg, managers, createdAt, createdBy, type, isAdmin, description, results, testLength, attemptedTests, schema }:Props) {
+function TestChannelComponent({tests, sectionId, testChannelName, members,serverMembers, sendMsg, managers, createdAt, createdBy, type, isAdmin, description, results, testLength, attemptedTests, schema, member }:Props) {
 
 
     const [showResult, setShowResult] = useState(false);
+
+    let whoCanCreateTest =false;
+    const isManager = managers.memberIds.includes(member.id);
+    const isMember = schema.memberIds.includes(member.id);
+
+    if(((isAdmin || isManager || isMember) && schema?.whoCanCreateTest==="member") || ((isManager || isAdmin) && schema?.whoCanCreateTest==="manager") || (isAdmin && schema?.whoCanCreateTest==="admin") ){
+      whoCanCreateTest = true;
+      }
 
 
   return (
@@ -51,11 +60,12 @@ function TestChannelComponent({tests, sectionId, testChannelName, members,server
       resultLength={results.length}
       testLength={testLength}
       schema={schema}
+      member={member}
       />
 
       {
         showResult===false ? 
-        <TestChannelContainer tests={tests} sectionId={sectionId} attemptedTests={attemptedTests} /> :
+        <TestChannelContainer tests={tests} sectionId={sectionId} attemptedTests={attemptedTests} whoCanCreateTest={whoCanCreateTest} /> :
         <ChannelResult results={results} />
 
       }
