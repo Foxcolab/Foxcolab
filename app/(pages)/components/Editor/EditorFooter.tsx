@@ -31,18 +31,28 @@ import VoiceRecorder from "../Chat/Recorder/VoiceRecorder";
 import ScreenRecording from "../Chat/Recorder/ScreenRecording";
 import VideoRecorder from "../Chat/Recorder/VideoRecorder";
 // import VideoRecorder from "../Chat/Recorder/VideoRecorder";
-import Mention from "./EditorFooter/MentionComponent";
+import MentionComponent from "./EditorFooter/MentionComponent";
 import { Channel, Draft, Group, Member } from "@prisma/client";
-import ReactQuill, {Quill} from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import 'quill-mention';
-import QuillMention from 'quill-mention'
+import  "quill-mention";
 import 'quill-mention/dist/quill.mention.css';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import Schedule from "./schedule/Schedule";
+import dynamic from "next/dynamic";
+// const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+
+// const ReactQuill = dynamic(import('react-quill'), {
+//   ssr: false,
+//   loading: () => <p>Loading ...</p>,
+// });
+ 
+
 
 interface ChatInputProps {
     apiUrl: string;
@@ -60,12 +70,11 @@ interface ChatInputProps {
   const formSchema = z.object({
     content: z.string().optional(),
     contentText:z.string().optional(),
-    fileUrl: z.string().array().optional()
+    fileUrl: z.string().array().optional(),
+    scheduleTime:z.date().optional(),
   });
 
 
-  Quill.register('modules/mentions', QuillMention)
-  // Quill.import(Delta)
 
 
 const EditorFooter = ({apiUrl,
@@ -78,7 +87,7 @@ const EditorFooter = ({apiUrl,
     channels,
     drafts,
     uploadMedia,
-    sendMessage
+    sendMessage,
     
   }: ChatInputProps)=> {
 
@@ -99,8 +108,16 @@ const EditorFooter = ({apiUrl,
     const [emojiDialog, setEmojiDialog] = useState(false);
     const reactQuillRef = useRef(null);
     const [toolBarToogle, setToolBarToogle] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [scheduleDialog, setScheduleDialog] = useState(false);
+    // const [scheduleTime, setScheduleTime] = useState<null | Date> (null)
 
     const params = useParams();
+
+  
+
+    
+
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -111,7 +128,7 @@ const EditorFooter = ({apiUrl,
   });
  
 
-  const isLoading = form.formState.isSubmitting;
+  // const isLoading = form.formState.isSubmitting;
 
   const insertEmoji = (emoji:any, onChangee:any) => {
     const quill = reactQuillRef?.current?.getEditor();
@@ -131,6 +148,8 @@ const EditorFooter = ({apiUrl,
     try {
       
       // const res = await axios.post('/api/upload')
+      // console.log("Submit fun", values);
+      setLoading(true);
       const url = qs.stringifyUrl({
         url: apiUrl,
         query,
@@ -151,6 +170,7 @@ const EditorFooter = ({apiUrl,
       if(uploading) return;
       await axios.post(url, values);
       await deleteFromDatabase();
+      setLoading(false);
       form.reset();
       RemoveQuillText();
       router.refresh();
@@ -169,6 +189,7 @@ const EditorFooter = ({apiUrl,
       setMentions([]);
       setHandlerName('');
     } catch (error) {
+      setLoading(false);
       // console.log(error);
     }
   }
@@ -185,6 +206,7 @@ const EditorFooter = ({apiUrl,
       return;
     }
     const filess = e.target.files;
+    console.log(filess)
     const formData = new FormData();
     for (const file of Array.from(filess)) {
       files.push(file);
@@ -196,7 +218,7 @@ const EditorFooter = ({apiUrl,
     router.refresh();
     try {
       setUplodaing(true);
-      const res = await axios.post('/api/upload', formData);
+      const res = await axios.post(`/api/upload?serverId=${params?.id}`, formData);
       if(res.status===200){
         form.setValue("fileUrl", res.data.fileUrl);
       }
@@ -235,7 +257,7 @@ const EditorFooter = ({apiUrl,
 
   
  function suggestPeople(searchTerm:string) {
-  console.log(searchTerm)
+  // console.log(searchTerm)
   const allPeople = [
     {
       id: 1,
@@ -250,88 +272,7 @@ const EditorFooter = ({apiUrl,
   }
 
 
-//  const  modules = {
-//   // mention: {
-//   //   allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-//   //   mentionDenotationChars: ["@", "#"],
-//   //   source: function (searchTerm:string, renderItem:any, mentionChar:string) {
-//   //     // This is where you fetch your mention data and render it
-//   //     // Example:
-//   //     console.log(groups);
-//   //     let values:Array<Object> = [];
 
-//   //     if(mentionChar==="@"){
-//   //       for(let i=0; i<channelMember.length; i++){
-//   //         values.push({
-//   //           id: channelMember[i].id,
-//   //           value: channelMember[i]?.user?.name,
-//   //           type:"member"
-//   //         })
-//   //       }
-//   //       for(let i=0; i<groups.length; i++) {
-//   //         values.push({
-//   //           id: groups[i].id,
-//   //           value: groups[i].handle,
-//   //           name:groups[i].name,
-//   //           type:"group"
-//   //         })
-//   //       }
-//   //     }else {
-//   //       for(let i=0; i<channels.length; i++){
-//   //         values.push({
-//   //           id: channels[i].id,
-//   //           value:`${channels[i].name}` ,
-//   //           name:`#${channels[i].name}` ,
-            
-//   //         })
-//   //       }
-//   //     }
-   
-//   //     console.log("Search Item Length:", searchTerm.length);
-//   //     if (searchTerm.length === 0) {
-//   //       renderItem(values, searchTerm);
-//   //     } else {
-//   //       const matches = [];
-//   //       console.log("Values Length", values.length);
-//   //       for (let i = 0; i < values.length; i++) {
-//   //         console.log("Values", i, values);
-//   //         // Check against any relevant attribute for filtering
-//   //         if (
-//   //           ~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())
-//   //           // ~values[i].email.toLowerCase().indexOf(searchTerm.toLowerCase())
-//   //         ) {
-//   //           matches.push(values[i]);
-//   //           console.log(values[i])
-//   //         }
-//   //       }
-//   //       renderItem(matches, searchTerm);
-//   //     }
-//   //   },
-//   // },
-//   toolbar: [
-//     ['bold', 'italic', 'underline','strike'],
-//     [{'list': 'ordered'}, {'list': 'bullet'}],
-//     ['blockquote'],['code-block'],
-//     ['clean']
-//   ],
-//   // keyboard: {
-//   //   bindings: {
-//   //     shift_enter: {
-//   //       key: 13,
-//   //       shiftKey: true,
-//   //       handler: (range, ctx) => {
-//   //         console.log(range, ctx); // if you want to see the output of the binding
-//   //         this.editor.insertText(range.index, '\n');
-//   //       }
-//   //     },
-//   //     enter: {
-//   //       key: 13,
-//   //       handler: onsubmit
-//   //     }
-//   //   }
-//   // }
-
-// }
  
 
 const modules2 = {
@@ -379,37 +320,40 @@ const modules2 = {
   }, [draftContent]); 
 
 
-  useEffect(()=>{
-    if(reactQuillRef.current){
-      const quill = reactQuillRef.current.editor;
-      quill.keyboard.addBinding({
-        key: 'S', // The key you want to use for the shortcut
-        ctrlKey: true, // Whether the Ctrl key should be pressed
-        handler: () => {
-          console.log('Ctrl+S pressed'); // Perform any action you want here
-        }
-      });
 
-      quill.keyboard.addBinding({
-        key: 'Z',
-        ctrlKey: true,
-        handler: () => {
-          console.log('Ctrl+Z pressed');
-        }
-      });
-      // quill.keyboard.addBinding({
-      //   key: 'Enter',
-      //   handler: (range: any, context: any) => {
-      //     if (!range) {
-      //       console.log('Enter pressed without selection');
-      //       return true;
-      //     }
-      //     return false; 
-      //   }
-      // });
 
-    }
-  }, [])
+
+  // useEffect(()=>{
+  //   if(reactQuillRef.current){
+  //     const quill = reactQuillRef.current.editor;
+  //     quill.keyboard.addBinding({
+  //       key: 'S', // The key you want to use for the shortcut
+  //       ctrlKey: true, // Whether the Ctrl key should be pressed
+  //       handler: () => {
+  //         // console.log('Ctrl+S pressed'); // Perform any action you want here
+  //       }
+  //     });
+
+  //     quill.keyboard.addBinding({
+  //       key: 'Z',
+  //       ctrlKey: true,
+  //       handler: () => {
+  //         // console.log('Ctrl+Z pressed');
+  //       }
+  //     });
+  //     // quill.keyboard.addBinding({
+  //     //   key: 'Enter',
+  //     //   handler: (range: any, context: any) => {
+  //     //     if (!range) {
+  //     //       console.log('Enter pressed without selection');
+  //     //       return true;
+  //     //     }
+  //     //     return false; 
+  //     //   }
+  //     // });
+
+  //   }
+  // }, [])
 
 
 
@@ -419,7 +363,13 @@ const modules2 = {
     // console.log(event);
     const editorRef = reactQuillRef.current.getEditor();
     // console.log(editorRef.getText())
+    // console.log(editorRef)
+
     form.setValue("contentText", editorRef.getText())
+    const content = editorRef.getText()
+    // if(content.includes('@')){
+    //   setMentionDialog(true);
+    // }
     
     setDraftContent(event);
     if (stripHtmlTags(event)==="") {
@@ -429,11 +379,11 @@ const modules2 = {
   const saveToDatabase = async() => {
     
     try {
-      if(drafts.length===0){
-        const res = await axios.post(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&sectionId=${query?.sectionId}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
-      }else {
-        const res = await axios.put(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
-      }
+      // if(drafts.length===0){
+      //   const res = await axios.post(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&sectionId=${query?.sectionId}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
+      // }else {
+      //   const res = await axios.put(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
+      // }
       
       router.refresh();
     } catch (error) {
@@ -442,7 +392,7 @@ const modules2 = {
   };
   const deleteFromDatabase = async() => {
     try {
-      const res = await axios.delete(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`);
+      // const res = await axios.delete(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`);
       router.refresh();
 
     } catch (error) {
@@ -455,43 +405,16 @@ const modules2 = {
     return doc.body.textContent || "";
   };
 
-  const modules = {
-    'toolbar':[
-      ['bold', 'italic', 'underline','strike'],
-      [{'list': 'ordered'}, {'list': 'bullet'}],
-      ['blockquote'],['code-block'],
-      ['clean']
-    ],
-    
-    // 'keyboard': {
-    //   bindings: {
-    //     // shift_enter: {
-    //     //   key: 13,
-    //     //   shiftKey: true,
-    //     //   handler: (range, ctx) => {
-    //     //     console.log(range, ctx); // if you want to see the output of the binding
-    //     //     // this.editor.insertText(range.index, '\n');
-    //     //   }
-    //     // },
-    //     // enter: {
-    //     //   key: 13,
-    //     //   handler: () => console.log("Submit Form")
-    //     // }
-    //   }
-    // }
-    
-  }
+  const atValues = [
+    { id: 1, value: "Fredrik Sundqvist" },
+    { id: 2, value: "Patrik Sjölin" }
+  ];
+  const hashValues = [
+    { id: 3, value: "Fredrik Sundqvist 2" },
+    { id: 4, value: "Patrik Sjölin 2" }
+  ];
+  
 
-
-  const KeyPressHandler =()=>{
-    const quill = reactQuillRef.current.getEditor();
-    console.log(quill.root.innerText)
-    // console.log(quill.root.in)
-    if (quill) {
-      return quill.root.innerHTML;
-    }
-    return '';
-  }
 
   return(
     <>
@@ -521,16 +444,11 @@ const modules2 = {
      
      <div id="editor_htigh">
      
-           {/* <ReactQuill theme="snow" placeholder={`Message to ${(type==="channel" && channelType==="public") ? "#" :(type==="channel" && channelType==="private")? "#":""}${name}`}
-           modules={modules} 
-           onChange={e=>form.setValue("content",e)}
-            defaultValue={form.getValues("content")}
-           id="editor" 
-           ref={reactQuillRef}
-           /> */}
+         
 
            <div>
-           <ReactQuill ref={reactQuillRef}
+           <ReactQuill ref={reactQuillRef} 
+
            
            theme={"snow"}
            
@@ -546,27 +464,15 @@ const modules2 = {
                ['blockquote'],['code-block'],
                ['clean']
              ],
-             // keyboard: {
-             //   bindings: {
-             //     // shift_enter: {
-             //     //   key: 13,
-             //     //   shiftKey: true,
-             //     //   handler: (range, ctx) => {
-             //     //     console.log(range, ctx); // if you want to see the output of the binding
-             //     //     // this.editor.insertText(range.index, '\n');
-             //     //   }
-             //     // },
-             //     enter: {
-             //       key: 13,
-             //       handler: () => {
-             //         console.log("Submitted Form")
-             //       }
-             //     }
-             //   }
-             // }
-     
-           }}
+           
+            
+          
+            }}
+          
            />
+
+     
+
            </div>
        
 </div>
@@ -899,7 +805,7 @@ files[i]?.name.endsWith(".ppt")?
     <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
 
 <input type="file" id="file" onChange={handleChange} multiple
-accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt "
+accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt, .svg, .mp3, .wav, .json "
 />
 </label>
             
@@ -935,7 +841,7 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
          {/* <button 
          className=" h-[24px] w-[24px] transition rounded-full p-1 flex items-center justify-center"
          ><GoMention /></button> */}
-         <Mention open={mentionDialog} setOpen={setMentionDialog}  groups={groups} onSelectHandler={(e:any)=>onGroupSelect(e, field.onChange)}  />
+         <MentionComponent open={mentionDialog} setOpen={setMentionDialog}  groups={groups} onSelectHandler={(e:any)=>onGroupSelect(e, field.onChange)}  />
          <VideoRecorder setVideoName={setVideoName} setVideoUrl={setVideoUrl} />
          <VoiceRecorder setAudioUrl={setAudioUrl} setAudioName={setaudioName} />
          <ScreenRecording setScreenName={setScreenName} setScreenUrl={setScreenUrl}  />
@@ -946,27 +852,30 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
          </button> */}
          </div>
 
-         <div  className={(isLoading || ((form.getValues("content")==="" || form.getValues("content") === "<p><br></p>" )&& form.getValues("fileUrl")===undefined))?'send_msg':"send_msg ssdnBg"}  >
-           <button onClick={onSubmit} disabled={isLoading || ((form.getValues("content")==="" || form.getValues("content") === "<p><br></p>" )&& form.getValues("fileUrl")===undefined)}  >
+         <div  className={(loading || ((form.getValues("content")==="" || form.getValues("content") === "<p><br></p>" )&& form.getValues("fileUrl")===undefined))?'send_msg':"send_msg ssdnBg"}  >
+           <button onClick={onSubmit} disabled={loading || ((form.getValues("contentText")===undefined ||  form.getValues("contentText")!==undefined && form.getValues("contentText")==="" )&& files.length===0)}  >
                
              {
-               isLoading ? <ReloadIcon  className='className="mr-2 h-4 w-4 animate-spin "' /> :  <IoSend/>
+               loading ? <ReloadIcon  className='className="mr-2 h-4 w-4 animate-spin "' /> :  <IoSend/>
              }
             
              
              
              </button><span>|</span>
-           <button disabled={isLoading} ><MdKeyboardArrowDown/></button>
+           <button type="button" disabled={loading || ((form.getValues("contentText")===undefined ||  form.getValues("contentText")!==undefined && form.getValues("contentText")=="" )&& files.length===0)} onClick={()=>setScheduleDialog(true)}><MdKeyboardArrowDown/></button>
          </div>
-
+       
+         
          
        </div>
      </div>
-         
+     {
+          scheduleDialog && <Schedule open={scheduleDialog} setOpen={setScheduleDialog} setScheduleTime={(value:any)=>form.setValue("scheduleTime",value )} onSubmit={onSubmit} form={form} loading={loading} />
+         }
       </div>
       </div>
   
-
+            
 
                     
 
@@ -976,6 +885,7 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
         />
       </form>
     </Form> 
+           
              
 
 

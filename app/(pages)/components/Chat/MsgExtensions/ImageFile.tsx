@@ -12,7 +12,7 @@ import { ActionTooltip } from '../../tooolkit/Toolkit'
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import { ImNewTab } from "react-icons/im";
 import { BiSolidMessageDetail } from 'react-icons/bi';
-import { BsThreeDots } from "react-icons/bs";
+import { BsFiletypeTxt, BsThreeDots } from "react-icons/bs";
 import Image from 'next/image';
 
 
@@ -36,9 +36,44 @@ function ImageFile({fileUrl, type, fileName}:{fileUrl:string, type:string, fileN
     <div className='img_preview'>
     <Dialog>
 <DialogTrigger asChild>
-      <div>
-        {fileName}
-      </div>
+      {/* <div>
+        
+      <div className="doc_main_body ">
+<button>
+<div className='doc_file_body'>
+    <div className="flex items-center gap-2">
+    <div className="channel_img_file">
+    <Image src={fileUrl} height={100} width={100} alt='' />
+    </div>
+    <div className="">
+     <div className="">{fileName}</div>
+     <div >Image</div>
+     
+    </div>
+   </div></div>
+</button> 
+</div>
+      </div> */}
+
+<div className="doc_main_body">
+        <button>
+        <div className='doc_file_body'>
+            <div className="doc_thumbnail doc_thum_imp">
+            <div className="channel_img_file">
+            <Image src={fileUrl} height={100} width={100} alt='' />
+
+              </div>
+            <div className="">
+             <div className="">{fileName}</div>
+             <div >PDF</div>
+             
+            </div>
+           </div>
+           <div className='iframe_src'></div></div>
+        </button> 
+        </div>
+
+      
 {/* <Image src={fileUrl} alt='' width={100} height={100} unoptimized  quality={50}  />  */}
 
 </DialogTrigger>

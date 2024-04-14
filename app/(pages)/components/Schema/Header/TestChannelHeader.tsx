@@ -73,7 +73,7 @@ function TestChannelHeader({name, members, description, createdAt, createdBy, ty
             showResult ? <button onClick={()=>setShowResult(false)}>
             Tests ({testLength})
           </button> :  <button onClick={()=>setShowResult(true)}>
-            Results ({resultLength})
+            Results {resultLength!==0 && (resultLength) } 
           </button>
         }
          

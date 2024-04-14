@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { ModeToggle } from "./(pages)/components/mode-toggle/Toggle";
 import Image from "next/image";
 import logo from "./foxcolab.png"
 import logo1 from "./Foxcolab2.png"
+import { useEffect, useRef } from "react";
 
 export default function Home() {
+
+
   return (
     <>
 
@@ -14,6 +19,9 @@ export default function Home() {
     <button className="px-6 py-2"><ModeToggle/></button>
     
     </div>
+
+
+
 
     <div>
       <Image src={logo} width={100} height={100} alt="logo" unoptimized  />

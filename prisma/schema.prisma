@@ -134,6 +134,7 @@ model Server {
   activityLogs ActivityLog[]
   schemaActivity  SchemaActivity[]
   botResponses   BotResponse[]
+  uploadedFiles  UploadedFile[]
 }
 model Section {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -501,7 +502,7 @@ model Member {
   schemaActivity  SchemaActivity[] @relation("CreatedBy")
   removedSchemaActivity  SchemaActivity[] @relation("RemovedMember")
   BotResponses   BotResponse[]
-  
+  uploadedFiles  UploadedFile[]
   // TestChanneƒls  TestChannel[]
   // NoteContent NoteContent[]
   @@index([userId])
@@ -512,9 +513,12 @@ model Message {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content     String
   contentText  String?
-  fileUrl    String[]
+  // fileUrl    String[]
+  fileUrl    String[] @db.ObjectId
+  uploadedFiles UploadedFile[] 
   memberId String @db.ObjectId
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  // scheduleTime    DateTime @default(now())
   channelId String? @db.ObjectId
   channel Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
   sectionId    String? @db.ObjectId
@@ -568,6 +572,7 @@ model Threads {
   content     String
   contentText  String?
   fileUrl    String[]
+  uploadedFiles UploadedFile[] 
   messageId    String? @db.ObjectId
   message      Message? @relation( fields: [messageId], references: [id], onDelete:Cascade)
   channelId    String? @db.ObjectId
@@ -611,7 +616,7 @@ model DirectMessage {
   content String
   contentText  String?
   fileUrl String[]
-
+  uploadedFiles UploadedFile[] 
   memberId String @db.ObjectId
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
@@ -839,6 +844,7 @@ model Draft {
   content     String
   contentText  String?
   fileUrl    String[]
+  uploadedFiles UploadedFile[] 
   createdBy String @db.ObjectId
   createdMember Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   channelId String? @db.ObjectId
@@ -917,6 +923,7 @@ model BotResponse {
   triggeredText     String
   responseText      String
   responseFileUrl   String[]
+  uploadedFiles UploadedFile[] 
   triggeredType    BotTriggeredType @default(specificText)
   createdBy        String @db.ObjectId
   createdMember    Member?  @relation(fields: [createdBy], references: [id])
@@ -930,4 +937,31 @@ model BotResponse {
 
 
 
-// model 
+model UploadedFile {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String 
+  type          String?
+  fileType      String
+  size          Int
+  publicUrl     String
+  createdAt     DateTime @default(now())
+  createdBy     String @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id])
+  serverId      String @db.ObjectId
+  server        Server? @relation(fields: [serverId], references: [id])
+  isDeleted     Boolean @default(false)
+  thumbnail     String?
+  convertedUrl  String?
+  messageId     String? @db.ObjectId
+  message       Message? @relation(fields: [messageId], references: [id])
+  botResponseId String? @db.ObjectId
+  botResponse   BotResponse? @relation(fields: [botResponseId], references: [id])
+  directMessageId String? @db.ObjectId
+  directMessage DirectMessage? @relation(fields: [directMessageId], references: [id])
+  draftId       String? @db.ObjectId
+  draft         Draft?   @relation(fields: [draftId], references: [id])
+  threadId      String? @db.ObjectId
+  thread       Threads? @relation(fields: [threadId], references: [id])
+  
+}
+

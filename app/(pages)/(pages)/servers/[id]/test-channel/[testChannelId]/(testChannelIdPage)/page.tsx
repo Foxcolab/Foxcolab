@@ -177,6 +177,9 @@ async function TestChannel({params}:ForumsProps) {
 
 const attemptedTests = getAttemptedTests(myResults, tests);
 
+const activatedTest = tests && tests.filter(test=>test.activated);
+const myTests  = tests && tests.filter(test=>test.createdBy===member.id);
+
 
   return (
     <>
@@ -206,7 +209,7 @@ const attemptedTests = getAttemptedTests(myResults, tests);
       isAdmin={isAdmin}
       description={testChannel.description as string}
       results={testChannel.Results}
-      testLength={testChannel.Tests.length}
+      testLength={Math.max(activatedTest.length, myTests.length, 0)}
       attemptedTests={attemptedTests}
       schema={testChannel}
       member={member}

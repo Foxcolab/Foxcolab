@@ -148,7 +148,7 @@ const DescriptionHandler =async()=>{
 }
 
 const member:Member = channel.currentMember;
-console.log(member);
+
   let whoCanUpdateChannel = false;
   let whoCanManageManager = false;
   let whoCanManageMember = false;

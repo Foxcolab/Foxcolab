@@ -98,6 +98,9 @@ import { NextApiRequest } from "next";
             content,
             serverId:serverId as string,
             fileUrl,
+            uploadedFiles:{
+              connect:fileUrl?.map((file:string)=>({id:file}))
+            },
             channelId:channelId as string
           }
         }

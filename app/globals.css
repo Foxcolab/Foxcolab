@@ -1659,10 +1659,13 @@
 }
 .msg_footer {
   position: relative;
-  height:8rem;
+  /* height:8rem; */
   display: flex;
   align-items: center;
   padding:0.5rem;
+  bottom: 0;
+  min-height: 8rem;
+  max-height: 50vh;
 }
 /* .msg_footer {
   width: 100%;
@@ -3610,16 +3613,16 @@
   color: var(--testBtn);
 }
 .testsidebar .sidebutton{
-  background-color: #11843a;
-  padding: 0.4rem 1rem;
+  /* background-color: #11843a; */
+  padding: 0.35rem 1rem;
   margin: 0.1rem 0.4rem;
-  font-size: 0.85rem;
+  /* font-size: 0.85rem; */
   border-radius: 0.3rem;
   margin-bottom: 0.5rem;
-  border: 1px solid #0bbd88;
-  color: white;
+  /* border: 1px solid #0bbd88; */
+  /* color: white; */
 }
-.testsidebar button {
+.testsidebar .testSideBtn {
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
@@ -4378,7 +4381,7 @@
   font-size: 1.5rem;
     padding: 0.6rem;
     background: red;
-    border-radius: 0.12px;
+    border-radius: 12px;
 }
 .doc_thumbnail .doc_icon {
   font-size: 1.5rem;
@@ -4396,11 +4399,11 @@
 
 .doc_main_body {
   border-radius: 0.5rem;
-  border: 1px solid rgb(225 225 225);
-  background-color: #fbfbfb;
+  background: var(--background);
+  border: 1px solid var(--background4);
   font-size: 0.95rem;
   margin-bottom: 1rem;
-  margin: 0 1rem 1rem 1rem;
+  margin: 0.5rem 1rem 1rem 1rem;
   /* padding: 0.3rem; */
 }
 .doc_main_body button {
@@ -4879,6 +4882,10 @@
 .send_can_btn .send_msg  button  {
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.send_can_btn .send_msg  button:disabled {
+  cursor: not-allowed;
 }
 
 
@@ -6141,6 +6148,13 @@
   object-fit: cover;
 }
 
+.channel_img_file {
+  height: 2.75rem;
+  width: 2.75rem;
+  overflow: hidden;
+  border-radius: 0.6rem;
+  object-fit: cover;
+}
 
 /* cover  */
 .setting_avt .server_cover {
@@ -6804,4 +6818,153 @@
   width: 100vw;
   overflow-y: scroll;
   background-color: #141c24;
+}
+
+
+
+
+
+/* create new server  */
+
+.new_server_container {
+  height: 100vh;
+  max-width: 100vw;
+  padding: 0 !important;
+}
+
+.new_server_container .absolute {
+  display: none;
+}
+
+.new_ser_serv {
+  display: flex;
+}
+
+.new_ser_serv .new_serv_title {
+  border-right: 1px solid var(--exam_left_con);
+  /* padding-right: 1.5rem; */
+  padding:1rem 0.5rem;
+}
+
+.new_ser_serv .new_serv_title .new_ser_nm {
+  height: 3.5rem;
+    width: 3.5rem;
+    background: #4a767b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 2.4rem;
+    overflow: hidden;
+    /* height: 4rem; */
+}
+
+.new_ser_serv .new_ser_chann {
+  width: 15rem;
+  padding: 0.5rem;
+  border-right: 1px solid var(--exam_left_con);
+
+}
+.new_ser_serv .new_ser_chann .server_final_name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  height: 2rem;
+  padding: 0 0.3rem;
+}
+.new_ser_serv .new_serv_body {
+  padding: 2rem;
+}
+.server_type_con {
+
+}
+.server_types_c {
+  display: flex;
+  gap: 1rem;
+}
+.server_types_c .sing_server {
+  border: 1px solid var(--testBorder);
+  padding: 1rem;
+  border-radius: 0.3rem;
+  background: var(--emojiDiv);
+  width: 15rem;
+}
+.server_types_c .sing_server .sing_type_name {
+  font-weight: 600;
+  color: var(--color2);
+}
+.server_types_c .sing_server .sing_type_des {
+  font-size: 0.85rem;
+  color: var(--color3);
+} 
+.new_serv_sec label {
+  font-weight: 600;
+  color: var(--color2);
+  padding-bottom: 1rem;
+}
+.new_serv_sec .serv_inputs {
+  margin-top: 0.4rem;
+  background-color: var(--emojiDiv);
+}.radio-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+
+.sever_profile_upload {
+  margin-top:1rem;
+}
+.sever_profile_upload input {
+  display: none;
+}
+
+.sever_profile_upload label .upload_logo {
+  width: 6rem;
+  height: 6rem;
+  background: #212f45;
+  border-radius: 50%;
+  display: flex;
+  font-size: 0.80rem;
+  justify-content: center;
+  border: 1px solid var(--channelSidebar);
+  align-items: center;
+  font-weight: 600;
+  color: var(--color3);
+  cursor:pointer;
+  overflow: hidden;
+}
+
+
+.active_ser_type {
+  border: 1px solid #1d564f !important;
+  background: #2b504c !important;
+  outline: 1px solid #214845 !important;
+  outline-offset: 1px;
+  
+}
+.active_ser_type .sing_type_name {
+  color:white;
+}
+
+.new_side_sec {
+  background-color: #21262e;
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  margin-top: 0.5rem;
+}
+.new_side_sec .new_side_item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.3rem;
+  color: var(--color2);
+}
+.new_side_sec .new_side_item  span {
+  color: #59aa8f;
+  font-size: 1.2rem;
+}
+.new_side_bg_tm {
+  background-color: #26303e;
+  color: white !important;
+  border-radius: 0.3rem;
 }

@@ -65,8 +65,8 @@ function TestChannelComponent({tests, sectionId, testChannelName, members,server
 
       {
         showResult===false ? 
-        <TestChannelContainer tests={tests} sectionId={sectionId} attemptedTests={attemptedTests} whoCanCreateTest={whoCanCreateTest} /> :
-        <ChannelResult results={results} />
+        <TestChannelContainer tests={tests} sectionId={sectionId} attemptedTests={attemptedTests} whoCanCreateTest={whoCanCreateTest} memberId={member.id} /> :
+        <ChannelResult results={results}   />
 
       }
     </>

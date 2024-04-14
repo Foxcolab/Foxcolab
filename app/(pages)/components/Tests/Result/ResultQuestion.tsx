@@ -53,6 +53,10 @@ function ResultQuestion({responses, index, expand, question}:Props) {
                     
                 ))}
             </div>
+            <div className='p-2 my-4'>
+                <div className='font-semibold'>Explanation:</div>
+                <div className='pt-2'><div dangerouslySetInnerHTML={{__html: question.explanation as string}}/></div>
+            </div>
         </div>
         }
         

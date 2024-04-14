@@ -70,6 +70,9 @@ export const POST =async(req:NextRequest)=>{
             triggeredType:triggeredType,
             responseText:responseText,
             responseFileUrl:responseFileUrl,
+            uploadedFiles:{
+                connect:responseFileUrl?.map((file:string)=>({id:file}))
+            },
             createdBy:member.id,
             
         }

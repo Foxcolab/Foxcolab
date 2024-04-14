@@ -3,7 +3,7 @@
 import * as z from "zod";
 import axios from "axios";
 import qs from "query-string";
-import { Channel, Later, Member, MemberRole, Message, PinnedPost, Reaction, User } from "@prisma/client";
+import { Channel, Later, Member, MemberRole, Message, PinnedPost, Reaction, UploadedFile, User } from "@prisma/client";
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -42,7 +42,7 @@ interface ChatItemProps {
     user: User;
   };
   timestamp: string;
-  fileUrl: string[];
+  fileUrl: UploadedFile[];
   deleted: boolean;
   currentMember: Member;
   isUpdated: boolean;
@@ -105,7 +105,7 @@ export const ChatItem = ({
   // const { onOpen } = useModal();
   const params = useParams();
   const router = useRouter();
-
+  // console.log(message);
   const onMemberClick = () => {
     if (member.id === currentMember.id) {
       return;
@@ -158,16 +158,16 @@ export const ChatItem = ({
   }, [content]);
 
   
-  const fileType = fileUrl![0]?.split(".").pop();
+  // const fileType = fileUrl![0]?.split(".").pop();
   const forwardedMsg:Message = message.forwardedMessage;
   const isAdmin = currentMember.role === MemberRole.admin;
   const isModerator = currentMember.role === MemberRole.moderator;
   const isOwner = currentMember.id === member?.id;
    const isManager = managers?.some(m => m === member?.id);
   const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner || isManager);
-  const canEditMessage = !deleted && isOwner && !fileUrl;
-  const isPDF = fileType === "pdf" && fileUrl;
-  const isImage = !isPDF && fileUrl;
+  // const canEditMessage = !deleted && isOwner && !fileUrl;
+  // const isPDF = fileType === "pdf" && fileUrl;
+  // const isImage = !isPDF && fileUrl;
   const arrayWithColors = [
     '#2ecc71',
     '#3498db',
@@ -252,8 +252,6 @@ mySavedPost && mySavedPost.forEach(p => {
 
   }
     
-
-  
 
 
   return (
@@ -412,17 +410,13 @@ mySavedPost && mySavedPost.forEach(p => {
   
               </div>
               </div>
-              <div className="all_imgs">
-              {fileUrl?.length!==0 && 
-              
-             fileUrl &&  fileUrl.map((file, i)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
+              <div className="">
+             
+             <MsgFile files={fileUrl} />
 
-                </>
-              ))
               
-              }
+
+
             </div> 
             <div className="posted_tag_forw">
               posted in {message?.forwardedMessage?.channel?.type==="public"? "#": <FaLock/>} {message?.forwardedMessage?.channel?.name} | 
@@ -441,16 +435,8 @@ mySavedPost && mySavedPost.forEach(p => {
 
 
             <div className="all_imgs">
-              {fileUrl?.length!==0 && 
+             <MsgFile files={fileUrl}  />
               
-             fileUrl &&  fileUrl.map((file, i)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
-              }
             </div>            
             
             </>

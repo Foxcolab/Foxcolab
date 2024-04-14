@@ -19,7 +19,7 @@ const s3Client = new S3Client({
     }
 })
 
-const UploadFileToS3=async(file, fileName, type)=>{
+const UploadFileToS3=async(file:any, fileName:string, type:string)=>{
     const fileBuffer = file;
     
     const params = {
@@ -43,6 +43,8 @@ const UploadFileToS3=async(file, fileName, type)=>{
 
 export const POST =async(req:NextRequest)=>{
     try {
+        const serverId = req.nextUrl.searchParams.get('serverId');
+        if(!serverId) return NextResponse.json({error:"serverId  not found"}, {status:409});
          const formData = await req.formData();
         //  console.log(formData);
          const userId = await GetDataFromToken(req);
@@ -54,6 +56,7 @@ export const POST =async(req:NextRequest)=>{
                 user:true
             }
          })
+         if(!member) return NextResponse.json({error:"Member not found"}, {status:409});
          
          let audioo = formData.get('file');
 
@@ -75,10 +78,22 @@ export const POST =async(req:NextRequest)=>{
         
             const key = await UploadFileToS3(buffer, `${member?.user?.name}${fileName}.mp3`, "audio/mpeg");
             
+            const file = await db.uploadedFile.create({
+                data:{
+                    name:`${member?.user?.name}${fileName}.mp4`,
+                    serverId:serverId,
+                    createdBy:member?.id,
+                    type:"audio",
+                    fileType:audioo.type,
+                    size:audioo.size,
+                    publicUrl:`https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
+                
+                }
+            });
          
          
-         
-         const fileUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
+         const fileUrl = file.id;
+        //  const fileUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
          
          console.log(fileUrl);
          

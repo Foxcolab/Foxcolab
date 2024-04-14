@@ -25,7 +25,7 @@ const  Server_Sidebar =async ()=>{
     
     
     <div className='server_sidebar'>
-    <SidebarActions/>
+    <SidebarActions servers={servers} />
 
     <hr className='hr' />
  

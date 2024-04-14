@@ -82,6 +82,9 @@ export default async function handler(
       data: {
         content,
         fileUrl,
+        uploadedFiles:{
+          connect:fileUrl?.map((file:string)=>({id:file}))
+        },
         conversationId: conversationId as string,
         memberId: member.id,
       },

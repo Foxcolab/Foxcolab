@@ -14,9 +14,9 @@ import { BotResponse, Message } from "@prisma/client";
         // console.log("cominggg....");
         
       
-      const { content, fileUrl, contentText } =  req.body;
+      const { content, fileUrl, contentText, scheduleTime } =  req.body;
       const { serverId, channelId, sectionId } = req.query;
-      console.log(content, fileUrl, contentText)
+      console.log("Time IS:", scheduleTime)
         const user = await db.user.findUnique({
             where:{
                 id:userId
@@ -78,7 +78,8 @@ import { BotResponse, Message } from "@prisma/client";
     if (!member) {
       return res.status(404).json({ message: "Member not found" });
     }
-
+    let time = scheduleTime===undefined  ? new Date(): scheduleTime;
+    // console.log("Schedule Time: is", time);
     const message = await db.message.create({
       data: {
         content,
@@ -87,18 +88,42 @@ import { BotResponse, Message } from "@prisma/client";
         serverId: serverId as string,
         sectionId:sectionId as string,
         memberId: member.id,
-        contentText
+        contentText,
+        createdAt:time,
+        updatedAt:time,
+        uploadedFiles:{
+          connect:fileUrl?.map((file:string)=>({id:file}))
+        }
       },
       include: {
         member: {
           include: {
             user: true,
           }
-        }
+        },
+        uploadedFiles:true
       }
     });
     const channelKey = `chat:${channelId}:messages`;
-    res?.socket?.server?.io?.emit(channelKey, message);
+    if(scheduleTime===undefined){
+      res?.socket?.server?.io?.emit(channelKey, message);
+    }
+    if(scheduleTime){
+      // console.log("Schedule Time:", scheduleTime)
+      // const dt = new Date(scheduleTime);
+      // console.log("AFter Dte Time:", dt)
+
+      // const cur = new Date()
+      // let RemainingTime:any = dt - cur;
+      // console.log("Remaining Time: is", RemainingTime);
+      // console.log(RemainingTime/(60*1000))
+      // setTimeout(() => {
+      //   console.log("Socket IO");
+      
+      // console.log("SEND")
+      // }, RemainingTime);
+    
+    }
 
 
     const allBotRespones = await db.botResponse.findMany({
@@ -153,10 +178,13 @@ import { BotResponse, Message } from "@prisma/client";
               include: {
                 user: true,
               }
-            }
+            },
+            uploadedFiles:true
           }
         })
-        res?.socket?.server?.io?.emit(channelKey, botMessage);
+        if(scheduleTime===undefined){
+          res?.socket?.server?.io?.emit(channelKey, botMessage);
+        }
       }else if(!fullResponse && specificResponse){
          botMessage = await  db.message.create({
           data:{
@@ -177,12 +205,14 @@ import { BotResponse, Message } from "@prisma/client";
             }
           }
         })
-        res?.socket?.server?.io?.emit(channelKey, botMessage);
+        if(scheduleTime===undefined){
+          res?.socket?.server?.io?.emit(channelKey, botMessage);
+        }
       }
     }
 
 
-
+    // setTimeOut (function, delay)
 
     // console.log("Message sent successfully");
     

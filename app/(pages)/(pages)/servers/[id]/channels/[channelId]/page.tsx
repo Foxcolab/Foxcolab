@@ -79,6 +79,9 @@ const ChannelChat =async({params}:Props)=> {
         take:5,
         orderBy: {
           createdAt: "desc",
+        },
+        include:{
+          uploadedFiles:true
         }
       },
       Members:{
@@ -106,9 +109,11 @@ const ChannelChat =async({params}:Props)=> {
             include:{
               member:{
                 include:{
-                  user:true
+                  user:true,
+
                 }
-              }
+              },
+              uploadedFiles:true
             }
           }
 

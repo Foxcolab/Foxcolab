@@ -38,8 +38,12 @@ export async function GET(
         },
         where: {
           channelId,
+          // createdAt:{
+          //   lte:new Date()
+          // }
         },
         include: {
+          uploadedFiles:true,
           member: {
             include: {
               user: true,
@@ -76,8 +80,12 @@ export async function GET(
         take: MESSAGES_BATCH,
         where: {
           channelId,
+          // createdAt:{
+          //   lte:new Date()
+          // }
         },
         include: {
+          uploadedFiles:true,
           member: {
             include: {
               user: true,

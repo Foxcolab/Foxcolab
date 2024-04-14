@@ -35,6 +35,9 @@ export const POST =async(req:NextRequest)=>{
             data:{
                 content:content as string,
                 fileUrl:fileUrl,
+                uploadedFiles:{
+                    connect:fileUrl?.map((file:string)=>({id:file}))
+                },
                 createdBy:member.id as string,
                 serverId:serverId as string,
                 channelId:channelId as string,
