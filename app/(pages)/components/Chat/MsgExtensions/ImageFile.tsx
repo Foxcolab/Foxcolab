@@ -65,7 +65,7 @@ function ImageFile({fileUrl, type, fileName}:{fileUrl:string, type:string, fileN
               </div>
             <div className="">
              <div className="">{fileName}</div>
-             <div >PDF</div>
+             <div >Image</div>
              
             </div>
            </div>

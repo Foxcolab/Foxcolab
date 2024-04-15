@@ -1,7 +1,12 @@
 import React from 'react'
 import { BsSearch } from "react-icons/bs";
 import {RiRadioButtonLine} from "react-icons/ri"
-function DiscoverContent() {
+
+interface Props {
+    selectedState:string
+}
+
+function DiscoverContent({selectedState}:Props) {
   return (
     <>
     <div className="discv">
@@ -14,7 +19,7 @@ function DiscoverContent() {
         </div>
         </div>
      
-    <div className='featured_heading'>Featured Communities</div>
+    <div className='featured_heading my-4 mx-2'>{selectedState}</div>
     <div className="card_container">
         <div className='featured_card'>
             <div className='img'></div>
@@ -22,7 +27,11 @@ function DiscoverContent() {
             <div className='featured_n'>
             <div className="title">Featured title</div>
             <div className="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, non.lorem Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus quasi nam quibusdam, eum labore  </div>
-            <div className='member'><span> <RiRadioButtonLine/></span>  1,02,400 Member</div>
+            <div className='member'>
+                <div>
+                <span className='text-green-500'> <RiRadioButtonLine/></span>  1,02,400 Member
+                </div>
+            </div>
             </div>
         </div>
         <div className='featured_card'>
@@ -31,7 +40,11 @@ function DiscoverContent() {
             <div className='featured_n'>
             <div className="title">Featured title</div>
             <div className="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, non.lorem Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus quasi nam quibusdam, eum labore  </div>
-            <div className='member'><span> <RiRadioButtonLine/></span>  1,02,400 Member</div>
+            <div className='member'>
+                <div>
+                <span className='text-green-500'> <RiRadioButtonLine/></span>  1,02,400 Member
+                </div>
+            </div>
             </div>
         </div>
         <div className='featured_card'>
@@ -40,7 +53,11 @@ function DiscoverContent() {
             <div className='featured_n'>
             <div className="title">Featured title</div>
             <div className="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, non.lorem Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus quasi nam quibusdam, eum labore  </div>
-            <div className='member'><span> <RiRadioButtonLine/></span>  1,02,400 Member</div>
+            <div className='member'>
+                <div>
+                <span className='text-green-500'> <RiRadioButtonLine/></span>  1,02,400 Member
+                </div>
+            </div>
             </div>
         </div>
         <div className='featured_card'>
@@ -49,7 +66,24 @@ function DiscoverContent() {
             <div className='featured_n'>
             <div className="title">Featured title</div>
             <div className="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, non.lorem Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus quasi nam quibusdam, eum labore  </div>
-            <div className='member'><span> <RiRadioButtonLine/></span>  1,02,400 Member</div>
+            <div className='member'>
+                <div>
+                <span className='text-green-500'> <RiRadioButtonLine/></span>  1,02,400 Member
+                </div>
+            </div>
+            </div>
+        </div>
+        <div className='featured_card'>
+            <div className='img'></div>
+            <div className='logo'></div>
+            <div className='featured_n'>
+            <div className="title">Featured title</div>
+            <div className="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, non.lorem Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus quasi nam quibusdam, eum labore  </div>
+            <div className='member'>
+                <div>
+                <span className='text-green-500'> <RiRadioButtonLine/></span>  1,02,400 Member
+                </div>
+            </div>
             </div>
         </div>
         

@@ -1,5 +1,5 @@
 
-import { Channel, Member, Message, Server } from '@prisma/client'
+import { Channel, Member, Message, Server, User } from '@prisma/client'
 import React from 'react'
 import ServerHome from '../../v1/ServerHome/ServerHome'
 import ThreadComponents from '../../v1/Thread/ThreadComponents'
@@ -13,16 +13,17 @@ interface Props {
     currentMember:Member
     isAdmin:boolean
     myChannels:Channel[]
+    user:User
 }
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
-function ChannelContainer({server, channel, isAdmin, currentMember, myChannels}:Props) {
+function ChannelContainer({server, channel, isAdmin, currentMember, myChannels, user}:Props) {
     
   
     
   return (
     <>
-        <ServerHome server={server}>
+        <ServerHome server={server} user={user}>
             <ChannelMsgComp
             
             server={server}

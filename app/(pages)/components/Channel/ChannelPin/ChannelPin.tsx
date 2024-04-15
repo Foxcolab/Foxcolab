@@ -81,13 +81,13 @@ function ChannelPin({pinnedPosts}:PinnedProps) {
      
       
     <div className="w-full mt-2 channel_pin_msg">
-              {pinned.message.fileUrl?.length!==0 && 
+              {pinned.message.uploadedFiles?.length!==0 && 
               
-              pinned.message.fileUrl.map((file, i)=>(
+              pinned.message.uploadedFiles.map((file)=>(
                 <div key={i} className='px-4'>
                 {/* {file} */}
                 {/* <MsgFile fileUrl={file} key={i} length={pinned.message.fileUrl.length} type="msgFile" /> */}
-                <SingleMsgFile fileUrl={file} />
+                <SingleMsgFile file={file} />
 
                 </div>
               ))

@@ -1,5 +1,5 @@
 "use client";
-import { Member, Message, Server } from '@prisma/client'
+import { Member, Message, Server, UploadedFile } from '@prisma/client'
 import React, { useState } from 'react'
 import FilesHeader from './FilesHeader'
 import SingleMsgFile from '../Channel/ChannelPin/SingleMsgFile';
@@ -19,7 +19,7 @@ function FilesContainer({messages, memberId, server}:FilesProps) {
 
     const FilesStatus=(status:string)=>{
         setState(status);
-        const msgs = []
+        const msgs:Message[] = []
         if(status==="Created by you"){
             for(let i=0; i<messages.length; i++){
                 if(messages[i].memberId ===memberId){
@@ -55,7 +55,7 @@ function FilesContainer({messages, memberId, server}:FilesProps) {
         state==="Created by you" ? <CreatedByYou MessageFile={MessageFile} /> : state==="All Files" ? <AllFiles MessageFile={MessageFile} server={server}  />: <SharedWithYou MessageFile={MessageFile} />
     }
 
-
+ 
 
    
     

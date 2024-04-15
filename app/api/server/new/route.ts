@@ -13,7 +13,7 @@ export const POST =async(req:NextRequest)=>{
         
         if(!userId) return NextResponse.json({success:false, message:"You are not authorized"}, {status:401});
         const user = await db.user.findFirst({where:{id:userId}})
-        const {name, description, type, displayPic, coverPic} = reqBody;
+        const {name, description, type, displayPic, coverPic, serverType} = reqBody;
 
         if(!name || !description ) return NextResponse.json({success:false ,message:"Enter the fields"}, {status:409});
         console.log(name, description);
@@ -42,6 +42,7 @@ export const POST =async(req:NextRequest)=>{
                 inviteCode:uuidv4(),
                 createdBy:user?.id,
                 discoverable:discoverable,
+                serverType,
                 sections:{
                     create:[
                         {name:"General", createdBy:user?.id as string, 

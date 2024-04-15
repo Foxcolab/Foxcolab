@@ -64,6 +64,15 @@ async function page({params}:FilesProps) {
               user:true
             }
           },
+          uploadedFiles:{
+            include:{
+              createdMember: {
+                include:{
+                  user:true
+                }
+              }
+            }
+          }
         },
         orderBy:{
           createdAt:"desc"

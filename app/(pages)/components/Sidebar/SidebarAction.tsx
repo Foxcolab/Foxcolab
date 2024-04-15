@@ -21,7 +21,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FileUpload from "../fileUpload/FileUpload";
-import { Server } from "@prisma/client";
+import { Server, User } from "@prisma/client";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { IoMdLock } from "react-icons/io";
@@ -33,6 +33,118 @@ import { PiExamFill } from "react-icons/pi";
 import { FaNoteSticky } from "react-icons/fa6";
 import Image from "next/image";
 import Loader from "../Loaders/Loader";
+import { FaBook, FaUserTie } from 'react-icons/fa'
+import { GiArtificialHive, GiBookshelf, GiChestnutLeaf } from 'react-icons/gi'
+import { GoLaw } from 'react-icons/go'
+import { GrTechnology } from 'react-icons/gr'
+import { IoHome } from 'react-icons/io5'
+import { MdBusinessCenter, MdEngineering, MdLanguage, MdPeople, MdPermMedia, MdSportsEsports, MdTour } from 'react-icons/md'
+import {  PiGraduationCapFill } from 'react-icons/pi'
+import { RiGraduationCapFill } from 'react-icons/ri'
+import { SiMediamarkt } from 'react-icons/si'
+import { TbCoinRupee, TbMathFunction } from 'react-icons/tb'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+
+
+const Categories = [
+  {
+      icon:<IoHome/>,
+      name:"Home"
+  },
+  {
+      icon: <PiExamFill/> ,
+      name:"Assessment"
+  },
+  // {
+  //     icon:<GiArtificialHive/>,
+  //     name:"AI"
+  // },
+  {
+      icon:<FaBook/>,
+      name:"Books"
+  },
+  {
+      icon:<MdBusinessCenter/>,
+      name:"Business & Management"
+  },
+  {
+      icon:<SiMediamarkt />,
+      name:"Creative Arts & Media"
+  },
+  {
+      icon:<PiGraduationCapFill/>,
+      name:"CBSE"
+  },
+  {
+      icon:<GiChestnutLeaf />,
+      name:"Culture & Spiritual"
+  },
+  {
+      icon:<RiGraduationCapFill/>,
+      name:"Education "
+  },
+  {
+      icon:<GiBookshelf/>,
+      name:"Literature"
+  },
+  {
+      icon:<TbMathFunction/>,
+      name:"Science & Mathematics"
+  },
+  {
+      icon:<MdEngineering/>,
+      name:"Engineering"
+  },
+  {
+      icon:<BiAtom/>,
+      name:"Technology"
+  },
+  {
+      icon:<GoLaw/>,
+      name:"Law"
+  },
+  {
+      icon:<MdPermMedia/>,
+      name:"Entertainment"
+  },
+  {
+      icon:<GrTechnology/>,
+      name:"IT & Computer Science",
+  },
+  {
+      icon:<TbCoinRupee />,
+      name:"Finance"
+  },
+  {
+      icon:<MdSportsEsports/>,
+      name:"Sports & Games"
+  },
+  {
+      icon:<MdLanguage/>,
+      name:"Languages"
+  },
+  {
+      icon:<MdTour/>,
+      name:"Tourism"
+  },
+  {
+      icon:<MdPeople/>,
+      name:"Politics & Society"
+  },
+  {
+      icon:<FaUserTie/>,
+      name:"Job Portal"
+  }
+]
 
 interface MyEventTarget extends EventTarget {
     value: string
@@ -43,10 +155,14 @@ interface MyFormEvent<T> extends React.FormEvent<T> {
 }
 
 interface Props {
-  servers:Server[]
+  // servers:Server[]
+  user:User
 }
 
-export const SidebarActions = ({servers}:Props)=>{
+
+
+
+export const SidebarActions = ({user}:Props)=>{
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -63,6 +179,7 @@ export const SidebarActions = ({servers}:Props)=>{
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [dp, setDp] = useState(null);
+    const [category, setCategory] = useState('');
     // const []
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -95,7 +212,7 @@ export const SidebarActions = ({servers}:Props)=>{
             if(preview){
               fileUrl = await UploadImage();
             }
-            const res = await axios.post('/api/server/new', {name, description, type, displayPic:fileUrl});
+            const res = await axios.post('/api/server/new', {name, description, type, displayPic:fileUrl, serverType:category});
             console.log(res);
             
             if(res.status===200){
@@ -234,6 +351,28 @@ export const SidebarActions = ({servers}:Props)=>{
                       <label htmlFor="" className="">Server Description</label>
                       <Textarea className="resize-none serv_inputs" onChange={(e:any)=>setDescription(e.target.value)} />
                     </div>
+                    {
+                      user?.role==="admin" && 
+                      <div className="my-4 new_serv_sec">
+                      <label htmlFor="" className="mb-2">Server Cateogry</label>
+                      <Select onValueChange={(e)=>setCategory(e)} >
+  <SelectTrigger className="">
+    <SelectValue placeholder="Server Category" />
+  </SelectTrigger>
+  <SelectContent className="serv_inputs">
+                      {
+                        Categories.map((category)=>(
+                          <SelectItem className="" value={category.name}><div className="flex items-center gap-2">{category.icon} {category.name}</div></SelectItem>
+                        ))
+                      }
+                      
+  </SelectContent>
+</Select>
+
+                      {/* <Textarea className="resize-none serv_inputs" onChange={(e:any)=>setDescription(e.target.value)} /> */}
+                    </div>
+                    }
+                   
                     <div className="server_type_con">
                       <label htmlFor="">Server Type</label>
                       <div className="server_types_c">

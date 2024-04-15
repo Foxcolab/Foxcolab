@@ -26,7 +26,7 @@ export const layout =async({children, params}:HomeProps)=>{
     return (<>
     
 
-   <ServerHome server={server}>
+   <ServerHome server={server} user={profile}>
         <h1>Hii</h1>
 
    </ServerHome>

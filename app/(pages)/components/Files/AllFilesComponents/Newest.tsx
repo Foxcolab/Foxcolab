@@ -11,21 +11,22 @@ import {
 
 
 interface Props {
-  SortingOrderHandler:any
+  sortingOrder:string
+  setSortingOrder:any
 }
 
-function Newest({SortingOrderHandler}:Props) {
+function Newest({sortingOrder, setSortingOrder}:Props) {
   return (
     <>
     <div className='select_sorting_div'>
-    <Select onValueChange={e=>SortingOrderHandler(e)}>
+    <Select onValueChange={e=>setSortingOrder(e)} defaultValue={sortingOrder}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Newest" className='file_filtering' />
       </SelectTrigger>
       <SelectContent >
         <SelectGroup >
-        <SelectItem value="Oldest file">Oldest file</SelectItem>
-        <SelectItem value="Newest file">Newest file</SelectItem>
+        <SelectItem value="Newest">Newest file</SelectItem>
+        <SelectItem value="Oldest">Oldest file</SelectItem>
         <SelectItem value="A to Z">A to Z</SelectItem>
         <SelectItem value="Z to A">Z to A</SelectItem>
 

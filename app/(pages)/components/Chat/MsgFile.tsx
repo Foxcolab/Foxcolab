@@ -8,6 +8,7 @@ import PptViewer from './MsgExtensions/PptViewer';
 import DocFile from './MsgExtensions/DocFile';
 import Mp3File from "./MsgExtensions/Mp3File";
 import { UploadedFile } from '@prisma/client';
+import { cn } from '@/lib/utils';
 
 interface Props {
     files:UploadedFile[]
@@ -110,7 +111,7 @@ function MsgFile({files, type, length}:Props) {
 //     </>
     <>
 
-            <div className={type!=="channelFile" ? "all_imgs" : ''}>
+            <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
             {
         media && media.map((file, i)=>(
             <>
@@ -127,7 +128,7 @@ function MsgFile({files, type, length}:Props) {
         ))
     }
             </div>
-            <div className={type!=="channelFile" ? "all_imgs" : ''}>
+            <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
             {
         applications && applications.map((file, i)=>(
             <>
@@ -148,7 +149,7 @@ function MsgFile({files, type, length}:Props) {
         ))
     }
             </div>
-            <div className={type!=="channelFile" ? "all_imgs" : ''}>
+            <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
             {
         audio && audio.map((file, i)=>(
             <>

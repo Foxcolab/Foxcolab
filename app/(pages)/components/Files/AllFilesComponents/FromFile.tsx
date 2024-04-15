@@ -15,14 +15,13 @@ interface Props {
     serverMembers:Member[]
     from:string,
     setFrom:any
-    onFiltering:any
 }
 
-function FromFile({serverMembers, from, setFrom, onFiltering}:Props) {
+function FromFile({serverMembers, from, setFrom}:Props) {
   return (
     <>
     
-     <Select onValueChange={(e)=>onFiltering(e, "from")} defaultValue={from}>
+     <Select onValueChange={(e)=>setFrom(e)} defaultValue={from} >
       <SelectTrigger className="file_select_btn ">
       <SelectValue placeholder="From" />
       </SelectTrigger>

@@ -66,6 +66,13 @@ function PdfFile({fileUrl, length, key, fileName, type}:Props) {
         </div>
         </div>
         :
+        type==="Grid" ?
+
+        <>
+        <div className='file_Grid_lw_icon'>
+        <FaRegFilePdf/> 
+     </div>
+        </> :
 
         <div className="doc_main_body">
         <button>

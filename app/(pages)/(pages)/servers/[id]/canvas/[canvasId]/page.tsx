@@ -173,7 +173,7 @@ async function CanvasPage({params}:Props) {
     <>
     
     
-    <ServerHome server={server}>
+    <ServerHome server={server} user={profile}>
       <SchemaHeader
       name={canvas?.title as string}
       description={canvas?.description as string}

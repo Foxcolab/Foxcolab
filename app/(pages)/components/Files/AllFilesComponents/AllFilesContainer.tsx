@@ -1,36 +1,54 @@
 import React from 'react'
 import SingleMsgFile from '../../Channel/ChannelPin/SingleMsgFile'
 import GridFile from './GridFile'
-import { Message } from '@prisma/client'
+import { Message, UploadedFile } from '@prisma/client'
 import { format } from 'date-fns'
 
 interface Props {
-    MsgFiles:Message[]
+    MsgFiles:UploadedFile[]
     listStyle:string
 }
 const DATE_FORMAT = "d MMM yyyy";
 
 
 function AllFilesContainer({MsgFiles, listStyle}:Props) {
+    // console.log("MSGFIKES", MsgFiles)
 
   return (
     <>
     
    <div className={listStyle==="grid"? "file_grid_style" :'single_message_file' } >
-   {MsgFiles && MsgFiles.map((message, i)=>(
+
+   <>
+        {
+            MsgFiles && MsgFiles.map((file, i)=>(
+                <>
+                {
+                    listStyle==="grid" ? <GridFile file={file} key={i}/> :
+                    <SingleMsgFile file={file} key={i}/>
+                }
+                
+                </>
+            ))
+        }
+        
+        </>
+
+
+   {/* {MsgFiles && MsgFiles.map((message, i)=>(
         <>
         {
             listStyle==="list" ? <div key={i} className=''>
             {
-                message && message.fileUrl.map((fileUrl)=>(
-                    <SingleMsgFile fileUrl={fileUrl} createdBy={message.member.user.name} timeStamp={format(new Date(message.createdAt), DATE_FORMAT)} />
+                message && message.uploadedFiles.map((file)=>(
+                    <SingleMsgFile file={file}  />
                 ))
             }
             
         </div> : <>
         {
-                message && message.fileUrl.map((fileUrl, i)=>(
-                    <GridFile fileUrl={fileUrl} createdBy={message.member.user.name} timeStamp={format(new Date(message.createdAt), DATE_FORMAT)} key={i}  />
+                message && message.uploadedFiles.map((file)=>(
+                    <GridFile file={file}  />
                 ))
             }
       
@@ -39,7 +57,7 @@ function AllFilesContainer({MsgFiles, listStyle}:Props) {
         }
         
         </>
-    ))}
+    ))} */}
    </div>
     
     

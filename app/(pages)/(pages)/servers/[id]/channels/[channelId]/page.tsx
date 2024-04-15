@@ -113,7 +113,15 @@ const ChannelChat =async({params}:Props)=> {
 
                 }
               },
-              uploadedFiles:true
+              uploadedFiles:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
             }
           }
 
@@ -204,7 +212,7 @@ const ChannelChat =async({params}:Props)=> {
 
 
 
-    <ChannelContainer server={server} channel={channel} currentMember={member} isAdmin={isAdmin} myChannels={myChannels} />
+    <ChannelContainer server={server} channel={channel} currentMember={member} isAdmin={isAdmin} myChannels={myChannels} user={profile} />
 
 
 

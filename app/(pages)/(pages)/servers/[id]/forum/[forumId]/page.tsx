@@ -176,7 +176,7 @@ async function ForumsId({params}:ForumsProps) {
     <>
     
 
-    <ServerHome server={server}>
+    <ServerHome server={server} user={profile}>
       <ForumsCom
       name={forumsChannel.name}
       members={forumsChannel.Members}

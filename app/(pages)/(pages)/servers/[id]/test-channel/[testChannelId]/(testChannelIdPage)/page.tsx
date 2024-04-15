@@ -190,7 +190,7 @@ const myTests  = tests && tests.filter(test=>test.createdBy===member.id);
       {/* <TestChannelContainer tests={testChannel.Tests} sectionId={testChannel.sectionId} /> */}
 
 
-    <ServerHome server={server}>
+    <ServerHome server={server} user={profile}>
 
    
 

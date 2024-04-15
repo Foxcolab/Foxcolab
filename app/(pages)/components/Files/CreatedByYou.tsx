@@ -14,8 +14,8 @@ function CreatedByYou({MessageFile}:Props) {
     {MessageFile && MessageFile.map((message, i)=>(
         <div key={i} className='single_message_file'>
             {
-                message && message.fileUrl.map((fileUrl)=>(
-                    <SingleMsgFile fileUrl={fileUrl} />
+                message && message.uploadedFiles.map((file)=>(
+                    <SingleMsgFile file={file} />
                 ))
             }
             

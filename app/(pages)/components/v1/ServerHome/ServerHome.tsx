@@ -1,7 +1,7 @@
 import React from 'react'
 import Server_Sidebar from '../../Sidebar/Server_Sidebar'
 import ChannelSidebar from '../../Sidebar/ChannelSidebar'
-import { Server } from '@prisma/client'
+import { Server, User } from '@prisma/client'
 import {
   ResizableHandle,
   ResizablePanel,
@@ -12,9 +12,10 @@ import Header from '../../Header/Header'
 interface Props {
   server:Server
   children:React.ReactNode
+  user:User
 }
 
-function ServerHome({children, server}:Props) {
+function ServerHome({children, server, user}:Props) {
   return (
     <>
     
@@ -27,7 +28,7 @@ function ServerHome({children, server}:Props) {
 
 
       <div className="">
-        <Server_Sidebar/>
+        <Server_Sidebar user={user} home={false} />
       </div>
       <ResizablePanelGroup direction="horizontal" className='resizeable_container'>
       <ResizablePanel  className='resize_side_panel'  defaultSize={22} minSize={20} maxSize={60} >

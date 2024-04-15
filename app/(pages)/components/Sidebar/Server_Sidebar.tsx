@@ -4,10 +4,19 @@ import { SidebarActions } from './SidebarAction';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Sidebar_item, { EtcItem } from './Sidebar_item';
-import { redirect } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { User } from '@prisma/client';
 
 const imageUrl = "https://play-lh.googleusercontent.com/Rp_Sqi5hvV6unhH1ghqEiPBZc3BBRBH_lXKBKESRb5QzW3hZrd3vWWQx0JgHiB7ToPI"
-const  Server_Sidebar =async ()=>{
+
+interface Props {
+  home:boolean
+  user:User
+}
+
+
+const  Server_Sidebar =async ({home, user}:Props)=>{
     
     // const profile = await myProfile();
     const servers = await getMyserver();
@@ -16,16 +25,13 @@ const  Server_Sidebar =async ()=>{
     }
  
 
-
-   
-
     
   return (
     <>
     
     
-    <div className='server_sidebar'>
-    <SidebarActions servers={servers} />
+    <div className={cn('server_sidebar', home ? "top-0" : "top-[2.95rem]")}  >
+    <SidebarActions user={user} />
 
     <hr className='hr' />
  

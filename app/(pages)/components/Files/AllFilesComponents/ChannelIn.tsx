@@ -14,14 +14,13 @@ interface Props {
     serverChannels:Channel[]
     fromIn:string
     setFromIn:any
-    onFiltering:any
 }
 
-function ChannelIn({serverChannels, fromIn, setFromIn, onFiltering}:Props) {
+function ChannelIn({serverChannels, fromIn, setFromIn}:Props) {
   return (
     <>
     
-    <Select onValueChange={e=>onFiltering(e, "in")} defaultValue={fromIn}>
+    <Select onValueChange={e=>setFromIn(e)} defaultValue={fromIn}>
       <SelectTrigger className="file_select_btn ">
       <SelectValue placeholder="In" />
       </SelectTrigger>
