@@ -50,9 +50,18 @@ function PptViewer({fileUrl, length, key, fileName, type}:Props) {
 </button> 
 </div>
        </> 
+          :
+      type==="Grid" ? 
+      <>
+      <div className="file_Grid_lw_icon">
+      <BsFileEarmarkPptFill/> 
+      </div>
       
+      </> 
+
+        :
       
-      : <> 
+      <> 
       <button className='text-left'onClick={DownlodHandler}>
 <div className='pdf_iframe'>
       <div className="doc_thumbnail doc_thumbnail_impo w-full">

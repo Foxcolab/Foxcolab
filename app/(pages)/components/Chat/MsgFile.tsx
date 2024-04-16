@@ -78,6 +78,7 @@ function MsgFile({files, type, length}:Props) {
     })
 
 
+    console.log("File Type",files[0].type);
 
   return (
 //     <>
@@ -109,60 +110,73 @@ function MsgFile({files, type, length}:Props) {
 //     }    
 
 //     </>
+
+
+
     <>
 
-            <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
             {
-        media && media.map((file, i)=>(
-            <>
+                media.length!==0 && <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
                 {
-      
-                    file.type==="image" ? 
-                    <ImageFile fileUrl={file.publicUrl} type={type} fileName={file.name}  /> 
-                    : file.type==="video" ?
-                     <VideoFile fileUrl={file.publicUrl}  type={type} fileName={file.name} /> :''
-                }
-
-            </>
-
-        ))
-    }
-            </div>
-            <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
+            media && media.map((file, i)=>(
+                <>
+                    {
+          
+                        file.type==="image" ? 
+                        <ImageFile fileUrl={file.publicUrl} type={type} fileName={file.name}  /> 
+                        : file.type==="video" ?
+                         <VideoFile fileUrl={file.publicUrl}  type={type} fileName={file.name} /> :''
+                    }
+    
+                </>
+    
+            ))
+        }
+                </div>
+            }
+            
             {
-        applications && applications.map((file, i)=>(
-            <>
+                applications && <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
                 {
-                     file.type==="audio" ?
-                     <Mp3File key={i} fileUrl={file.publicUrl} type={type} /> :
-                     file.type==="pdf" ? 
-                    <Pdf fileUrl={file.publicUrl} key={i} length={length} fileName={file.name}  type={type}/>
-                    :    
-                    file.type==="ppt" ? 
-                    <PptViewer fileUrl={file.publicUrl} key={i} length={length} fileName={file.name} type={type} />
-                    :    
-                    <DocFile fileUrl={file.publicUrl} key={i} length={length} fileName={file.name} type={type} />
-                }
+            applications && applications.map((file, i)=>(
+                <>
+                    {
+                        //  file.type==="audio" ?
+                        //  <Mp3File key={i} fileUrl={file.publicUrl} type={type} /> :
+                         file.type==="pdf" ? 
+                        <Pdf fileUrl={file.publicUrl} key={i} length={length} fileName={file.name}  type={type}/>
+                        :    
+                        file.type==="ppt" ? 
+                        <PptViewer fileUrl={file.publicUrl} key={i} length={length} fileName={file.name} type={type} />
+                        :    
+                        <DocFile fileUrl={file.publicUrl} key={i}  fileName={file.name} type={type} fileType={file.type as string} />
+                    }
+    
+                </>
+    
+            ))
+        }
+                </div>
+            }
 
-            </>
 
-        ))
-    }
-            </div>
-            <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
             {
-        audio && audio.map((file, i)=>(
-            <>
+                audio &&  <div className={cn(type!=="channelFile" && type!=="Grid" ? "all_imgs" : '', type==="Grid" && "w-full h-full")}>
                 {
-                     file.type==="audio" ?
-                     <Mp3File key={i} fileUrl={file.publicUrl} type={type} /> : ''
-                }
-
-            </>
-
-        ))
-    }
-            </div>
+            audio && audio.map((file, i)=>(
+                <>
+                    {
+                         file.type==="audio" ?
+                         <Mp3File key={i} fileUrl={file.publicUrl} type={type} /> : ''
+                    }
+    
+                </>
+    
+            ))
+        }
+                </div>
+            }
+           
             <div>
 
             </div>

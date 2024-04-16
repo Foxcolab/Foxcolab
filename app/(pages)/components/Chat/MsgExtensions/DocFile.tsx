@@ -1,22 +1,23 @@
 
 import React from 'react'
 import { BsFiletypeDocx, BsFiletypeTxt, BsFiletypeXlsx } from 'react-icons/bs'
+import { GoFileZip } from 'react-icons/go'
 import { GrDocumentCsv } from 'react-icons/gr'
+import { VscJson } from 'react-icons/vsc'
 
 interface DocProps {
   fileUrl:string
-  length : number
-  key:number
   fileName:string
   type:string
+  fileType: string
 }
 
-function DocFile({fileUrl, type, length, key, fileName}:DocProps) {
+function DocFile({fileUrl, type, fileType, fileName}:DocProps) {
   function getFileExtension(name:string) {
     let data = name.split('.').pop();
     return data;
 }
-const typee = getFileExtension(fileName);
+// const fileType = getFileExtension(fileName);
 
 
 
@@ -37,7 +38,7 @@ const typee = getFileExtension(fileName);
 
 {
 
-type==="channelFile" && typee==="txt" ? 
+type==="channelFile" && fileType==="txt" ? 
 
 <div className="doc_main_body">
 <button>
@@ -57,7 +58,7 @@ type==="channelFile" && typee==="txt" ?
 </div>
 
 : 
-type==="channelFile" && typee==="docx" ? 
+type==="channelFile" && fileType==="docx" ? 
 <div className="doc_main_body">
 <button>
 <div className='doc_file_body'>
@@ -75,7 +76,7 @@ type==="channelFile" && typee==="docx" ?
 </button> 
 </div>
 :
-type==="channelFile" && typee==="xlsx" ?
+type==="channelFile" && fileType==="xlsx" ?
 <div className="doc_main_body">
 <button>
 <div className='doc_file_body'>
@@ -94,7 +95,7 @@ type==="channelFile" && typee==="xlsx" ?
 </div>
 : 
 
-type==="channelFile" && typee==="csv" ? 
+type==="channelFile" && fileType==="csv" ? 
 
 <div className="doc_main_body">
 <button>
@@ -112,7 +113,49 @@ type==="channelFile" && typee==="csv" ?
    <div className='iframe_src'></div></div>
 </button> 
 </div>
-: ''
+:
+
+type==="channelFile" && fileType==="zip" ?
+<div className="doc_main_body">
+<button>
+<div className='doc_file_body'>
+    <div className="doc_thumbnail doc_thum_imp">
+    <div className="doc_icon bg-yellow-700">
+      <GoFileZip/> 
+      </div>
+    <div className="">
+     <div className="">{fileName}</div>
+     <div >Zip</div>
+     
+    </div>
+   </div>
+   <div className='iframe_src'></div></div>
+</button> 
+</div> :
+type==="channelFile" && fileType==="json" ?
+<div className="doc_main_body">
+<button>
+<div className='doc_file_body'>
+    <div className="doc_thumbnail doc_thum_imp">
+    <div className="doc_icon bg-yellow-700">
+      <VscJson/> 
+      </div>
+    <div className="">
+     <div className="">{fileName}</div>
+     <div >Json</div>
+     
+    </div>
+   </div>
+   <div className='iframe_src'></div></div>
+</button> 
+</div> :
+
+
+
+
+
+
+''
     
 }
 
@@ -122,10 +165,50 @@ type==="channelFile" && typee==="csv" ?
 
 :
 
+
+   type==="Grid" ?
+   <>
+
+    {
+      fileType==="txt" ?
+      <div className="file_Grid_lw_icon">
+      <BsFiletypeTxt/>
+      </div> :
+      fileType==="docx" ?
+      <div className="file_Grid_lw_icon">
+        <BsFiletypeDocx/> 
+      </div> :
+      fileType==="xlsx" ?
+      <div className="file_Grid_lw_icon">
+        <BsFiletypeXlsx/> 
+      </div> :
+      fileType==="csv" ?
+      <div className='file_Grid_lw_icon'>
+        <GrDocumentCsv/> 
+      </div> :
+      fileType==="json" ?
+      <div className="">
+        <VscJson />
+
+      </div> :
+      fileType==="zip" ?
+      <div className="">
+        <GoFileZip />
+
+      </div> :
+     ''
+
+    }
+
+   </>
+
+    :
+
+
 <>
 {
 
-typee==="txt" ? 
+fileType==="txt" ? 
 
 <button className='text-left' >
 <div className='pdf_iframe'>
@@ -144,7 +227,7 @@ typee==="txt" ?
  
 
 : 
-typee==="docx" ? 
+fileType==="docx" ? 
 <button className='text-left' >
 <div className='pdf_iframe'>
       <div className="doc_thumbnail doc_thumbnail_impo w-full">
@@ -159,7 +242,7 @@ typee==="docx" ?
      </div>
      <div className='iframe_src'></div></div>
 </button> :
-typee==="xlsx" ?
+fileType==="xlsx" ?
 <button className='text-left' onClick={DownlodHandler}>
 <div className='pdf_iframe'>
       <div className="doc_thumbnail doc_thumbnail_impo w-full">
@@ -174,7 +257,7 @@ typee==="xlsx" ?
      </div>
      <div className='iframe_src'></div></div>
 </button> : 
-typee==="csv" ? <button className='text-left' >
+fileType==="csv" ? <button className='text-left' >
 <div className='pdf_iframe'>
       <div className="doc_thumbnail doc_thumbnail_impo w-full">
       <div className="doc_icon bg-yellow-700">
@@ -187,7 +270,39 @@ typee==="csv" ? <button className='text-left' >
       </div>
      </div>
      <div className='iframe_src'></div></div>
-</button> : ''
+</button> : 
+
+fileType==="zip" ? <button className='text-left' >
+<div className='pdf_iframe'>
+      <div className="doc_thumbnail doc_thumbnail_impo w-full">
+      <div className="doc_icon bg-yellow-700">
+      <GoFileZip/> 
+      </div>
+      <div className="doc_thum_nm">
+       <div className="extn">{fileName}</div>
+       <div >Zip</div>
+       
+      </div>
+     </div>
+     <div className='iframe_src'></div></div>
+</button> :
+
+fileType==="json" ? <button className='text-left' >
+<div className='pdf_iframe'>
+      <div className="doc_thumbnail doc_thumbnail_impo w-full">
+      <div className="doc_icon bg-yellow-700">
+      <VscJson/> 
+      </div>
+      <div className="doc_thum_nm">
+       <div className="extn">{fileName}</div>
+       <div >Json</div>
+       
+      </div>
+     </div>
+     <div className='iframe_src'></div></div>
+</button> :
+
+''
     
 }
 </>

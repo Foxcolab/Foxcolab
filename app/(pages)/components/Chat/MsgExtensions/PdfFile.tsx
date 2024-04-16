@@ -22,8 +22,14 @@ interface Props {
 
 
 function PdfFile({fileUrl, length, key, fileName, type}:Props) {
-  
 
+
+  
+  console.log("PDF Found", type, length, fileName, fileUrl);
+  console.log(length===1 && type!=="channelFile" && type!=="Grid" );
+  console.log(length!==1 && type!=="channelFile" && type!=="Grid");
+  console.log(type==="Grid")
+  console.log("Else , true")
   return (
     <>
     {/* {
@@ -33,7 +39,7 @@ function PdfFile({fileUrl, length, key, fileName, type}:Props) {
       <Dialog>
       <DialogTrigger asChild>
       {
-        length===1 && type!=="channelFile" ?  <div className='pdf_iframe'>
+        length===1 && type!=="channelFile" && type!=="Grid" ?  <div className='pdf_iframe'>
         <div className="doc_thumbnail doc_thumbnail_impo w-full">
         <div className="doc_thum_icon">
         <FaRegFilePdf/> 
@@ -51,7 +57,7 @@ function PdfFile({fileUrl, length, key, fileName, type}:Props) {
        </div>
   
        </div> :
-        length!==1 && type!=="channelFile" ? 
+        length!==1 && type!=="channelFile" && type!=="Grid" ? 
         
         <div className='pdf_container'>
         <div className="doc_thumbnail">
