@@ -66,6 +66,10 @@ export const getMyserver = async()=>{
                         userId:userId
                     }
                 }
+            },
+            include:{
+                displayPicture:true,
+                coverPic:true
             }
         })
         

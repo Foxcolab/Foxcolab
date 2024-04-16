@@ -52,7 +52,7 @@ interface NavigationItemProps {
             <Image
               fill
               src={imageUrl}
-              alt="Channel"
+              // alt="Channel"
             />
            
           </div>

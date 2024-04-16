@@ -70,8 +70,7 @@ interface ChatInputProps {
   const formSchema = z.object({
     content: z.string().optional(),
     contentText:z.string().optional(),
-    fileUrl: z.string().array().optional(),
-    scheduleTime:z.date().optional(),
+    fileUrl: z.string().array().optional()
   });
 
 
@@ -870,7 +869,7 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
        </div>
      </div>
      {
-          scheduleDialog && <Schedule open={scheduleDialog} setOpen={setScheduleDialog} setScheduleTime={(value:any)=>form.setValue("scheduleTime",value )} onSubmit={onSubmit} form={form} loading={loading} />
+          scheduleDialog && <Schedule open={scheduleDialog} setOpen={setScheduleDialog}   form={form} loading={loading} sectionId={query?.sectionId}  />
          }
       </div>
       </div>

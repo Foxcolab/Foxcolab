@@ -86,8 +86,10 @@ model Server {
   type Type @default(public)
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  displayPic String?
-  coverPic String?
+  displayPicId String? @db.ObjectId
+  displayPicture UploadedFile? @relation("DisplayPictures", fields: [displayPicId], references: [id], onDelete:NoAction, onUpdate:NoAction)
+  coverPicId String? @db.ObjectId
+  coverPic  UploadedFile? @relation("CoverPictures", fields: [coverPicId], references: [id], onDelete:NoAction, onUpdate:NoAction)
   createdBy   String  @db.ObjectId
   createdUser    User?    @relation(fields: [createdBy], references: [id], onDelete:Cascade)
   inviteCode String?
@@ -134,7 +136,7 @@ model Server {
   activityLogs ActivityLog[]
   schemaActivity  SchemaActivity[]
   botResponses   BotResponse[]
-  uploadedFiles  UploadedFile[]
+  uploadedFiles  UploadedFile[] @relation("Server")
 }
 model Section {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -945,10 +947,10 @@ model UploadedFile {
   size          Int
   publicUrl     String
   createdAt     DateTime @default(now())
-  createdBy     String @db.ObjectId
+  createdBy     String? @db.ObjectId
   createdMember Member? @relation(fields: [createdBy], references: [id])
-  serverId      String @db.ObjectId
-  server        Server? @relation(fields: [serverId], references: [id])
+  serverId      String? @db.ObjectId
+  server        Server? @relation("Server", fields: [serverId], references: [id])
   isDeleted     Boolean @default(false)
   thumbnail     String?
   convertedUrl  String?
@@ -962,6 +964,9 @@ model UploadedFile {
   draft         Draft?   @relation(fields: [draftId], references: [id])
   threadId      String? @db.ObjectId
   thread       Threads? @relation(fields: [threadId], references: [id])
+
+  displayPictures Server[] @relation("DisplayPictures")
+  coverPictures Server[] @relation("CoverPictures") 
   
 }
 

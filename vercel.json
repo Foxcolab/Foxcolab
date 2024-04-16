@@ -1,0 +1,8 @@
+{
+    "crons": [
+      {
+        "path": "/api/socket/schedule/draft-to-message",
+        "schedule": "* * * * *"
+      }
+    ]
+  }

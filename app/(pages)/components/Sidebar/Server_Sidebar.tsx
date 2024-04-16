@@ -23,6 +23,7 @@ const  Server_Sidebar =async ({home, user}:Props)=>{
     if(!servers){
       redirect('/home');
     }
+
  
 
     
@@ -39,7 +40,7 @@ const  Server_Sidebar =async ({home, user}:Props)=>{
         {
             servers.map((server)=>(
                 <div key={server.id} className='sing_server'>
-                    <Sidebar_item id={server.id} name={server.name} imageUrl={server.displayPic===null ? imageUrl : server.displayPic} />
+                    <Sidebar_item id={server.id} name={server.name} imageUrl={!server.displayPic ? imageUrl : server.displayPic.publicUrl} />
                 </div>
             )) 
         }

@@ -154,7 +154,17 @@ const ChannelChat =async({params}:Props)=> {
       saveLater:true,
       Drafts:{
         where:{
-          channelId:channel?.id
+          channelId:channel?.id,
+          OR:[
+            {
+              ScheduledDate:null
+            },
+            {
+              ScheduledDate:{ 
+                equals:undefined
+              }
+            }
+          ]
         }
       }
     }
@@ -205,6 +215,7 @@ const ChannelChat =async({params}:Props)=> {
   const isAdmin = member.id===channel.createdBy;
   channel.currentMember = member;
 
+  
 
 
   return (

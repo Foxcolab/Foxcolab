@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/popover"
 import { format } from 'date-fns';
 import ForwardMessage from './ForwardMessage';
+import { GrBookmark } from 'react-icons/gr';
 
 
 
@@ -427,13 +428,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
             </button></ActionTooltip> 
           }
   
-       <ActionTooltip label='Save for later' side='top' align='center'><button onClick={isSavedPost ? RemoveLater :()=> SavedLater(undefined)}  className={isSavedPost ? "bookmark_icon": ''} style={{fontSize:"1.1rem !important"}}>
+       <ActionTooltip label='Save for later' side='top' align='center'><button onClick={isSavedPost ? RemoveLater :()=> SavedLater(undefined)}  className={isSavedPost ? "bookmark_icon": ''} style={{fontSize:"1.1rem"}}>
             {
-              isSavedPost ? <BsBookmarkFill/> : <BsBookmark/>
+              isSavedPost ? <BsBookmarkFill/> : <FaRegBookmark/>
             }
              </button></ActionTooltip> 
-      
-          
+    
 
  
  <DropdownMenu >

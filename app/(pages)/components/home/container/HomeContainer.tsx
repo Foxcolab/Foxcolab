@@ -3,8 +3,13 @@ import { ScrollArea } from '@radix-ui/react-scroll-area'
 import React, { useState } from 'react'
 import ServerCategory from '../LoginHome/ServerCategory'
 import DiscoverContent from '../../DiscoverContent/DiscoverContent';
+import { Server } from '@prisma/client';
 
-function HomeContainer() {
+interface Props {
+  servers:Server[]
+}
+
+function HomeContainer({servers}:Props) {
 
   const [selectedCategory, setSelectedCategory] = useState('Home');
 
@@ -24,7 +29,7 @@ function HomeContainer() {
   
   <div className="server_category_content">
     <ScrollArea>
-    <DiscoverContent selectedState={selectedCategory} />
+    <DiscoverContent selectedState={selectedCategory} servers={servers}  />
     {/* hiiiii */}
     </ScrollArea>
   </div>

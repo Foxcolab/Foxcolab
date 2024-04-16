@@ -14,15 +14,18 @@ import HomeContainer from '../../components/home/container/HomeContainer';
 import { User } from '@prisma/client';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
+import { redirect } from 'next/navigation';
+import AdminServer from '@/lib/db/AdminServer';
+
 
 
 async function HomePage() {
 
   const user = await myProfile();
+  if(!user) redirect(`/home`)
 
 
-
-
+  const servers = await AdminServer();
 
   // const servers = await db
 
@@ -36,7 +39,7 @@ async function HomePage() {
   <div className='home_container d-flex '>
   <ServerSidebar home user={user} />
   
-  <HomeContainer />
+  <HomeContainer servers={servers} />
 
 
   </div>

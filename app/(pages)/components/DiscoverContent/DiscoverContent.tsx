@@ -1,12 +1,14 @@
+import { Server } from '@prisma/client';
 import React from 'react'
 import { BsSearch } from "react-icons/bs";
 import {RiRadioButtonLine} from "react-icons/ri"
 
 interface Props {
     selectedState:string
+    servers:Server[]
 }
 
-function DiscoverContent({selectedState}:Props) {
+function DiscoverContent({selectedState, servers}:Props) {
   return (
     <>
     <div className="discv">

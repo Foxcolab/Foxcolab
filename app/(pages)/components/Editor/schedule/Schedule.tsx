@@ -22,6 +22,8 @@ import {
 import { GoClockFill } from 'react-icons/go'
 import { time } from 'console'
 import Loader from '../../Loaders/Loader'
+import axios from 'axios'
+import { useParams } from 'next/navigation'
 
 
 
@@ -224,15 +226,17 @@ const times = [
 interface Props {
     open:boolean
     setOpen:any
-    setScheduleTime:any
-    onSubmit:any
     form:any
     loading:boolean
+    sectionId:string
+
 }
 
-function Schedule({open, setOpen, setScheduleTime, onSubmit, form, loading}:Props) {
+function Schedule({open, setOpen, form, loading, sectionId}:Props) {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
     const [hhmm, setHhmm] = useState('00:00');
+
+    const params = useParams();
     
     var prev_date = new Date();
     prev_date.setDate(prev_date.getDate() - 1);
@@ -279,14 +283,31 @@ function Schedule({open, setOpen, setScheduleTime, onSubmit, form, loading}:Prop
         let dtt = (`${yy}-${mm}-${dd}, ${hour}:${tm}:00`);
         const neDt = new Date(dtt);
         
-        setScheduleTime(neDt)
+        // setScheduleTime(neDt)
         console.log("SCheul", form.getValues("content"));
         const content=form.getValues("content");
         const contentText=form.getValues("contentText");
         const fileUrl=form.getValues("fileUrl");
         const sttt=neDt;
         console.log(sttt);
-        await onSubmit({content, contentText, fileUrl, scheduleTime:neDt});
+       
+        try {
+            const drafts = await axios.post(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&sectionId=${sectionId}`, { content: content, fileUrl, contentText,ScheduledAt:neDt });
+
+            setOpen(false);
+        } catch (error) {
+            console.log(error)
+        }
+
+
+
+
+
+
+
+
+
+
         setOpen(false)
     }
 

@@ -13,7 +13,9 @@ export const POST =async(req:NextRequest)=>{
         
         if(!userId) return NextResponse.json({success:false, message:"You are not authorized"}, {status:401});
         const user = await db.user.findFirst({where:{id:userId}})
-        const {name, description, type, displayPic, coverPic, serverType} = reqBody;
+        // console.log(displayPic);
+        let {name, description, type, displayPic, coverPic, serverType} = reqBody;
+        console.log(displayPic);
 
         if(!name || !description ) return NextResponse.json({success:false ,message:"Enter the fields"}, {status:409});
         console.log(name, description);
@@ -30,6 +32,15 @@ export const POST =async(req:NextRequest)=>{
             error:"Bot not found",
             success:false
         }, {status:409});
+        
+        let displayPicture;
+        if(displayPic){
+            displayPicture = await db.uploadedFile.findFirst({
+                where:{
+                    id:displayPic
+                }
+            })
+        }
 
 
         let server = await db.server.create({
@@ -37,7 +48,18 @@ export const POST =async(req:NextRequest)=>{
                 name,
                 description,
                 type,
-                displayPic,
+                displayPicId:displayPic,
+                displayPicture:displayPic && {
+                    connect:{
+                        id:displayPic
+                    }
+                },
+
+                // displayPicture:{
+                //     connect:{
+                //         id:displayPic
+                //     }
+                // },
                 coverPic,
                 inviteCode:uuidv4(),
                 createdBy:user?.id,

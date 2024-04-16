@@ -65,7 +65,7 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
         },
         {
             title:"Drafts & Sent",
-            url:`/servers/${id}/drafts-&-sent`,
+            url:`/servers/${id}/drafts-&-sents`,
             icon:<BsFillSendFill/>
         },
         {

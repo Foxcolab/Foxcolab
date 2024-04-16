@@ -81,6 +81,7 @@
     "next-auth": "^4.24.5",
     "next-seo": "^6.4.0",
     "next-themes": "^0.2.1",
+    "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.9",
     "otp-generator": "^4.0.1",

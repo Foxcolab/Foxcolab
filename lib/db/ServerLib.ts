@@ -181,6 +181,8 @@ export const getServer =async(serverId:string, userId:string)=>{
         }
         server.currentMember = currentMember;
         // console.log(server.currentMember)
+
+
         return server;
 
 

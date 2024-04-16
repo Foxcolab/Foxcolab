@@ -84,21 +84,28 @@ export const POST =async(req:NextRequest)=>{
     try {
         const userId = await GetDataFromToken(req);
         const serverId = req.nextUrl.searchParams.get('serverId');
-        if(!serverId) return NextResponse.json({
-            error:"Server id not found",
-        }, {status:409})
+        // if(!serverId) return NextResponse.json({
+        //     error:"Server id not found",
+        // }, {status:409})
         if(!userId) return NextResponse.json({
             error:"User ID not found"
         }, {status:409});
-        const member = await db.member.findFirst({
-            where:{
-                userId:userId,
-                serverId:serverId
-            }
-        });
-        if(!member) return NextResponse.json({
-            error:"Member not found"
-        }, {status:409});
+        let member;
+        if(serverId){
+             member = await db.member.findFirst({
+                where:{
+                    userId:userId,
+                    serverId:serverId as string
+                }
+            });
+            if(!member) return NextResponse.json({
+                error:"Member not found"
+            }, {status:409});
+        }
+        
+        // if(!member) return NextResponse.json({
+        //     error:"Member not found"
+        // }, {status:409});
 
          const formData = await req.formData();
          console.log(formData);
@@ -140,7 +147,7 @@ export const POST =async(req:NextRequest)=>{
                     type: FindType(files[i].type, files[i].name),
                     publicUrl:`https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
                     serverId:serverId,
-                    createdBy:member.id,
+                    createdBy:member?.id,
 
                 }
             })

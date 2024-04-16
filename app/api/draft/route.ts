@@ -15,7 +15,7 @@ export const POST =async(req:NextRequest)=>{
         // console.log("Section Id", sectionId);
         if(!serverId) return NextResponse.json({error:"Channel Id missing."}, {status:409});
         const reqBody = await req.json();
-        const {content, fileUrl} = reqBody;
+        const {content, fileUrl,contentText, ScheduledAt } = reqBody;
         console.log("FileUrl", fileUrl)
         if(!content && fileUrl.length===0) return NextResponse.json({error:"Content missing."}, {status:400});
         console.log("Finding member")
@@ -38,6 +38,8 @@ export const POST =async(req:NextRequest)=>{
                 uploadedFiles:{
                     connect:fileUrl?.map((file:string)=>({id:file}))
                 },
+                ScheduledDate:ScheduledAt,
+                contentText:contentText,
                 createdBy:member.id as string,
                 serverId:serverId as string,
                 channelId:channelId as string,
