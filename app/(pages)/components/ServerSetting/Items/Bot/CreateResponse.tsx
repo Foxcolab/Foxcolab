@@ -181,8 +181,8 @@ function CreateResponse({serverId}:Props) {
 
             {
               previewUrl.length!==0 && files.length!==0 && previewUrl.map((image, i)=>(
-                <div>
-                  <div key={i}>
+                <div key={i}>
+                  <div >
                             {files[i]?.type.startsWith("image/") ?
                         <div className="upload_img">
                            <div className="upld_img_opt">

@@ -1,5 +1,4 @@
 import { db } from "@/prisma"
-import { SchemaActivity } from "@prisma/client"
 
 interface Props {
     schemaId:string

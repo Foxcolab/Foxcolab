@@ -7,8 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import RoundLoader from '../../../components/Loaders/RoundLoader/RoundLoader';
-import logo from "./../../../../foxcolab.png";
-import Image from "next/image";
+
 function Login() {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -41,10 +40,6 @@ function Login() {
     {
         loading ? <RoundLoader/> :     <div className="main_container">
         <div className="login_card">
-          <div className="text-center h-[2rem] w-auto">
-            <Image src={logo} height={100} width={100} unoptimized />
-            
-          </div>
           <div>Foxcolab</div>
           <div className="login_heading">
             Sign in

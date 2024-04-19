@@ -16,7 +16,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { ImLink } from "react-icons/im";
 import axios from 'axios';
 
-function invite({serverName, inviteCode}) {
+interface Props {
+  serverName:string
+  inviteCode:string
+}
+
+function invite({serverName, inviteCode}:Props) {
   const [email, setEmail] = useState('');
   const [invitetext, setInviteText] = useState("Copy Invite Code");
   const SubmitHadler =async()=>{

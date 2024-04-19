@@ -260,7 +260,7 @@ if(((isAdmin || isManager || isMember) && channel.whoCanMakePublicToPrivate==="m
         <CommandGroup heading="All members">
         {
                 members.map((member, i)=>(
-                  <CommandItem className='w-full' style={{background:"transparent"}}>
+                  <CommandItem className='w-full' style={{background:"transparent"}} key={i}>
                   <div className="single_member_p" key={i}>
                     <div className='single_profile'>
                     <div>

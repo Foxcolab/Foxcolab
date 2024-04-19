@@ -396,8 +396,8 @@ if(schemaType==="Test Channel"){
         <CommandGroup heading="All members">
         {
                 members.map((member, i)=>(
-                  <CommandItem className='w-full' style={{background:"transparent"}}>
-                  <div className="single_member_p" key={i}>
+                  <CommandItem className='w-full' style={{background:"transparent"}} key={i}>
+                  <div className="single_member_p" >
                     <div className='single_profile'>
                     <div>
                     {

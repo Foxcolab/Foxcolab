@@ -79,7 +79,7 @@ function CreateNote({sectionId}:Props) {
         <div className="pb-2">
           <div className='flex items-center justify-between'>
             <label htmlFor="" className='' style={{color:"var(--color2)", fontWeight:"600"}}>Can Everyone Comment</label>
-            <Switch id="airplane-mode" defaultChecked={true} defaultChecked={false} onCheckedChange={e=>setCommenting(e)} />
+            <Switch id="airplane-mode" defaultChecked={true}  onCheckedChange={e=>setCommenting(e)} />
             </div>
         </div>
         <hr />

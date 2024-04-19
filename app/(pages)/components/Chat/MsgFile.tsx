@@ -78,7 +78,6 @@ function MsgFile({files, type, length}:Props) {
     })
 
 
-    console.log("File Type",files[0].type);
 
   return (
 //     <>

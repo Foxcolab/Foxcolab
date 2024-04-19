@@ -93,7 +93,7 @@ const formSchema = z.object({
     // ['clean']                                         // remove formatting button
   ];
 
-  const module = {
+  const modulee = {
     toolbar:toolbarOptions
   }
 
@@ -167,7 +167,7 @@ const EmojiHandler =(emoji:any)=>{
       <div className="editor_container">
       <ReactQuill 
        theme='snow'
-        placeholder={`Message to ${name}`} modules={module} className='quill_editor' {...field}
+        placeholder={`Message to ${name}`} modules={modulee} className='quill_editor' {...field}
       // readOnly={true}
       // theme="bubble"
       

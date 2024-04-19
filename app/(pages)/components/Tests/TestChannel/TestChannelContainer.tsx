@@ -55,12 +55,12 @@ function TestChannelContainer({tests, sectionId, attemptedTests, whoCanCreateTes
         <div className="tstcont">
           {
           testsType==="All Tests" && activatedTest.map((test:Test)=>(
-              <SingleTest Test={test} attemptedTests={attemptedTests}  />
+              <SingleTest Test={test} attemptedTests={attemptedTests} key={test.id} />
             ))
           }
           {
           testsType==="My Tests" && myTests.map((test:Test)=>(
-              <SingleTest Test={test} attemptedTests={attemptedTests}  />
+              <SingleTest Test={test} attemptedTests={attemptedTests}  key={test.id} />
             ))
           }
          

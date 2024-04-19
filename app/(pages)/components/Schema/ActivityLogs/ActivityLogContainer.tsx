@@ -13,7 +13,7 @@ function ActivityLogContainer({schemaType, activityLogs}:Props) {
     
     {
         activityLogs && activityLogs.map((activityLog)=>(
-            <SingleActivity activityLog={activityLog} />
+            <SingleActivity activityLog={activityLog} key={activityLog.id} />
         ))
     }
     

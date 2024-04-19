@@ -139,7 +139,7 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
         qType==="Single Choice" ? <> 
           {
           options.map((option, index)=>(
-            <div className="qus_s_option">
+            <div className="qus_s_option" key={index}>
             <div key={index} className='d-flex items-center gap-2'>
           
             <input type='radio' value={option} id="exam_radio" className='radio' name={`${questionId}`} onChange={(e)=>onChangeCheck(e.target.value)} checked={isOptionSelected(option) }  />
@@ -152,8 +152,8 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
         </> : <>
         {
           options.map((option, index)=>(
-            <div className="qus_s_option">
-            <div key={index} className='d-flex items-center gap-2'>
+            <div className="qus_s_option" key={index}>
+            <div  className='d-flex items-center gap-2'>
      
             <input type="checkbox" value={option} onChange={(e)=>onChangeCheck(e.target.value)}  name={`${questionId}`}
              checked={isOptionSelected(option)}

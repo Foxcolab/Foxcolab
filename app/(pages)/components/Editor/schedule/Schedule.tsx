@@ -362,8 +362,8 @@ function Schedule({open, setOpen, form, loading, sectionId}:Props) {
         <div className='inline-flex items-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 pr-2 pl-4 w-[240px] justify-start text-left font-normal'>
             <div className='text-lg'><GoClockFill/> </div>
             <select name="" id="" className='px-1 py-2 w-full bg-transparent outline-none border-none' onChange={(e)=>setHhmm(e.target.value)}>
-                {times.map((time)=>(
-                    <option value={time.value} selected={hhmm===time.value} disabled={TimeDisable(time.value)}>{time.name}</option>
+                {times.map((time, i)=>(
+                    <option key={i} value={time.value} selected={hhmm===time.value} disabled={TimeDisable(time.value)}>{time.name}</option>
                 ))}
             </select>
         </div>

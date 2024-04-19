@@ -47,7 +47,7 @@ function ResultQuestion({responses, index, expand, question}:Props) {
                 {question.options && question.options.map((option, index)=>(
                    
                     
-                   <Options option={option} rightAns={question.answer} selectedAns={response?.answer} />
+                   <Options key={index} option={option} rightAns={question.answer} selectedAns={response?.answer} />
                    
                     
                     

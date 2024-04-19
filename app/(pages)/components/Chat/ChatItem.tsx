@@ -151,11 +151,11 @@ export const ChatItem = ({
     }
   }
 
-  useEffect(() => {
-    form.reset({
-      content: content,
-    })
-  }, [content]);
+  // useEffect(() => {
+  //   form.reset({
+  //     content: content,
+  //   })
+  // }, [content]);
 
   
   // const fileType = fileUrl![0]?.split(".").pop();

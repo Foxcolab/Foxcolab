@@ -45,7 +45,7 @@ export const POST =async(req:NextRequest)=>{
       
     
     
-       server = await db.server.update({
+       const updatedServer = await db.server.update({
         where: {
           id: serverId,
           Members: {
@@ -66,13 +66,12 @@ export const POST =async(req:NextRequest)=>{
           }
         }
       });
-        console.log(server);
 
         await CreateActivityLog(serverId, member.id, "Created", "Section", name, "" );
         
         return NextResponse.json({
             success:true,
-            server
+            updatedServer
         }, {status:200})
 
     }catch (error:any) {

@@ -158,7 +158,7 @@ function AllManager({isAdmin, managers, name, type,channelMember, managerId, sch
         <CommandGroup heading="All Managers">
         {
              managers &&   managers.map((member, i)=>(
-                  <CommandItem className='w-full' style={{background:"transparent"}}>
+                  <CommandItem className='w-full' style={{background:"transparent"}} key={i}>
                   <div className="single_member_p" key={i}>
                     <div className='single_profile'>
                     <div>

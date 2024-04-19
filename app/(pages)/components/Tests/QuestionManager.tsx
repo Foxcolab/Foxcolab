@@ -29,7 +29,7 @@ function QuestionManager({questions, testId}:Props) {
    
     <div className="testsidebar">
         {questions && questions.map((question, index)=>(
-          <SingleQuestion question={question} index={index+1}  />
+          <SingleQuestion question={question} index={index+1} key={index}  />
         ))}
     </div>
     </div>

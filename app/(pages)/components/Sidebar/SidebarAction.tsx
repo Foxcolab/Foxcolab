@@ -207,11 +207,11 @@ export const SidebarActions = ({user}:Props)=>{
         try {
             setLoading(true);
             let fileUrl;
-            // if(preview){
-            //   fileUrl = await UploadImage();
-            //   fileUrl=fileUrl[0];
-            // }
-            const res = await axios.post('/api/server/new', {name, description, type, displayPic:'661de204bae329eb20417425'})            ', serverType:category});
+            if(preview){
+              fileUrl = await UploadImage();
+              fileUrl=fileUrl[0];
+            }
+            const res = await axios.post('/api/server/new', {name, description, type, displayPic:fileUrl, serverType:category});
             console.log(res);
             setOpenDialog(false);
             if(res.status===200){
@@ -361,7 +361,7 @@ export const SidebarActions = ({user}:Props)=>{
   <SelectContent className="serv_inputs">
                       {
                         Categories.map((category)=>(
-                          <SelectItem className="" value={category.name}><div className="flex items-center text-base gap-2"><span className="text-lg">{category.icon}</span> {category.name}</div></SelectItem>
+                          <SelectItem className="" key={category.name} value={category.name}><div className="flex items-center text-base gap-2"><span className="text-lg">{category.icon}</span> {category.name}</div></SelectItem>
                         ))
                       }
                       

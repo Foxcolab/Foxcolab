@@ -74,7 +74,7 @@ function Questions({result, test}:Props) {
             <p>Questions</p>
         <div className='qs_index '>
         {test?.questions && test?.questions.map((question, index)=>(
-            <button onClick={()=>ChangeQuestion(index)} className={result.currentState===index ? "qs_ind current_qs" : "qs_ind"}>
+            <button onClick={()=>ChangeQuestion(index)} key={index} className={result.currentState===index ? "qs_ind current_qs" : "qs_ind"}>
                 {index+1}
             </button>
         ))}
