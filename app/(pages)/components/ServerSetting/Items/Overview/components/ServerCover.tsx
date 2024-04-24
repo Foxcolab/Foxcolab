@@ -27,9 +27,11 @@ function ServerCover({coverPic, serverId, hasPermission}:Props) {
                 const fileUrl = await UploadImage();
                 if(!fileUrl) return;
                 const res = await axios.put(`/api/server/update/cover?serverId=${serverId}`, {coverPic:fileUrl});
+                if(res.status===200){
+                    setPreviewc(res.data.coverPic);
+                }
                 setLoading(false);
                 setCover(null);
-                setPreviewc(fileUrl);
                 router.refresh();
             }
         } catch (error) {
@@ -101,7 +103,7 @@ function ServerCover({coverPic, serverId, hasPermission}:Props) {
                 <>
                 <div className='server_cover' >           
                     {
-                        previewc && <Image src={previewc} height={100} width={100} alt='image' /> 
+                        previewc && <Image src={previewc} height={100} width={100} alt='image' unoptimized /> 
                     }
                 </div>
                 </>

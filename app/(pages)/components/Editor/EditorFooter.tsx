@@ -18,7 +18,7 @@ import { AiOutlineFullscreen } from "react-icons/ai"
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { ReloadIcon } from "@radix-ui/react-icons"
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ import MentionComponent from "./EditorFooter/MentionComponent";
 import { Channel, Draft, Group, Member } from "@prisma/client";
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import  "quill-mention";
+import QuillMention from 'quill-mention'
 import 'quill-mention/dist/quill.mention.css';
 import {
   HoverCard,
@@ -44,14 +44,7 @@ import {
 } from "@/components/ui/hover-card"
 import Schedule from "./schedule/Schedule";
 import dynamic from "next/dynamic";
-// const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-
-// const ReactQuill = dynamic(import('react-quill'), {
-//   ssr: false,
-//   loading: () => <p>Loading ...</p>,
-// });
- 
 
 
 interface ChatInputProps {
@@ -60,12 +53,14 @@ interface ChatInputProps {
     name: string;
     type: "conversation" | "channel";
     groups:Group[]
-    channelType:"public" | "private"
+    channelType:"public" | "private" | null
     channelMember:Member[]
     channels:Channel[]
     drafts:Draft[]
     uploadMedia:boolean
     sendMessage:boolean
+    atValues:any
+    hashValues:any
   }
   const formSchema = z.object({
     content: z.string().optional(),
@@ -73,7 +68,37 @@ interface ChatInputProps {
     fileUrl: z.string().array().optional()
   });
 
+  const atValues = [
+    { id: 1, value: 'Fredrik Sundqvist' },
+    { id: 2, value: 'Patrik Sjölin' }
+  ];
+  const hashValues = [
+    { id: 3, value: 'Fredrik Sundqvist 2' },
+    { id: 4, value: 'Patrik Sjölin 2' }
+  ]
 
+  const mentionModule = {
+    allowedChars: /^[A-Za-z\s]*$/,
+    mentionDenotationChars: ["@", "#"],
+    source: function (searchTerm:string, renderList:any, mentionChar:string) {
+      let values;
+
+      if (mentionChar === "@") {
+        values = atValues;
+      } else {
+        values = hashValues;
+      }
+
+      if (searchTerm.length === 0) {
+        renderList(values, searchTerm);
+      } else {
+        const matches = [];
+        for (let i = 0; i < values.length; i++)
+          if (~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())) matches.push(values[i]);
+        renderList(matches, searchTerm);
+      }
+    },
+  }
 
 
 const EditorFooter = ({apiUrl,
@@ -87,8 +112,15 @@ const EditorFooter = ({apiUrl,
     drafts,
     uploadMedia,
     sendMessage,
-    
+    atValues,
+    hashValues
   }: ChatInputProps)=> {
+
+    console.log("Groups", groups)
+    const reactQuillRef = useRef(null);
+
+
+    
 
     const router = useRouter();
     const [files, setFiles] = useState([]);
@@ -105,7 +137,9 @@ const EditorFooter = ({apiUrl,
     const [mentions, setMentions] = useState([]);
     const [value, setValue ] =useState('')
     const [emojiDialog, setEmojiDialog] = useState(false);
-    const reactQuillRef = useRef(null);
+    // const reactQuillRef = useRef(null);
+    // const reactQuillRef: MutableRefObject<HTMLDivElement> = React.useRef(null);
+
     const [toolBarToogle, setToolBarToogle] = useState(false);
     const [loading, setLoading] = useState(false);
     const [scheduleDialog, setScheduleDialog] = useState(false);
@@ -113,9 +147,8 @@ const EditorFooter = ({apiUrl,
 
     const params = useParams();
 
-  
+ 
 
-    
 
 
 
@@ -319,6 +352,8 @@ const modules2 = {
   }, [draftContent]); 
 
 
+
+
   // useEffect(() => {
   //   form.reset({
   //     content: ,
@@ -361,8 +396,8 @@ const modules2 = {
 
 
 
-
   const InputHandler = (event:any) => {
+    console.log(reactQuillRef)
     form.setValue("content", event);
     // console.log(event);
     const editorRef = reactQuillRef.current.getEditor();
@@ -409,16 +444,37 @@ const modules2 = {
     return doc.body.textContent || "";
   };
 
-  const atValues = [
-    { id: 1, value: "Fredrik Sundqvist" },
-    { id: 2, value: "Patrik Sjölin" }
-  ];
-  const hashValues = [
-    { id: 3, value: "Fredrik Sundqvist 2" },
-    { id: 4, value: "Patrik Sjölin 2" }
-  ];
-  
 
+
+
+  const modules = {
+    toolbar:[
+      ['bold', 'italic', 'underline','strike'],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
+      ['blockquote'],['code-block'],
+      ['clean']
+    ],
+    mention:  mentionModule
+    // mention:mentionModule
+  }
+
+  const handleRef = (ref:any) => {
+
+    console.log('Ref received:', ref);
+    if (ref) {
+      // Delay the assignment until the component is mounted
+      setTimeout(() => {
+        reactQuillRef.current = ref;
+      }, 0);
+    }
+  };
+
+  console.log(reactQuillRef)
+
+  const handleQuillLoaded = (quill) => {
+    if (quillRef.current || !quill) return;
+    quillRef.current = quill.getEditor();
+  };
 
   return(
     <>
@@ -448,10 +504,10 @@ const modules2 = {
      
      <div id="editor_htigh">
      
-         
 
            <div>
-           <ReactQuill ref={reactQuillRef} 
+           <ReactQuill
+          ref={reactQuillRef}
 
            
            theme={"snow"}
@@ -461,19 +517,13 @@ const modules2 = {
            defaultValue={drafts && drafts[0]?.content}
            // placeholder={form.getValues("content")}
             placeholder={`Message to ${(type==="channel" && channelType==="public") ? "#" :(type==="channel" && channelType==="private")? "#":""}${name}`} 
-           modules={{
-             toolbar:[
-               ['bold', 'italic', 'underline','strike'],
-               [{'list': 'ordered'}, {'list': 'bullet'}],
-               ['blockquote'],['code-block'],
-               ['clean']
-             ],
-           
-            
-          
-            }}
+           modules={
+            modules
+           }
           
            />
+
+
 
      
 
@@ -909,6 +959,20 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
 }
 
 
+
+// const ReactQuill = dynamic(() => import('react-quill').then((mod) => {
+  
+//   const ReactQuillWithRef = forwardRef((props, ref) => {
+//     console.log('Component mounted');
+//     props.handleRef(ref);
+//     return <mod.default {...props} />;
+//   });
+//   ReactQuillWithRef.displayName = 'ReactQuill';
+//   return ReactQuillWithRef;
+// }), {
+//   loading: () => <p>Loading editor...</p>, // Fallback component while loading
+//   ssr: false, // Disable server-side rendering
+// });
 
 
 export default EditorFooter;

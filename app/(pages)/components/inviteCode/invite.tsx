@@ -15,25 +15,32 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from "@/components/ui/textarea"
 import { ImLink } from "react-icons/im";
 import axios from 'axios';
+import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
+import Loader from '../Loaders/Loader';
+
 
 interface Props {
   serverName:string
   inviteCode:string
+  userName:string
 }
 
-function invite({serverName, inviteCode}:Props) {
+function Invite({serverName, inviteCode, userName}:Props) {
   const [email, setEmail] = useState('');
   const [invitetext, setInviteText] = useState("Copy Invite Code");
-  const SubmitHadler =async()=>{
+  const [loading, setLoading] = useState(false)
+;  const SubmitHadler =async()=>{
     try {
-      console.log("*************", serverName);
+    setLoading(true);
     const link = `http://localhost:3000/invite/${serverName}/${inviteCode}`;
       
-      const res = await axios.post('/api/sendmail', {to:email, name:serverName,link });
+      const res = await axios.post('/api/sendmail', {to:email, name:serverName,link, userName });
       console.log(res);
       setEmail('');
+      setLoading(false);
       
     } catch (error) {
+      setLoading(false);
       console.log(error);
       
     }
@@ -65,9 +72,20 @@ function invite({serverName, inviteCode}:Props) {
             <Textarea id="username" placeholder={`Enter email address`} onChange={e=>setEmail(e.target.value)}  className="col-span-3" />
           </div>
         </div>
+        <div className="w-full px-10">
+      {/* <MultipleSelector
+        // defaultOptions={OPTIONS}
+        placeholder="Select frameworks you like..."
+        
+      /> */}
+    </div>
         <DialogFooter>
+
           <Button type="submit" color='blue' variant={'link'} onClick={copyHandler}><ImLink/> &nbsp; {invitetext}</Button>
-          <Button type="submit" onClick={SubmitHadler}>Invite</Button>
+          {
+            loading ? <Loader/> : <Button type="submit" onClick={SubmitHadler}>Invite</Button>
+          }
+          
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -76,4 +94,4 @@ function invite({serverName, inviteCode}:Props) {
   )
 }
 
-export default invite
+export default Invite

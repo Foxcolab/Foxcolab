@@ -1,4 +1,4 @@
-import { NoteComment } from '@prisma/client'
+import { Member, NoteComment } from '@prisma/client'
 import React, { useState } from 'react'
 import MsgFile from '../../../Chat/MsgFile'
 import { format } from 'date-fns'
@@ -8,7 +8,9 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import SingleThreeDot from './SingleThreeDot'
 
 interface Props {
-    comment:NoteComment
+    comment:NoteComment & {
+      createdMember:Member
+    }
     memberId:string
 }
 const DATE_FORMAT = "d MMM yyyy, HH:mm";

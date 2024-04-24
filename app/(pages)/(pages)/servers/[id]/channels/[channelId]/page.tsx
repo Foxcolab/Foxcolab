@@ -213,7 +213,7 @@ const ChannelChat =async({params}:Props)=> {
   }
 
   const isAdmin = member.id===channel.createdBy;
-  channel.currentMember = member;
+  // channel.currentMember = member;
 
   
 

@@ -66,7 +66,7 @@ function SingleQuestion({question, index }:QuesitonProps) {
                 {question.options && question.options.map((option, index)=>(
                    
                     
-                    <p 
+                    <p key={index}
                     className={`${question.answer.map((que)=>(option===que ? "d-flex align-center gap-2 text-green-600 font-bold" : "d-flex align-center gap-2" ))}   `}
                     
                     >

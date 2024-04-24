@@ -12,7 +12,8 @@ export const PUT = async(req:NextRequest)=>{
         const user = await db.user.findFirst({
             where:userId
         });
-        const sectionId = await req.nextUrl.searchParams.get("sectionId");
+        const sectionId =  req.nextUrl.searchParams.get("sectionId");
+        if(!sectionId) return NextResponse.json({error:"Server Id missing"}, {status:409});
         
         const section = await db.section.findUnique({
             where:{

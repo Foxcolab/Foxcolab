@@ -33,9 +33,9 @@ function Overview({setOpen, server, hasPermission, isAdmin}:Props) {
 
     <div>
        
-        <ServerAvatar serverId={server.id} displayPic={server?.displayPic as string} coverPic={server.coverPic as string} whoCanUpdate={server.whoCanUpdateServer} hasPermission={hasPermission}  />
+        <ServerAvatar serverId={server.id} displayPic={server?.displayPicture?.publicUrl as string} coverPic={server.coverPic?.publicUrl as string} whoCanUpdate={server.whoCanUpdateServer} hasPermission={hasPermission}  />
 
-        <ServerCover serverId={server.id} coverPic={server?.coverPic} hasPermission={hasPermission} />
+        <ServerCover serverId={server.id} coverPic={server?.coverPic?.publicUrl} hasPermission={hasPermission} />
 
         <ServerName serverName={server.name} serverId={server.id} hasPermission={hasPermission} />
         <ServerDescription serverDescription={server.description as string} serverId={server.id} hasPermission={hasPermission} />

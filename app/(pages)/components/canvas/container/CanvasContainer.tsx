@@ -5,10 +5,10 @@ import SingleCanvas from '../SingleCanvas';
 
 interface Props {
     canvas:Canvas & {
-        manager:canvasManager
+        manager:canvasManager | null
     } &  {
         notes: Note[]
-    }
+    },
     member:Member
     isAdmin:boolean 
 }
@@ -36,7 +36,7 @@ function CanvasContainer({canvas, isAdmin, member}:Props) {
             {
             notes.length!==0 && notes.map((note:Note)=>(
                 <>
-                <SingleCanvas note={note} isAdmin={isAdmin} whoCanDeleteNote={DeletePermission} memberId={member.id} managerIds={canvas.manager.memberIds} memberIds={canvas.memberIds} />
+                <SingleCanvas note={note} isAdmin={isAdmin} whoCanDeleteNote={DeletePermission} memberId={member.id} managerIds={canvas?.manager?.memberIds || []} memberIds={canvas.memberIds} />
                 </>
             ))
             }

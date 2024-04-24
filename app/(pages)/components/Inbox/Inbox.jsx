@@ -3,8 +3,10 @@ import {Separator} from "../../../../components/ui/separator";
 import { RiArrowDropLeftFill, RiArrowDropRightFill, RiArrowDropDownLine } from "react-icons/ri";
 import { BiSolidUserCircle } from "react-icons/bi";
 import SingleMember from "@/app/(pages)/components/Inbox/SingleMember";
-import Invite from "@/app/(pages)/components/inviteCode/invite"
-function Inbox({members,serverId, inviteCode, name}) {
+import Invite from "@/app/(pages)/components/inviteCode/Invite"
+
+
+function Inbox({members,serverId, inviteCode, name, userName}) {
 
   return (
     <>
@@ -28,7 +30,7 @@ function Inbox({members,serverId, inviteCode, name}) {
     
 
     {/* <Separator/> */}
-    <Invite  inviteCode={inviteCode} serverName={name} />
+    <Invite  inviteCode={inviteCode} serverName={name} userName={userName} />
     
     </>
   )

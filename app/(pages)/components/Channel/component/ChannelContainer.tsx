@@ -19,6 +19,7 @@ const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 function ChannelContainer({server, channel, isAdmin, currentMember, myChannels, user}:Props) {
     
+   channel.currentMember = currentMember;
   
     
   return (

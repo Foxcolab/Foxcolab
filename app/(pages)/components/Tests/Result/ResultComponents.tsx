@@ -20,7 +20,7 @@ import { ModeToggle } from '../../mode-toggle/Toggle';
 interface Props {
   result:Result
   testChannelName:string
-  user:User
+  user:User | null | undefined
   test:Test
 }
 

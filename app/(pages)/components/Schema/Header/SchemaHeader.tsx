@@ -14,7 +14,7 @@ interface Props {
   type: string
   isAdmin:boolean
   schemaType:string
-  managers: ForumManager | TestChannelManager | canvasManager
+  managers: ForumManager | TestChannelManager | canvasManager | null
   serverMembers:Member[]
   sendMsg:boolean
   schema:ForumsChannel | Canvas | TestChannel

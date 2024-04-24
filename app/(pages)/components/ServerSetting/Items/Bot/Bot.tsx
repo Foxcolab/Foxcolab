@@ -79,13 +79,14 @@ function Bot({setOpen, botResponse, hasPermission}:Props) {
      console.log(error); 
     }
   }
+  
 
   return (
     <>
 
         <ItemHeader setOpen={setOpen} title='Bots' />
         <div className="setting_section" style={{borderBottom:"none"}}>
-        <div className="setting_section_title">Slackbot can automatically respond to messages that members of your server send in channels. </div>
+        <div className="setting_section_title">FoxcolabBot can automatically respond to messages that members of your server send in channels. </div>
         {
           hasPermission && <CreateResponse  serverId={params?.id as string} />
         }

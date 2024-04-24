@@ -83,7 +83,6 @@ function ForumEditor({placeholder, apiUrl, query, whoCanUploadMediaInComment, wh
 
     const params = useParams();
 
-    console.log(whoCanUploadMediaInComment, whoCanComment)
 
 
   const form = useForm<z.infer<typeof formSchema>>({

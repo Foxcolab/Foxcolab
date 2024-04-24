@@ -49,7 +49,7 @@ const Categories = [
     },
     {
         icon:<RiGraduationCapFill/>,
-        name:"Education "
+        name:"Education"
     },
     {
         icon:<GiBookshelf/>,

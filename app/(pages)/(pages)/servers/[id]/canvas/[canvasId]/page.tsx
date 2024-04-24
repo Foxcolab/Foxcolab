@@ -1,16 +1,8 @@
-import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
-import MainSidebar from '@/app/(pages)/components/Sidebar/MainSidebar';
+
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
 import { redirect } from 'next/navigation';
 import React from 'react'
-import {SiSimplenote} from "react-icons/si";
-import { IoSearch } from "react-icons/io5";
-import { IoIosCreate } from "react-icons/io";
-import Link from 'next/link';
-import CreateCanvas from '@/app/(pages)/components/Create/CreateCanvas';
-import CreateNote from '@/app/(pages)/components/canvas/CreateNote';
-import SingleCanvas from '@/app/(pages)/components/canvas/SingleCanvas';
 import { getServer } from '@/lib/db/ServerLib';
 import SchemaHeader from '@/app/(pages)/components/Schema/Header/SchemaHeader';
 import { format } from 'date-fns';
@@ -178,7 +170,7 @@ async function CanvasPage({params}:Props) {
       name={canvas?.title as string}
       description={canvas?.description as string}
       members={members}
-      managers={canvas.manager}
+      managers={managers}
       serverMembers={server.Members}
       createdAt={createdAt}
       createdBy={canvas?.createdMember?.user?.name as string}

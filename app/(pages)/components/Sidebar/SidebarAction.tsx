@@ -208,9 +208,10 @@ export const SidebarActions = ({user}:Props)=>{
             setLoading(true);
             let fileUrl;
             if(preview){
-              fileUrl = await UploadImage();
-              fileUrl=fileUrl[0];
+              const ffileUrl = await UploadImage();
+              fileUrl=ffileUrl;
             }
+            console.log("File URl", fileUrl);
             const res = await axios.post('/api/server/new', {name, description, type, displayPic:fileUrl, serverType:category});
             console.log(res);
             setOpenDialog(false);

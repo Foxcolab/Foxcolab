@@ -42,18 +42,25 @@ export const PUT =async(req:NextRequest)=>{
             hasPermission = true;
         }
         if(!hasPermission) return NextResponse.json({success:false, message:"You are not authorized"}, {status:409});
-         server = await db.server.update({
+        const updatedserver = await db.server.update({
             where:{
                 id:serverId as string
             },
             data:{
-                displayPic:displayPic
+                displayPicId:displayPic,
+                // displayPicture:{
+                //     connect:{
+                //         id:displayPic
+                //     }
+                // }
+            },
+            include:{
+                displayPicture:true
             }
         });
-        console.log("Picture updated successfully");
         await CreateActivityLog(serverId, member.id, "Updated", "Server", displayPic, "Display picture" );
 
-        return NextResponse.json({success:true, server}, {status:200});
+        return NextResponse.json({success:true, displayPic:updatedserver.displayPicture?.publicUrl}, {status:200});
     } catch (error) {
         
     }

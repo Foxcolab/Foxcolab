@@ -25,9 +25,13 @@ async function HomePage() {
   if(!user) redirect(`/home`)
 
 
-  const servers = await AdminServer();
+  let servers = await AdminServer();
 
+  if(servers===undefined){
+    servers = [];
+  }
   // const servers = await db
+
 
 
 

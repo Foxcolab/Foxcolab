@@ -16,6 +16,8 @@ export const getServer =async(serverId:string, userId:string)=>{
               
             },
             include: {
+              displayPicture:true,
+              coverPic:true,
               sections:{
                   include:{
                       channels:{

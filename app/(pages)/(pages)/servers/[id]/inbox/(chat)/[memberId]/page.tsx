@@ -85,7 +85,11 @@ async function ChatWithUser({params}:ChatProps) {
             }}
             PinnedPosts={[]}
             mySavedPost={[]}
-            
+            myChannels={[]}
+            allServerMember={[]}
+            channel={null}
+            setThreadMessage={null}
+
           />
 
     <EditorFooter 
@@ -95,6 +99,14 @@ async function ChatWithUser({params}:ChatProps) {
    query={{
      conversationId: conversation.id,
    }}
+   groups={[]}
+   channelType={null}
+   channelMember={[]}
+   channels={[]}
+   drafts={[]}
+   uploadMedia
+   sendMessage
+
     />
 
     

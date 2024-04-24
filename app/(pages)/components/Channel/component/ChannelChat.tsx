@@ -66,7 +66,7 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
     }
 
 
-
+  
   return (
     <>
     {/* <div className='channel_chats'>

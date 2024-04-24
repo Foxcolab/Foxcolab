@@ -65,7 +65,7 @@ const formSchema = z.object({
         url: apiUrl,
         query,
       });
-
+      console.log(url)
       console.log(values)
       await axios.post(url, values);
 

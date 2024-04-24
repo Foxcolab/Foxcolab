@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import React, { useState } from 'react'
 import { BsFillKeyFill } from 'react-icons/bs';
 import { FaSquareThreads } from 'react-icons/fa6';
@@ -71,7 +72,7 @@ function UsefulFeature() {
         <div className="mx-40 flex border border-[#e9e9e9] rounded-xl overflow-hidden shadow-xl">
             {
                 state==="Scheduling" ? <div className='bg-red-500 w-3/5 h-[20rem]  flex-none '>
-
+<Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
                 </div> :
                 state==="Threads" ? <div className='bg-green-500 w-3/5 h-[20rem]  flex-none '>
 

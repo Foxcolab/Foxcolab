@@ -5,6 +5,7 @@ import { getServer } from '@/lib/db/ServerLib';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
 import { redirect } from 'next/navigation';
+import { NextResponse } from 'next/server';
 import React from 'react'
 import { MdGroups } from "react-icons/md";
 
@@ -38,11 +39,17 @@ async function Groups({params}:PinnedProps) {
       }
     });
     console.log(groups);
+    const member = await db.member.findFirst({
+      where:{
+        userId:profile.id,
+        serverId:server.id
+      }
+    })
+    if(!member) return redirect(`servers/${server.id}`)
 
     
     let hasPermission = false;
     const whoCanUpdate = server.whoManageGroups;
-    const member = server.currentMember;
     if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCanUpdate==="user") || ((member.role==="moderator" || member.role==="admin") && whoCanUpdate==="moderator") || (member.role==="admin" && whoCanUpdate==="admin")  ){
     
         hasPermission = true;

@@ -52,7 +52,10 @@ enum BotTriggeredType {
   specificText
 }
 
-
+enum PollType {
+  singleChoice
+  multipleChoice
+}
 
 
 model User {
@@ -969,4 +972,20 @@ model UploadedFile {
   coverPictures Server[] @relation("CoverPictures") 
   
 }
+
+
+
+
+// model Poll {
+//   id            String @id @default(auto()) @map("_id") @db.ObjectId
+//   question      String
+//   options       String[]
+//   answerType    PollType @default(singleChoice)
+//   expiryDate    DateTime?
+//   anonymous     Boolean @default(false)
+//   createdBy     String @db.ObjectId
+//   createdMember Member? @relation(fields: [createdBy], references: [id])
+
+// }
+
 

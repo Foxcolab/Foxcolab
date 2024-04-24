@@ -29,13 +29,11 @@ import { useRouter } from 'next/navigation';
 import UpdateNoteContent from './Note/UpdateNoteContent';
 
 interface Props {
-    note:Note & {
-      createdUser:Member
-    },
+    note:Note
     isAdmin:boolean,
     whoCanDeleteNote:boolean
     memberId:string
-    managerIds:string[]
+    managerIds:string[] | []
     memberIds:string[]
 
 }

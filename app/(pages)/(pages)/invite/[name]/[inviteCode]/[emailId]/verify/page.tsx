@@ -13,9 +13,9 @@ import { useToast } from "@/components/ui/use-toast"
 
 interface InviteCodePageProps {
     params:{
-      inviteCode:String,
-      name:String,
-      emailId:String
+      inviteCode:string,
+      name:string,
+      emailId:string
     }
   }
 function VerifyPage({params}:InviteCodePageProps) {

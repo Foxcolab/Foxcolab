@@ -157,7 +157,7 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
       /> */}
       <ForumEditor
          placeholder={"Reply in theads.."}
-         apiUrl="/api/socket/forum-response"
+         apiUrl="/api/socket/threads"
          query={{
           serverId: message.serverId,
            channelId:message.channelId, 

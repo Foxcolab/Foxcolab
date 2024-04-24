@@ -1,11 +1,13 @@
 import { Separator } from '@/components/ui/separator'
 import React from 'react'
 import CommentEditor from '../../../Editor/Comment/CommentEditor'
-import { Note } from '@prisma/client'
+import { Note, NoteComment } from '@prisma/client'
 import AllComments from './AllComments'
 
 interface Props {
-    note:Note
+    note:Note & {
+      comments: NoteComment[]
+    }
     canComment:boolean
     memberId:string
 
@@ -18,7 +20,7 @@ function NoteComment({note, canComment, memberId}:Props) {
             <div className="note_comments">Comments</div>
             <Separator orientation='horizontal' />
             <div className="all_comments">
-              <AllComments comments={note?.comments} memberId={memberId} />
+              <AllComments comments={note?.comments || []} memberId={memberId} />
             </div>
 
        

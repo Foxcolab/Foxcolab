@@ -31,7 +31,7 @@ interface ChatMessagesProps {
     paramKey: "channelId" | "conversationId";
     paramValue: string;
     type: "channel" | "conversation" | "thread";
-    channel:Channel
+    channel:Channel | null
     PinnedPosts: PinnedPost[];
     mySavedPost: Later[]
     myChannels:Channel[]

@@ -77,8 +77,6 @@ function ThreadChatComponents({
    
     const channelMemberExceptMe = channel.Members.filter(mem=>mem.id!==currentMember.id)
 
-    console.log("Saved Post:", mySavedPosts);
-    console.log("Pinned Post:", PinnedPosts);
 
 
 

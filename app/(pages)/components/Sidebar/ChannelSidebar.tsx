@@ -131,6 +131,7 @@ const ChannelSidebar =async({server}:Props) =>{
          serverId={server.id}
          inviteCode={server.inviteCode}
          name={server.name}
+         userName={server.currentMember.user?.name}
          />
 
         

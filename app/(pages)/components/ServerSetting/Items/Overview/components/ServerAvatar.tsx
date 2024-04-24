@@ -32,9 +32,12 @@ function ServerAvatar({displayPic,coverPic, serverId, hasPermission}:Props) {
                 const fileUrl = await UploadImage();
                 if(!fileUrl) return;
                 const res = await axios.put(`/api/server/update/updatePic?serverId=${serverId}`, {displayPic:fileUrl});
+                if(res.status===200){
+                    setPreview(res.data.displayPic);
+                }
                 setLoading(false);
                 setDp(null);
-                setPreview(fileUrl);
+                
                 router.refresh();
             }
         } catch (error) {
@@ -82,7 +85,7 @@ function ServerAvatar({displayPic,coverPic, serverId, hasPermission}:Props) {
                  <div className="setting_section_content">
                 <div className="setting_avt">
                     <>
-                    <div className='server_ndp' onMouseEnter={()=>setShowOpt(true)} onMouseLeave={()=>setShowOpt(false)}>
+                    {/* <div className='server_ndp' onMouseEnter={()=>setShowOpt(true)} onMouseLeave={()=>setShowOpt(false)}>
                     <label className="custum-file-upload flex items-center justify-center  gap-1" htmlFor="file" id='avatar'>
                     {   showOpt && <span>Change Icon</span> }
                     { preview && !showOpt && <Image src={preview} height={100} width={100} alt='image' /> }
@@ -90,9 +93,19 @@ function ServerAvatar({displayPic,coverPic, serverId, hasPermission}:Props) {
                     accept="image/jpeg,image/png,image/webp,image/gif" onChange={onChangeHandler}
                     />
                     </label>
-                    </div>
-                   
-                    
+                    </div> */}
+            <div className="server_ndp" onMouseEnter={()=>setShowOpt(true)} onMouseLeave={()=>setShowOpt(false)}>
+             <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
+    
+             {   showOpt && <span>Change Icon</span> }
+             { preview && !showOpt && <Image src={preview} height={100} width={100} alt='image' unoptimized /> }
+
+
+<input type="file" id="file"  
+accept="image/jpeg,image/png,image/webp,image/gif" onChange={onChangeHandler}
+/>
+            </label>
+            </div>      
                     </>
 
                     <div className="server_set_inp">

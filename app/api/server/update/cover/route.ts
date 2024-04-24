@@ -50,13 +50,16 @@ export const PUT =async(req:NextRequest)=>{
                 id:serverId as string
             },
             data:{
-                coverPic:coverPic
+                coverPicId:coverPic
+            },
+            include:{
+                coverPic:true
             }
         });
         console.log("Picture updated successfully");
         await CreateActivityLog(serverId, member.id, "Updated", "Server", "Cover Picture", "" );
 
-        return NextResponse.json({success:true, server:updatedServer}, {status:200});
+        return NextResponse.json({success:true, server:updatedServer, coverPic:updatedServer.coverPic?.publicUrl}, {status:200});
     } catch (error) {
         
     }

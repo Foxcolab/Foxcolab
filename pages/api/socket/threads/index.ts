@@ -2,6 +2,7 @@ import { GetAuth } from "@/lib/GetAuth";
 import { db } from "@/prisma";
 import { NextApiResponseServerIo } from "@/types";
 import { NextApiRequest } from "next";
+import { NextResponse } from "next/server";
 
 
 
@@ -13,8 +14,6 @@ import { NextApiRequest } from "next";
         const { content, fileUrl } =  req.body;
       const { serverId, channelId, sectionId, messageId } = req.query;
       
-      console.log(serverId, channelId, sectionId, messageId);
-      console.log(content, fileUrl);
       
       const user = await db.user.findUnique({
         where:{
@@ -87,32 +86,56 @@ import { NextApiRequest } from "next";
         return res.status(404).json({ message: "Message not found" });
     }
     
-     await db.message.update({
-      where:{
-        id:messageId as string,
-      },
+    //  await db.message.update({
+    //   where:{
+    //     id:messageId as string,
+    //   },
+    //   data:{
+    //     threads:{
+    //       create:{
+    //         createdBy:member.id as string,
+    //         content,
+    //         serverId:serverId as string,
+    //         fileUrl,
+    //         uploadedFiles:{
+    //           connect:fileUrl?.map((file:string)=>({id:file}))
+    //         },
+    //         channelId:channelId as string
+    //       },
+          
+    //     },
+    //     incl
+      
+    //   }
+    // })
+
+    const threads = await db.threads.create({
       data:{
-        threads:{
-          create:{
-            createdBy:member.id as string,
-            content,
-            serverId:serverId as string,
-            fileUrl,
-            uploadedFiles:{
-              connect:fileUrl?.map((file:string)=>({id:file}))
-            },
-            channelId:channelId as string
+        messageId:messageId as string,
+        createdBy:member.id as string,
+        content,
+        serverId:serverId as string,
+        fileUrl,
+        uploadedFiles:{
+          connect:fileUrl?.map((file:string)=>({id:file}))
+        },
+      },
+      include:{
+        member:{
+          include:{
+            user:true
           }
         }
       }
     })
 
+
     
     const channelKey = `chat:${Sendmessage.id}:messages`;
 
-    res?.socket?.server?.io?.emit(channelKey, Sendmessage);
+    res?.socket?.server?.io?.emit(channelKey, threads);
 
-    return res.status(200).json(Sendmessage);
+    return res.status(200).json(Sendmessage.id);
   } catch (error) {
     console.log(error);
     

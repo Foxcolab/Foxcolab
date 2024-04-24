@@ -71,7 +71,7 @@ function LandingFeatures() {
                 Feature==="Assessment" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(1).png'} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2+(1).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="SpreadSheets" ? 

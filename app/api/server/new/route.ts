@@ -15,7 +15,7 @@ export const POST =async(req:NextRequest)=>{
         const user = await db.user.findFirst({where:{id:userId}})
         // console.log(displayPic);
         let {name, description, type, displayPic, coverPic, serverType} = reqBody;
-        console.log(displayPic);
+        console.log("DP",displayPic, "type", type);
 
         if(!name || !description ) return NextResponse.json({success:false ,message:"Enter the fields"}, {status:409});
         console.log(name, description);
@@ -49,11 +49,11 @@ export const POST =async(req:NextRequest)=>{
                 description,
                 type,
                 displayPicId:displayPic,
-                displayPicture:displayPic && {
-                    connect:{
-                        id:displayPic
-                    }
-                },
+                // displayPicture:displayPic && {
+                //     connect:{
+                //         id:displayPic
+                //     }
+                // },
 
                 // displayPicture:{
                 //     connect:{

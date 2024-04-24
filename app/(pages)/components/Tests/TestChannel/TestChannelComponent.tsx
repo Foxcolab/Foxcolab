@@ -11,7 +11,7 @@ interface Props {
     sectionId:string
     testChannelName:string
     members:Member[]
-    managers:TestChannelManager
+    managers:TestChannelManager | null
     serverMembers:Member[]
     createdAt:string
     createdBy:string

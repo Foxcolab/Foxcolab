@@ -197,7 +197,6 @@ const myTests  = tests && tests.filter(test=>test.createdBy===member.id);
       <TestChannelComponent 
       tests={testChannel.Tests} 
       sectionId={testChannel.sectionId}
-      server={server}
       testChannelName={testChannel.name}
       members={members}
       serverMembers={testChannel.Members}

@@ -52,6 +52,9 @@ interface NavigationItemProps {
             <Image
               fill
               src={imageUrl}
+              alt=''
+              unoptimized
+              
               // alt="Channel"
             />
            

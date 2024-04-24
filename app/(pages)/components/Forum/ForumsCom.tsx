@@ -20,7 +20,7 @@ interface Props {
     type:string
     isAdmin:boolean
     sendMsg:boolean
-    managers:ForumManager
+    managers:ForumManager | null
     forums:Forums[]
     sectionId:string
     schema:ForumsChannel

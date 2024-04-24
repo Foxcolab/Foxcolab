@@ -14,14 +14,13 @@ import { NextApiRequest } from "next";
       const { serverId,   forumId,forumsChannelId } = req.query;
    
       
-      
+      // console.log(serverId, forumId, forumsChannelId, content, fileUrl)
       
       const user = await db.user.findUnique({
         where:{
             id:userId
         }
     });
-    console.log("USER ID",user?.id);
     
     if (!user) {
         return res.status(401).json({ error: "Unauthorized" });

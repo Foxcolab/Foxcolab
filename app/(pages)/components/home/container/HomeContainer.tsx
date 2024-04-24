@@ -6,7 +6,7 @@ import DiscoverContent from '../../DiscoverContent/DiscoverContent';
 import { Server } from '@prisma/client';
 
 interface Props {
-  servers:Server[]
+  servers:Server[] | []
 }
 
 function HomeContainer({servers}:Props) {

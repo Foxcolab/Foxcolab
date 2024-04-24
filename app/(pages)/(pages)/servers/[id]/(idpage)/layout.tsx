@@ -1,4 +1,4 @@
-import MainSidebar from "@/app/(pages)/components/Sidebar/MainSidebar";
+
 import ServerHome from "@/app/(pages)/components/v1/ServerHome/ServerHome";
 import { getServer } from "@/lib/db/ServerLib";
 import { myProfile } from "@/lib/db/profile";
@@ -15,25 +15,39 @@ interface HomeProps {
 }
 
 
-export const layout =async({children, params}:HomeProps)=>{
-    const profile = await myProfile();
-    if(!profile) redirect('/home');
-    const server =await getServer(params?.id, profile.id);
-    // console.log("ID SERVER",server);
+// export const ServerLayout =async({children, params}:{children:React.ReactNode, params:{id:string}})=>{
+//     const profile = await myProfile();
+//     if(!profile) redirect('/home');
+//     const server =await getServer(params?.id, profile.id);
+//     // console.log("ID SERVER",server);
     
-    if(!server) redirect('/home')
+//     if(!server) redirect('/home')
 
-    return (<>
+//     return (<>
     
 
-   <ServerHome server={server} user={profile}>
-        <h1>Hii</h1>
+//    <ServerHome server={server} user={profile}>
+//         {children}
 
-   </ServerHome>
+//    </ServerHome>
      
     
-    </>)
-};
+//     </>)
+// };
 
 
-export default layout;
+// export default ServerLayout;
+
+
+
+export default function Layout({ children }:{children:React.ReactNode}) {
+
+
+    
+    return (
+      <>
+        <main>{children}</main>
+        
+      </>
+    )
+  }
