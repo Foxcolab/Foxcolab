@@ -44,6 +44,24 @@ export async function GET(
         },
         include: {
           uploadedFiles:true,
+          poll:{
+            include:{
+              createdMember:{
+                include:{
+                  user:true
+                }
+              },
+              votes:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
+            }
+          },
           member: {
             include: {
               user: true,
@@ -86,6 +104,25 @@ export async function GET(
         },
         include: {
           uploadedFiles:true,
+          poll:{
+            include:{
+              createdMember:{
+                include:{
+                  user:true
+                }
+              },
+              votes:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
+            }
+
+          },
           member: {
             include: {
               user: true,

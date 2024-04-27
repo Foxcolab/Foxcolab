@@ -49,7 +49,7 @@ function CreateQuestion({testId, testTitle}:Props) {
             }
           }
         }else {
-          for(let i=0; i<radio.length; i++){
+          for(let i=0; i<checkbox.length; i++){
             if(checkbox[i].checked){
               answers.push(radio[i].value);
             }
@@ -258,19 +258,7 @@ function CreateQuestion({testId, testTitle}:Props) {
                   <option value="Single Choice">Single Choice</option>
                   <option value="Multiple Choice">Multiple Choice</option>
                 </select>
-                {/* <Select onValueChange={e=>setTypeHanlder(e)} >
-                    <SelectTrigger className="">
-                       <SelectValue placeholder="Select--" />
-                    </SelectTrigger>
-                <SelectContent className='bg-[#222F3E]' style={{background:"#222f3e !important"}}>
-                     <SelectGroup>
-                     
-                  <SelectItem value='Single Choice' >Single Choice</SelectItem>
-                  <SelectItem value='Multiple Choice'>Multiple Choice</SelectItem>
                
-        </SelectGroup>
-      </SelectContent>
-    </Select> */}
             </div>
             <div className="create_ss">
                 <label htmlFor="" className='font-semibold fontsize-xl'>Marks</label>
@@ -298,13 +286,6 @@ function CreateQuestion({testId, testTitle}:Props) {
           <button onClick={()=>handleRemoveInput(index)} className='py-[0.3rem] px-4 rounded-md border-input font-semibold hover:bg-red-500 text-md flex items-center gap-1'><span className='text-xl'><RiDeleteBin5Line/></span> </button>
         </div>
 
-
-          {/* <input
-            type="text"
-            value={inputField.value}
-            onChange={(event) => handleChangeInput(index, event)}
-          />
-          <button onClick={() => handleRemoveInput(index)}>Remove</button> */}
         </div>
       ))}
     </div>

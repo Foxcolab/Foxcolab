@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import EditorEmoji from "../Emoji/EditorEmoji";
 import { AiOutlineFullscreen } from "react-icons/ai"
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowDown, MdOutlineLibraryBooks } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { ReloadIcon } from "@radix-ui/react-icons"
 import React, { MutableRefObject, forwardRef, useCallback, useEffect, useRef, useState } from "react";
@@ -24,7 +24,7 @@ import { RxCross2 } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import { FaLock, FaRegFilePdf, FaRegFileZipper } from "react-icons/fa6";
 import { BsFiletypeDocx, BsFiletypeTxt, BsRecordCircleFill } from "react-icons/bs";
-import { GrDocumentCsv } from "react-icons/gr";
+import { GrDocumentCsv, GrPersonalComputer } from "react-icons/gr";
 import { BsFiletypeXlsx } from "react-icons/bs";
 import { BsFileEarmarkPptFill } from "react-icons/bs";
 import VoiceRecorder from "../Chat/Recorder/VoiceRecorder";
@@ -44,7 +44,19 @@ import {
 } from "@/components/ui/hover-card"
 import Schedule from "./schedule/Schedule";
 import dynamic from "next/dynamic";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { HiMiniComputerDesktop } from "react-icons/hi2";
+import { FaPollH } from "react-icons/fa";
+import { CgPoll } from "react-icons/cg";
+import PollDialog from "../polls/PollDialog";
+import FormDialog from "../forms/FormDialog";
 
 
 interface ChatInputProps {
@@ -116,7 +128,6 @@ const EditorFooter = ({apiUrl,
     hashValues
   }: ChatInputProps)=> {
 
-    console.log("Groups", groups)
     const reactQuillRef = useRef(null);
 
 
@@ -137,6 +148,8 @@ const EditorFooter = ({apiUrl,
     const [mentions, setMentions] = useState([]);
     const [value, setValue ] =useState('')
     const [emojiDialog, setEmojiDialog] = useState(false);
+    const [pollOpen, setPollOpen] = useState(false);
+    const [formOpen, setFormOpen] = useState(false);
     // const reactQuillRef = useRef(null);
     // const reactQuillRef: MutableRefObject<HTMLDivElement> = React.useRef(null);
 
@@ -148,7 +161,6 @@ const EditorFooter = ({apiUrl,
     const params = useParams();
 
  
-
 
 
 
@@ -187,7 +199,6 @@ const EditorFooter = ({apiUrl,
         query,
       });
 
-      console.log(url, values);
 
       if(screenUrl){
         form.setValue('fileUrl', [screenUrl]);
@@ -238,7 +249,6 @@ const EditorFooter = ({apiUrl,
       return;
     }
     const filess = e.target.files;
-    console.log(filess)
     const formData = new FormData();
     for (const file of Array.from(filess)) {
       files.push(file);
@@ -397,12 +407,9 @@ const modules2 = {
 
 
   const InputHandler = (event:any) => {
-    console.log(reactQuillRef)
     form.setValue("content", event);
-    // console.log(event);
     const editorRef = reactQuillRef.current.getEditor();
-    // console.log(editorRef.getText())
-    // console.log(editorRef)
+  
 
     form.setValue("contentText", editorRef.getText())
     const content = editorRef.getText()
@@ -460,7 +467,6 @@ const modules2 = {
 
   const handleRef = (ref:any) => {
 
-    console.log('Ref received:', ref);
     if (ref) {
       // Delay the assignment until the component is mounted
       setTimeout(() => {
@@ -469,7 +475,6 @@ const modules2 = {
     }
   };
 
-  console.log(reactQuillRef)
 
   const handleQuillLoaded = (quill) => {
     if (quillRef.current || !quill) return;
@@ -849,12 +854,38 @@ files[i]?.name.endsWith(".ppt")?
           </HoverCard> :
            <>
            
-           <button
+
+           <DropdownMenu>
+  <DropdownMenuTrigger className="h-[24px] w-[24px]  transition rounded-full  flex items-center justify-center">
+  <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className="w-[200px]">
+
+    <DropdownMenuItem className="flex items-center gap-2" onClick={()=>setFormOpen(true)}><span className="text-[1.2rem]"><MdOutlineLibraryBooks/></span>Create Forms</DropdownMenuItem>
+    <DropdownMenuItem className="flex items-center gap-2" onClick={()=>setPollOpen(true)}>
+    <span className="text-[1.2rem]"><CgPoll/></span>Create Polls
+ 
+     </DropdownMenuItem>
+
+    <DropdownMenuItem className="flex items-center gap-2">
+    <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
+    {/* <RiComputerFill /> Upload from local */}
+    
+    <span className="text-[1.2rem]"><GrPersonalComputer/></span> Upload From Local
+
+<input type="file" id="file" onChange={handleChange} multiple
+accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt, .svg, .mp3, .wav, .json "
+/>
+</label>
+     </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+           {/* <button
             type="button"
             className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"
           >
              <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
-    {/* <RiComputerFill /> Upload from local */}
+
     
     <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
 
@@ -863,7 +894,7 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
 />
 </label>
             
-          </button> 
+          </button>  */}
            
            </>
         
@@ -940,7 +971,12 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
       </form>
     </Form> 
            
-             
+        {
+          pollOpen &&  <PollDialog open={pollOpen} setOpen={setPollOpen} /> 
+        }
+        {
+          formOpen && <FormDialog open={formOpen} setOpen={setFormOpen} />
+        }
 
 
     </>

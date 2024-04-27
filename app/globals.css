@@ -7456,3 +7456,58 @@
   height: 35rem;
   margin-top: -10rem;
 }
+
+
+/* message poll */
+
+.poll_container {
+  background: var(--background3);
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  width: 30rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--qBorder);
+}
+
+.voted_options {
+
+}
+
+.voted_options .voted_opt {
+  background: var(--testBgUpper);
+    height: 2rem;
+    border-radius: 0.3rem;
+    margin-top: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--editorBorder);
+  }
+
+.poll_option .poll_single_option {
+  height: 2rem;
+  margin-top: 0.3rem;
+}
+
+.poll_option .poll_single_option input {
+  height: 1.1rem;
+  width: 1.1rem;
+}
+
+
+.voted_options .voted_opt .prog_bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.voted_progress_color {
+  background: rgb(108,208,100);
+  background: linear-gradient(90deg, rgba(108,208,100,1) 0%, rgba(108,219,193,1) 95%);
+}
+
+.overflow_text_hide {
+  white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  word-break: break-all;
+}

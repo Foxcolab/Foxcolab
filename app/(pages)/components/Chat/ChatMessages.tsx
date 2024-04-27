@@ -11,6 +11,7 @@ import { useChatScroll } from "@/hooks/useChatScroll";
 import ChannelDescription from "../Channel/ChannelDescription";
 import Conversation from "../Channel/Conversation";
 import Dividor from "./Dividor";
+import Polls from "./Polls/Polls";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 const DATE_FORMAT2 = "d MMM yyyy";
@@ -185,9 +186,32 @@ function ChatMessages({
           <Fragment key={i}>
             {group.items &&  group.items.map((message:any, j:number) => (
               <>
-        {
-          message!==null && <>
-           <ChatItem
+              {
+                message.pollId!==null && message.pollId!==undefined ? 
+                <Polls
+                id={message.id}
+                currentMember={member}
+                member={message.member}
+                deleted={message.deleted}
+                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                poll={message.poll}
+                socketUrl={socketUrl}
+                socketQuery={socketQuery}
+                message={message}
+                managers={channel?.manager?.memberIds}
+                mySavedPost = {mySavedPost}
+                PinnedPosts = {PinnedPosts}
+                myChannels={myChannels}
+                allServerMember={allServerMember}
+                setThreadMessage={setThreadMessage}
+                schemaType="Channel"
+                whoCanPinnedPost={whoCanPinnedPost}
+                whoCanDeleteMessage={whoCanDeleteMessage}                
+
+                />
+                : 
+                <>
+                <ChatItem
           key={message.id}
           id={message.id}
           currentMember={member}
@@ -210,6 +234,11 @@ function ChatMessages({
           whoCanPinnedPost={whoCanPinnedPost}
           whoCanDeleteMessage={whoCanDeleteMessage}
         /> 
+                </>
+              }
+        {
+          message!==null && <>
+           
         {
           CheckDividorTime(message.createdAt, group.items[j+1]?.createdAt)==true && 
         <Dividor timestamp={message.createdAt} nextTime={group.items[j+1]?.createdAt} /> 

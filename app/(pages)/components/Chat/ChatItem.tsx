@@ -3,7 +3,7 @@
 import * as z from "zod";
 import axios from "axios";
 import qs from "query-string";
-import { Channel, Later, Member, MemberRole, Message, PinnedPost, Reaction, UploadedFile, User } from "@prisma/client";
+import { Channel, Later, Member, MemberRole, Message, PinnedPost, Poll, Reaction, UploadedFile, User } from "@prisma/client";
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -58,6 +58,7 @@ interface ChatItemProps {
   schemaType:"Channel" | "Threads"
   whoCanDeleteMessage:boolean
   whoCanPinnedPost:boolean
+
 };
 
 
@@ -182,7 +183,6 @@ const length = fileUrl?.length;
 
 let isPinnedPost=false;
 let pinnedPost;
-let pinnedPostUser;
 PinnedPosts && PinnedPosts.forEach(p => {
   if(schemaType==="Threads"){
     if(p.threadId===id){
@@ -251,6 +251,8 @@ mySavedPost && mySavedPost.forEach(p => {
 
 
   }
+
+
     
 
 

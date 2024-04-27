@@ -57,6 +57,16 @@ enum PollType {
   multipleChoice
 }
 
+enum FieldType {
+  shortAns
+  longAns
+  singleChoice
+  multipleChoice
+  select
+  file
+
+}
+
 
 model User {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
@@ -139,7 +149,12 @@ model Server {
   activityLogs ActivityLog[]
   schemaActivity  SchemaActivity[]
   botResponses   BotResponse[]
+  polls  Poll[]
   uploadedFiles  UploadedFile[] @relation("Server")
+  pollVotes PollVote[]
+  forms    Form[]
+  formResponse  formResponse[]
+
 }
 model Section {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -221,8 +236,7 @@ model Forums {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-
-
+ 
   // forumsQuestions ForumQuestion[]
   // responses    ForumsResponse[]
   responses ForumResponse[]
@@ -252,8 +266,10 @@ model ForumResponse {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deleted Boolean @default(false)
-
+  pollId      String? @db.ObjectId
+  polls       Poll? @relation(fields: [pollId], references: [id])
   Reactions   Reaction[]
+  pollVotes PollVote[]
 
 }
 
@@ -508,6 +524,12 @@ model Member {
   removedSchemaActivity  SchemaActivity[] @relation("RemovedMember")
   BotResponses   BotResponse[]
   uploadedFiles  UploadedFile[]
+  polls   Poll[]
+  pollVotes PollVote[]
+  forms   Form[]
+  formFields FormField[]
+  formResponses formResponse[]
+  formFieldResponses FormFieldResponse[]
   // TestChanneƒls  TestChannel[]
   // NoteContent NoteContent[]
   @@index([userId])
@@ -516,7 +538,7 @@ model Member {
 }
 model Message {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
-  content     String
+  content     String?
   contentText  String?
   // fileUrl    String[]
   fileUrl    String[] @db.ObjectId
@@ -540,10 +562,13 @@ model Message {
 
   // forwardedThreadId String? @db.ObjectId
   // forwardedThread Threads? @relation("FowardedThreads", fields: [forwardedThreadId], references: [id])
-
+  pollId    String? @db.ObjectId
+  poll      Poll? @relation(fields: [pollId], references: [id])
+  formId    String? @db.ObjectId
+  form      Form? @relation(fields: [formId], references: [id])
   forwardedDirectMessages DirectMessage[]
 
-
+  pollVotes PollVote[]
   pinnedPost  PinnedPost[]
   saveLater  Later[]
   threads    Threads[]   
@@ -967,7 +992,8 @@ model UploadedFile {
   draft         Draft?   @relation(fields: [draftId], references: [id])
   threadId      String? @db.ObjectId
   thread       Threads? @relation(fields: [threadId], references: [id])
-
+  fieldResponseId   String? @db.ObjectId
+  fieldResponse     FormFieldResponse? @relation(fields: [fieldResponseId], references: [id])
   displayPictures Server[] @relation("DisplayPictures")
   coverPictures Server[] @relation("CoverPictures") 
   
@@ -976,16 +1002,114 @@ model UploadedFile {
 
 
 
-// model Poll {
-//   id            String @id @default(auto()) @map("_id") @db.ObjectId
-//   question      String
-//   options       String[]
-//   answerType    PollType @default(singleChoice)
-//   expiryDate    DateTime?
-//   anonymous     Boolean @default(false)
-//   createdBy     String @db.ObjectId
-//   createdMember Member? @relation(fields: [createdBy], references: [id])
+model Poll {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  question      String
+  options       String[]
+  answerType    PollType @default(singleChoice)
+  expiryDate    DateTime?
+  anonymous     Boolean @default(false)
+  createdBy     String @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id])
+  serverId      String @db.ObjectId
+  server        Server? @relation(fields: [serverId], references: [id])
+  // messageId     String @db.ObjectId
+  // message       Message @relation(fields: [messageId], references: [id])
+  // forumResponseId       String @db.ObjectId
+  // forumId        ForumResponse @relation(fields: [forumResponseId], references: [id])
 
-// }
+  message Message[]
+  forumResponse ForumResponse[]
+  votes   PollVote[]
+
+
+}
+model PollVote {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  vote          String[]
+  createdBy     String @db.ObjectId
+  createdMember  Member? @relation(fields: [createdBy], references: [id])
+  serverId      String @db.ObjectId
+  server        Server? @relation(fields: [serverId], references: [id])
+  messageId     String? @db.ObjectId
+  message       Message? @relation(fields: [messageId], references: [id])
+  forumResonseId     String? @db.ObjectId
+  forumResponse       ForumResponse? @relation(fields: [forumResonseId], references: [id])
+
+  pollId         String @db.ObjectId
+  poll           Poll?   @relation(fields: [pollId], references: [id])
+
+  createdAt    DateTime       @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Form {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  title         String 
+  description   String?
+  createdBy     String @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id])
+
+  serverId      String @db.ObjectId
+  server        Server? @relation(fields: [serverId], references: [id])
+
+
+  expiryDate    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  formFields    FormField[]
+  messages      Message[]
+  formResponses formResponse[]
+
+}
+
+model FormField {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  options       String[]
+  fileType      String?
+  fileCount     Int?
+  description   String?
+  type          FieldType
+  required      Boolean   @default(false)
+  formId        String @db.ObjectId
+  form          Form? @relation(fields: [formId], references: [id])
+  createdBy     String @db.ObjectId
+  createdMember Member? @relation(fields: [createdBy], references: [id])
+
+  formFieldResponses FormFieldResponse[]
+
+
+}
+
+
+model formResponse {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  createdBy     String @db.ObjectId
+  createdMember  Member? @relation(fields: [createdBy], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  formId        String @db.ObjectId
+  form          Form? @relation(fields: [formId], references: [id])
+  serverId      String @db.ObjectId
+  server        Server? @relation(fields: [serverId], references: [id])
+  formFieldResponses FormFieldResponse[]
+}
+
+model FormFieldResponse {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  fieldResponse   String[]
+  files           UploadedFile[]
+  formFieldType   FieldType
+  formFieldId     String @db.ObjectId
+  formField       FormField? @relation(fields: [formFieldId], references: [id])
+  formResponseId  String @db.ObjectId
+  formResponse    formResponse? @relation(fields: [formResponseId], references: [id])
+  createdBy       String @db.ObjectId
+  createdMember   Member? @relation(fields: [createdBy], references: [id])
+
+}
+
+
 
 

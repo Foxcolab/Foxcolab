@@ -41,7 +41,7 @@ function LandingFeatures() {
                 Feature==="Channel" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                 <div className='channel_ui_container'>
-                <Image src={ChannelUiPic} height={100} width={100} alt='' unoptimized />
+                <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Finance_Frontpage.png'} height={100} width={100} alt='' unoptimized />
                 </div>
                 </div> :
                 Feature==="Forum" ? 
@@ -53,19 +53,19 @@ function LandingFeatures() {
                 Feature==="Canvas" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={ChannelUiPic} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(4).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="Bot" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={ChannelUiPic} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(5).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="Polls" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={ChannelUiPic} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(2).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="Assessment" ? 
@@ -89,7 +89,7 @@ function LandingFeatures() {
                 Feature==="File" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={ChannelUiPic} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(6).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                ''
