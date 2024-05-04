@@ -42,14 +42,14 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
             where:{
                 id:messageId as string,
                 serverId:serverId as string,
-                pollId:formId as string
+                formId:formId as string
             },
             include:{
                 form:true
             }
         });
         if(!message) return res.status(401).json({ error: "Message not found" }); 
-
+        console.log("Message ond");
             const formResponse = await db.formResponse.create({
                 data:{
                     createdBy:member.id as string,
@@ -67,9 +67,16 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                     data:{
                         formFieldResponses:{
                             create:{
-                                formFieldId:fieldResponses[i].formFieldId,
+                                formFieldId:fieldResponses[i].formFieldId as string,
+                                formId:formId as string,
+                                // formField:{
+                                //     connect: {
+                                //         id:fieldResponses[i]?.formFieldId as string,
+                                //     }
+                                // },
                                 fieldResponse:fieldResponses[i].response,
                                 formFieldType:fieldResponses[i].type,
+                                createdBy:member.id as string,
                                 files: {
                                     connect:fieldResponses[i].files?.map((file:string)=>({id:file}))
                                 },
@@ -102,6 +109,26 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                                         }
                                     }
                                 }
+                            },
+                            formResponses:{
+                                where:{
+                                    createdBy:member.id as string
+                                },
+                                include:{
+                                    formFieldResponses:{
+                                        include:{
+                                            formField:{
+                                                include:{
+                                                    createdMember:{
+                                                        include:{
+                                                            user:true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -110,13 +137,17 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
             })
 
 
-
+            console.log(updatedMessage)
             const updateKey = `chat:${message.channelId}:messages:update`;
             res?.socket?.server?.io?.emit(updateKey, updatedMessage);
+            return res.status(200).json("Form created successfully");
        
-
     } catch (error) {
-        
+        console.log(error)
     }
 
 }
+
+
+
+export default POST;

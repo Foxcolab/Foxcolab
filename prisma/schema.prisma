@@ -67,6 +67,30 @@ enum FieldType {
 
 }
 
+enum tableType {
+  readOnly
+  editable
+}
+
+enum ColumnType {
+  shortText
+  longText
+  date 
+  status
+  person 
+  number
+  email
+  checkbox
+  rating
+  vote
+  progress
+  dropdown
+  link
+  file
+}
+
+
+
 
 model User {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
@@ -119,6 +143,7 @@ model Server {
   whoCreateForum        MemberRole   @default(user)
   whoCreateCanvas       MemberRole   @default(user)
   whoCreateTestChannel  MemberRole   @default(user)
+  whoCreateSpreadsheet  MemberRole   @default(user)
   whoCreateBotResponse  MemberRole   @default(user)
   whoCanInviteMember    MemberRole   @default(user)
 
@@ -154,6 +179,10 @@ model Server {
   pollVotes PollVote[]
   forms    Form[]
   formResponse  formResponse[]
+  spreadsheets  Spreadsheets[]
+  tables        Table[]
+  spreadsheetManager SpreadSheetManager[]
+  tableRows  TableRow[]
 
 }
 model Section {
@@ -184,6 +213,9 @@ model Section {
   testChannelManager      TestChannelManager[] 
   drafts    Draft[]
   schemaActivity  SchemaActivity[]
+  spreadsheets   Spreadsheets[]
+  spreadsheetManager SpreadSheetManager[]
+
   // forums 
 }
 model ForumsChannel {
@@ -477,8 +509,10 @@ model Member {
   forumChannels  ForumsChannel[] @relation("Members", fields: [forumsChannelIds], references: [id])
 
   createdForumChannels ForumsChannel[] @relation("CreatedForum")
+  createdSpreadsheets Spreadsheets[] @relation("Spreadsheets")
 
-
+  spreadsheetIds   String[] @db.ObjectId
+  spreadsheets  Spreadsheets[] @relation("Members", fields: [spreadsheetIds], references: [id])
 
   testChannelIds String[] @db.ObjectId
   testChannels  TestChannel[] @relation("Members", fields: [testChannelIds], references: [id])
@@ -493,8 +527,21 @@ model Member {
   
   managedForumId     String[] @db.ObjectId
   managedForums      ForumManager[] @relation(fields: [managedForumId], references: [id])
+
+  managedSpreadsheetId   String[] @db.ObjectId
+  managedSpreadsheet     SpreadSheetManager[] @relation(fields: [managedSpreadsheetId], references: [id])
+
+
   managedTestChannelId     String[] @db.ObjectId
   managedTestChannel      TestChannelManager[] @relation(fields: [managedTestChannelId], references: [id])
+
+  managedTableRowId   String[] @db.ObjectId
+  managedTableRow     TableRowData [] @relation(fields: [managedTableRowId], references: [id])
+
+  //  managedTableRowId   String[] @db.ObjectId
+  // managedTableRow     TableRow [] @relation(fields: [managedTableRowId], references: [id])
+
+
   messages Message[]
   directMessages DirectMessage[]
   navigations   String[]
@@ -530,6 +577,10 @@ model Member {
   formFields FormField[]
   formResponses formResponse[]
   formFieldResponses FormFieldResponse[]
+  tables    Table[]
+  tableColumns TableColumn[]
+  tableRowComment TableRowComments[]
+  // tableRowData TableRowData[]
   // TestChanneƒls  TestChannel[]
   // NoteContent NoteContent[]
   @@index([userId])
@@ -937,6 +988,10 @@ model SchemaActivity {
   testChannelId       String? @db.ObjectId
   testChannel         TestChannel? @relation(fields:[testChannelId] ,references :[id])
 
+  spreadsheetId            String? @db.ObjectId
+  spreadsheet              Spreadsheets? @relation(fields: [spreadsheetId], references: [id])
+
+
   sectionId           String? @db.ObjectId
   section             Section? @relation(fields:[sectionId] ,references :[id])
 
@@ -996,7 +1051,10 @@ model UploadedFile {
   fieldResponse     FormFieldResponse? @relation(fields: [fieldResponseId], references: [id])
   displayPictures Server[] @relation("DisplayPictures")
   coverPictures Server[] @relation("CoverPictures") 
-  
+  rowCommentId   String? @db.ObjectId
+  rowComment   TableRowComments? @relation(fields: [rowCommentId], references: [id])
+  tableRowDataId String? @db.ObjectId
+  tableRowData   TableRowData? @relation(fields: [tableRowDataId], references: [id])
 }
 
 
@@ -1060,6 +1118,7 @@ model Form {
   formFields    FormField[]
   messages      Message[]
   formResponses formResponse[]
+  formFieldResponse FormFieldResponse[]
 
 }
 
@@ -1069,6 +1128,7 @@ model FormField {
   options       String[]
   fileType      String?
   fileCount     Int?
+  fileMaxSize   Int?
   description   String?
   type          FieldType
   required      Boolean   @default(false)
@@ -1101,6 +1161,8 @@ model FormFieldResponse {
   fieldResponse   String[]
   files           UploadedFile[]
   formFieldType   FieldType
+  formId          String @db.ObjectId
+  form            Form? @relation(fields: [formId], references: [id])
   formFieldId     String @db.ObjectId
   formField       FormField? @relation(fields: [formFieldId], references: [id])
   formResponseId  String @db.ObjectId
@@ -1113,3 +1175,152 @@ model FormFieldResponse {
 
 
 
+// spreadsheets 
+
+model Spreadsheets {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  name String 
+  description String?
+  type Type @default(public)
+  createdBy  String @db.ObjectId
+  createdMember  Member? @relation("Spreadsheets",fields: [createdBy], references: [id],  onDelete: Cascade)
+  // isEveryoneCreate Boolean @default(true)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  sectionId  String @db.ObjectId
+  section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
+
+  memberIds  String[] @db.ObjectId
+  Members    Member[] @relation("Members", fields: [memberIds], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+
+  whoCanUpdateSpreadsheets      SchemaRole @default(manager)
+  whoCanMakePublicToPrivate     SchemaRole @default(manager)
+  whoCanCreateTable             SchemaRole @default(member)
+  whoCanManageTable             SchemaRole @default(manager)
+  whoCanManageMember            SchemaRole @default(manager)
+  whoCanManageManager           SchemaRole @default(manager)
+
+
+
+
+  tables  Table[]
+  manager SpreadSheetManager?
+  tableColumns TableColumn[]
+  tableRows TableRow[]
+  schemaActivity SchemaActivity[]
+  
+}
+
+model SpreadSheetManager {
+  id           String      @id @default(auto()) @map("_id")  @db.ObjectId
+  spreadsheetId     String @db.ObjectId @unique
+  spreadsheet      Spreadsheets? @relation(fields: [spreadsheetId], references: [id])
+  memberIds     String[] @db.ObjectId
+  member        Member[] @relation(fields: [memberIds], references: [id])
+  serverId       String @db.ObjectId
+  server        Server? @relation(fields: [serverId],references: [id])
+  sectionId    String? @db.ObjectId
+  section      Section? @relation(fields: [sectionId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  
+}
+
+
+model Table {
+  id   String   @id @default(auto()) @map("_id")  @db.ObjectId
+  name String 
+  description String?
+  type   tableType @default(editable)
+  createdBy  String? @db.ObjectId
+  createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  serverId  String @db.ObjectId
+  server  Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+  spreadsheetId  String @db.ObjectId
+  spreadsheet  Spreadsheets? @relation(fields: [spreadsheetId], references: [id],  onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tableColumns  TableColumn[]
+  tableRows     TableRow[]
+  tableRowData  TableRowData[]
+  tableRowComments TableRowComments[]
+
+
+}
+
+model TableColumn {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  columnName String  
+  columnDescription String?
+  columnType  ColumnType @default(shortText)
+  rowId    String @db.ObjectId
+  row      TableRow? @relation(fields: [rowId], references: [id], onDelete:Cascade)
+  tableId    String @db.ObjectId
+  table      Table? @relation(fields: [tableId], references: [id], onDelete:Cascade)
+  spreadSheetId  String @db.ObjectId
+  spreadsheet    Spreadsheets? @relation(fields: [spreadSheetId], references: [id], onDelete:Cascade)
+  createdBy  String @db.ObjectId
+  createdUser  Member? @relation(fields: [createdBy], references: [id], onDelete:Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tableRowData TableRowData[]
+}
+
+model TableRow {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  rowIndex Int?
+  columns  TableColumn[]
+  rowData  TableRowData[]
+  tableId  String @db.ObjectId
+  table   Table? @relation(fields: [tableId], references: [id])
+  spreadSheetId  String @db.ObjectId
+  spreadsheet    Spreadsheets? @relation(fields: [spreadSheetId], references: [id])
+  serverId  String @db.ObjectId
+  server    Server? @relation(fields: [serverId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  RowComments TableRowComments[]
+
+}
+
+model TableRowData {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  data String[]
+  labels String[]
+   assignedMemberIds   String[] @db.ObjectId
+  assignedMember  Member[] @relation(fields: [assignedMemberIds], references: [id])
+  files    UploadedFile[]
+  type     ColumnType @default(shortText)
+  rowId  String @db.ObjectId
+  row  TableRow? @relation(fields: [rowId], references: [id])
+  columnId  String @db.ObjectId
+  column  TableColumn? @relation(fields:[columnId], references: [id])
+  tableId  String @db.ObjectId
+  table   Table? @relation(fields: [tableId], references: [id], onDelete:Cascade)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model TableRowComments {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  content  String? 
+  fileUrl String[] @db.ObjectId
+  files    UploadedFile[]
+  tableRowId  String @db.ObjectId
+  tableRow   TableRow? @relation(fields: [tableRowId], references: [id], onDelete:Cascade)
+  tableId  String @db.ObjectId
+  table   Table? @relation(fields: [tableRowId], references: [id], onDelete:Cascade)
+  createdBy  String @db.ObjectId
+  createdMember  Member? @relation(fields: [createdBy], references: [id], onDelete:Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+}

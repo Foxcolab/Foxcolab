@@ -6,7 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu";
-  import { FaHome } from "react-icons/fa";
+  import { FaHome, FaPollH, FaWpforms } from "react-icons/fa";
   import { CiCircleMore } from "react-icons/ci";
   import { MdOutlineDataSaverOn } from "react-icons/md";
   import { MdForum } from "react-icons/md";
@@ -27,6 +27,7 @@ import { Separator } from '@/components/ui/separator';
 import CreateCanvas from '../Create/CreateCanvas';
 import CreateTest from '../Create/CreateTest';
 import { Member, MemberRole, Section } from '@prisma/client';
+import { LiaWpforms } from 'react-icons/lia';
 
 
 interface Props {
@@ -52,6 +53,16 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
             title:"Mentions & Reactions",
             url:`/servers/${id}/mention-reaction`,
             icon:<GoMention /> 
+        },
+        {
+            title:"Forms",
+            url:`/servers/${id}/forms`,
+            icon:<FaWpforms/>
+        },
+        {
+            title:"Polls",
+            url:`/servers/${id}/polls`,
+            icon:<FaPollH/>
         },
         {
             title:"Groups",
@@ -106,7 +117,7 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
            <Separator className="sidebar_separator" />
         <div className='sidecontent'>
         {
-            SideContent.map((content, index)=>(
+            SideContent.map((content:any, index:number)=>(
                 <SingleSection content={content} key={index} />
             ))
         }

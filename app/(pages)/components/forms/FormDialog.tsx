@@ -31,7 +31,10 @@ import { FaCloudUploadAlt } from 'react-icons/fa'
 import { FaCirclePlus } from 'react-icons/fa6'
 import { GoPlusCircle } from 'react-icons/go'
 import { Switch } from '@/components/ui/switch'
-import { RiDeleteBinLine } from 'react-icons/ri'
+import { RiDeleteBin6Line, RiDeleteBinLine } from 'react-icons/ri'
+import { AiOutlinePlus } from 'react-icons/ai'
+import axios from 'axios'
+import { useParams, useRouter } from 'next/navigation'
 const times = [
   {
       name:"12:00AM",
@@ -251,11 +254,13 @@ function FormDialog({open, setOpen}:Props) {
   const [hhmm, setHhmm] = useState<string | null>(null);
   const [type, setType] = useState("shortAns")
 
-  const [inputFields, setInputFields] = useState([{ name: '', description:'', options:[''], fileType:'', fileCount:0, type:'shortAns', required:true }]);
+  const [inputFields, setInputFields] = useState([{ name: '', description:'', options:[''], fileType:'', fileCount:0, type:'shortAns', required:true, maxSize:0 }]);
 
+  const [options, setOptions] = useState(['']);
+  const [speficic, setSpecific] = useState(false);
 
-
-  
+  const params = useParams();
+  const router = useRouter();
 
   var prev_date = new Date();
   prev_date.setDate(prev_date.getDate() - 1);
@@ -266,8 +271,19 @@ function FormDialog({open, setOpen}:Props) {
 
   const SubmitHandler =async()=>{
     try {
-      
+      let expiryDate = null;
+      if(date!==null){
+        expiryDate= TimeHandler();
+      }
+      console.log(inputFields);
+      setLoading(true);
+      const res = await axios.post(`/api/socket/messages/forms/new?serverId=${params?.id}&channelId=${params?.channelId}`, {
+        title, description, questions:inputFields
+      });
+      setLoading(false);
+      router.refresh();
     } catch (error) {
+      setLoading(false);
       
     }
   }
@@ -287,6 +303,15 @@ function FormDialog({open, setOpen}:Props) {
     }
 
   }
+  const TimeHandler =()=>{
+    const [hour, tm] = hhmm?.split(':');
+        const yy = date?.getFullYear();
+        const mm = date?.getMonth() + 1;
+        const dd = date?.getDate();
+        let dtt = (`${yy}-${mm}-${dd}, ${hour}:${tm}:00`);
+        const neDt = new Date(dtt);
+        return neDt;
+  }
   const CalenderHandler =(e:any)=>{
     // setDate
     console.log(e)
@@ -300,21 +325,72 @@ function FormDialog({open, setOpen}:Props) {
   }
 
 
-  const handleChangeInput = (index:number, event:any) => {
-    const values = [...inputFields];
-    // values[index].value = event;
-    // setInputFields(values);
-  };
+  const handleChangeInput = (index:number, event:any, changeType:string) => {
+    if(changeType==="type"){
+      const values = [...inputFields];
+      values[index].type = event;
+      if(type==="file"){
+        values[index].options = [];
+      }else if(type==="shortAns" || type==="longAns"){
+        values[index].options = [];
+        values[index].fileCount = 0;
+        values[index].maxSize = 0;
+        values[index].fileType = '';
+      }else if(type==="multipleChoice" || type==="singleChoice" || type==="select"){
+        values[index].fileCount = 0;
+        values[index].maxSize = 0;
+        values[index].fileType = '';
+      }
+      setInputFields(values);
+      return;
+    }
+    else if(changeType==="required"){
+      const values = [...inputFields];
+      values[index].required = event;
+      setInputFields(values);
+      return;
+    }
+    else if(changeType==="title"){
+      const values = [...inputFields];
+      values[index].name = event;
+      setInputFields(values);
+      return;
+    }
+    else if(changeType==="description"){
+      const values = [...inputFields];
+      values[index].description = event;
+      setInputFields(values);
+      return;
+    }
+    else if(changeType==="fileType"){
+      const values = [...inputFields];
+      values[index].fileType = event;
+      setInputFields(values);
+      return;
+    }
+    else if(changeType==="fileCount"){
+      const values = [...inputFields];
+      values[index].fileCount = event;
+      setInputFields(values);
+      return;  
+    }
+    else if(changeType==="maxSize"){
+      const values = [...inputFields];
+      values[index].maxSize = event;
+      setInputFields(values);
+      return;  
+    }
+  }
 
   const handleAddInput = (type:string) => {
     console.log(type)
     if(type==="shortAns" || type==="longAns"){
-      setInputFields([...inputFields,  { name:``, description:'', fileType:'', fileCount:0, type:"shortAns", options: [''], required:true }]);
+      setInputFields([...inputFields,  { name:``, description:'', fileType:'', fileCount:0, type:"shortAns", options: [''], required:true, maxSize:0 }]);
     }else if(type==="singleChoice" || type==="multipleChoice" || type==="select"){
-      setInputFields([...inputFields,  { name:``, description:'', fileType:'', fileCount:0, type:type, options: ['Option 1', 'Option 2'], required:true }]);
+      setInputFields([...inputFields,  { name:``, description:'', fileType:'', fileCount:0, type:type, options: ['Option 1', 'Option 2'], required:true, maxSize:0 }]);
     }
     else {
-      setInputFields([...inputFields,  { name:``, description:'', fileType:'image', fileCount:1, type:"file", options: [''], required:true }]);
+      setInputFields([...inputFields,  { name:``, description:'', fileType:'image', fileCount:1, type:"file", options: [''], required:true, maxSize:1 }]);
     }
   };
 
@@ -323,6 +399,38 @@ function FormDialog({open, setOpen}:Props) {
     values.splice(index, 1);
     setInputFields(values);
   };
+
+
+
+
+  const OptionChangeHandler = (index:number, event:any, inputIndex:number) => {
+    const values = [...options];
+    values[index] = event;
+    setOptions(values);
+
+    const value2 = [...inputFields];
+    value2[inputIndex].options = values;
+      setInputFields(value2);
+
+  };
+
+  const OptionAddInput = (i:number) => {
+    setOptions([...options, '']);
+    const value2 = [...inputFields];
+    value2[i].options = [...options, ''];
+  };
+
+  const OptionInputRemove = (index:number, index2:number) => {
+    const values = [...options];
+    values.splice(index, 1);
+    setOptions(values);
+    const value2 = [...inputFields];
+    // value2.splice(index2, 1);
+    value2[index2].options= values;
+
+
+  };
+
 
   
   return (
@@ -343,6 +451,7 @@ function FormDialog({open, setOpen}:Props) {
         </DialogHeader>
 
         <div className='overflow-scroll px-8 pt-4 h-[95%] min-h-0'>     
+            <div>
             <div className="mb-4">
                 <label htmlFor="" className='text-sm font-bold'>Form Title:</label>
                 <div className="mt-2">
@@ -409,19 +518,19 @@ function FormDialog({open, setOpen}:Props) {
 </div>
               </div>
             </div>
+            </div>
           <hr />
           {
             inputFields.map((inputField, i)=>(
             <>
             <div className="border p-4 mt-4 rounded text-sm" key={i}>
             <div className='flex items-center gap-4'>
-            <Select  defaultValue={inputField.type}>
+            <Select defaultValue={inputField.type} onValueChange={(e)=>handleChangeInput(i, e, "type")}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Select Field Type" />
       </SelectTrigger>
       <SelectContent className='w-full p-4'>
-        <SelectGroup  defaultValue={inputField.type}>
-        {/* <SelectLabel>Select Field Type</SelectLabel> */}
+        <SelectGroup >
           {
             FieldType.map((field, i)=>(
               <SelectItem key={i} value={field.value} className=''> <div className='flex items-center gap-2'><span className='text-lg'>{field.icon}</span> {field.name}</div> </SelectItem>
@@ -432,20 +541,117 @@ function FormDialog({open, setOpen}:Props) {
       </SelectContent>
     </Select>
     <div className='flex h-10 gap-2 items-center border px-3 rounded'>
-      Required <Switch defaultChecked={inputField.required} />
+      Required <Switch defaultChecked={inputField.required} onCheckedChange={e=>handleChangeInput(i, e, "required")} />
     </div>
     <div className=''>
-      <button className='h-10 text-xl text-gray-500 rounded border p-3 flex justify-center items-center' onClick={()=>handleRemoveInput(i)}><RiDeleteBinLine/></button>
+      <button className='h-10 text-xl text-gray-500 rounded border p-3 flex justify-center items-center' onClick={()=>handleRemoveInput(i)}><RiDeleteBin6Line/></button>
     </div>
             </div>
             <div className='mt-4'>
               <label htmlFor="">Question Title</label>
-              <div className='mt-2'><Input type='text' /></div>
+              <div className='mt-2'><Input type='text' onChange={(e)=>handleChangeInput(i, e.target.value, "title")} /></div>
             </div>
             <div className='mt-4'>
               <label htmlFor="">Question Description <span className='text-gray-400'>- Optional</span></label>
-              <div className='mt-2'><Textarea className='resize-none' /></div>
+              <div className='mt-2'><Textarea className='resize-none' onChange={(e)=>handleChangeInput(i, e.target.value, "description")} /></div>
             </div>
+            {/* INPUT TYPE SINGLE CHOICE  */}
+
+           {
+             (inputField.type==="singleChoice" || inputField.type==="multipleChoice" || inputField.type==="select") &&<>
+             {options.map((option, j)=>(
+              <>
+               <div className="mt-4">
+              <label htmlFor="">Choice {j+1}</label>
+              <div className='flex items-center gap-4 mt-2'><Input type='text' onChange={(e)=>OptionChangeHandler(j, e.target.value, i)} />
+              <button className='border h-10 flex items-center justify-center w-10 flex-none text-lg text-gray-600 rounded' onClick={()=>OptionInputRemove(j, i)}><RiDeleteBin6Line/></button>
+              </div>
+            </div>
+              
+              </>
+             ))}
+             <button onClick={()=>OptionAddInput(i)} className='flex items-center gap-2 text-sm font-semibold px-2 py-[0.35rem] rounded border mt-4'><span className='text-lg'><AiOutlinePlus/></span> Add Choice</button>
+             
+             </>
+           }
+
+           {
+            inputField.type==="file" && <>
+            
+            <div className='pt-4'>
+              <div className='flex items-center justify-between gap-4'>Allow Only Specific file types: <span> <Switch onCheckedChange={e=>setSpecific(e)} /> </span></div>
+              {
+                speficic && <div className='flex items-center gap-8 mt-4'>
+                <div className='flex flex-col gap-2'>
+                <div className='flex gap-2'><input type='radio' name='file' value={"PDF"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")}  />PDF</div>
+                  <div className='flex gap-2'><input type='radio' name='file' value={"Spreadsheet"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")} />Spreadsheet</div>
+                  <div className='flex gap-2'><input type="radio" name='file' value={"Word"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")} />Word</div>
+                  <div className='flex gap-2'><input type="radio" name='file' value={"Presentation"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")} />Presentation</div>
+                </div>
+                <div className='flex flex-col gap-2'> 
+                  <div className='flex gap-2'><input type="radio" name='file' value={"Image"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")} />Image</div>
+                  <div className='flex gap-2'><input type="radio" name='file' value={"Audio"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")} />Audio</div>
+                  <div className='flex gap-2'><input type='radio' name='file' value={"Video"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")} />Video</div>
+                  <div className='flex gap-2'><input type='radio' name='file' value={"Zip"} onChange={e=>handleChangeInput(i, e.target.value, "fileType")}  />Document</div>
+                </div>
+              </div>
+              }
+
+              <div className='flex items-center justify-between mt-4'>
+                <div>Maximum no of files: </div>
+                <div>
+                <Select onValueChange={e=>handleChangeInput(i, e, "fileCount")}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a count" />
+                </SelectTrigger>
+                <SelectContent className=''>
+                  <SelectGroup>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="5">5</SelectItem>
+                    <SelectItem value="10">10</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>                  
+                </div>
+              </div>
+
+              <div className='flex items-center justify-between mt-4'>
+                <div>Maximum file size (MB):</div>
+                <div>
+                <Select onValueChange={(e)=>handleChangeInput(i, e, "maxSize")}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a size" />
+                </SelectTrigger>
+                <SelectContent className=''>
+                  <SelectGroup>
+                    <SelectItem value="1">1 MB</SelectItem>
+                    <SelectItem value="10">10 MB</SelectItem>
+                    <SelectItem value="100">100 MB</SelectItem>
+                    <SelectItem value="1024">1 GB</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>                  
+                </div>
+              </div>
+
+
+              <div>
+
+              </div>
+
+
+            </div>
+
+            
+            </>
+           }
+
+
+              
+
+
+
           </div>
             
             </>

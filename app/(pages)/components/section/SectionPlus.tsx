@@ -20,6 +20,7 @@ import CreateCanvas from '../Create/CreateCanvas';
 import CreateChannel from '../Create/CreateChannel';
 import CreateTest from '../Create/CreateTest';
 import CreateForums from '../Create/CreateForums';
+import CreateSpreadsheet from '../Create/CreateSpreadsheet';
    
 
 interface Props {
@@ -29,9 +30,10 @@ interface Props {
   createForum:boolean
   createCanvas:boolean
   createTestChannel:boolean
+  createSpreadsheet:boolean
 }
 
-function SectionPlus({sectionId, serverId, createCanvas, createChannel, createForum, createTestChannel}:Props) {
+function SectionPlus({sectionId, serverId, createCanvas, createChannel, createForum, createTestChannel, createSpreadsheet}:Props) {
 
  
   return (
@@ -64,6 +66,12 @@ function SectionPlus({sectionId, serverId, createCanvas, createChannel, createFo
           {
             createTestChannel && <DropdownMenuItem className='drpdn_ip' asChild>
             <CreateTest sectionId={sectionId} serverId={serverId} /> 
+            </DropdownMenuItem>
+          }
+
+          {
+            createSpreadsheet && <DropdownMenuItem className='drpdn_ip' asChild>
+            <CreateSpreadsheet sectionId={sectionId} serverId={serverId} /> 
             </DropdownMenuItem>
           }
           

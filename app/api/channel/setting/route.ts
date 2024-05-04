@@ -10,7 +10,7 @@ export const PUT =async(req:NextRequest)=>{
         const serverId = req.nextUrl.searchParams.get('serverId');
         const channelId = req.nextUrl.searchParams.get('channelId');
         const reqBody = await req.json();
-        const {type, sendMsg} = reqBody;
+        const {type} = reqBody;
         const userId = await GetDataFromToken(req);
         const member = await db.member.findFirst({
             where:{

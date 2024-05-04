@@ -97,7 +97,25 @@ export const getServer =async(serverId:string, userId:string)=>{
                               createdAt:"desc"
                           }
                       },
-        
+                      spreadsheets:{
+                        where:{
+                          OR:[
+                            {
+                              type:"public"
+                            },
+                            {
+                              Members:{
+                                some:{
+                                  userId:userId
+                                }
+                              }
+                            }
+                          ]
+                        },
+                          orderBy:{
+                              createdAt:"desc"
+                          }
+                      },
                   }
               },
               Members: {

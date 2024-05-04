@@ -122,7 +122,6 @@ export const POST =async(req:NextRequest)=>{
 
         return NextResponse.json({
             success:true,
-            channel
         }, {status:200})
 
     } catch (error:any) {

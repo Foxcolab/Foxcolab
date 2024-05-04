@@ -12,7 +12,6 @@ export const DELETE =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
 
         const userId =await GetAuth(req);
         const { messageId, serverId, channelId } = req.query;
-        console.log("ITs executing....", messageId, serverId, channelId)
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized" });
           }

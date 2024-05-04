@@ -62,6 +62,97 @@ export async function GET(
               }
             }
           },
+          // form:{
+          //   include:{
+          //     createdMember:{
+          //       include:{
+          //         user:true
+          //       }
+          //     },
+          //     formFields:{
+          //       include:{
+          //         createdMember:{
+          //           include:{
+          //             user:true
+          //           }
+          //         },
+          //         // formFieldResponses:{
+          //         //   include:{
+          //         //     createdMember:{
+          //         //       include:{
+          //         //         user:true
+          //         //       }
+          //         //     }
+          //         //   }
+          //         // },
+          //       }
+          //     },
+          //     formResponses:{
+          //       include:{
+          //         createdMember:{
+          //           include:{
+          //             user:true
+          //           }
+          //         },
+          //         formFieldResponses:{
+          //           include:{
+          //             createdMember:{
+          //               include:{
+          //                 user:true
+          //               }
+          //             }
+          //           }
+          //         },
+          //       }
+          //     }
+          //   }
+          // },
+          form:{
+            include:{
+              createdMember:{
+                include:{
+                  user:true
+                }
+              },
+              // formResponses:{
+              //   include:{
+              //     createdMember:{
+              //       include:{
+              //         user:true
+              //       }
+              //     },
+              //     formFieldResponses:{
+              //       include:{
+              //         createdMember:{
+              //           include:{
+              //             user:true
+              //           }
+              //         }
+              //       }
+              //     }
+              //   }
+              // },
+              formFields:true,
+              formResponses: {
+                include:{
+                  formFieldResponses: {
+                    include:{
+                      files:true
+                    }
+                  },
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
+            },
+            
+          },
+          
+          
+          
           member: {
             include: {
               user: true,
@@ -123,6 +214,49 @@ export async function GET(
             }
 
           },
+          form:{
+            include:{
+              createdMember:{
+                include:{
+                  user:true
+                }
+              },
+              // formResponses:{
+              //   include:{
+              //     createdMember:{
+              //       include:{
+              //         user:true
+              //       }
+              //     },
+              //     formFieldResponses:{
+              //       include:{
+              //         createdMember:{
+              //           include:{
+              //             user:true
+              //           }
+              //         }
+              //       }
+              //     }
+              //   }
+              // },
+              formFields:true,
+              formResponses: {
+                include:{
+                  formFieldResponses: {
+                    include:{
+                      files:true
+                    }
+                  },
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
+            },
+            
+          },
           member: {
             include: {
               user: true,
@@ -152,6 +286,7 @@ export async function GET(
     if (messages.length === MESSAGES_BATCH) {
       nextCursor = messages[MESSAGES_BATCH - 1].id;
     }
+
 
     return NextResponse.json({
       items: messages,

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useParams, usePathname, useRouter } from "next/navigation";
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 
 
@@ -17,8 +18,8 @@ export const SingleSection = ({content}) => {
   return (
     <>
     
-    <button href={`${content.url}`} className={path===content.url? ' activeBg':''} onClick={onClick}>
-    {content.icon} {content.title}
+    <button href={`${content.url}`} className={cn('flex items-center gap-1' , path===content.url? ' activeBg':'')} onClick={onClick}>
+    <span className='text-lg'>{content.icon} </span>{content.title}
 
     </button>
     

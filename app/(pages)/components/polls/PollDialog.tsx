@@ -304,7 +304,7 @@ function PollDialog({open,setOpen}:Props) {
   }
   
   const TimeHandler =()=>{
-    const [hour, tm] = hhmm.split(':');
+    const [hour, tm] = hhmm?.split(':');
         const yy = date?.getFullYear();
         const mm = date?.getMonth() + 1;
         const dd = date?.getDate();

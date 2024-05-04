@@ -12,6 +12,7 @@ import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ActionTooltip } from "../tooolkit/Toolkit";
 import { IoIosLock } from "react-icons/io";
+import { FaHashtag } from "react-icons/fa";
 
 interface ServerChannelProps {
   channel: Channel;
@@ -36,7 +37,7 @@ export const SingleChannel = ({channel,server,role}: ServerChannelProps) => {
     <>
     
     <button onClick={onClick} className={params?.channelId===channel.id?"ch_btnn activeBg":"ch_btnn"} >
-        <span># {channel.name}</span>
+        <span> <span  className='text-lg'><FaHashtag /> </span> {channel.name}</span>
         <span> {channel.type==="private"?<IoIosLock/>: '' } </span>
 
     </button>

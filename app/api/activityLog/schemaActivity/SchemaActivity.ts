@@ -6,7 +6,7 @@ interface Props {
     serverId:string
     message:string | null
     activityType:"Create" | "Update" | "Delete" | "Add Member" | "Remove Member" | "Make Manager" | "Remove Manager" | "Change" | "Left"
-    schemaType:"Channel"| "Forum Channel" | "Canvas" | "Test Channel" | "Canvas" 
+    schemaType:"Channel"| "Forum Channel" | "Canvas" | "Test Channel" | "Canvas" | "SpreadSheet"
     name:string | null
     memberId:string 
     memberId2:string | null
@@ -87,10 +87,30 @@ interface Props {
                     oldData:oldData,
                     newData:newData
                 }
+                
             });
+            
             return;
     
-        }else {
+        }else if(schemaType==="SpreadSheet"){
+            const activity = await db.schemaActivity.create({
+                data:{
+                    serverId:serverId,
+                    spreadsheetId:schemaId,
+                    sectionId:sectionId,
+                    message:message,
+                    activityType:activityType,
+                    schemaType:schemaType,
+                    name:name,
+                    memberId:memberId,
+                    memberId2:memberId2,
+                    oldData:oldData,
+                    newData:newData
+                }
+            });
+            return;
+        }
+        else {
             return;
         }
       

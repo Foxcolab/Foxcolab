@@ -1,4 +1,4 @@
-import { Canvas, ForumManager, ForumsChannel, Member, TestChannel, TestChannelManager, canvasManager } from '@prisma/client'
+import { Canvas, ForumManager, ForumsChannel, Member, SpreadSheetManager, Spreadsheets, TestChannel, TestChannelManager, canvasManager } from '@prisma/client'
 import React from 'react'
 import SchemaDialog from '../SchemaDialog/SchemaDialog'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -14,10 +14,10 @@ interface Props {
   type: string
   isAdmin:boolean
   schemaType:string
-  managers: ForumManager | TestChannelManager | canvasManager | null
+  managers: ForumManager | TestChannelManager | canvasManager | SpreadSheetManager | null
   serverMembers:Member[]
   sendMsg:boolean
-  schema:ForumsChannel | Canvas | TestChannel
+  schema:ForumsChannel | Canvas | TestChannel | Spreadsheets
 }
 function SchemaHeader({member, name, members, description, createdAt, createdBy, type, isAdmin, schemaType, managers, serverMembers, sendMsg, schema}:Props) {
   return (

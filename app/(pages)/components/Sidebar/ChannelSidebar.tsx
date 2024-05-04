@@ -13,7 +13,8 @@ import { RiSurveyFill } from "react-icons/ri";
 import { IoIosLock } from "react-icons/io";
 import { myProfile } from '@/lib/db/profile';
 import { NameDropDown } from '../Header/NameDropDown';
-import { Member, Server } from '@prisma/client';
+import { Member, Server, Spreadsheets } from '@prisma/client';
+import { VscTable } from 'react-icons/vsc';
 
 
 interface Props {
@@ -40,6 +41,7 @@ const ChannelSidebar =async({server}:Props) =>{
     let createCanvas = false;
     let createTestChannel = false;
     let createSection = false;
+    let createSpreadsheet = false;
 
     if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateChannel==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateChannel==="moderator") || (currentMember.role==="admin" && server.whoCreateChannel==="admin")  ){
         createChannel = true;
@@ -56,6 +58,10 @@ const ChannelSidebar =async({server}:Props) =>{
     if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSection==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSection==="moderator") || (currentMember.role==="admin" && server.whoCreateSection==="admin")  ){
         createSection = true;
     }
+    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSpreadsheet==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSpreadsheet==="moderator") || (currentMember.role==="admin" && server.whoCreateSpreadsheet==="admin")  ){
+        createSpreadsheet = true;
+    }
+
 
   
 
@@ -87,7 +93,7 @@ const ChannelSidebar =async({server}:Props) =>{
                             {
                                 createChannel===false && createCanvas===false && createForum===false && createTestChannel===false ? 
                                 "" : 
-                                <SectionPlus sectionId={section.id} serverId={server.id} createChannel={createChannel} createCanvas={createCanvas} createForum={createForum} createTestChannel={createTestChannel}  />  
+                                <SectionPlus sectionId={section.id} serverId={server.id} createChannel={createChannel} createCanvas={createCanvas} createForum={createForum} createTestChannel={createTestChannel} createSpreadsheet={createSpreadsheet}  />  
                             }
                                                  
                        </div>
@@ -102,7 +108,7 @@ const ChannelSidebar =async({server}:Props) =>{
 
                     {
                        section.canvas!==undefined &&  section.canvas.map((canvas)=>(
-                            <Link href={`/servers/${server.id}/canvas/${canvas.id}`} key={canvas.id} className='ch_btnn'><span><FaNoteSticky/> {canvas.title} </span>{canvas.type==="public"?"":<IoIosLock/> } </Link>
+                            <Link href={`/servers/${server.id}/canvas/${canvas.id}`} key={canvas.id} className='ch_btnn'><span className=''><span className='text-lg'><FaNoteSticky/> </span>{canvas.title} </span>{canvas.type==="public"?"":<IoIosLock/> } </Link>
                         )
                         
                         )
@@ -110,15 +116,20 @@ const ChannelSidebar =async({server}:Props) =>{
 
                     {
                         section.forumsChannel && section.forumsChannel.map((forums, index)=>(
-                            <Link href={`/servers/${server.id}/forum/${forums.id}`} key={index} className='ch_btnn'><span><MdForum/> {forums.name} </span>{forums.type==="public"?"":<IoIosLock/> } </Link>
+                            <Link href={`/servers/${server.id}/forum/${forums.id}`} key={index} className='ch_btnn'><span className=''> <span className="text-lg"><MdForum/> </span> {forums.name} </span>{forums.type==="public"?"":<IoIosLock/> } </Link>
                         ))
                     }
-{
+                    {
                         section.TestChannels && section.TestChannels.map((test, index)=>(
-                            <Link href={`/servers/${server.id}/test-channel/${test.id}`} key={index} className='ch_btnn'><span><RiSurveyFill/> {test.name}</span> {test.type==="public"?"":<IoIosLock/> } </Link>
+                            <Link href={`/servers/${server.id}/test-channel/${test.id}`} key={index} className='ch_btnn'><span className=''> <span className='text-lg'><RiSurveyFill/></span> {test.name}</span> {test.type==="public"?"":<IoIosLock/> } </Link>
                         ))
                     }
-                    
+                    {
+                        section.spreadsheets && section.spreadsheets.map((spreadsheet:Spreadsheets, index:number)=>(
+                            <Link href={`/servers/${server.id}/spreadsheet/${spreadsheet.id}`} key={index} className='ch_btnn'><span className=''> <span className='text-lg'><VscTable/></span> {spreadsheet.name}</span> {spreadsheet.type==="public"?"":<IoIosLock/> } </Link>
+                        ))
+                    }
+                    {/* <VscTable/> */}
 
                     </div>
            {/* <Separator className="my-4" /> */}

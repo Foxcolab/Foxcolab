@@ -12,6 +12,7 @@ import ChannelDescription from "../Channel/ChannelDescription";
 import Conversation from "../Channel/Conversation";
 import Dividor from "./Dividor";
 import Polls from "./Polls/Polls";
+import ChannelForm from "./form/ChannelForm";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 const DATE_FORMAT2 = "d MMM yyyy";
@@ -210,6 +211,33 @@ function ChatMessages({
 
                 />
                 : 
+                message.formId!==null && message.formId!==undefined && message.form!==null && message.form!==undefined ? 
+                <>
+                <ChannelForm
+                id={message.id}
+                currentMember={member}
+                member={message.member}
+                deleted={message.deleted}
+                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                form={message.form}
+                socketUrl={socketUrl}
+                socketQuery={socketQuery}
+                message={message}
+                managers={channel?.manager?.memberIds}
+                mySavedPost = {mySavedPost}
+                PinnedPosts = {PinnedPosts}
+                myChannels={myChannels}
+                allServerMember={allServerMember}
+                setThreadMessage={setThreadMessage}
+                schemaType="Channel"
+                whoCanPinnedPost={whoCanPinnedPost}
+                whoCanDeleteMessage={whoCanDeleteMessage}  
+                
+                
+                
+                />
+                </>
+                :
                 <>
                 <ChatItem
           key={message.id}

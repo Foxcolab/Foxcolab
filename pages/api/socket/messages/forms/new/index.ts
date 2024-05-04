@@ -41,6 +41,7 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
         if(!hasPermission) return res.status(401).json({ error: "You are not authorized" });
 
         const {title, description, questions} = req.body;
+        if(!title || !description || questions.length===0) return res.status(401).json({ error: "Enter the fields" });
 
         const form = await db.form.create({
             data:{
@@ -58,12 +59,14 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                 name:questions[i].name,
                 description:questions[i].description,
                 options:questions[i].options,
-                fileType:questions[i].fileType ? questions[i].fileType : null,
-                fileCount:questions[i].fileCount, 
+                fileType:questions[i].fileType,
+                fileCount:parseInt(questions[i].fileCount), 
+                fileMaxSize:parseInt(questions[i].maxSize),
                 type:questions[i].type,
                 formId:form.id,
                 required:questions[i].required,
-                createdBy:member.id
+                createdBy:member.id,
+                
             }
         })
        }
@@ -113,8 +116,11 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
         }
     });
 
-const channelKey = `chat:${channelId}:messages`;
-res?.socket?.server?.io?.emit(channelKey, message);
+    console.log(message);
+
+    const channelKey = `chat:${channelId}:messages`;
+    res?.socket?.server?.io?.emit(channelKey, message);
+    return res.status(200).json("Form created successfully");
 
 
     } catch (error) {
