@@ -113,6 +113,7 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
             tableId:table.id as string,
             rowIndex:0,
             spreadSheetId:spreadsheetId as string,
+            serverId:serverId as string,
             columns:{
                 create:[
                 {
@@ -120,21 +121,27 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
                     columnType:"shortText",
                     spreadSheetId:spreadsheetId as string,
                     tableId:table.id as string,
-                    createdBy:member.id as string
+                    createdBy:member.id as string,
+                    restricted:false,
+                    
                 },
                 {
                     columnName:"Person",
                     columnType:"person",
                     spreadSheetId:spreadsheetId as string,
                     tableId:table.id as string,
-                    createdBy:member.id as string
+                    createdBy:member.id as string,
+                    restricted:false
+
                 },
                 {
                     columnName:"Status",
                     columnType:"status",
                     spreadSheetId:spreadsheetId as string,
                     tableId:table.id as string,
-                    createdBy:member.id as string
+                    createdBy:member.id as string,
+                    restricted:false
+
                 }
             ]
             }
@@ -156,6 +163,7 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
         data:{
             tableId:table.id,
             spreadSheetId:spreadsheetId,
+            serverId:serverId as string,
             rowData:{
                 create:[
                     {
@@ -190,6 +198,7 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
       const AddedRow2 = await db.tableRow.create({
         data:{
             tableId:table.id,
+            serverId:serverId as string,
             spreadSheetId:spreadsheetId,
             rowData:{
                 create:[
@@ -221,6 +230,7 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
         data:{
             tableId:table.id,
             spreadSheetId:spreadsheetId,
+            serverId:serverId as string,
             rowData:{
                 create:[
                     {

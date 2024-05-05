@@ -13,7 +13,7 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
         const tableId = req.nextUrl.searchParams.get('tableId');
         const rowDataId = req.nextUrl.searchParams.get('rowDataId');
         const sectionId = req.nextUrl.searchParams.get('sectionId');
-
+        console.log(serverId, spreadsheetId, sectionId, tableId, rowDataId);
         if(!serverId || !spreadsheetId || !tableId) return NextResponse.json({
             error:"Something is missng"
         }, {status:409});
@@ -66,26 +66,45 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
         if(!table) return NextResponse.json({error:"Table not found"}, {status:409});
 
         const reqBody = await req.json();
-        const {data, labels, assignedMemberIds, files, type} = reqBody;
-        if(!data || !type) return NextResponse.json({error:"Something is missing"}, {status:409});
+        const {data, labels} = reqBody;
+        console.log(data, labels);
+        if(!data && !labels) return NextResponse.json({error:"Something is missing"}, {status:409});
+        console.log("Updatingg... started...");
+        // const TableRowData = await db.tableRowData.update({
+        //     where:{
+        //         id:rowDataId as string
+        //     },
+        //     data:{
+        //         data:data,
+        //         labels:labels,
+        //         assignedMemberIds:assignedMemberIds,
+        //         files:files
+        //     }
+        // });
         
-        const TableRowData = await db.tableRowData.update({
+        const tableRowData = await db.tableRowData.findFirst({
             where:{
-                id:rowDataId as string
+                id:rowDataId as string,
+                tableId:tableId as string,
+                
+            }
+        });
+        console.log(tableRowData);
+        if(!tableRowData) return NextResponse.json({error:"Table row data not found"}, {status:409});
+        
+        const updateRowData = await db.tableRowData.update({
+            where:{
+                id:rowDataId as string,
+                tableId:tableId as string
             },
             data:{
                 data:data,
                 labels:labels,
-                assignedMemberIds:assignedMemberIds,
-                files:files,
-                type:type,
+                
             }
         });
+        console.log(updateRowData);
         
-        
-
-
-
 
         return NextResponse.json({success:true}, {status:200});
 

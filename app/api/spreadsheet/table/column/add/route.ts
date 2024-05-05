@@ -59,30 +59,93 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
             }
         });
         if(!table) return NextResponse.json({error:"Table not found"}, {status:409});
-
+        console.log("TABLE ROWS:: ",table.tableRows.length);
         const reqBody = await req.json();
         const {columnName, columnDescription, columnType} = reqBody;
-        if(!columnName || !columnType) return NextResponse.json({error:"Column not found"}, {status:409});
+        console.log(columnName, columnDescription, columnType);
 
+        if(!columnName || !columnType) return NextResponse.json({error:"Column not found"}, {status:409});
+        // const updateTable = await db.table.update({
+        //     where:{
+        //         id:tableId as string,
+        //         serverId:serverId as string,
+        //         spreadsheetId:spreadsheetId as string
+        //     },
+        //     data:{
+        //         tableRows:{
+        //             update:{
+        //                 where:{
+        //                     id:table.tableRows[0].id as string,
+        //                 },
+        //                 data:{
+        //                     columns:{
+        //                         create:{
+        //                             columnName:columnName as string,
+        //                             columnDescription:columnDescription as string,
+        //                             columnType:columnType
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     },
+        //     include:{
+        //         tableRows:{
+        //             include:{
+        //                 columns:true
+        //             }
+        //         },
+               
+        //     }
+        // })
+        console.log(table.tableRows[0])
+        // const updateTable = await db.tableRow.update({
+        //     where:{
+        //         id:table.tableRows[0].id as string,
+        //         serverId:serverId as string,
+        //         tableId:tableId as string,
+        //         spreadSheetId:spreadsheetId as string
+        //     },
+        //     data:{
+        //         columns:{
+        //             create:{
+        //                 columnName:columnName,
+        //                 columnDescription:columnDescription,
+        //                 columnType:columnType
+        //             }
+        //         }
+        //     },
+        //     include:{
+        //         columns:true
+        //     }
+        // })
         const updateTable = await db.table.update({
             where:{
                 id:tableId as string,
-                serverId:serverId as string,
                 spreadsheetId:spreadsheetId as string
             },
             data:{
+                tableColumns:{
+                    create:{
+                        columnName:columnName as string,
+                        columnDescription:columnDescription as string,
+                        columnType:columnType,
+                        restricted:false,
+                        spreadSheetId:spreadsheetId as string,
+                        rowId:table.tableRows[0].id as string,
+                        createdBy:member.id as string
+                    }
+                }
+            },
+            include:{
                 tableRows:{
-                    update:{
-                        where:{
-                            id:table.tableRows[0].id as string,
-                        },
-                        data:{
-                            columns:{
-                                create:{
-                                    columnName:columnName as string,
-                                    columnDescription:columnDescription as string,
-                                    columnType:columnType
-                                }
+                    where:{
+                        id:table.tableRows[0].id as string
+                    },
+                    include:{
+                        columns:{
+                            orderBy:{
+                                createdAt:"desc"
                             }
                         }
                     }
@@ -90,9 +153,32 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
             }
         })
 
+        const length = table.tableRows.length;
+        const newColumn = updateTable.tableRows[0].columns[0];
+       
+        for(let i=1; i<table.tableRows.length; i++){
+            const tableRowData = await db.tableRow.update({
+                where:{
+                    id:table.tableRows[i].id as string,
+                    tableId:tableId as string
+                },
+                data:{
+                    rowData:{
+                        create:{
+                            data:[],
+                            labels:[],
+                            type:newColumn.columnType,
+                            columnId:newColumn.id,
+                            tableId:tableId as string
+                        }
+                    }
+                }
+            })
+        }
 
 
-        return NextResponse.json({success:true}, {status:200});
+
+        return NextResponse.json({success:true, table}, {status:200});
 
 
 

@@ -42,9 +42,6 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
                 id:spreadsheetId as string,
                 serverId:serverId as string,
                 sectionId:sectionId as string
-            },
-            include:{
-                manager:true
             }
         });
         if(!spreadSheet) return NextResponse.json({error:"Test Channel not found"}, {status:409});
@@ -62,10 +59,10 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
         if(!table) return NextResponse.json({error:"Table not found"}, {status:409});
 
         const reqBody = await req.json();
-        const {columnName, columnDescription, columnType} = reqBody;
-        console.log(columnName);
+        const {columnDescription} = reqBody;
+        console.log(columnDescription);
 
-        if(!columnName || !columnType) return NextResponse.json({error:"Column not found"}, {status:409});
+        if(!columnDescription) return NextResponse.json({error:"Column not found"}, {status:409});
         
         const column = await db.tableColumn.findFirst({
             where:{
@@ -77,31 +74,24 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
         if(!column) return NextResponse.json({
             error:"Column not found"
         }, {status:409});
-
         if(column.restricted===true){
             return NextResponse.json({
                 error:"Column is restricted"
             }, {status:409});
         }
+
         const updateColumn = await db.tableColumn.update({
             where:{
                 id:columnId as string,
                 tableId:tableId as string
             },
             data:{
-                columnName:columnName as string,
                 columnDescription:columnDescription as string,
-                columnType:columnType
             }
         });
 
-
-
         return NextResponse.json({success:true}, {status:200});
-
-
-
     } catch (error) {
-        
+        console.log(error);
     }
 }
