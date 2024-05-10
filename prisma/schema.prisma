@@ -97,16 +97,19 @@ model User {
   name         String? 
   bio          String?
   profilePic   String?
-  email        String         @unique
-  otp          String?
+  displayPic    UploadedFile[]
+  email        String        @unique
+  otp          Int?
   role         Role           @default(user)
   googleId     String?
   appleId      String?
+  githubId     String?
   verified     Boolean        @default(false)
   createdAt    DateTime       @default(now())
   updatedAt   DateTime @updatedAt
-  password     String
+  password     String?
   // subscription Subscription[]
+  resetTokenExpiryIn   DateTime? 
   servers      Server[]
   sections     Section[]
   // channels     Channel[]
@@ -115,6 +118,7 @@ model User {
   // groups        Group[]
   // forums        ForumsChannel[]
   // testChannels    TestChannel[]
+
 }
 model Server {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
@@ -536,10 +540,13 @@ model Member {
   managedTestChannel      TestChannelManager[] @relation(fields: [managedTestChannelId], references: [id])
 
   managedTableRowId   String[] @db.ObjectId
-  managedTableRow     TableRowData [] @relation(fields: [managedTableRowId], references: [id])
+  managedTableRow     TableRowData [] @relation("AssignedMember", fields: [managedTableRowId], references: [id])
+
 
   //  managedTableRowId   String[] @db.ObjectId
-  // managedTableRow     TableRow [] @relation(fields: [managedTableRowId], references: [id])
+  // managedTableRow     TableRowData[] @relation("AssignedMember")
+  respondentRowId      String[] @db.ObjectId
+  respondentTableRowData     TableRowData[] @relation("Respondent", fields: [respondentRowId], references: [id])
 
 
   messages Message[]
@@ -1055,6 +1062,11 @@ model UploadedFile {
   rowComment   TableRowComments? @relation(fields: [rowCommentId], references: [id])
   tableRowDataId String? @db.ObjectId
   tableRowData   TableRowData? @relation(fields: [tableRowDataId], references: [id])
+
+  userId   String? @db.ObjectId
+  user     User? @relation(fields: [userId], references: [id])
+
+
 }
 
 
@@ -1294,10 +1306,12 @@ model TableRowData {
   id  String @id @default(auto()) @map("_id") @db.ObjectId
   data String[]
   labels String[]
-   assignedMemberIds   String[] @db.ObjectId
-  assignedMember  Member[] @relation(fields: [assignedMemberIds], references: [id])
+  assignedMemberIds   String[] @db.ObjectId
+  assignedMember  Member[] @relation("AssignedMember", fields: [assignedMemberIds], references: [id])
   files    UploadedFile[]
   type     ColumnType @default(shortText)
+  respondentId   String[] @db.ObjectId
+  respondent Member[] @relation("Respondent", fields: [respondentId], references: [id])
   rowId  String @db.ObjectId
   row  TableRow? @relation(fields: [rowId], references: [id])
   columnId  String @db.ObjectId

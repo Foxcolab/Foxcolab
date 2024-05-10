@@ -86,10 +86,10 @@ function VerifyPage({params}:InviteCodePageProps) {
 
           <div>
             <div className="verify_links">
-                <Link href={'https://mail.google.com/mail/u/1/?hl=en_GB#all'} target="_blank"><CgMail/> Open Gmail</Link>
+                <Link href={'https://mail.google.com/mail/u/0'} target="_blank"><CgMail/> Open Gmail</Link>
                 <Link href={'https://outlook.live.com/mail/0/inbox'} target="_blank"><PiMicrosoftOutlookLogo/> Open Outlook</Link>
             </div> 
-          <p style={{fontSize:"0.95rem", color:'#535151', marginTop:'0.3rem'}}>Can’t find your code? Check your spam folder!</p>  
+          <p style={{fontSize:"0.95rem", color:'var(--color3)', marginTop:'0.3rem'}}>Can’t find your code? Check your spam folder!</p>  
 
           </div>  
         </div>

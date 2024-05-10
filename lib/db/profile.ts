@@ -3,6 +3,8 @@ import { db } from "@/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import { getUserSesssion } from "@/app/api/auth/[...nextauth]/session";
+import { getServerSession } from "next-auth";
 
 export const getUserIDFromToken = (token:any)=>{
     try {
@@ -19,10 +21,19 @@ export const myProfile = async()=>{
     try {
         const cookieStore = cookies();
         const token = cookieStore.get('token')?.value || '';
+        const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
 
-        const userId = getUserIDFromToken(token);
+        let userId = ''
+       if(googleToken!==null && googleToken!==''){
+            const session =await getUserSesssion();
+            userId = session.id;
+       }else {
+          userId = getUserIDFromToken(token);
+           
+       }
+       if(userId===''){return}
+       
 
-        
         const user = await db.user.findUnique({
             where:{
                 id:userId
@@ -55,9 +66,16 @@ export const getMyserver = async()=>{
     try {
         const cookieStore = cookies();
         const token = cookieStore.get('token')?.value || '';
+        const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
+        let userId = ''
+        if(googleToken!==null && googleToken!==''){
+            const session =await getUserSesssion();
+            userId = session.id;
+       }else {
+         userId = getUserIDFromToken(token);
+       }
 
-        const userId = getUserIDFromToken(token);
-        if(!userId) return;
+        if(userId==='') return;
         
         const servers = await db.server.findMany({
             where:{

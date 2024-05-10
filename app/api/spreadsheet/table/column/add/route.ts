@@ -155,26 +155,49 @@ export const POST =async(req:NextRequest, res:NextResponse)=>{
 
         const length = table.tableRows.length;
         const newColumn = updateTable.tableRows[0].columns[0];
-       
-        for(let i=1; i<table.tableRows.length; i++){
-            const tableRowData = await db.tableRow.update({
-                where:{
-                    id:table.tableRows[i].id as string,
-                    tableId:tableId as string
-                },
-                data:{
-                    rowData:{
-                        create:{
-                            data:[],
-                            labels:[],
-                            type:newColumn.columnType,
-                            columnId:newColumn.id,
-                            tableId:tableId as string
+        console.log(newColumn.columnType)
+        if(newColumn.columnType==="status"){
+            for(let i=1; i<table.tableRows.length; i++){
+                const tableRowData = await db.tableRow.update({
+                    where:{
+                        id:table.tableRows[i].id as string,
+                        tableId:tableId as string
+                    },
+                    data:{
+                        rowData:{
+                            create:{
+                                data:[""],
+                                labels:["Done", "Working on it", "Stuck", ""],
+                                type:newColumn.columnType,
+                                columnId:newColumn.id,
+                                tableId:tableId as string
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
+        }else {
+            for(let i=1; i<table.tableRows.length; i++){
+                const tableRowData = await db.tableRow.update({
+                    where:{
+                        id:table.tableRows[i].id as string,
+                        tableId:tableId as string
+                    },
+                    data:{
+                        rowData:{
+                            create:{
+                                data:[],
+                                labels:[],
+                                type:newColumn.columnType,
+                                columnId:newColumn.id,
+                                tableId:tableId as string
+                            }
+                        }
+                    }
+                })
+            }
         }
+        
 
 
 

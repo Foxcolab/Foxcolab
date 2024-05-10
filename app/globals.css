@@ -413,7 +413,8 @@
     padding: 0 .5em;
     line-height: 1.5em;
     color: var(--textColor);
-    background-color: var(--channelBg);
+    /* background-color: var(--channelBg); */
+    background-color: hsl(var(--background));
   }
 }
 .hr-white {
@@ -2509,7 +2510,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.95rem;
+  font-size: 0.90rem;
   margin-top: 4rem;
 }
 
@@ -2517,11 +2518,10 @@
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  color: #535151;
+  color: var(--color3);
 }
 .verify_links a:hover {
-  color: rgb(75, 91, 88);
-  font-weight: 600;
+  color: rgb(41, 106, 171);
   text-decoration: underline;
 }
 

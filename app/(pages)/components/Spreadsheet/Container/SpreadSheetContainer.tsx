@@ -80,7 +80,7 @@ function SpreadSheetContainer({activeTable, sectionId, tables, name, members, me
     </div>
     <hr />
     {
-        table!==null && table!==undefined && <SingleTable table={table} sectionId={sectionId} />
+        table!==null && table!==undefined && <SingleTable table={table} sectionId={sectionId} channelMember={members} currentMember={member} />
     }
     
     

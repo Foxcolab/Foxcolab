@@ -2,11 +2,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { NextApiRequest } from "next";
+import { getUserSesssion } from "@/app/api/auth/[...nextauth]/session";
 
 
-export  const GetDataFromToken = (req:NextRequest)=>{
+export  const GetDataFromToken = async(req:NextRequest)=>{
     try {
-        const token = req.cookies.get('token')?.value || '';        
+        const token = req.cookies.get('token')?.value || ''; 
+        const googleToken = req.cookies.get('next-auth.csrf-token')?.value || '';
+
+        if(googleToken!==null && googleToken!==''){
+            const session =await getUserSesssion();
+            return session.id;
+        }
+        // if(googleToken!==null){
+        //     const decodeToken:any = jwt.very
+        // }      
+        if(googleToken!==null){
+            const userSession = getUserSesssion();
+            console.log("User Session",userSession);
+
+        }
         const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      
         return decodeToken.id;
     } catch (error:any) {

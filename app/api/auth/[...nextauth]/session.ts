@@ -8,7 +8,7 @@ export const session = async({session, token}:any)=>{
 }
 
 
-export const getUserSesssino = async():Promise<User> =>{
+export const getUserSesssion = async():Promise<User> =>{
     const authUserSession = await getServerSession({
         callbacks:{
             session,

@@ -7,7 +7,8 @@ import { SocketProvider } from './(pages)/components/provider/SocketProvider'
 import { QueryProvider } from './(pages)/components/provider/QueryProvider'
 const inter = Inter({ subsets: ['latin'] })
 import { Toaster } from "@/components/ui/toaster"
-import { NextSeo } from 'next-seo'
+import { NextSeo } from 'next-seo';
+import AuthProvider from './(pages)/components/provider/AuthProvider'
 export const metadata: Metadata = {
   title: 'Foxcolab',
   description: 'Foxcolab - where community meets',
@@ -28,8 +29,8 @@ export default function RootLayout({
       <body 
       className={cn(inter, "bg-white dark:bg-[#24272c]")} 
       >
-
       <ThemeProvider attribute='class' defaultTheme='Dark'  enableSystem={true} storageKey='foxcolab-key'>
+      <AuthProvider>
       <SocketProvider>
       <QueryProvider>
                 {children}
@@ -37,6 +38,7 @@ export default function RootLayout({
 
       </QueryProvider>
       </SocketProvider>
+      </AuthProvider>
         </ThemeProvider>        
         
         </body>

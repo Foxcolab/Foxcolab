@@ -7,7 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import RoundLoader from '../../../components/Loaders/RoundLoader/RoundLoader';
-
+import {FaGithub} from "react-icons/fa"
 function Login() {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -30,6 +30,10 @@ function Login() {
       
     }    
   }
+
+  const GithubHandler =()=>{
+
+  }
   
   return (
     <>
@@ -40,7 +44,6 @@ function Login() {
     {
         loading ? <RoundLoader/> :     <div className="main_container">
         <div className="login_card">
-          <div>Foxcolab</div>
           <div className="login_heading">
             Sign in
           </div>
@@ -59,8 +62,8 @@ function Login() {
           </div>
           <hr class="hr-text" data-content="OR" />
           <div className="other_signin">
-            <button><FcGoogle/> Continue with Google</button>
-            <button><BsApple/> Continue with Apple</button>
+          <button onClick={()=>{signIn("google")}}><FcGoogle/> Continue with Google</button>
+        <button onClick={()=>signIn("github")}><FaGithub/> Continue with Github</button>
           </div>
           <div className="log_footer">
             <div>Not a user?</div>
