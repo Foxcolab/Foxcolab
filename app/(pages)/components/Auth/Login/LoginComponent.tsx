@@ -1,18 +1,26 @@
-"use client"
-import {NextSeo} from "next-seo"
-import React, { useState } from 'react'
-import {FcGoogle} from "react-icons/fc";
-import {BsApple} from "react-icons/bs";
-import Link from 'next/link';
+"use client";
 import axios from 'axios';
+import { signIn, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import RoundLoader from '../../../components/Loaders/RoundLoader/RoundLoader';
-import {FaGithub} from "react-icons/fa"
-function Login() {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+import React, { useState } from 'react'
+import { FaGithub } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+import OtherSignin from './OtherSignin';
+import Loader from '../../Loaders/Loader';
+
+function LoginComponent() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false)
     const router = useRouter();
+  const {data:session, status} = useSession();
+
+    if(status==="authenticated"){
+        router.push("/home");
+      }
+
+
   const SubmitHandler = async()=>{    
     try {
       setLoading(true);
@@ -31,18 +39,10 @@ function Login() {
     }    
   }
 
-  const GithubHandler =()=>{
-
-  }
-  
   return (
     <>
-     <NextSeo
-      title="Login - Foxcolab"
-      description="Login in Foxcolab using Email or Google Account or Apple Account."
-    />
-    {
-        loading ? <RoundLoader/> :     <div className="main_container">
+    
+     <div className="main_container">
         <div className="login_card">
           <div className="login_heading">
             Sign in
@@ -58,13 +58,13 @@ function Login() {
             <input type="password" onChange={e=>setPassword(e.target.value)} />
           </div>
           <div className="login_section">
-            <button onClick={SubmitHandler}>Continue</button>
+            {
+                loading ? <Loader /> :<button onClick={SubmitHandler}>Continue</button>
+            }
+            
           </div>
-          <hr class="hr-text" data-content="OR" />
-          <div className="other_signin">
-          <button onClick={()=>{signIn("google")}}><FcGoogle/> Continue with Google</button>
-        <button onClick={()=>signIn("github")}><FaGithub/> Continue with Github</button>
-          </div>
+          <hr className="hr-text" data-content="OR" />
+          <OtherSignin />
           <div className="log_footer">
             <div>Not a user?</div>
             <Link href={'/register'}>Register to create a server </Link>
@@ -72,9 +72,11 @@ function Login() {
         </div>
         </div>
       </div> 
-    }
+    
+    
+    
     </>
   )
 }
 
-export default Login
+export default LoginComponent

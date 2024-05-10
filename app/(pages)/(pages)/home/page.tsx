@@ -41,7 +41,7 @@ async function HomePage() {
     <>
     
   <div className='home_container d-flex '>
-  <ServerSidebar home user={user} />
+  <ServerSidebar home={true} user={user} />
   
   <HomeContainer servers={servers} />
 

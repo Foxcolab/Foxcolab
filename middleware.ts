@@ -1,7 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { db } from "./prisma";
-import { GetDataFromToken } from "./middlewares/getDataFromToken";
-import jwt from "jsonwebtoken"
+
 
 
 export const middleware=async(req:NextRequest)=>{
@@ -9,21 +7,23 @@ export const middleware=async(req:NextRequest)=>{
     const path = req.nextUrl.pathname;
     const isPublicPath = path === '/login' || path === '/register' || path==="/"
 
-  const token = req.cookies.get('token')?.value || ''
-  console.log(token);
+  const token = req.cookies.get('token')?.value || '';
+  const googleToken = req.cookies.get('next-auth.csrf-token')?.value || '';
+  console.log("Token", token);
+  console.log("googleToken", googleToken)
   
 
-  if(isPublicPath && token) {
+  if(isPublicPath && (token!=='' && googleToken!=='')) {
     return NextResponse.redirect(new URL('/home', req.nextUrl))
   }
 
-  if (!isPublicPath && !token) {
+  if (!isPublicPath && (token==='' && googleToken==='')) {
     return NextResponse.redirect(new URL('/', req.nextUrl))
   }
 
 // await connectDB();
 
-console.log(token);
+// console.log(token);
 
 
 // // const user = await User.findById(userId).select("-password");
