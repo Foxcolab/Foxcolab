@@ -15,6 +15,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import AuthRight from '../Login/AuthRight';
 import { TfiEmail } from 'react-icons/tfi';
 import { RiLockPasswordFill } from 'react-icons/ri';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 function RegisterComponent() {
   const [username, setUsername] = useState('');
@@ -55,7 +56,6 @@ function RegisterComponent() {
       console.log(error.response.data.error);
       toast({
         title:error.response.data.error,
-       
       })
 
       
@@ -108,7 +108,7 @@ function RegisterComponent() {
           
           <div className="login_section">
             
-             <button className='auth_submit' onClick={SubmitHandler} disabled={loading}> {loading ? <span className='flex items-center justify-center'><ReloadIcon className='mr-2 h-4 w-4 animate-spin '/> Signing</span> : <span>Sign in</span>}  </button>
+             <button className='auth_submit' onClick={SubmitHandler} disabled={loading}> {loading ? <span className='flex items-center justify-center'><ReloadIcon className='mr-2 h-4 w-4 animate-spin '/> Signing up</span> : <span>Sign up</span>}  </button>
             
             
           </div>

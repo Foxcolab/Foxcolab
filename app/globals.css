@@ -588,10 +588,12 @@
   height: 2.5rem;
   padding: 0.5rem;
   font-size: 0.9rem;
+  background: transparent;
 }
 .auth_card .login_card .input_sec .login_section .auth_input_box input:focus {
   outline:none;
   border:none;
+  background: transparent;
 }
 .auth_card .login_card .input_sec .login_section .auth_input_box span{
   display: flex;
