@@ -32,6 +32,9 @@ function ServerName({serverName, serverId, hasPermission}:Props) {
     
     <div className="setting_section">      
         <div className="setting_section_title">Server Name</div>
+        <div className="setting_sec_desc">
+        Define your server's identity in a snap with a catchy and memorable name.
+            </div>
         <div className="setting_section_content">   
             <div className="server_set_inp">
                 <input type="text" onChange={(e)=>setName(e.target.value)} defaultValue={name} disabled={!hasPermission} />

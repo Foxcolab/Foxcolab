@@ -35,6 +35,9 @@ function DefaultOpen({server}:Props) {
     
     <div className="setting_section">      
         <div className="setting_section_title">Default Open</div>
+        <div className="setting_sec_desc">
+        Guide your community's first steps by specifying which channel or tab greets them upon entering the server.
+        </div>
         <div className="setting_section_content">   
             <div className="server_set_inp">
               <select name="" id="" onChange={(e)=>setDefault(e.target.value)}>

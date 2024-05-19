@@ -19,7 +19,7 @@ export const SingleSection = ({content}) => {
     <>
     
     <button href={`${content.url}`} className={cn('flex items-center gap-1' , path===content.url? ' activeBg':'')} onClick={onClick}>
-    <span className='text-lg'>{content.icon} </span>{content.title}
+    <span className='text-lg'>{content.icon} </span>  <span className='overflow_hidden'>{content.title} </span>  
 
     </button>
     

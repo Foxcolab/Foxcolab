@@ -49,13 +49,13 @@ function UsefulFeature() {
     <>
     
     <div className="pt-24 pb-8">
-    <div className='text-[2.8rem] text-center font-semibold flex items-center gap-1 justify-center'><span className=''><sup><RiDoubleQuotesL/> </sup></span> Packed with Useful Features<span className=''><sup><RiDoubleQuotesR/></sup> </span></div>
+    <div className='landling_feature_title'><span className=''><sup><RiDoubleQuotesL/> </sup></span> Packed with Useful Features<span className=''><sup><RiDoubleQuotesR/></sup> </span></div>
     <div className='text-center text-lg font-semibold'>From integrations to security, Foxcolab has everything a modern team needs.
 </div>
 
 
     <div className='p-8'>
-        <div className='  flex items-center justify-center '>
+        <div className='  flex items-center justify-center flex-wrap'>
         {
             items.map((item, i)=>(
                 <div key={i}>
@@ -69,27 +69,28 @@ function UsefulFeature() {
           </div>
     </div>
 
-        <div className="mx-40 flex border border-[#e9e9e9] rounded-xl overflow-hidden shadow-xl">
+        <div className='flex items-center justify-center p-4'>
+        <div className="useful_feat_list  border border-[#e9e9e9] rounded-xl overflow-hidden shadow-xl">
             {
-                state==="Scheduling" ? <div className='bg-red-500 w-3/5 h-[20rem]  flex-none '>
+                state==="Scheduling" ? <div className='bg-red-500 w-full h-[20rem] useful_feat_image flex-none '>
 <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
                 </div> :
-                state==="Threads" ? <div className='bg-green-500 w-3/5 h-[20rem]  flex-none '>
+                state==="Threads" ? <div className='bg-green-500 w-full h-[20rem]  flex-none '>
 
                 </div>:
-                state==="Voice Message" ? <div className='bg-violet-500 w-3/5 h-[20rem]  flex-none '>
+                state==="Voice Message" ? <div className='bg-violet-500 w-full h-[20rem]  flex-none '>
 
                 </div>:
-                state==="Video Message" ? <div className='bg-blue-500 w-3/5 h-[20rem]  flex-none '>
+                state==="Video Message" ? <div className='bg-blue-500 w-full h-[20rem]  flex-none '>
 
                 </div>:
-                state==="Screen Sharing" ? <div className='bg-cyan-500 w-3/5 h-[20rem]  flex-none '>
+                state==="Screen Sharing" ? <div className='bg-cyan-500 w-full h-[20rem]  flex-none '>
 
                 </div>:
-                state==="Permissions" ? <div className='bg-pink-500 w-3/5 h-[20rem]  flex-none '>
+                state==="Permissions" ? <div className='bg-pink-500 w-full h-[20rem]  flex-none '>
 
                 </div>:
-                state==="Direct Message" ? <div className='bg-yellow-500 w-3/5 h-[20rem]  flex-none '>
+                state==="Direct Message" ? <div className='bg-yellow-500 w-full h-[20rem]  flex-none '>
 
                 </div>:
                 ''
@@ -158,6 +159,7 @@ function UsefulFeature() {
                 }
                 
             </div>
+        </div>
         </div>
 
 

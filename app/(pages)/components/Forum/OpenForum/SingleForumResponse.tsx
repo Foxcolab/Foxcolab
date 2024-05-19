@@ -56,7 +56,7 @@ interface Props {
 function SingleForumResponse({id, content, member, timestamp, fileUrl, deleted, currentMember, isUpdated, socketUrl, socketQuery, forumResponse, managers, index, totallength, forumId, Reactions}:Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
-  console.log(open);
+ 
   // const { onOpen } = useModal();
   const params = useParams();
   const router = useRouter();
@@ -139,7 +139,8 @@ function SingleForumResponse({id, content, member, timestamp, fileUrl, deleted, 
 }
   
   const isMsgCreator = currentMember.id === member.id;
-  console.log("MSG CREATOR", currentMember.user.name, member.id, isMsgCreator);
+  
+
   
   return (
     <>
@@ -252,21 +253,15 @@ className={cn("relative group flex items-center p-2 mb-2  transition w-full msg_
 
 
 
-
-
-
-            <div className="all_imgs">
-              {fileUrl?.length!==0 && 
-              
-             fileUrl &&  fileUrl.map((file, i)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
+              {
+                forumResponse?.uploadedFiles?.length!==0 && 
+                <div className="all_imgs">
+                  <MsgFile files={forumResponse.uploadedFiles} type="" length={forumResponse.uploadedFiles.length} />
+                </div>
               }
-            </div>            
+
+
+                     
             
             </>
 

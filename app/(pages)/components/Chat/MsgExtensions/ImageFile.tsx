@@ -2,24 +2,22 @@ import React from 'react'
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { ActionTooltip } from '../../tooolkit/Toolkit'
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import { ImNewTab } from "react-icons/im";
 import { BiSolidMessageDetail } from 'react-icons/bi';
-import { BsFiletypeTxt, BsThreeDots } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 import Image from 'next/image';
 
 
 function ImageFile({fileUrl, type, fileName}:{fileUrl:string, type:string, fileName:string}) {
 
     const Download =(url:string)=>{
-       
+      const OpenNewTab = ()=>{
+        window.open(fileUrl)
+    }
         }
     
         const OpenNewTab = ()=>{

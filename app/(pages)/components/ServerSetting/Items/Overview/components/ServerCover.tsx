@@ -73,6 +73,9 @@ function ServerCover({coverPic, serverId, hasPermission}:Props) {
      <div className="setting_section">
             
             <div className="setting_section_title">Server Cover</div>
+            <div className="setting_sec_desc">
+            Make a striking first impression with a unique server cover photo.
+            </div>
             <div className="setting_section_content">
                 {
                     hasPermission ? <div className="setting_avt">

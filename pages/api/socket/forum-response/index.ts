@@ -118,6 +118,9 @@ import { NextApiRequest } from "next";
       data:{
         content,
         fileUrl,
+        uploadedFiles:{
+          connect:fileUrl?.map((file:string)=>({id:file}))
+      },
         serverId:serverId as string,
         sectionId:Sendmessage.sectionId as string,
         forumsId:forumId as string,
@@ -129,12 +132,12 @@ import { NextApiRequest } from "next";
           include:{
             user:true
           }
-        }
+        },
+        uploadedFiles:true
       }
     })
 
 
-    console.log("CREATED SUCESSFUKKY");
     
     
     const channelKey = `chat:${Sendmessage.id}:messages`;

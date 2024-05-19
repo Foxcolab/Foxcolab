@@ -82,10 +82,45 @@ function OpenForumContainer({setForum, forum, managerIds, whoCanComment, whoCanD
   }
 
 
-
   return (
     <>
-    <div className="forum_msg_container">
+
+  <div className='relative top-[1.6305rem]'>
+  <div className="forum_msg_container">
+  <div className="chat_section">
+        <div className="channel_title">
+            {forum.title}
+        </div>
+        <div className="channel_memb_pin">
+        <div className="content2_cross flex items-center gap-3">
+
+
+        <DropdownMenu>
+  <DropdownMenuTrigger><button><BsThreeDots/></button></DropdownMenuTrigger>
+  <DropdownMenuContent className='server_drpdwn w-20' style={{width:"5rem", marginRight:"1rem"}}>
+    <DropdownMenuItem className='cursor-pointer font-semibold flex items-center gap-1' onClick={()=>setEditDialog(true)}><MdEdit/> Edit title</DropdownMenuItem>
+    <DropdownMenuItem className='leave_item font-semibold' onClick={()=>setDeleteDialog(true)}>
+      <button className='flex items-center gap-1' ><RiDeleteBin7Fill/> Delete</button>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+
+            
+      <button onClick={()=>setForum(null)}> <RxCross1/></button>
+    </div>
+        </div>
+    </div>
+    <ForumMessageContainer forum={forum} managerIds={managerIds} whoCanComment={whoCanComment} whoCanDelete={whoCanDelete} whoCanUploadMediaInComment={whoCanUploadMediaInComment} member={member}  />
+
+
+    </div>
+
+  </div>
+
+
+
+    {/* <div className="forum_msg_container ">
+      
     <div className="chat_section">
         <div className="channel_title">
             {forum.title}
@@ -112,13 +147,12 @@ function OpenForumContainer({setForum, forum, managerIds, whoCanComment, whoCanD
 
         <ForumMessageContainer forum={forum} managerIds={managerIds} whoCanComment={whoCanComment} whoCanDelete={whoCanDelete} whoCanUploadMediaInComment={whoCanUploadMediaInComment} member={member}  />
  
-    </div>
+    </div> */}
 
     <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
   <DialogTrigger></DialogTrigger>
   <DialogContent>
     <DialogHeader>
-      {/* <DialogTitle>Deleting "{forum.title}" ?</DialogTitle> */}
       
       
     </DialogHeader>

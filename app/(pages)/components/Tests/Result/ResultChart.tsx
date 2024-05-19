@@ -155,8 +155,8 @@ const formattedDate = `${formattedDay}-${formattedMonth}-${year}`;
 
   return (
     <>
-    <div className="flex w-full gap-4">
-        <div className="respondent w-1/2">
+    <div className="result_chart w-full gap-4">
+        <div className="respondent response_chart">
             <label htmlFor="">RESULT</label>
             
 
@@ -193,7 +193,7 @@ const formattedDate = `${formattedDay}-${formattedMonth}-${year}`;
               </div>
 
         </div>
-        <div className="respondent w-1/2">
+        <div className="respondent response_chart">
             <label htmlFor="">TIMER</label>
             <div className='flex items-center font-bold text-xl gap-1 py-3 '><FaClock/>Total Time</div>
             <div className='text-lg font-semibold'>{diff} / 

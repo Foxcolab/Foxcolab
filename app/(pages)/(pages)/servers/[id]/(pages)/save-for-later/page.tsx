@@ -10,6 +10,7 @@ import {MdOutlineDataSaverOn} from "react-icons/md"
 import Pinned from '@/app/(pages)/components/SaveLater/Pinned';
 import { getServer } from '@/lib/db/ServerLib';
 import SavedContainer from '@/app/(pages)/components/SaveLater/SavedContainer';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 interface SavedLater {
   params:{
     id:string
@@ -24,17 +25,7 @@ async function SaveForLater({params}:SavedLater) {
 
 
     if(!server) redirect('/home');
-    // const member 
-    // const myLater = await db.later.findMany({
-    //   where:{
-    //     createdUser:{
-    //       userId:profile.id
-    //     }
-    //   },
-    //   include:{
-    //     message:true,
-    //   }
-    // });
+
 
     const myLater = await db.later.findMany({
       where:{
@@ -50,9 +41,9 @@ async function SaveForLater({params}:SavedLater) {
                  member:{
                   include:{
                       user:true,
-
                   }
-                 } 
+                 } ,
+                 uploadedFiles:true
               }
           }
       }
@@ -63,19 +54,20 @@ async function SaveForLater({params}:SavedLater) {
   return (
     <>
     
-    <MainSidebar server={server}>
-    <div className="section_container">
+   
+      <ServerHome server={server} user={profile}>
+    <div className="forum_msg_container">
         
-        <SectionHeader icon={<MdOutlineDataSaverOn/>} name={"Saved for later"} />
-       
+    <SectionHeader icon={<MdOutlineDataSaverOn/>} name={"Saved for later"} />
 
-        <SavedContainer savedPosts={myLater} userId={profile.id as string} />
-      
+    <div className="forum_messages">
+    <SavedContainer savedPosts={myLater} userId={profile.id as string} />
+
+    </div>
+       </div>
+    </ServerHome>
 
 
-
-      </div>
-    </MainSidebar>
     
     </>
   )

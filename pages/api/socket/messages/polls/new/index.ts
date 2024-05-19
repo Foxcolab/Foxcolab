@@ -71,6 +71,15 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                             include:{
                                 user:true
                             }
+                        },
+                        votes:{
+                            include:{
+                                createdMember:{
+                                    include:{
+                                        user:true
+                                    }
+                                }
+                            }
                         }
                     }
                 },

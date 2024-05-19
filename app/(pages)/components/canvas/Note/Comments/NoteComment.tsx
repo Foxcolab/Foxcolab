@@ -19,15 +19,16 @@ function NoteComment({note, canComment, memberId}:Props) {
         <div className='note_right_container'>
             <div className="note_comments">Comments</div>
             <Separator orientation='horizontal' />
+        
             <div className="all_comments">
               <AllComments comments={note?.comments || []} memberId={memberId} />
             </div>
 
        
             <CommentEditor noteId={note?.id} canComment={canComment} />
+            </div>
+            
        
-
-        </div>
        
     
     

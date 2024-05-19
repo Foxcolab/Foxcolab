@@ -10,20 +10,17 @@ export  const GetDataFromToken = async(req:NextRequest)=>{
         const token = req.cookies.get('token')?.value || ''; 
         const googleToken = req.cookies.get('next-auth.csrf-token')?.value || '';
 
-        if(googleToken!==null && googleToken!==''){
+        if(googleToken!==null && googleToken!=='' && token===''){
             const session =await getUserSesssion();
             return session.id;
+        }else {
+            const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      
+            return decodeToken.id;
         }
         // if(googleToken!==null){
         //     const decodeToken:any = jwt.very
-        // }      
-        if(googleToken!==null){
-            const userSession = getUserSesssion();
-            console.log("User Session",userSession);
-
-        }
-        const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      
-        return decodeToken.id;
+        // } 
+        
     } catch (error:any) {
         console.log(error);
         return NextResponse.json({message:"You are not athorized"}, {status:400});

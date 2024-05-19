@@ -24,21 +24,21 @@ function Security() {
     
     <div className="pt-24 pb-8">
         <div className='flex items-center justify-center text-[1.2rem] gap-2 pb-4 font-semibold'>A new sense of security <MdSecurity/></div>
-        <div className='text-[2.8rem] text-center font-semibold flex gap-1 justify-center'>
+        <div className='landling_feature_title'>
         <div className='flex flex-col items-center justify-center'>
-            <div className='flex items-center'><span className=''><sup><RiDoubleQuotesL/> </sup></span>Giving you the freedom to </div>
-            <div className='flex items-center pl-8'>communicate on your own terms. <span className=''><sup><RiDoubleQuotesR/></sup> </span></div>
+            <div className='flex items-center'><span className='double_quote'><sup><RiDoubleQuotesL/> </sup></span>Giving you the freedom to </div>
+            <div className='flex items-center pl-8'>communicate on your own terms. <span className='double_quote'><sup><RiDoubleQuotesR/></sup> </span></div>
         </div>
     
     
     
     </div>
 
-    <div className='flex gap-4 pt-4  justify-center'>
+    <div className='  security_container gap-4 pt-4 px-8  justify-center'>
         {
             items.map((item, i)=>(
-        <div key={i} className='w-72 bg-white border border-[#e9e9e9] h-36 rounded-md shadow-md'>
-            <div className='flex items-center justify-center flex-col p-4'>
+        <div key={i} className=' security_container_item  bg-white border border-[#e9e9e9]  rounded-md shadow-md'>
+            <div className='flex items-center justify-center flex-col p-4 h-full'>
             <div className='text-[1.3rem] font-semibold text-center'>{item.name}</div>
             <div className='text-[#7b7c81]'>
                 {item.description}

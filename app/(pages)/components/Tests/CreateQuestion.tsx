@@ -13,6 +13,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 
 import {  RxCrossCircled } from 'react-icons/rx';
 import { RiDeleteBin5Line } from 'react-icons/ri';
+import { useToast } from '@/components/ui/use-toast';
 
 
 interface Props {
@@ -28,7 +29,7 @@ function CreateQuestion({testId, testTitle}:Props) {
 
     const [inputFields, setInputFields] = useState([{ value: '' }]);
 
-
+    const {toast} = useToast();
     const [explanation, setExplanation] = useState('');
     const router = useRouter();
     const params = useParams();
@@ -36,7 +37,6 @@ function CreateQuestion({testId, testTitle}:Props) {
     const SubmitHandler =async(value:string)=>{
       try {
         console.log(value);
-        setLoading(true);
         // console.log(serverId, testId, testChannelId, type);
         let answers= []
         let checkbox = document.querySelectorAll('.checkbox');
@@ -60,6 +60,16 @@ function CreateQuestion({testId, testTitle}:Props) {
       for(let i=0; i<inputFields.length; i++){
         options.push(inputFields[i].value);
       }
+
+      if(answers.length===0){
+        toast({
+          title: "Please select the answer.",
+      
+        })
+        return;
+      }
+      setLoading(true);
+
     
         
         const res = await axios.post(`/api/test/question/new?serverId=${params?.id}&testChannelId=${params?.testChannelId}&testId=${params?.testId}`, {title:name, qType:type, marks, options, answer:answers, explanation });
@@ -68,15 +78,12 @@ function CreateQuestion({testId, testTitle}:Props) {
         if(res.status===200){
           if(value==="Save"){
             console.log("SAVE EXecuting");
-            hrefHandler();
+            router.push(`${testId}`);
             router.refresh();
 
           }else {
             console.log("ELSE EXecuting");
-            setInputFields([{value:""}]);
-            setExplanation("");
-            setName("");
-            setType("Single Choice");
+            router.push(`/add-question`);
             router.refresh();
 
           }
@@ -114,8 +121,7 @@ function CreateQuestion({testId, testTitle}:Props) {
     }
 
     const hrefHandler =()=>{
-      console.log("Click");
-      router.push(``);
+      router.push(`/servers/${params?.id}/test-channel/${params?.testChannelId}/${testId}`);
     }
 
 
@@ -275,8 +281,8 @@ function CreateQuestion({testId, testTitle}:Props) {
         <div key={index} className='flex items-center gap-4 mb-4'>
 
 <div className="flex items-center space-x-2">
-        <RadioGroupItem value={inputField.value} className='radio'   id="r1" />
-        <input type="checkbox"  value={inputField.value}  className='checkbox'  style={{display:'none'}}  />
+        <RadioGroupItem value={inputField.value} className='radio' style={{height:'1.1rem', width:'1.1rem'}}  id="r1" />
+        <input type="checkbox"  value={inputField.value}  className='checkbox'   style={{display:'none', height:'1.1rem', width:'1.1rem'}}  />
         <div className="create_ss_editor">
         <TinyMce setTitle={(value:string)=>handleChangeInput(index, value)} placeholder={`Enter the option ${index}`} />
         

@@ -18,7 +18,7 @@ export const POST =async(req:NextRequest)=>{
         const reqBody = await req.json();
 
         const {title, fileUrl, content} = reqBody;
-        console.log(title, fileUrl, serverId, sectionId, forumId);
+        console.log(title, fileUrl, content);
         if(!title) return NextResponse.json({error:"Please enter the title fields"}, {status:409});
 
         const server = await db.server.findFirst({
@@ -31,7 +31,6 @@ export const POST =async(req:NextRequest)=>{
                 }
             }
         });
-        console.log("SERVER", server);
         if(!server) return NextResponse.json({error:"Server not found"}, {status:409});
 
         const member = await db.member.findFirst({
@@ -80,16 +79,19 @@ export const POST =async(req:NextRequest)=>{
                 sectionId:forumChannel.sectionId as string,
                 forumsChannelId:forumId,
                 responses:{
-                                        create:[
-                                            {
-                                                content,
-                                                fileUrl,
-                                                createdBy:member?.id as string,
-                                                serverId:server.id as string,
-                                                sectionId:forumChannel.sectionId as string
-                                            }
-                                        ]
-                                    }
+                    create:[
+                        {
+                            content,
+                            fileUrl,
+                            uploadedFiles:{
+                                connect:fileUrl?.map((file:string)=>({id:file}))
+                            },
+                            createdBy:member?.id as string,
+                            serverId:server.id as string,
+                            sectionId:forumChannel.sectionId as string
+                        }
+                    ]
+                }
             }
         })
 

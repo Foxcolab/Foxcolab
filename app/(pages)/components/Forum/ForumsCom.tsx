@@ -45,20 +45,18 @@ function ForumsCom({name, members, serverMembers, description, createdBy, create
   if(((isAdmin || isManager || isMember) && schema?.whoCanDeletePost==="member") || ((isManager || isAdmin) && schema?.whoCanDeletePost==="manager") || (isAdmin && schema?.whoCanDeletePost==="admin") ){
     whoCanDelete = true;
   }  
-  // console.log("IS ADMIN",isAdmin, isManager, isMember, member);
-  console.log(whoCanComment, whoCanDelete, whoCanUploadMediaInComment)
 
   return (
     <>
 
         {
             forum===null ? <>
-            <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} schema={schema} member={member}  />
+            <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} schema={schema} member={member} isOpen={false} />
              </> : 
             <>
-     <ResizablePanelGroup direction="horizontal">
+     <ResizablePanelGroup direction="horizontal" >
   <ResizablePanel>
-  <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} schema={schema} member={member} />
+  <ForumContainer name={name} members={members} serverMembers={serverMembers} description={description} createdBy={createdBy} createdAt={createdAt} type={type} isAdmin={isAdmin} managers={managers} sendMsg={sendMsg} sectionId={sectionId} forums={forums} setForum={setForum} listStyle={listStyle} schema={schema} member={member} isOpen={true} />
   </ResizablePanel>
   <ResizableHandle />
   <ResizablePanel>

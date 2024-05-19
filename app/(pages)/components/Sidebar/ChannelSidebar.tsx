@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {SingleChannel} from "./SingleChannel"
+import {SingleChannel} from "./Components/SingleChannel"
 import { FaDharmachakra, FaNoteSticky} from "react-icons/fa6"
 import ChannelFeature from "@/app/(pages)/components/Channel/ChannelFeature";
 import {ScrollArea} from "@/components/ui/scroll-area"
@@ -10,11 +10,17 @@ import SectionPlus from '../section/SectionPlus';
 import Link from 'next/link';
 import { MdForum } from "react-icons/md";
 import { RiSurveyFill } from "react-icons/ri";
-import { IoIosLock } from "react-icons/io";
+import { IoIosArrowDown, IoIosLock } from "react-icons/io";
 import { myProfile } from '@/lib/db/profile';
 import { NameDropDown } from '../Header/NameDropDown';
-import { Member, Server, Spreadsheets } from '@prisma/client';
+import { Canvas, Channel, Forums, ForumsChannel, Member, Section, Server, Spreadsheets, TestChannel } from '@prisma/client';
 import { VscTable } from 'react-icons/vsc';
+import { PiExamFill } from 'react-icons/pi';
+import { BiSolidLeftArrow, BiSolidSpreadsheet } from 'react-icons/bi';
+import SingleForums from './Components/SingleForums';
+import SingleTestChannel from './Components/SingleTestChannel';
+import SingleSpreadsheet from './Components/SingleSpreadsheet';
+import SingleCanvas from './Components/SingleCanvas';
 
 
 interface Props {
@@ -70,63 +76,65 @@ const ChannelSidebar =async({server}:Props) =>{
     
   return (
     <>
-
+    <div className='channel_border_rad'> 
         <div className='sidebgg'>
-    <ScrollArea className='flex-1 w-full'>
+    {/* <ScrollArea className='flex-1 w-full h-full min-h-0 sideb_bg_scroll' > */}
+    <div className='flex-1 w-full h-full min-h-0 '>
              <div className="server_logo">
-                <div className="">
+                <div className="server_title">
                 <NameDropDown server={server} createSection={createSection} />
                 </div>
               
             </div>
+            <div className="sideb_bg_scroll all_side_conents">
             <ChannelFeature id={server.id} sections={server.sections} member={currentMember} whoCreateSection={server.whoCreateSection} />
         
     <div className='channels'>
         {
-           server.sections && server.sections.map((section)=>(
+           server.sections && server.sections.map((section:Section)=>(
                 <div key={section.id}>
-                    <div className="section_title secbtnn">
+                    <div className="section_title">
                         
-                        <div>
-                        <FaDharmachakra/>{section.name}
+                        <div className='flex items-center gap-1'>
+                        <span className='text-sm'><BiSolidLeftArrow/></span>{section.name}
                         </div>
                             {
                                 createChannel===false && createCanvas===false && createForum===false && createTestChannel===false ? 
                                 "" : 
-                                <SectionPlus sectionId={section.id} serverId={server.id} createChannel={createChannel} createCanvas={createCanvas} createForum={createForum} createTestChannel={createTestChannel} createSpreadsheet={createSpreadsheet}  />  
+                                <SectionPlus sectionId={section.id} serverId={server.id} createChannel={createChannel} createCanvas={createCanvas} createForum={createForum} createTestChannel={createTestChannel} createSpreadsheet={createSpreadsheet}  sectionName={section.name} />  
                             }
                                                  
                        </div>
                   
-        <div className='sidecontent '>
+        <div className='sidecontent mb-[0.3rem]'>
                     {
-                      section.channels &&  section.channels.map((channel)=>(
+                      section.channels &&  section.channels.map((channel:Channel)=>(
                             <SingleChannel channel={channel} key={channel.id} server={channel.server} />
                             
                         ))
                     }
 
                     {
-                       section.canvas!==undefined &&  section.canvas.map((canvas)=>(
-                            <Link href={`/servers/${server.id}/canvas/${canvas.id}`} key={canvas.id} className='ch_btnn'><span className=''><span className='text-lg'><FaNoteSticky/> </span>{canvas.title} </span>{canvas.type==="public"?"":<IoIosLock/> } </Link>
-                        )
+                       section.canvas  &&  section.canvas.map((canvas:Canvas)=>(
+                        <SingleCanvas canvas={canvas} key={canvas.id} />        
+                    )
                         
                         )
                     }
 
                     {
-                        section.forumsChannel && section.forumsChannel.map((forums, index)=>(
-                            <Link href={`/servers/${server.id}/forum/${forums.id}`} key={index} className='ch_btnn'><span className=''> <span className="text-lg"><MdForum/> </span> {forums.name} </span>{forums.type==="public"?"":<IoIosLock/> } </Link>
-                        ))
+                        section.forumsChannel && section.forumsChannel.map((forums:ForumsChannel, index:number)=>(
+                            <SingleForums forum={forums} key={index} />
+                            ))
                     }
                     {
-                        section.TestChannels && section.TestChannels.map((test, index)=>(
-                            <Link href={`/servers/${server.id}/test-channel/${test.id}`} key={index} className='ch_btnn'><span className=''> <span className='text-lg'><RiSurveyFill/></span> {test.name}</span> {test.type==="public"?"":<IoIosLock/> } </Link>
+                        section.TestChannels && section.TestChannels.map((test:TestChannel, index:number)=>(
+                           <SingleTestChannel testChannel={test} key={index} />
                         ))
                     }
                     {
                         section.spreadsheets && section.spreadsheets.map((spreadsheet:Spreadsheets, index:number)=>(
-                            <Link href={`/servers/${server.id}/spreadsheet/${spreadsheet.id}`} key={index} className='ch_btnn'><span className=''> <span className='text-lg'><VscTable/></span> {spreadsheet.name}</span> {spreadsheet.type==="public"?"":<IoIosLock/> } </Link>
+                            <SingleSpreadsheet spreadsheet={spreadsheet} key={index} />
                         ))
                     }
                     {/* <VscTable/> */}
@@ -148,10 +156,11 @@ const ChannelSidebar =async({server}:Props) =>{
         
         </div>
     
-    </ScrollArea>
-        
         </div>
+            </div>
 
+        </div>
+        </div>
 
     </>
   )

@@ -7,6 +7,8 @@ import { redirect } from 'next/navigation';
 import { getServer } from '@/lib/db/ServerLib';
 import { db } from '@/prisma';
 import ThreadContainer from '@/app/(pages)/components/threads/Sidebar/ThreadContainer';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
+import { BsFillThreadsFill } from 'react-icons/bs';
 
 interface ThreadProp {
   params:{
@@ -20,38 +22,7 @@ async function ThreadPage({params}:ThreadProp) {
   const server = await getServer(params?.id, profile.id);
   if(!server) redirect('/home');
 
-  // const myThreads = await db.threads.findMany({
-  //   where:{
-  //     serverId:server.id,
-  //     OR:[
-  //       {
-  //         member:{
-  //           userId:profile.id
-  //         }
-  //       },
-  //       {
-  //         message:{
-  //           member:{
-  //             userId:profile.id
-  //           }
-  //         }
-  //       }
-  //     ]
-  //   },
-  //   include:{
-  //     message:{
-  //       include:{
-  //         member:{
-  //           include:{
-  //             user:true
-  //           }
-  //         }
-  //       }
-  //     },
-  //     channel:true
 
-  //   }
-  // })
 
   const ThreadMessages = await db.message.findMany({
     where:{
@@ -83,16 +54,40 @@ async function ThreadPage({params}:ThreadProp) {
                 include:{
                   user:true
                 }
-              }
+              },
+              uploadedFiles:true
             }
           },
           member:{
             include:{
               user:true
             }
+          },
+          uploadedFiles:true
+        }
+      },
+      poll:{
+        include:{
+          createdMember:{
+            include:{
+              user:true
+            }
+          },
+
+        }
+      },
+      form:{
+        include:{
+          createdMember:{
+            include:{
+              user:true
+            }
           }
         }
-      }
+      },
+      channel:true,
+      uploadedFiles:true,
+
     }
   })
 
@@ -100,14 +95,28 @@ async function ThreadPage({params}:ThreadProp) {
   return (
     <>
     
-    <MainSidebar server={server}>
-    <div className="section_container">
+    {/* <MainSidebar server={server}>
+    <div className="forum_msg_container">
         
         <SectionHeader icon={<MdMessage/>} name={"Threads"} />
-        {/* <DraftContainer drafts={myDrafts} sents={messages} /> */}
         <ThreadContainer  ThreadMessages={ThreadMessages} />
       </div>
-    </MainSidebar>
+    </MainSidebar> */}
+
+    <ServerHome server={server} user={profile}>
+    <div className="forum_msg_container">
+        
+        <SectionHeader icon={<BsFillThreadsFill/>} name={"Threads"} />
+        <div className="forum_messages">
+        <ThreadContainer  ThreadMessages={ThreadMessages} />
+        {
+          ThreadMessages.length===0 && 
+        <h1 className='nopinn'>You have not participate any thread.</h1>
+
+        }
+        </div>
+      </div>
+    </ServerHome>
     
     
     </>

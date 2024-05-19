@@ -49,7 +49,6 @@ function ChannelResult({results}:Props) {
     <div className="test_chann_res">
    
     <Table className='result_table'>
-  <TableCaption>My Results</TableCaption>
   <TableHeader>
     <TableRow >
       {/* <TableHead className=""><input type="checkbox" value={"all"} onChange={()=>onChangeHandler("all")} /></TableHead> */}

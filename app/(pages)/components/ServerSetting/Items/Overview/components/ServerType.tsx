@@ -28,6 +28,9 @@ function ServerType({serverId, serverType, hasPermission}:Props) {
     <>
        <div className="setting_section">      
         <div className="setting_section_title">Server Type</div>
+        <div className="setting_sec_desc">
+        Choose the server type that best represents your community's focus and culture.
+        </div>
         <div className="setting_section_content">   
             <div className="server_set_inp">
               <select name="" id="" defaultValue={type} onChange={e=>setType(e.target.value)} disabled={!hasPermission} >

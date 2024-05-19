@@ -10,6 +10,7 @@ import {
 import OpenForumContainer from './OpenForum/OpenForumContainer';
 import SchemaHeader from '../Schema/Header/SchemaHeader';
 import ForumHeader from './ForumHeader';
+import { cn } from '@/lib/utils';
 
 
 interface Props {
@@ -29,8 +30,9 @@ interface Props {
   listStyle:string
   schema:ForumsChannel
   member:Member
+  isOpen:boolean
 }
-function ForumContainer({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums, setForum, listStyle,schema, member}:Props) {
+function ForumContainer({name, members, serverMembers, description, createdBy, createdAt, type, isAdmin, managers, sendMsg,sectionId,forums, setForum, listStyle,schema, member, isOpen}:Props) {
     
   let canCreateForum = false;
   let canDeleteForum = false;
@@ -53,7 +55,7 @@ function ForumContainer({name, members, serverMembers, description, createdBy, c
     <>
 
 
-<div className="body_content_container">
+<div className={cn('forum_msg_container', isOpen ? "forum_open_radius":"")}>
 
    
 <SchemaHeader
@@ -77,7 +79,10 @@ member={member}
 <div className="canvas_container">
   <ForumHeader sectionId={sectionId} canCreateForum={canCreateForum} />
   <div className='cnvs_sc'>
-    <div><b>All Forums</b></div>
+    {
+      forums.length>0 && <div><b>All Forums</b></div>
+    }
+    
    </div>
 
   
@@ -91,7 +96,10 @@ member={member}
             }
 
             </> :
-            <> <h1>No forums found!</h1>
+            <> 
+            
+            <div className='mt-[10rem] flex items-center justify-center'><h1>No forums found!</h1></div>
+            
              </>
         }
         </div>

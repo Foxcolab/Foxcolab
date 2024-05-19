@@ -32,7 +32,6 @@ function NotificationSetting({serverId, defaultNotification, hasPermission}:Prop
         <div className="setting_section_title">Default Notification</div>
         <div className="setting_sec_desc">
         This will be the default notification setting for members who join your server. Members can override default notification settings with their own notification settings.
-
         </div>
         <div className="setting_section_content">   
             <div className="server_set_inp">

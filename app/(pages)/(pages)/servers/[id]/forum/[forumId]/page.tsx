@@ -84,7 +84,8 @@ async function ForumsId({params}:ForumsProps) {
                   user:true
                 }
               },
-              Reactions:true
+              Reactions:true,
+              uploadedFiles:true
             }
           }
       },
@@ -172,6 +173,8 @@ async function ForumsId({params}:ForumsProps) {
   const createdAt = format(new Date(forumsChannel.createdAt), DATE_FORMAT);
   let sendMsg = forumsChannel.isEveryonePost !==undefined && forumsChannel.isEveryonePost!==null ? forumsChannel.isEveryonePost : true;
   
+
+
   return (
     <>
     

@@ -3,58 +3,22 @@ import React from 'react'
 import { BsFileEarmarkPdfFill, BsFiletypeCsv, BsFiletypeDocx, BsFiletypeTxt, BsFiletypeXls, BsFiletypeXlsx, BsFillFileEarmarkPptFill } from 'react-icons/bs';
 import { RiFolderImageLine, RiVideoFill } from 'react-icons/ri';
 import MsgFile from '../../Chat/MsgFile';
-import { UploadedFile } from '@prisma/client';
+import { Member, UploadedFile } from '@prisma/client';
 import { format } from 'date-fns';
 
 interface Props {
-    file:UploadedFile
+    file:UploadedFile & {
+        createdMember:Member & {
+            user: {
+                name:string
+            }
+        }
+    }
 
 }
 
 function GridFile({file, }:Props) {
-    // console.log(key, fileUrl)
-    // function getFileExtension(filename:string) {
-    //     let data = filename.split('**').pop();
-    //     if(data?.includes('application')){
-    //         data = data?.slice( data.indexOf('/'));
-    //     }else {
-    //         data = data?.slice(0, data.indexOf('/'));
-    //     }
-    //     return data;
-    // }
 
-    // const fileType = getFileExtension(fileUrl);
-    // console.log(fileType)
-    
-    // const getFileName =(file:string)=>{
-    //     file = file.replace('https://foxcolab.s3.ap-south-1.amazonaws.com/','')
-    //     file =file.substring(0, file.indexOf('.'))
-    //     if(fileType==="image"){
-    //         return `${file}.jpg`
-    //     }
-    //     else if(fileType==="/pdf"){
-    //         return `${file}.pdf`
-    //     }
-    //     else if(fileType==="/vnd.ms-powerpoint" || fileUrl.includes('.ppt')){
-    //         return `${file}.ppt`
-    //     }else if(fileType==="/vnd.ms-excel" || fileUrl.includes('.xls')){
-    //         return `${file}.xlsx`
-    //     }else if(fileUrl.includes('.txt')){
-    //         return `${file}.txt`
-    //     }else if(fileUrl.includes('.csv')){
-    //         return `${file}.csv`
-    //     }else if(fileType==="/vnd.ms-word"|| fileType==='/msword'|| fileUrl.includes('docx')){
-    //         return `${file}.docx`
-    //     }
-    //     return file;
-    // }
-    // const fileName = getFileName(fileUrl);
-    // const getFileExtension2=(filename:string)=>{
-
-        
-    //     const extension = filename.split('.').pop();
-    //     return extension;
-    // }
 
     const fileType = file.type;
     const fileName = file.name;
@@ -78,7 +42,7 @@ function GridFile({file, }:Props) {
             </div>
             <div className='grid_file'>
                 {/* <Image src={fileUrl} alt="" height={100} width={100} unoptimized quality={100}  /> */}
-                <MsgFile files={[file]} key={0} length={0} />
+                <MsgFile files={[file]} key={0} length={0} type='' />
             </div>
             </> :
         fileType==="video" ?
@@ -129,7 +93,6 @@ function GridFile({file, }:Props) {
                </div>
            </div>
            <div className='grid_file'>
-               {/* <BsFillFileEarmarkPptFill/>  */}
             <MsgFile files={[file]} key={0} length={0} type='Grid' />
 
            </div>

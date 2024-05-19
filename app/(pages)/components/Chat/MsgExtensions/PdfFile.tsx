@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { FaRegFilePdf } from 'react-icons/fa6';
 import {
   Dialog,

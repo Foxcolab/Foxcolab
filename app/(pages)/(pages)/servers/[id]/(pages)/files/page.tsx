@@ -1,6 +1,7 @@
 import FilesContainer from '@/app/(pages)/components/Files/FilesContainer';
 import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
 import MainSidebar from '@/app/(pages)/components/Sidebar/MainSidebar';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 import { getServer } from '@/lib/db/ServerLib';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
@@ -89,19 +90,21 @@ async function page({params}:FilesProps) {
   return (
     <>
     
-    <MainSidebar server={server}>
-    <div className="section_container">
+   
+
+    <ServerHome server={server} user={profile}>
+    <div className="forum_msg_container">
         
-        <SectionHeader icon={<SiFiles/>} name={"Files"} />
-      
-        <FilesContainer messages={files} memberId={member.id} server={server}  />
+    <SectionHeader icon={<SiFiles/>} name={"Files"} />
 
 
 
+    <div className="forum_messages">
+    <FilesContainer messages={files} memberId={member.id} server={server}  />
 
-
-      </div>
-    </MainSidebar>
+    </div>
+       </div>
+    </ServerHome>
     
     
     

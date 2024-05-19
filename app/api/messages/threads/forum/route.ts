@@ -47,7 +47,8 @@ export async function GET(
               user: true,
             }
           },
-          Reactions:true
+          Reactions:true,
+          uploadedFiles:true
 
         },
         orderBy: {
@@ -66,7 +67,8 @@ export async function GET(
               user: true,
             }
           },
-          Reactions:true
+          Reactions:true,
+          uploadedFiles:true
         },
         orderBy: {
           createdAt: "desc",

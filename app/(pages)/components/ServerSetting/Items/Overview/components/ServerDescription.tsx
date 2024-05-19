@@ -33,6 +33,9 @@ function ServerDescription({serverDescription, serverId, hasPermission}:Props) {
     
     <div className="setting_section">      
         <div className="setting_section_title">Server Description</div>
+        <div className="setting_sec_desc">
+        Provide a snapshot of what your server is all about in the server description. 
+        </div>
         <div className="setting_section_content">   
             <div className="server_set_inp">
               <textarea name="" id="" cols={5} rows={5}  onChange={(e)=>setDescription(e.target.value)} defaultValue={description} disabled={!hasPermission} ></textarea>

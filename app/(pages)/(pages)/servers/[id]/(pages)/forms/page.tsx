@@ -1,6 +1,7 @@
 import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
 import MainSidebar from '@/app/(pages)/components/Sidebar/MainSidebar'
 import FormContainer from '@/app/(pages)/components/forms/Sidebar/FormContainer';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 import { getServer } from '@/lib/db/ServerLib';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
@@ -166,22 +167,26 @@ async function Forms({params}:Props) {
     <>
     
  
-    <MainSidebar server={server}>
+    {/* <MainSidebar server={server}>
     <div className="section_container">
         
         <SectionHeader icon={<FaWpforms/>} name={"Forms"} />
 
         <FormContainer myForms={myForms} submittedForms={submittedForm} pendingForms={pendingForms} currentMember={server.currentMember} />
       
-        {/* <FilesContainer messages={files} memberId={member.id} server={server}  /> */}
-
-
-
-
-
       </div>
 
-    </MainSidebar>
+    </MainSidebar> */}
+
+    <ServerHome server={server} user={profile}>
+      <div className="forum_msg_container">
+        
+        <SectionHeader icon={<FaWpforms/>} name={"Forms"} />
+        <div className="forum_messages">
+        <FormContainer myForms={myForms} submittedForms={submittedForm} pendingForms={pendingForms} currentMember={server.currentMember} />
+      </div>
+      </div>
+    </ServerHome>
 
 
     </>

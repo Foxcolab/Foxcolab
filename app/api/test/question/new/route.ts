@@ -32,7 +32,7 @@ export const POST =async(req:NextRequest)=>{
         });
         if(!test || test.createdBy!==member.id) return NextResponse.json({error:"Test not found"}, {status:409});
 
-        const fullMark = test.fullMarks + marks;
+        const fullMark = test.fullMarks + parseInt(marks);
        
         const question =  await db.test.update({
             where:{
@@ -48,7 +48,7 @@ export const POST =async(req:NextRequest)=>{
                         options,
                         answer,
                         qType,
-                        marks,
+                        marks:parseInt(marks),
                         createdBy:member.id,
                         testChannelId:testChannelId as string,
                         explanation

@@ -59,7 +59,7 @@ function CreateSection({serverId, openDialog, setOpenDialog, hasPermission}:Prop
         
         {
           (openDialog===false || openDialog===true ) ? '': 
-      <button className='csec_btn' disabled={!hasPermission}><FaPlusCircle/> Create Section</button>
+      <button className='csec_btn' disabled={!hasPermission}><FaPlusCircle/> <span className='overflow_hidden'>Create Section</span></button>
 
         }
       </DialogTrigger>

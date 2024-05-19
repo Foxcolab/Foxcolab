@@ -1,8 +1,8 @@
 "use client";
 import { cn } from '@/lib/utils'
-import { Message, Threads } from '@prisma/client'
+import { Message, Threads, UploadedFile } from '@prisma/client'
 import React from 'react'
-import { FaLock } from 'react-icons/fa'
+import { FaHashtag, FaLock } from 'react-icons/fa'
 import MsgFile from '../../Chat/MsgFile'
 import Profile from '../../SaveLater/Profile';
 import { format } from 'date-fns';
@@ -12,7 +12,8 @@ import ThreadEditor from './ThreadEditor';
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 function ThreadContainer({ThreadMessages}:{ThreadMessages:Message[]}) {
-    console.log("ACtive",ThreadMessages)
+  
+  
   return (
     <>
     
@@ -20,7 +21,8 @@ function ThreadContainer({ThreadMessages}:{ThreadMessages:Message[]}) {
         {
             ThreadMessages && ThreadMessages.map((message, i)=>(
                 <>
-                <div className='pinsmsg'>
+                <div className='pinsmsg border'>
+                  <div className='flex items-center text-sm font-semibold italic'><span>{message.channel.type==="public" ? <FaHashtag/>: <FaLock/>}</span> {message.channel.name}</div>
                    <div className="pin_msg" key={i}>
               <Profile name={message.member?.user?.name} url={message.member?.user?.profilePic} />
              <div className="flex flex-col w-full">
@@ -50,18 +52,13 @@ function ThreadContainer({ThreadMessages}:{ThreadMessages:Message[]}) {
           </div>
               </div>
 
-              <div className="all_imgs">
-              {message.fileUrl?.length!==0 && 
               
-              message.fileUrl &&  message.fileUrl.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
+              {message.uploadedFiles?.length!==0 && 
+                <div className="all_imgs">
+                <MsgFile files={message.uploadedFiles}  type="msgFile" length={message.uploadedFiles.length} />
+                </div>  
               }
-            </div>  
+            
 
               <div className='message_threads_container'>
               {/* {message.} */}
@@ -85,8 +82,8 @@ function ThreadContainer({ThreadMessages}:{ThreadMessages:Message[]}) {
             </div>
          
              <p className={cn(
-                "text-sm text-zinc-200 dark:text-zinc-300",
-                 " text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+                "text-sm ",
+                 "  text-xs mt-1"
               )}>
                 {/* {content} */}
                 <div dangerouslySetInnerHTML={{__html:thread.content}} className="msg_contnt" />
@@ -96,23 +93,20 @@ function ThreadContainer({ThreadMessages}:{ThreadMessages:Message[]}) {
           </div>
               </div>
 
+              
+              {thread.uploadedFiles?.length>0 && 
               <div className="all_imgs">
-              {thread.fileUrl?.length!==0 && 
-              
-              thread.fileUrl &&  thread.fileUrl.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
+                <MsgFile files={thread.uploadedFiles}  length={length} type="msgFile" />      
+                </div> 
               }
-            </div> 
+           
+            
             </> 
               
               ))}
               </div>
 
+              <div className="pt-2">
               <ThreadEditor  
                    name={"Reply.."}
       apiUrl="/api/socket/threads"
@@ -124,6 +118,7 @@ function ThreadContainer({ThreadMessages}:{ThreadMessages:Message[]}) {
     }}
               
               />
+              </div>
 
             </div>
 

@@ -9,7 +9,7 @@ function BasicSetting({test}:{test:Test}) {
   return (
     <>
     <div className='w-full'>
-    <span className='d-flex w-1/6 pt-4 font-semibold gap-2 rounded-md test_info' ><FaInfoCircle/> Test Info</span>
+    <span className='d-flex  pt-4 font-semibold gap-2 rounded-md test_info ' ><FaInfoCircle/> Test Info</span>
     <div className="testsidebar">
         <div className='respdnt'>
             <p>RESPONDENTS MONITORING</p>

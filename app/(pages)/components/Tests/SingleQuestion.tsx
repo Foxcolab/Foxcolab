@@ -9,6 +9,7 @@ import { DeleteQuestion } from './DeleteQuestion';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import UpdateQuestion from './UpdateQuestion';
+import { cn } from '@/lib/utils';
 
 
 interface QuesitonProps {
@@ -67,11 +68,11 @@ function SingleQuestion({question, index }:QuesitonProps) {
                    
                     
                     <p key={index}
-                    className={`${question.answer.map((que)=>(option===que ? "d-flex align-center gap-2 text-green-600 font-bold" : "d-flex align-center gap-2" ))}   `}
+                    className={cn('flex items-center gap-2 pb-[0.3rem]',  question.answer.map((ans)=>(option===ans ? "text-green-500" :"")))}
                     
                     >
                    
-                <RiCheckboxBlankCircleLine/>
+                <span className='text-lg'><RiCheckboxBlankCircleLine/></span>
                 
                 
                  <div key={index} dangerouslySetInnerHTML={{__html: option}}/>

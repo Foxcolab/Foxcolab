@@ -28,14 +28,20 @@ import { useRouter } from 'next/navigation';
 import Loader from '../Loaders/Loader';
 import { Textarea } from '@/components/ui/textarea';
 
+interface Props {
+  serverId:string
+  sectionId:string
+  open:boolean
+  setOpen:any
+}
 
- function CreateChannel({serverId, sectionId}) {
+ function CreateChannel({serverId, sectionId, open, setOpen}:Props) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   // const [sectionId, setSectionId] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const router = useRouter();
   const SubmitHandler =async()=>{
     try {
@@ -54,12 +60,13 @@ import { Textarea } from '@/components/ui/textarea';
     }
   }
 
-  const NameHandler =(value)=>{
+  const NameHandler =(value:string)=>{
     
         value =value.replace(/ /g,"-");
         value=value.toLowerCase();
         setName(value);
-        document.getElementById('handle').value=value;
+        // document?.getElementById('handle')?.value=value;
+
         return;
     
 }
@@ -67,9 +74,7 @@ import { Textarea } from '@/components/ui/textarea';
   return (
     <>
     <Dialog open={open} onOpenChange={setOpen}> 
-      <DialogTrigger asChild>
-      <button className='drpdn_ip'><FaPlusCircle/> Create Channel</button>
-      </DialogTrigger>
+      
       <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>
           <DialogTitle>Create a channel</DialogTitle>

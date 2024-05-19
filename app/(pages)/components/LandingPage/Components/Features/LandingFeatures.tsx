@@ -18,11 +18,11 @@ function LandingFeatures() {
   return (
     <>
     
-    <div className='pt-24 pb-8'>
-        <div className='text-[2.2rem] text-center font-semibold flex items-center gap-1 justify-center'><span className=''><sup><RiDoubleQuotesL/> </sup></span> One Team Collabration Platform for all your needs <span className=''><sup><RiDoubleQuotesR/></sup> </span></div>
+    <div className='pt-24 pb-8 '>
+        <div className=' landling_feature_title  '><span className='double_quote'><sup><RiDoubleQuotesL/> </sup></span> One Team Collabration Platform for all your needs <span className='double_quote'><sup><RiDoubleQuotesR/></sup> </span></div>
 
 
-        <div className='mt-8'>
+        <div className='mt-8 px-8'>
             <div className='flex gap-16 justify-center featured_buttons'>
                 <button onClick={()=>setFeature("Channel")} className={cn('chan_ho_feature2', Feature==="Channel" ? "chan_ho_feature" : "")}><span><FaHashtag/></span> Channel</button>
                 <button onClick={()=>setFeature("Forum")} className={cn('formu_ho_feature2', Feature==="Forum" ? "formu_ho_feature" : "")}><span><MdForum/></span> Forum</button>
@@ -83,7 +83,7 @@ function LandingFeatures() {
                 Feature==="Forms" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={ChannelUiPic} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Form_Frontpage.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="File" ? 

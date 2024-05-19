@@ -7,7 +7,7 @@ import Profile from '../SaveLater/Profile'
 import MsgFile from '../Chat/MsgFile'
 import { ActionTooltip } from '../tooolkit/Toolkit';
 import { Lock, Trash2 } from 'lucide-react';
-import { FaLock } from 'react-icons/fa';
+import { FaHashtag, FaLock } from 'react-icons/fa';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -35,7 +35,7 @@ function PinnedContainer({PinnedPosts}:PinnedProps) {
     const RemovePinnedPost =async(pinned:PinnedPost)=>{
         try {
             const res = await axios.delete(`/api/pinnedmessage?serverId=${params?.id}&pinnedId=${pinned.id}&messageId=${pinned.messageId}`);
-            console.log(res);
+            // console.log(res);
             router.refresh();
         } catch (error) {
             console.log(error);
@@ -51,10 +51,11 @@ function PinnedContainer({PinnedPosts}:PinnedProps) {
         
     {
             PinnedPosts && PinnedPosts.map((saved)=>(
-                <div key={saved.id} className='pinsmsg flex  justify-between pin_imp' onMouseEnter={()=>ShowDeleteButton(saved.id)} onMouseLeave={()=>ShowDeleteButton(saved.id)}>
+                <div key={saved.id} className='pinsmsg flex border justify-between pin_imp' onMouseEnter={()=>ShowDeleteButton(saved.id)} onMouseLeave={()=>ShowDeleteButton(saved.id)}>
                     <div>
+                    <div className='flex items-center text-sm font-semibold italic'><span>{saved.message.channel.type==="public" ? <FaHashtag/>: <FaLock/>}</span> {saved.message.channel.name}</div>
 
-                   <div className='text-sm flex items-center gap-1 text-stone-400'> {saved.message.channel.type==="public"?"#": <FaLock  />}{saved.message.channel.name}</div>
+                   {/* <div className='text-sm flex items-center gap-1 text-stone-400'> {saved.message.channel.type==="public"?"#": <FaLock  />}{saved.message.channel.name}</div> */}
                  <div className="pin_msg">
               <Profile name={saved.message.member?.user?.name} url={saved.message.member?.user?.profilePic} />
              <div className="flex flex-col w-full">
@@ -83,22 +84,16 @@ function PinnedContainer({PinnedPosts}:PinnedProps) {
            
           </div>
               </div>
-              <div className="all_imgs">
-              {saved.message.fileUrl?.length!==0 && 
-              
-             saved.message.fileUrl &&  saved.message.fileUrl.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
-              }
-            </div>  
+              {
+                saved?.message?.uploadedFiles?.length>0 && 
+                <div className="all_imgs">
+                <MsgFile files={saved?.message?.uploadedFiles}  type="msgFile" length={saved.message?.uploadedFiles?.length} />
+                </div>    
+              } 
             </div>
 
             <div className='mt-4'>
-            <ActionTooltip label='Remove from list' side='top' align='center'><button className='pin_trash' id={`pin_trash${saved.id}`} style={{display:"none"}} onClick={()=>RemovePinnedPost(saved)}><Trash2 size={15} /></button></ActionTooltip>
+            <ActionTooltip label='Remove from list' side='top' align='center'><button className='pin_trash' id={`pin_trash${saved.id}`} style={{display:"none"}} onClick={()=>RemovePinnedPost(saved)}><Trash2 size={18} /></button></ActionTooltip>
 
             </div>
 

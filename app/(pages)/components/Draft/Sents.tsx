@@ -4,7 +4,7 @@ import MsgFile from '../Chat/MsgFile'
 import Profile from '../SaveLater/Profile'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
-import { FaLock } from 'react-icons/fa'
+import { FaHashtag, FaLock } from 'react-icons/fa'
 
 interface SentsProp {
     Sents:Message[]
@@ -27,10 +27,10 @@ function Sents({Sents}:SentsProp) {
                 <div className="flex items-start gap-2">
                 {/* <Profile name={draft.message.member?.user?.name} url={saved.message.member?.user?.profilePic} /> */}
                         <div className="draft_channel_type">
-                        {sent.channel.type==="public"?"#": <FaLock  />}
+                        {sent.channel.type==="public"? <FaHashtag/> : <FaLock  />}
                         </div>
                 <div className="flex flex-col w-full">
-                <div className='flex items-center justify-between leading-8'>
+                <div className='flex items-center justify-between leading-8 mt-[-0.45rem]'>
                 <div className="draft_channel_title">{sent.channel.type==="public"?"#": <FaLock  />}{sent.channel.name}</div>
                
                 </div>
@@ -47,18 +47,14 @@ function Sents({Sents}:SentsProp) {
                 
                 </div>
                 </div>
-                <div className="all_imgs">
-                {sent.fileUrl?.length!==0 && 
-                
-                sent.fileUrl &&  sent?.fileUrl?.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-                
-                </>
-                ))
-                
+                {
+                  sent.uploadedFiles.length>0 && 
+                    <div className="all_imgs">
+                <MsgFile files={sent.uploadedFiles} length={sent.uploadedFiles.length} type="msgFile" />
+
+                      </div> 
                 }
-                </div>  
+               
                 </div>
         </div>
 

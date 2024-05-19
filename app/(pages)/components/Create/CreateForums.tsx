@@ -29,12 +29,18 @@ import Loader from '../Loaders/Loader';
 import { Textarea } from '@/components/ui/textarea';
 
 
-function CreateForums({sectionId, serverId}:{sectionId:string, serverId: string}) {
+interface Props {
+  serverId:string
+  sectionId:string
+  open:boolean
+  setOpen:any
+}
+
+function CreateForums({sectionId, serverId, open, setOpen}:Props) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const router = useRouter();  
 
   const SubmitHandler=async()=>{
@@ -55,7 +61,7 @@ function CreateForums({sectionId, serverId}:{sectionId:string, serverId: string}
     <>
     <Dialog open={open} onOpenChange={setOpen}> 
       <DialogTrigger asChild>
-      <button className='drpdn_ip'><FaPlusCircle/> Create Forums</button>
+      {/* <button className='drpdn_ip'><FaPlusCircle/> Create Forums</button> */}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>

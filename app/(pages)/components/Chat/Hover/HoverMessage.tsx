@@ -207,7 +207,7 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   const PinnedMsg =async()=>{
     try {
       setLoadingText("Pinning a message");
-      setLoading(true);
+      // setLoading(true);
       if(schemaType==="Threads"){
         const res = await axios.post(`/api/pinnedmessage/thread?threadId=${message.id}&serverId=${params?.id}`);
       }else {
@@ -223,8 +223,9 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   }
   const RemovePinnedMsg =async()=>{
     try {
+      console.log("Removingnnnn")
       setLoadingText("Unpinning a message");
-      setLoading(true);
+      // setLoading(true);
       if(schemaType=="Threads"){
         const res = await axios.delete(`/api/pinnedmessage/thread?threadId=${message.id}&serverId=${params?.id}`);
       }else {
@@ -263,9 +264,9 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   const SavedLater =async(newDate:any)=>{
     try {
       if(newDate===undefined){
-        setLoading(true);
+        // setLoading(true);
       }else {
-        setsLoading(true);
+        // setsLoading(true);
       }
       if(schemaType==="Threads"){
         const res = await axios.post(`/api/save-later/thread?threadId=${message.id}`, {time:newDate});
@@ -295,7 +296,7 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   const RemoveLater =async()=>{
     try {
       setLoadingText("Saved for later");
-      setLoading(true);
+      // setLoading(true);
       if(schemaType==="Threads"){
         const res = await axios.delete(`/api/save-later/thread?threadId=${message.id}&laterId=${savedPost.id}`);
       }else {
@@ -428,11 +429,14 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
             </button></ActionTooltip> 
           }
   
-       <ActionTooltip label='Save for later' side='top' align='center'><button onClick={isSavedPost ? RemoveLater :()=> SavedLater(undefined)}  className={isSavedPost ? "bookmark_icon": ''} style={{fontSize:"1.1rem"}}>
-            {
-              isSavedPost ? <BsBookmarkFill/> : <FaRegBookmark/>
-            }
-             </button></ActionTooltip> 
+       <ActionTooltip label='Save for later' side='top' align='center'>
+        {
+          isSavedPost ? <button className='text-[1.1rem] bookmark_icon' onClick={()=>RemoveLater()} ><BsBookmarkFill/></button> : <button onClick={()=>SavedLater(undefined)}><FaRegBookmark/></button>
+        }
+        
+       
+             
+             </ActionTooltip> 
     
 
  

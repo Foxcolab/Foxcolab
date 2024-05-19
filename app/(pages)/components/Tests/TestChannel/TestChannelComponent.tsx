@@ -43,6 +43,7 @@ function TestChannelComponent({tests, sectionId, testChannelName, members,server
 
   return (
     <>
+    <div className="forum_msg_container">
       <TestChannelHeader
       name={testChannelName}
       description={description}
@@ -69,6 +70,7 @@ function TestChannelComponent({tests, sectionId, testChannelName, members,server
         <ChannelResult results={results}   />
 
       }
+      </div>
     </>
   )
 }

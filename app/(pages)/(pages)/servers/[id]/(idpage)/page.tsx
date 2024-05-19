@@ -26,7 +26,9 @@ async function page({params}:Props) {
 
 <ServerHome server={server} user={profile}>
     
-    <h1>Hii</h1>
+    <div className="forum_msg_container">
+
+    </div>
 
    </ServerHome>
     

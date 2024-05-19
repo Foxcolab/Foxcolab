@@ -19,10 +19,15 @@ import Loader from '../Loaders/Loader';
 import { useRouter } from 'next/navigation';
 
 
+interface Props {
+  serverId:string
+  sectionId:string
+  open:boolean
+  setOpen:any
+}
 
-function CreateTest({sectionId, serverId}:{sectionId:string, serverId: string}) {
+function CreateTest({sectionId, serverId, open, setOpen}:Props) {
     const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
     const [type, setType] = useState('');
     const router = useRouter();
@@ -49,7 +54,7 @@ function CreateTest({sectionId, serverId}:{sectionId:string, serverId: string}) 
     
     <Dialog open={open} onOpenChange={setOpen}> 
     <DialogTrigger asChild>
-      <button className='drpdn_ip'><FaPlusCircle/> Create Test</button>
+      {/* <button className='drpdn_ip'><FaPlusCircle/> Create Test</button> */}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>

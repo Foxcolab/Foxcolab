@@ -32,11 +32,11 @@ function ServerHome({children, server, user}:Props) {
       </div>
       <ResizablePanelGroup direction="horizontal" className='resizeable_container'>
       <ResizablePanel  className='resize_side_panel'  defaultSize={22} minSize={20} maxSize={60} >
-      <div className="w-full">
+      <div className="w-full channel_sidebar_container">
         <ChannelSidebar server={server}/> 
       </div>
       </ResizablePanel>
-  <ResizableHandle withHandle />
+  <ResizableHandle className='hover:bg-cyan-400 bg-none' />
 
   <ResizablePanel>
 

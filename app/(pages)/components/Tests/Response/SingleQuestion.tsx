@@ -114,7 +114,6 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
           <LeftHeader testName={testName} qIndex={qIndex} questions={questions} length={length}  ChangeQuestion={ChangeQuestion} questionId={questionId} answer={answer}  />
           <div className='testq_content'>
           <div dangerouslySetInnerHTML={{__html:title}} />
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Architecto ratione, sequi perferendis, soluta repudiandae tempore quaerat beatae libero omnis recusandae voluptatibus quis? Animi fugiat repellat mollitia praesentium facere, provident dolores blanditiis molestiae ea a, amet minima? Eligendi exercitationem facilis consequatur ea asperiores, deserunt nam excepturi velit sint explicabo, distinctio illum beatae officia amet doloribus nulla quaerat animi. Eligendi voluptatem quibusdam labore minus possimus soluta adipisci incidunt fugiat minima assumenda esse culpa cupiditate recusandae earum similique id dolorem ipsum dolores libero ducimus, ad consectetur amet dignissimos enim? Soluta sed a, ipsam quasi, nam reiciendis ratione nulla sint consequatur tempora, rerum sit?
           </div>
           </div>
   </ResizablePanel>
@@ -178,9 +177,9 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
         isStarting ? 
         <>
         
-        <button className='bg-gray-200 text-black' onClick={ClearResponse}>Clear Response </button>
+        <button className='bg-gray-200 hover:bg-gray-100 text-black' onClick={ClearResponse}>Clear Response </button>
         
-        {loading ?<button disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :<button className='bg-green-500' onClick={()=>NextQuestion(questionId, answer)}>  Save & Next <IoIosArrowForward/></button>
+        {loading ?<button disabled className='flex bg-green-500 text-white '><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :<button className='bg-green-500 text-white hover:bg-green-600' onClick={()=>NextQuestion(questionId, answer)}>  Save & Next <IoIosArrowForward/></button>
         }
         </> :
         <>
@@ -188,25 +187,25 @@ function SingleQuestion({testName, qIndex, length, ChangeQuestion, marks, qType,
           isEnding ? 
           <>
 
-{loading ?<button disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> : <button className='bg-green-500 ' onClick={()=>PrevQuestion(questionId, answer)}><IoIosArrowBack/> Save & Previous</button>
+{loading ?<button disabled className='flex bg-green-500 text-white'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> : <button className='bg-green-500 hover:bg-green-600 text-white' onClick={()=>PrevQuestion(questionId, answer)}><IoIosArrowBack/> Save & Previous</button>
         }
      
-      <button className='bg-gray-200 text-black'  onClick={ClearResponse}>Clear Response </button>
+      <button className='bg-gray-200 hover:bg-gray-100 text-black'  onClick={ClearResponse}>Clear Response </button>
       
 
-      {submitting ?<button disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :
+      {submitting ?<button disabled className='flex bg-green-500 text-white'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :
       
-      <button className='bg-green-500' onClick={()=>SubmitTestDBHandler(questionId,answer)}> Submit <IoIosArrowForward/></button>
+      <button className='bg-green-500 text-white hover:bg-green-600' onClick={()=>SubmitTestDBHandler(questionId,answer)}> Submit <IoIosArrowForward/></button>
         }
           </>:
 
           <>
-          {loading ?<button disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :
-          <button className='bg-green-500 ' onClick={()=>PrevQuestion(questionId, answer)}><IoIosArrowBack/> Save & Previous</button>
+          {loading ?<button disabled className='flex bg-green-500 text-white '><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :
+          <button className='bg-green-500 hover:bg-green-600' onClick={()=>PrevQuestion(questionId, answer)}><IoIosArrowBack/> Save & Previous</button>
           }
       
-      <button className='bg-gray-200 text-black'  onClick={ClearResponse}>Clear Response </button>
-      {loading ?<button  disabled className='d-flex bg-green-500'><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :<button className='bg-green-500' onClick={()=>NextQuestion(questionId)}> Save & Next <IoIosArrowForward/></button>}
+      <button className='bg-gray-200 hover:bg-gray-100 text-black'  onClick={ClearResponse}>Clear Response </button>
+      {loading ?<button  disabled className='flex text-white bg-green-500 '><ReloadIcon className="mr-2  w-4 animate-spin " />Saving..</button> :<button className='bg-green-500 text-white hover:bg-green-600' onClick={()=>NextQuestion(questionId)}> Save & Next <IoIosArrowForward/></button>}
           </>
         }
         

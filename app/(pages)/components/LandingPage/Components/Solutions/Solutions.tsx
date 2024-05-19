@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React, { useState } from 'react'
 import { AiOutlineDollar } from 'react-icons/ai';
 import { FaChartPie, FaPaperPlane } from 'react-icons/fa';
-import { FaComputer } from 'react-icons/fa6';
+import { FaComputer, FaUserDoctor } from 'react-icons/fa6';
 import { MdEngineering } from 'react-icons/md';
 import { RiDoubleQuotesL, RiDoubleQuotesR, RiGraduationCapFill } from 'react-icons/ri'
 
@@ -25,8 +25,8 @@ const items = [
         name:"Engineering"
     },
     {
-        icon:<FaPaperPlane/>,
-        name:"Product"
+        icon:<FaUserDoctor/>,
+        name:"Health"
     },
     {
         icon:<FaChartPie/>,
@@ -41,9 +41,9 @@ function Solutions() {
     <>
     
     <div className="pt-24 pb-8">
-    <div className='text-[2.8rem] text-center font-semibold flex items-center gap-1 justify-center'><span className=''><sup><RiDoubleQuotesL/> </sup></span> Every team, side-by-side <span className=''><sup><RiDoubleQuotesR/></sup> </span></div>
+    <div className='landling_feature_title' ><span className='double_quote'><sup><RiDoubleQuotesL/> </sup></span> Every team, side-by-side <span className='double_quote'><sup><RiDoubleQuotesR/></sup> </span></div>
 
-    <div className='flex items-center justify-center gap-4 mt-4'>
+    <div className='flex items-center justify-center flex-wrap gap-4 mt-4'>
         {
             items.map((item, index)=>(
                 <div key={index} className={cn('solution_item', state===item.name ? "solution_item_bg_none" : "")}>
@@ -60,13 +60,13 @@ function Solutions() {
                 state==="Education" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                 <div className='channel_ui_container'>
-                <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype.png'} height={100} width={100} alt='' unoptimized />
+                <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Education_Frontpage+(1).png'} height={100} width={100} alt='' unoptimized />
                 </div>
                 </div> :
                 state==="Finance" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Finance+Section_Poll.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                 state==="Technology" ? 
@@ -78,19 +78,19 @@ function Solutions() {
                 state==="Engineering" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Engineering+Section_Test+(2).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
-                state==="Product" ? 
+                state==="Health" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Health+Section_Channel.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                 state==="Marketing" ? 
                 <div className='secondary_hero' id="home_feature_ui">
                     <div className='channel_ui_container'>
-                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
+                    <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Sales+Section_Note.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                

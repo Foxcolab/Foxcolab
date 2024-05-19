@@ -80,20 +80,15 @@ function ServerAvatar({displayPic,coverPic, serverId, hasPermission}:Props) {
      <div className="setting_section">
             
             <div className="setting_section_title">Server Avatar</div>
+            <div className="setting_sec_desc">
+            This will be the default notification setting for members who join your server. Members can override default notification settings with their own notification settings.
+            </div>
             {
                 hasPermission ? <>
                  <div className="setting_section_content">
                 <div className="setting_avt">
                     <>
-                    {/* <div className='server_ndp' onMouseEnter={()=>setShowOpt(true)} onMouseLeave={()=>setShowOpt(false)}>
-                    <label className="custum-file-upload flex items-center justify-center  gap-1" htmlFor="file" id='avatar'>
-                    {   showOpt && <span>Change Icon</span> }
-                    { preview && !showOpt && <Image src={preview} height={100} width={100} alt='image' /> }
-                    <input type="file" id="display_pic" 
-                    accept="image/jpeg,image/png,image/webp,image/gif" onChange={onChangeHandler}
-                    />
-                    </label>
-                    </div> */}
+                    
             <div className="server_ndp" onMouseEnter={()=>setShowOpt(true)} onMouseLeave={()=>setShowOpt(false)}>
              <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
     

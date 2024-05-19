@@ -1,6 +1,7 @@
 import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
 import MainSidebar from '@/app/(pages)/components/Sidebar/MainSidebar'
 import PollContainer from '@/app/(pages)/components/polls/sidebar/PollContainer';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 import { getServer } from '@/lib/db/ServerLib';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
@@ -147,21 +148,17 @@ async function Polls({params}:Props) {
   return (
     <>
     
-    <MainSidebar server={server}>
-    <div className="section_container">
-        
-        <SectionHeader icon={<FaPollH/>} name={"Polls"} />
-
-        <PollContainer pendingPoll={pendingMessage} Voted={Voted} myVotes={myVotes}  currentMember={server.currentMember} />
-
-
-
-
-
-      </div>
-
-    </MainSidebar>
     
+    <ServerHome server={server} user={profile}>
+    <div className="forum_msg_container">
+        
+    <SectionHeader icon={<FaPollH/>} name={"Polls"} />
+    <div className="forum_messages">
+    <PollContainer pendingPoll={pendingMessage} Voted={Voted} myVotes={myVotes}  currentMember={server.currentMember} />
+
+    </div>
+       </div>
+    </ServerHome>
     
     </>
   )

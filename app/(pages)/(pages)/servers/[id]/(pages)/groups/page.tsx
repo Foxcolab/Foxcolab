@@ -1,6 +1,7 @@
 import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
 import MainSidebar from '@/app/(pages)/components/Sidebar/MainSidebar';
 import GroupContent from '@/app/(pages)/components/groups/GroupContent';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 import { getServer } from '@/lib/db/ServerLib';
 import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
@@ -58,22 +59,17 @@ async function Groups({params}:PinnedProps) {
   return (
     <>
         
-        <MainSidebar server={server}>
-    <div className="section_container">
+      
+    <ServerHome server={server} user={profile}>
+    <div className="forum_msg_container">
         
-        <SectionHeader icon={<MdGroups/>} name={"People & user groups"} />
-
-
-        <GroupContent serverId={server.id} members={server.Members} groups={groups} hasPermission={hasPermission} />
-
-
-
-
-
-
-      </div>
-    </MainSidebar>
-    
+    <SectionHeader icon={<MdGroups/>} name={"People & user groups"} />
+    <div className="forum_messages">
+    <GroupContent serverId={server.id} members={server.Members} groups={groups} hasPermission={hasPermission} />
+    </div>
+       
+       </div>
+    </ServerHome>
     
     
     </>

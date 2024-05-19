@@ -29,17 +29,18 @@ import Loader from '../Loaders/Loader';
 import { Textarea } from '@/components/ui/textarea';
 
 interface Props {
-    serverId:String,
-    sectionId:String
+  serverId:string
+  sectionId:string
+  open:boolean
+  setOpen:any
 }
 
- function CreateSpreadsheet({serverId, sectionId}:Props) {
+ function CreateSpreadsheet({serverId, sectionId, open, setOpen}:Props) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   // const [sectionId, setSectionId] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
-  const [open, setOpen] = useState(false);
   const router = useRouter();
   const SubmitHandler =async()=>{
     try {
@@ -64,7 +65,7 @@ interface Props {
     <>
     <Dialog open={open} onOpenChange={setOpen}> 
       <DialogTrigger asChild>
-      <button className='drpdn_ip'><FaPlusCircle/> Create Spreadsheet</button>
+      {/* <button className='drpdn_ip'><FaPlusCircle/> Create Spreadsheet</button> */}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>

@@ -16,16 +16,15 @@ export const POST = async(req:NextRequest)=>{
     const user = await db.user.findFirst({where:{email:email}});
     if(!user) {
         return NextResponse.json({
-            error:"User does not exists",
-            status:401
-        })
+            error:"Please enter your registered email id",
+           
+        }, {status:401})
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if(!validPassword){
         return NextResponse.json({
-            error:"Incorrect email or password",
-            status:401
-        })
+            error:"Incorrect email id or password",
+        }, {status:401})
     }
     const tokenData = {
         id:user.id,

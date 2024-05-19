@@ -4,9 +4,12 @@ function Footer() {
   return (
     <>
     
-    <div className=" mt-8 border-t border-[#ebebeb] ">
-        <div className="flex justify-around mt-4">
-        <div className='text-[1.2rem] font-semibold'>Foxcolab</div>
+    <div className=" mt-8   flex item-center flex-col justify-center">
+        <div className="footer_container">
+            <div className="">
+                <div className='text-[1.3rem] font-bold'>Foxcolab</div>
+                <div className='mt-4 '>Streamline team communication <br /> and productivity with Foxcolab</div>
+            </div>
         <div className='footer_sec'>
             <div className='footer_sec_title'>PRODUCTS</div>
             <div className='flex flex-col footer_sec_items'>
@@ -105,18 +108,12 @@ function Footer() {
        
     </div>
     <div className='footer_t_c'>
-        <div className='flex justify-around items-center'>
-        <div className='flex gap-4 '>
-            <Link href={''}>Privacy</Link>
-            <Link href={''}>Terms</Link>
-            <Link href={''}>Privacy</Link>
-            <Link href={''}>Privacy</Link>
-        </div>
-        <div className='flex items-end flex-col'>
+        
+        <div className='footer_tc_item'>
         <div>©2024 Footer Technology. All rights reserved.</div>
         <div>Various trademarks held by their respective owners.</div>
         </div>
-        </div>
+      
     </div>
     </div>
     

@@ -10,6 +10,8 @@ import ThreadChatComponents from '../../threads/ThreadChatComponents'
 import ThreadEditor from '../../Editor/ThreadEditor'
 import EditorFooter from '../../Editor/EditorFooter'
 import ForumEditor from '../../Editor/Forum/ForumEditor'
+import Polls from '../../Chat/Polls/Polls'
+import ChannelForm from '../../Chat/form/ChannelForm'
 
 
 interface Props {
@@ -44,7 +46,62 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
    <div>
    <div style={{overflow:"scroll"}}>
             <div className='thred_main'>
-            <div className="relative group flex items-center  p-4 transition w-full msg_cnbdy">
+    
+
+            {
+              message.pollId!==null && message.pollId!==undefined ? <>
+              
+              <Polls
+               id={message.id}
+               currentMember={server.currentMember}
+                member={message.member}
+                deleted={message.deleted}
+                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                poll={message.poll}
+                socketQuery={{channelId:channel.id, serverId:server?.id, messageId:message.id}}
+                socketUrl='/api/socket/threads'
+                message={message}
+                managers={channel?.manager?.memberIds}
+              
+                myChannels={myChannels}
+                allServerMember={server.Members}
+                setThreadMessage={setThreadMessage}
+                schemaType="Threads"
+               
+               />
+          
+              </> :
+            message.formId!==null && message.formId!==undefined ? <> 
+            
+            <ChannelForm
+
+            id={message.id}
+            currentMember={server.currentMember}
+            member={message.member}
+            deleted={message.deleted}
+            timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+            form={message.form}
+            socketQuery={{channelId:channel.id, serverId:server?.id, messageId:message.id}}
+            socketUrl='/api/socket/threads'
+            message={message}
+            managers={channel?.manager?.memberIds}
+           
+            myChannels={myChannels}
+            allServerMember={server.Members}
+            setThreadMessage={setThreadMessage}
+            schemaType="Threads"
+            
+            
+            />
+
+
+            </> :
+
+
+
+
+              <>
+                          <div className="relative group flex items-center  p-4 transition w-full msg_cnbdy">
       <div className="group flex gap-x-2 items-start w-full">
         <div  className="cursor-pointer hover:drop-shadow-md transition">
 
@@ -73,21 +130,7 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
             {format(new Date(message.createdAt), DATE_FORMAT)}
             </span>
           </div>
-          {/* {isImage && (
-            <a 
-              href={fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
-            >
-              <Image
-                src={fileUrl}
-                alt={content}
-                fill
-                className="object-cover"
-              />
-            </a>
-          )} */}
+     
            <p className={cn(
               "text-sm text-zinc-200 dark:text-zinc-300",
                " text-zinc-500 dark:text-zinc-400 text-xs mt-1"
@@ -113,6 +156,11 @@ function ThreadComponents({message, currentMember, setThreadMessage, myChannels,
               
               }
             </div>
+              
+              </>
+            }
+
+
             </div>
             {/* <hr /> */}
             <ThreadChatComponents

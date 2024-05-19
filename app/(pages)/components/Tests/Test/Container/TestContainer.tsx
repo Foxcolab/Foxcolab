@@ -15,6 +15,7 @@ import axios from 'axios';
 import Loader from '../../../Loaders/Loader';
 import { cn } from '@/lib/utils';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Props{
     test:Test
@@ -24,14 +25,19 @@ function TestContainer({test}:Props) {
     const [loading, setLoading] = useState(false);
     const params = useParams();
     const router = useRouter();
-    const pathname = usePathname();
-    
+    const { toast } = useToast()
     const onHref = ()=>{
         router.push(`/servers/${params?.id}/test-channel/${params?.testChannelId}`);
     }
 
     const activateTestHandler =async()=>{
       try {
+        if(test.questions.length===0){
+          toast({
+            title: "You have not added any questions to this test",
+          })
+          return;
+        }
         setLoading(true);
         const res = await axios.put(`/api/test/activate?serverId=${params?.id}&testChannelId=${params?.testChannelId}&testId=${test.id}`)
         router.refresh();
@@ -45,13 +51,13 @@ function TestContainer({test}:Props) {
   return (
     <>
             <div className="testcontainer">
-        <div className='d-flex gap-5'>
+        <div className='d-flex gap-5 '>
 
-        <div className='w-1/4'>
+        <div className='flex-none test_sidebar'>
           <button onClick={onHref} className='flex items-center bg-white py-2 px-3 font-bold text-gray-600 rounded-sm'> <IoChevronBackOutline/> Back</button>
             
             <div className="testsidebar">
-             <button className={cn("sidebutton border text-sm", test.activated? "border-green-500 border border-dotted text-green-500 bg-green-900": "border-violet-500 bg-violet-900 text-gray-200 border-dotted border")} onClick={activateTestHandler} >{test.activated===true ? "ACTIVATED" : "SET UP IN PROGRESS"}</button>
+             <button className={cn("sidebutton border text-sm", test.activated? "border-green-500 border border-dotted text-white  dark:text-green-500 bg-green-900": "border-violet-500 bg-violet-900 text-gray-200 border-dotted border")} onClick={activateTestHandler} >{test.activated===true ? "ACTIVATED" : "SET UP IN PROGRESS"}</button>
             
             <button className={cn("testSideBtn", state==="Basic" ?"active_link":"" )} onClick={()=>setState("Basic")} ><IoSettings/> Basic Setting </button>
             <button className={cn("testSideBtn", state==="Questions" ?"active_link":"" )} onClick={()=>setState("Questions")}><MdDashboardCustomize /> Question Manager</button>

@@ -10,6 +10,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { BsFileEarmarkZipFill, BsFiletypeDocx, BsFiletypeTxt, BsFiletypeXls, BsFillFileEarmarkPdfFill, BsFillFileEarmarkPptFill } from "react-icons/bs";
 import Image from 'next/image';
 import { FaFileCsv } from 'react-icons/fa';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 
 interface Props {
@@ -147,7 +148,7 @@ function ForumHeader({sectionId, canCreateForum}:Props) {
         </> :
         <>
 
-            <div className='forums_input_containerr'>
+            <div className='forums_input_containerr mb-2'>
                 <div className='forums_input_upper'>
                     <button className='forums_cross' onClick={()=>setSearch(false)}><RxCrossCircled/></button>
                     <div className='forums_inputs'>
@@ -349,14 +350,28 @@ function ForumHeader({sectionId, canCreateForum}:Props) {
                       ))
 
                     }
-                      <label className="forums_image" htmlFor="file">
+
+                        <label className="forums_image" htmlFor="file">
+                        <div className="plus_file">
+                      
+                          <div className="icon">
+                            <BiSolidImageAdd/>
+                          </div>
+                          <input type="file" id="file" accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt' multiple onChange={handleChange} />
+                          </div>
+                        </label> 
+                      
+                      {/* <label className="forums_image" htmlFor="file">
                         <div className="plus_file">
                           <div className="icon">
                             <BiSolidImageAdd/>
                           </div>
                           <input type="file" id="file" accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt' multiple onChange={handleChange} />
                           </div>
-                      </label> 
+                      </label>  */}
+                      
+                     
+                      
                       
                      </>
                     
@@ -381,7 +396,16 @@ function ForumHeader({sectionId, canCreateForum}:Props) {
                     </div>
                     <div className='forums_post'>
                         {
-                            loading? <button>Loading..</button> : <button onClick={SubmitHandler}><BiMessageSquareAdd/> Post</button>
+            
+            loading? <button className='disabled'><ReloadIcon className="mr-1 h-4 w-4 animate-spin " /> Posting..  </button> :
+                            <> {
+                              title!=='' ? <button onClick={SubmitHandler} className='bg-green-500' ><BiMessageSquareAdd/> Post</button> :
+                              <button disabled className='cursor-not-allowed'><BiMessageSquareAdd/> Post</button>
+                            }
+                            
+                            </>
+                            
+                            
                         }
                         
                     </div>

@@ -57,6 +57,11 @@ import { FaPollH } from "react-icons/fa";
 import { CgPoll } from "react-icons/cg";
 import PollDialog from "../polls/PollDialog";
 import FormDialog from "../forms/FormDialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 
 interface ChatInputProps {
@@ -130,7 +135,7 @@ const EditorFooter = ({apiUrl,
 
     const reactQuillRef = useRef(null);
 
-
+    console.log("Drafts::", drafts);
     
 
     const router = useRouter();
@@ -150,6 +155,7 @@ const EditorFooter = ({apiUrl,
     const [emojiDialog, setEmojiDialog] = useState(false);
     const [pollOpen, setPollOpen] = useState(false);
     const [formOpen, setFormOpen] = useState(false);
+    const [plusDialog, setPlusDialog] = useState(false);
     // const reactQuillRef = useRef(null);
     // const reactQuillRef: MutableRefObject<HTMLDivElement> = React.useRef(null);
 
@@ -240,11 +246,11 @@ const EditorFooter = ({apiUrl,
     
   const processFile=(file:any)=>{
       return URL.createObjectURL(file);
-
   }
 
- 
   const handleChange = async(e: React.ChangeEvent<HTMLInputElement>) => {
+
+    setPlusDialog(false);
     if(!e.target.files || e.target.files.length===0){
       return;
     }
@@ -267,19 +273,16 @@ const EditorFooter = ({apiUrl,
       // console.log(res);
       setUplodaing(false);
     } catch (error) {
-      setUplodaing(false)
+      setUplodaing(false);
     }
   };
 
   const RemoveImage =(id:number)=>{
-    // const index = files.indexOf(id);
-    // console.log(index, id);
+    if (id > -1) {
+     files.splice(id, 1);
+      previewUrl.splice(id,1);
     
-  if (id > -1) {
-    files.splice(id, 1);
-    previewUrl.splice(id,1);
-  }
- 
+    }
   }
 
   const onGroupSelect =(e:string, onChangee:any)=>{
@@ -425,11 +428,11 @@ const modules2 = {
   const saveToDatabase = async() => {
     
     try {
-      // if(drafts.length===0){
-      //   const res = await axios.post(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&sectionId=${query?.sectionId}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
-      // }else {
-      //   const res = await axios.put(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
-      // }
+      if(drafts.length===0){
+        const res = await axios.post(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&sectionId=${query?.sectionId}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
+      }else {
+        const res = await axios.put(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`, { content: draftContent, fileUrl:form.getValues("fileUrl") });
+      }
       
       router.refresh();
     } catch (error) {
@@ -438,7 +441,7 @@ const modules2 = {
   };
   const deleteFromDatabase = async() => {
     try {
-      // const res = await axios.delete(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`);
+      const res = await axios.delete(`/api/draft?serverId=${params?.id}&channelId=${params?.channelId}&draftId=${drafts[0].id}`);
       router.refresh();
 
     } catch (error) {
@@ -537,17 +540,7 @@ const modules2 = {
 </div>
          
            <div className="preview_imsg">
-           {/* {previewUrl && (
-                       <div>
-                           {files.type.startsWith("image/") ?
-                       <div>
-                           <Image  src={previewUrl} alt="upload" height={100} width={100} />
-                       </div> :
-                       <div></div>    
-                       
-                       }
-                       </div>
-                   )} */}
+          
 
            {
              previewUrl.length!==0 && files.length!==0 && previewUrl.map((image, i)=>(
@@ -555,18 +548,21 @@ const modules2 = {
                  <div >
                            {files[i]?.type.startsWith("image/") ?
                        <div className="upload_img">
-                          <div className="upld_img_opt">
+                        <div className="upld_img_opt">
                          {
                            uploading ? 
-                           
-                           <Button disabled className=''>
+                           <button disabled className=''>
                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </Button> 
-                           : ''
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
                          }
-                         <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         
                        </div>
-                           <Image  src={image} alt="upload" height={100} width={100} />
+                         <div className="upload_img_container">
+                         <Image  src={image} alt="upload" height={100} width={100} />
+                         </div>
+
+                           
                        </div> :
                       files[i]?.type.startsWith("video/")?
                       <div className="upload_img">
@@ -574,12 +570,12 @@ const modules2 = {
                          {
                            uploading ? 
                            
-                           <Button disabled className=''>
+                           <button disabled className=''>
                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </Button> 
-                           : ''
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
                          }
-                         <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         
                        </div>
                       
                         <video  src={image} height={100} width={100} />
@@ -587,15 +583,14 @@ const modules2 = {
                    files[i]?.type==="application/pdf" ?
                     <div className="upload_application">
                      <div className="application_cross">
-                         {
+                     {
                            uploading ? 
                            
-                           <Button disabled className=''>
+                           <button disabled className=''>
                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </Button> 
-                           : ''
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
                          }
-                         <button onClick={()=>RemoveImage(i)} className="cross_btn"><RxCross2  /></button>
                        </div>
                        <div className="doc_thumbnail doc_thumbnail_width">
                         <div className="doc_thum_icon">
@@ -615,15 +610,14 @@ const modules2 = {
                    
                     <div className="upload_application">
                     <div className="application_cross">
-                        {
-                          uploading ? 
-                          
-                          <Button disabled className=''>
-                         <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                          </Button> 
-                          : ''
-                        }
-                        <button onClick={()=>RemoveImage(i)} className="cross_btn"><RxCross2  /></button>
+                    {
+                           uploading ? 
+                           
+                           <button disabled className=''>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         }
                       </div>
                       <div className="doc_thumbnail doc_thumbnail_width">
                        <div className="doc_icon bg-yellow-500">
@@ -646,15 +640,14 @@ const modules2 = {
                    
                     <div className="upload_application">
                     <div className="application_cross">
-                        {
-                          uploading ? 
-                          
-                          <Button disabled className=''>
-                         <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                          </Button> 
-                          : ''
-                        }
-                        <button onClick={()=>RemoveImage(i)} className="cross_btn"><RxCross2  /></button>
+                    {
+                           uploading ? 
+                           
+                           <button disabled className=''>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         }
                       </div>
                       <div className="doc_thumbnail doc_thumbnail_width">
                        <div className="doc_icon bg-green-700">
@@ -675,15 +668,14 @@ const modules2 = {
                    
                     <div className="upload_application">
                     <div className="application_cross">
-                        {
-                          uploading ? 
-                          
-                          <Button disabled className=''>
-                         <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                          </Button> 
-                          : ''
-                        }
-                        <button onClick={()=>RemoveImage(i)} className="cross_btn"><RxCross2  /></button>
+                    {
+                           uploading ? 
+                           
+                           <button disabled className=''>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         }
                       </div>
                       <div className="doc_thumbnail doc_thumbnail_width">
                        <div className="doc_icon bg-violet-700">
@@ -700,15 +692,14 @@ const modules2 = {
                    
                          <div className="upload_application">
                          <div className="application_cross">
-                             {
-                               uploading ? 
-                               
-                               <Button disabled className=''>
-                              <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                               </Button> 
-                               : ''
-                             }
-                             <button onClick={()=>RemoveImage(i)} className="cross_btn"><RxCross2  /></button>
+                         {
+                           uploading ? 
+                           
+                           <button disabled className=''>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         }
                            </div>
                            <div className="doc_thumbnail doc_thumbnail_width">
                             <div className="doc_icon bg-yellow-700">
@@ -725,15 +716,14 @@ const modules2 = {
                    
                          <div className="upload_application">
                          <div className="application_cross">
-                             {
-                               uploading ? 
-                               
-                               <Button disabled className=''>
-                              <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                               </Button> 
-                               : ''
-                             }
-                             <button onClick={()=>RemoveImage(i)} className="cross_btn"><RxCross2  /></button>
+                         {
+                           uploading ? 
+                           
+                           <button disabled className=''>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         }
                            </div>
                            <div className="doc_thumbnail doc_thumbnail_width">
                             <div className="doc_icon bg-pink-700">
@@ -751,15 +741,14 @@ files[i]?.name.endsWith(".ppt")?
                    
 <div className="upload_application">
 <div className="application_cross">
-   {
-     uploading ? 
-     
-     <Button disabled className=''>
-    <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-     </Button> 
-     : ''
-   }
-   <button onClick={()=>RemoveImage(i)} className="cross_btn"><RxCross2  /></button>
+{
+                           uploading ? 
+                           
+                           <button disabled className=''>
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                           </button> 
+                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                         }
  </div>
  <div className="doc_thumbnail doc_thumbnail_width">
   <div className="doc_icon bg-orange-700">
@@ -855,7 +844,7 @@ files[i]?.name.endsWith(".ppt")?
            <>
            
 
-           <DropdownMenu>
+           {/* <DropdownMenu>
   <DropdownMenuTrigger className="h-[24px] w-[24px]  transition rounded-full  flex items-center justify-center">
   <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
   </DropdownMenuTrigger>
@@ -869,7 +858,7 @@ files[i]?.name.endsWith(".ppt")?
 
     <DropdownMenuItem className="flex items-center gap-2">
     <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
-    {/* <RiComputerFill /> Upload from local */}
+    
     
     <span className="text-[1.2rem]"><GrPersonalComputer/></span> Upload From Local
 
@@ -879,7 +868,33 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
 </label>
      </DropdownMenuItem>
   </DropdownMenuContent>
-</DropdownMenu>
+</DropdownMenu> */}
+
+<Popover open={plusDialog} onOpenChange={setPlusDialog}>
+      <PopoverTrigger asChild>
+        <button className="h-[24px] w-[24px]  transition rounded-full  flex items-center justify-center"><Plus className="text-white dark:text-[#29292a]" id="lucide_plus" /></button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px]">
+        <div>
+          <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] w-full p-[0.3rem] rounded" style={{color:'var(--color2'}} onClick={()=>{setFormOpen(true); setPlusDialog(false)}}><span className="text-[1.2rem]"><MdOutlineLibraryBooks/></span>Create Forms</button>
+          <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] w-full p-[0.3rem] rounded" style={{color:'var(--color2'}}  onClick={()=>{setPollOpen(true); setPlusDialog(false)}}>
+    <span className="text-[1.2rem]"><CgPoll/></span>Create Polls</button>
+        
+          <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] w-full p-[0.3rem] rounded" style={{color:'var(--color2'}} >
+          <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
+          <span className="text-[1.2rem]"><GrPersonalComputer/></span> Upload From Local
+        <input type="file" id="file" onChange={handleChange} multiple
+        accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt, .svg, .mp3, .wav, .json "
+          />
+</label>
+          </button>
+        </div>
+      </PopoverContent>
+    </Popover>
+
+
+
+
            {/* <button
             type="button"
             className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"
@@ -937,7 +952,7 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
          </button> */}
          </div>
 
-         <div  className={(loading || ((form.getValues("content")==="" || form.getValues("content") === "<p><br></p>" )&& form.getValues("fileUrl")===undefined))?'send_msg':"send_msg ssdnBg"}  >
+         <div  className={(loading || ((form.getValues("content")==="" || form.getValues("contentText")==="" || form.getValues("content") === "<p><br></p>" )&& form.getValues("fileUrl")===undefined))?'send_msg':"send_msg ssdnBg"}  >
            <button onClick={onSubmit} disabled={loading || ((form.getValues("contentText")===undefined ||  form.getValues("contentText")!==undefined && form.getValues("contentText")==="" )&& files.length===0)}  >
                
              {

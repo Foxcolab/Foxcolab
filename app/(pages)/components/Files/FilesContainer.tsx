@@ -1,8 +1,7 @@
 "use client";
-import { Member, Message, Server, UploadedFile } from '@prisma/client'
+import { Message, Server } from '@prisma/client'
 import React, { useState } from 'react'
 import FilesHeader from './FilesHeader'
-import SingleMsgFile from '../Channel/ChannelPin/SingleMsgFile';
 import AllFiles from './AllFiles';
 import CreatedByYou from './CreatedByYou';
 import SharedWithYou from './SharedWithYou';

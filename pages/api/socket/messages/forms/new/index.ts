@@ -105,8 +105,15 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                         include:{
                             user:true
                         }
-                    }
-                }
+                    },
+                    formResponses:{
+                        include:{
+                            formFieldResponses:true
+                            }
+                    },
+                    formFields:true
+                },
+                    
             },
             member:{
                 include:{

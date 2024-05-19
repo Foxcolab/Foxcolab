@@ -130,9 +130,10 @@ function ForumEditor({placeholder, apiUrl, query, whoCanUploadMediaInComment, wh
       
       if(uploading) return;
       await axios.post(url, values);
+      router.refresh();
+
       form.reset();
       RemoveQuillText();
-      router.refresh();
       form.setValue("content", "");
       form.setValue("fileUrl", []);
       setFiles([]);

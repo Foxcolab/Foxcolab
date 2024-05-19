@@ -8,11 +8,16 @@ import { CreateActivityLog } from "../../activityLog/ActivityLog";
 export const POST =async(req:NextRequest)=>{
     try {
         const reqBody =await req.json()
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         console.log(userId);
         
         if(!userId) return NextResponse.json({success:false, message:"You are not authorized"}, {status:401});
-        const user = await db.user.findFirst({where:{id:userId}})
+        // const user = await db.user.findFirst({where:{id:userId}}) 
+        const user = await db.user.findUnique({
+            where:{
+                id:userId
+            }
+        })
         // console.log(displayPic);
         let {name, description, type, displayPic, coverPic, serverType} = reqBody;
         console.log("DP",displayPic, "type", type);

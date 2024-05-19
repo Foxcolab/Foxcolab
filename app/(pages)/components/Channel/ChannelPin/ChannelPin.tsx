@@ -9,30 +9,39 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { BsFillPinAngleFill } from 'react-icons/bs'
-import { PinnedPost } from '@prisma/client'
+import { Member, PinnedPost } from '@prisma/client'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { UserAvatar } from '../../UserAvatar/UserAvatar'
 import LetterAvatar from '../../UserAvatar/LetterAvatar'
 import MsgFile from '../../Chat/MsgFile'
 import SingleMsgFile from './SingleMsgFile';
+import Link from 'next/link';
+import SinglePinPoll from './SinglePinPoll';
+import { useParams } from 'next/navigation';
+import SinglePinForm from './SinglePinForm';
 
 interface PinnedProps {
     pinnedPosts:PinnedPost[]
+    currentMember:Member
 }
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
-function ChannelPin({pinnedPosts}:PinnedProps) {
+function ChannelPin({pinnedPosts, currentMember}:PinnedProps) {
     
+  const params = useParams();
+
+
+  
   return (
     <>
     
     <Dialog>
   <DialogTrigger className='flex items-center'><BsFillPinAngleFill/> {pinnedPosts.length!==0 && pinnedPosts.length} Pinned</DialogTrigger>
-  <DialogContent className='forward_container channel_pincon'>
+  <DialogContent className='forward_container channel_pincon max-w-[570px] '>
     <DialogHeader>
       <DialogTitle>Pinned Messages</DialogTitle>
-      <div className='channel_pin_container'>
+      <div className='channel_pin_container pb-8'>
         {
             pinnedPosts && pinnedPosts.map((pinned, i)=>(
            <>
@@ -94,11 +103,35 @@ function ChannelPin({pinnedPosts}:PinnedProps) {
               
               }
             </div>
+              {
+                pinned.message.pollId!==null && <>
+                <div className='w-full'>
+                <SinglePinPoll poll={pinned.message.poll} currentMember={currentMember} />
+
+                </div>
+                
+                </>
+              }
+              {
+                pinned.message.formId!==null && <>
+                <div className='w-full'>
+                <SinglePinForm form={pinned.message.form} currentMember={currentMember} />
+
+                </div>
+                
+                </>
+              }
+
+
+
             </div>
             </div>
 
             </>
            }
+
+
+
 
            {
             pinned.thread &&       <div className="channel_single_pin" key={i}>
@@ -156,12 +189,25 @@ pinned.thread.fileUrl.map((file, i)=>(
 
 }
 </div>
+
+
+
+
+
+
 </div>
 </div>
            }
            
            </>
             ))
+        }
+
+
+        {
+          pinnedPosts.length>0 && <div className='pt-4'>
+            <Link href={`/servers/${params?.id}/pinned-message`} className='py-2 px-3 text-white rounded bg-green-500 hover:bg-green-600 mt-4 text-sm font-semibold'>See my pinned post</Link>
+          </div>
         }
             
       </div>

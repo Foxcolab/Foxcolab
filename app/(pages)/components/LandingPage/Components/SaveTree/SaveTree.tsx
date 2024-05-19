@@ -8,13 +8,13 @@ function SaveTree() {
     <>
     <div className="pt-24 pb-8">
 
-        <div className='text-[2.8rem] text-center font-semibold flex gap-1 justify-center'>
+        <div className='landling_feature_title'>
         <div className='flex flex-col items-center justify-center'>
-            <div className='flex items-center text-green-600'> <span className=''><sup><RiDoubleQuotesL/> </sup></span><span className='text-green-600'><BiSolidTree/></span> Let's save trees together <span className='text-green-600'><BiSolidTree/></span> <sup><RiDoubleQuotesR/></sup>  </div>
+            <div className='flex items-center text-green-600'> <span className='double_quote'><sup><RiDoubleQuotesL/> </sup></span><span className='text-green-600'><BiSolidTree/></span> Let's save trees together <span className='text-green-600'><BiSolidTree/></span> <sup className='double_quote'><RiDoubleQuotesR/></sup>  </div>
         </div>
         
     </div>
-    <div className='flex items-center justify-center flex-col text-lg my-4 font-semibold'>
+    <div className='flex items-center justify-center flex-col text-lg my-4 font-semibold tree_text'>
         <div>Choose online workspace with Foxcolab and reduce your ecological footprint.</div>
         <div> Help us save trees and water for future generations.</div>
         </div>

@@ -30,8 +30,9 @@ function SingleTest({Test, attemptedTests}:Props) {
 
 
    <Link href={`/servers/${params?.id}/test-channel/${params?.testChannelId}/${Test.id}`}>
-
-   <div className={cn("single_test", Test.activated ? "border-green-500 " : "border-gray-400" )}>
+   
+   <div className={cn("", Test.activated ? "border-green-500 " : "border-gray-400" )}>
+    <div className='border single_test'>
     <div className="flex justify-between items-center">
       <div className={cn("text-xs font-bold py-1 px-2 rounded-sm" , Test.activated?"border-green-500 border-solid border text-green-500": "text-violet-500 border-violet-500 border border-solid")}>{Test.activated ? "ACTIVE" : "SET UP IN PROGRESS"}</div>
       <div className='text-xs font-bold text-gray-400'>Created: {format(new Date(Test.createdAt), DATE_FORMAT)}</div>
@@ -56,6 +57,7 @@ function SingleTest({Test, attemptedTests}:Props) {
         }
         <div className='level'>Level: <span className={Test.level==="easy" ? "text-green-500" : Test.level==="medium" ? "text-amber-500" : "text-rose-600" }>{Test.level}</span></div>
         </div>
+    </div>
     </div>
    </Link>
     

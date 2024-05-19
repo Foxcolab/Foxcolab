@@ -22,8 +22,13 @@ function QuestionManager({questions, testId}:Props) {
     <>
         <div className='w-full'>
             <div className='q_mangr'>
-            <span className='d-flex w-1/6 pt-4 font-semibold gap-2 rounded-md test_info'><MdDashboardCustomize /> Question Manager</span>
+              <div className='flex items-center justify-center'>
+              <span className='d-flex font-semibold gap-2 rounded-md test_info'><MdDashboardCustomize /> Question Manager</span>
+              </div>
+            
+            <div className='flex items-center justify-center'>
             <button className='cnvs_cnote' onDoubleClick={hrefHandler}><FaPlusCircle/> Create Question</button>
+              </div>
             {/* <CreateQuestion  /> */}
             </div>
    

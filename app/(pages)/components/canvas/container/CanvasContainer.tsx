@@ -31,8 +31,12 @@ function CanvasContainer({canvas, isAdmin, member}:Props) {
     {
         notes.length===0 ? 
         <> 
+        <div className='flex items-center justify-center mt-20'>
         <h1>No notes found!</h1>
+        </div>
+        
         </> : <> 
+            <div className='all_canvases'>
             {
             notes.length!==0 && notes.map((note:Note)=>(
                 <>
@@ -40,6 +44,8 @@ function CanvasContainer({canvas, isAdmin, member}:Props) {
                 </>
             ))
             }
+            </div>
+            
         
         </>
     }

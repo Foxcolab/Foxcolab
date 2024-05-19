@@ -42,6 +42,16 @@ function UpdateTest({test}:{test:Test}) {
     }
   }
 
+  const CheckNumber = (val:any)=>{
+    if (!isNaN(val)) {
+      if(val>100 || val<0){
+        return;
+      }
+      setPassmarks(val);
+    }
+
+  }
+
 
 
   return (
@@ -66,13 +76,13 @@ function UpdateTest({test}:{test:Test}) {
         </div>
         <div className="create_ss">
             <label className='font-semibold' htmlFor="">Level</label>
-            <Select onValueChange={e=>setLevel(e)} defaultValue={level} >
+            <Select onValueChange={(e)=>setLevel(e)} defaultValue={level} >
       <SelectTrigger className="w-full" id='username'>
-        <SelectValue placeholder="Select level--" />
+        <SelectValue placeholder="Select test level" />
       </SelectTrigger>
       <SelectContent id='username'>
         <SelectGroup  >
-          <SelectLabel>Select level--</SelectLabel>
+          <SelectLabel>Select test level</SelectLabel>
           <SelectItem value="easy">Easy</SelectItem>
           <SelectItem value="medium">Medium</SelectItem>
           <SelectItem value="hard">Hard</SelectItem>
@@ -83,13 +93,13 @@ function UpdateTest({test}:{test:Test}) {
         </div>
         <div className="create_ss">
             <label htmlFor="" className='font-semibold'>Time (Min)</label>
-            <div className='d-flex items-center w-full gap-2'><input type="range" id="volume" name="volume" min="0" max="120" onChange={e=>setTime(e.target.value)} className='w-full'defaultValue={time} /> <span className='text-sm text-slate-600'>{time}</span></div>
+            <div className='d-flex items-center w-full gap-2'><input type="range" id="volume" name="volume" min="0" max="120" onChange={(e)=>setTime(e.target.value)} className='w-full'defaultValue={time} /> <span className='text-sm font-semibold'>{time}</span></div>
           
         </div>
         <div className="create_ss">
             <label htmlFor="" className='font-semibold'>Pass Mark (%)</label>
             <div className='d-flex items-center w-full gap-2'>
-              <Input id='username' type="text" onChange={e=>setPassmarks(e.target.value)} placeholder='50%' defaultValue={passmarks} />
+              <Input id='username' type="text" onChange={(e)=>CheckNumber(e.target.value)} placeholder='50%' defaultValue={passmarks} />
             </div>
           
         </div>

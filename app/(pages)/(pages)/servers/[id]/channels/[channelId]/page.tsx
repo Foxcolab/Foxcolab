@@ -99,6 +99,9 @@ const ChannelChat =async({params}:Props)=> {
         }
       },
       pinnedPost: {
+        orderBy:{
+          createdAt:"desc"
+        },
         include:{
           createdUser:{
             include:{
@@ -121,6 +124,33 @@ const ChannelChat =async({params}:Props)=> {
                     }
                   }
                 }
+              },
+              poll:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  votes:true
+                
+                }
+              },
+              form:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  formFields:true,
+                  formResponses:{
+                    include:{
+                      formFieldResponses:true
+                    }
+                  }
+                },
+                
               }
             }
           }
@@ -134,7 +164,6 @@ const ChannelChat =async({params}:Props)=> {
 
 
   if(!channel) redirect(`/servers/${params.id}`);
-
   const member = await db.member.findFirst({
     where: {
       serverId: params.id,
@@ -155,16 +184,27 @@ const ChannelChat =async({params}:Props)=> {
       Drafts:{
         where:{
           channelId:channel?.id,
-          OR:[
-            {
-              ScheduledDate:null
-            },
-            {
-              ScheduledDate:{ 
-                equals:undefined
-              }
-            }
-          ]
+          createdMember:{
+            userId:profile.id
+          },
+          // ScheduledDate:null
+          // OR:[
+          //   {
+          //     ScheduledDate:{
+          //       equals:null
+          //     }
+          //   }
+          // ]
+          // OR:[
+          //   {
+          //     ScheduledDate:null
+          //   },
+          //   {
+          //     ScheduledDate:{ 
+          //       equals:undefined
+          //     }
+          //   }
+          // ]
         }
       }
     }
@@ -214,8 +254,6 @@ const ChannelChat =async({params}:Props)=> {
 
   const isAdmin = member.id===channel.createdBy;
   // channel.currentMember = member;
-
-  
 
 
   return (

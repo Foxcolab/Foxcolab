@@ -23,6 +23,7 @@ function Role({setOpen, server, isAdmin}:Props) {
   const [createCanvas, setCreateCanvas] = useState(server.whoCreateCanvas);
   const [createTest, setCreateTest] = useState(server.whoCreateTestChannel);
   const [botResponse, setBotResponse] = useState(server.whoCreateBotResponse);
+  const [createSpreadsheet, setCreateSpreadsheet] = useState(server.whoCreateSpreadsheet);
   const router = useRouter();
   const onChangeHandler =async(title:string, value:string)=>{
     try {
@@ -63,6 +64,7 @@ function Role({setOpen, server, isAdmin}:Props) {
     <RoleComponents state={createForum} onChangeHandler={onChangeHandler} title="Manage Canvas" subTitle="Allows you to create new Canvas" />
     <RoleComponents state={createCanvas} onChangeHandler={onChangeHandler} title="Manage Forums" subTitle="Allows you to create new Forums Channel" />
     <RoleComponents state={createTest} onChangeHandler={onChangeHandler} title="Manage Test Channels" subTitle="Allows you to create new Test Channel" />
+    <RoleComponents state={createSpreadsheet} onChangeHandler={onChangeHandler} title="Manage Spreadsheets" subTitle="Allows you to create new Spreadsheets" />
     <RoleComponents state={botResponse} onChangeHandler={onChangeHandler} title="Manage Bot Response" subTitle="Allows you to create new bot response and edit or delete exiting ones." />
  
 

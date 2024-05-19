@@ -36,7 +36,7 @@ const  Server_Sidebar =async ({home, user}:Props)=>{
 
     <hr className='hr' />
  
-    <ScrollArea className='flex-1 w-full'>
+    <ScrollArea className='flex-1 w-full '>
         {
             servers.map((server)=>(
                 <div key={server.id} className='sing_server'>

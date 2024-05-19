@@ -26,7 +26,7 @@ function TestChannelContainer({tests, sectionId, attemptedTests, whoCanCreateTes
       if(e===false){
         setTestsType("My Tests");
       }else {
-        setTestsType("All Tests");
+        setTestsType("All Active Tests");
       }
     }
     
@@ -40,7 +40,7 @@ function TestChannelContainer({tests, sectionId, attemptedTests, whoCanCreateTes
       </div>
       
       <div className='flex items-center gap-1'>
-      <Checkbox id="terms" onCheckedChange={HandlerChange} checked={testsType==="All Tests"} />
+      <Checkbox id="terms" onCheckedChange={HandlerChange} checked={testsType==="All Active Tests"} />
       <div className='cnvs_sc flex justify-between w-full'>
         <div>  <div>   </div> <b>{testsType}</b></div>
         {
@@ -54,7 +54,7 @@ function TestChannelContainer({tests, sectionId, attemptedTests, whoCanCreateTes
 
         <div className="tstcont">
           {
-          testsType==="All Tests" && activatedTest.map((test:Test)=>(
+          testsType==="All Active Tests" && activatedTest.map((test:Test)=>(
               <SingleTest Test={test} attemptedTests={attemptedTests} key={test.id} />
             ))
           }

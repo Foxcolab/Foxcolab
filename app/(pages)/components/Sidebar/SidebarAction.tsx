@@ -396,7 +396,7 @@ export const SidebarActions = ({user}:Props)=>{
                    <div className="mt-8 flex gap-4">
                     {
                       loading ? <Loader/> : <>
-                       <button className="px-5 py-[0.35rem] border rounded hover:bg-gray-800 font-semibold" onClick={()=>setOpenDialog(false)}>Cancel</button>
+                       <button className="px-5 py-[0.35rem] border rounded  font-semibold" onClick={()=>setOpenDialog(false)}>Cancel</button>
                     <button className="px-5 py-[0.35rem] rounded bg-green-500 text-white hover:bg-green-600 font-semibold" onClick={submitHandler}>Create</button>
                       </>
                     }

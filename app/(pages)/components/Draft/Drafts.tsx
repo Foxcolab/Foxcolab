@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { Draft } from '@prisma/client'
 import { format } from 'date-fns'
 import React, { useState } from 'react'
-import { FaLock } from 'react-icons/fa'
+import { FaHashtag, FaLock } from 'react-icons/fa'
 import MsgFile from '../Chat/MsgFile'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -53,12 +53,7 @@ function Drafts({drafts}:DraftProps) {
       const diffDays = Math.round(Math.abs((providedDate - currentDate) / oneDay));
   
       if (diffDays === 0) {
-        // const hours = providedDate.getHours();
-        // const minutes = providedDate.getMinutes();
-        // const formattedHours = hours < 10 ? '0' + hours : hours;
-        // const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-        // const formattedTime = `${formattedHours}:${formattedMinutes}`;
-        // const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+        
         return "Today";
     } else if (diffDays === -1) {
         return "Tomorrow"
@@ -111,21 +106,21 @@ function Drafts({drafts}:DraftProps) {
     <div className="saved_all_container">
     {
       drafts && drafts.map((draft, i)=>(
-        <div onClick={()=>ChannelHandler(draft?.channelId)} key={i} className='w-full text-left' onMouseEnter={()=>ToogleActions(draft.id)} onMouseLeave={()=>ToogleActions(draft.id)}>
+        <div  key={i} className='w-full text-left' onMouseEnter={()=>ToogleActions(draft.id)} onMouseLeave={()=>ToogleActions(draft.id)}>
                     <div className='pinsmsg' >
                 
 
 
                 <div className="flex items-start gap-2">
                 {/* <Profile name={draft.message.member?.user?.name} url={saved.message.member?.user?.profilePic} /> */}
-                        <div className="draft_channel_type">
-                        {draft.channel.type==="public"?"#": <FaLock  />}
+                        <div className="draft_channel_type" onClick={()=>ChannelHandler(draft?.channelId)}>
+                        {draft.channel.type==="public"? <FaHashtag/> : <FaLock  />}
                         </div>
                 <div className="flex flex-col w-full">
-                <div className='flex items-center justify-between leading-8'>
-                <div className="draft_channel_title">{draft.channel.type==="public"?"#": <FaLock  />}{draft.channel.name}</div>
-                <div className='text-xs text-[#bdbdbd]'>
-                  <div className='draft_actions' id={`draft_action${draft.id}`} style={{display:"none"}}>
+                <div className='flex items-center justify-between leading-8 mt-[-0.45rem]'>
+                <div className="draft_channel_title" onClick={()=>ChannelHandler(draft?.channelId)}>{draft.channel.type==="public"? <FaHashtag/>: <FaLock  />}{draft.channel.name}</div>
+                <div className='text-xs '>
+                  <div className='draft_actions border z-100' id={`draft_action${draft.id}`} style={{display:"none"}}>
                     <ActionTooltip align='center' label='Delete Draft' side='top'>
                     <button onClick={()=>setOpen(true)}><RiDeleteBin6Fill/></button>
                     </ActionTooltip>
@@ -139,7 +134,7 @@ function Drafts({drafts}:DraftProps) {
                     <button onClick={()=>SendMessage(draft)}><MdOutlineSend/></button>
                     </ActionTooltip>
                   </div>
-                <span id={`time${draft.id}`} className='print_date'>{PrintDate(draft?.createdAt)}</span>
+                <span id={`time${draft.id}`} className='print_date' onClick={()=>ChannelHandler(draft?.channelId)}>{PrintDate(draft?.createdAt)}</span>
                 </div>
                 </div>
                 <Dialog open={open} onOpenChange={setOpen}>
@@ -164,26 +159,26 @@ function Drafts({drafts}:DraftProps) {
                 <p className={cn(
                 "text-sm text-zinc-200 dark:text-zinc-300",
                 " text-zinc-500 dark:text-zinc-400 text-xs mt-1"
-                )}>
+                )} onClick={()=>ChannelHandler(draft?.channelId)}>
                 {/* {content} */}
-                <div dangerouslySetInnerHTML={{__html:draft.content}} className="msg_contnt" />
+                <div dangerouslySetInnerHTML={{__html:draft.content}} className="msg_contnt"  />
                 </p>
                 
                 
                 </div>
                 </div>
-                <div className="all_imgs">
-                {draft.fileUrl?.length!==0 && 
                 
-                draft.fileUrl &&  draft?.fileUrl?.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-                
-                </>
-                ))
-                
+
+                {
+                  draft.uploadedFiles.length>0 && 
+                    <div className="all_imgs">
+                <MsgFile files={draft.uploadedFiles} length={draft.uploadedFiles.length} type="msgFile" />
+
+                      </div> 
                 }
-                </div>  
+
+               
+                 
                 </div>
         </div>
 

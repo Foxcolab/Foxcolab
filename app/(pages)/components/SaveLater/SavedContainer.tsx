@@ -22,6 +22,8 @@ function SavedContainer({savedPosts, userId}:SavedProps) {
     setState(status);
   }
 
+  console.log(savedPosts);
+
   return (
     <>
 
@@ -40,8 +42,8 @@ function SavedContainer({savedPosts, userId}:SavedProps) {
         <>
         {
           saved.status==="progress" ? 
-           <div className='pinsmsg' key={i}>
-          <MsgUpper2 name={saved?.message.channel?.name} id={saved.id} serverId={saved.serverId} userId={userId} status="progress" />
+           <div className='pinsmsg ' key={i}>
+          <MsgUpper2 name={saved?.message.channel?.name} type={saved.message.channel.type} id={saved.id} serverId={saved.serverId} userId={userId} status="progress" />
   
               <div className="pin_msg">
               <Profile name={saved.message.member?.user?.name} url={saved.message.member?.user?.profilePic} />
@@ -71,18 +73,17 @@ function SavedContainer({savedPosts, userId}:SavedProps) {
            
           </div>
               </div>
-              <div className="all_imgs">
-              {saved.message.fileUrl?.length!==0 && 
               
-             saved.message.fileUrl &&  saved.message.fileUrl.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
+              {
+                saved?.message?.uploadedFiles?.length>0 && 
+                <div className="all_imgs">
+                <MsgFile files={saved?.message?.uploadedFiles}  type="msgFile" length={saved.message?.uploadedFiles?.length} />
+                </div>    
               }
-            </div>            
+
+              
+
+
             
   
   
@@ -137,15 +138,9 @@ function SavedContainer({savedPosts, userId}:SavedProps) {
               </div>
   
               <div className="all_imgs">
-              {saved.message.fileUrl?.length!==0 && 
-              
-             saved.message.fileUrl &&  saved.message.fileUrl.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
+              {
+                saved?.message?.uploadedFiles?.length>0 && 
+                <MsgFile files={saved?.message?.uploadedFiles}  type="msgFile" length={saved.message?.uploadedFiles?.length} />
               }
             </div>   
           </div>: ''
@@ -196,15 +191,9 @@ function SavedContainer({savedPosts, userId}:SavedProps) {
               </div>
   
               <div className="all_imgs">
-              {saved.message.fileUrl?.length!==0 && 
-              
-             saved.message.fileUrl &&  saved.message.fileUrl.map((file:string, i:number)=>(
-                <>
-                <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
-
-                </>
-              ))
-              
+              {
+                saved?.message?.uploadedFiles?.length>0 && 
+                <MsgFile files={saved?.message?.uploadedFiles}  type="msgFile" length={saved.message?.uploadedFiles?.length} />
               }
             </div>   
           </div>: ''

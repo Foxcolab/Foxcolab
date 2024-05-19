@@ -281,6 +281,7 @@ function PollDialog({open,setOpen}:Props) {
       const res = await axios.post(`/api/socket/messages/polls/new?serverId=${params?.id}&channelId=${params?.channelId}`, {question, options:inputFields, answerType:type, anonymous, expiryDate:expiryDate});
       setLoading(false);
       router.refresh();
+      setOpen(false);
     } catch (error) {
       setLoading(false);
       console.log(error)

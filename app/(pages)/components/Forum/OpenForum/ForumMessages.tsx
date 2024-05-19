@@ -64,6 +64,7 @@ function ForumMessages({
     paramValue,
   });
   useChatSocket({ queryKey, addKey, updateKey, deleteKey });
+
   useChatScroll({
     chatRef,
     bottomRef,
@@ -106,7 +107,7 @@ function ForumMessages({
   return (
     <>
     <div className="forum_messages">
-    <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
+    <div ref={chatRef} className="flex-1 flex flex-col pt-4 pb-2 overflow-y-auto">
       {!hasNextPage ? <div className="flex-1" /> : '' }
 
     {

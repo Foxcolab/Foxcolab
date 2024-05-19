@@ -24,8 +24,8 @@ function LeftHeader({testName, qIndex, questions, length, ChangeQuestion, questi
   return (
     <>
     
-    <div className="question_l_header">
-            <div className='qtest_name'>{testName}  <ModeToggle/> </div>
+    <div className="question_l_header overflow_hidden">
+            <div className='qtest_name'>{testName} </div>
           
           <div className="second_header">
             <div className='q_index'>Question {qIndex+1} of {length} </div>

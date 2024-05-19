@@ -19,16 +19,17 @@ import { useRouter } from 'next/navigation';
 import Loader from '../Loaders/Loader';
 
 interface Props {
-    serverId:String,
-    sectionId:String
+  serverId:string
+  sectionId:string
+  open:boolean
+  setOpen:any
 }
 
 
-function CreateCanvas({serverId, sectionId}:Props) {
+function CreateCanvas({serverId, sectionId, open, setOpen}:Props) {
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState('');
     const [type, setType] = useState('');
-    const [open, setOpen] = useState(false);
     const router =useRouter();
     const SubmitHandler =async()=>{
         try {
@@ -52,7 +53,7 @@ function CreateCanvas({serverId, sectionId}:Props) {
     
     <Dialog open={open} onOpenChange={setOpen}> 
     <DialogTrigger asChild>
-      <button  className='drpdn_ip'><FaPlusCircle/> Create Canvas</button>
+      {/* <button  className='drpdn_ip'><FaPlusCircle/> Create Canvas</button> */}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>

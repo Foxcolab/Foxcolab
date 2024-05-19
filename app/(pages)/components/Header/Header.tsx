@@ -5,13 +5,19 @@ import {ModeToggle} from "../mode-toggle/Toggle";
 import Link from 'next/link';
 import { SocketBadge } from '../SocketBadge/SocketBagde';
 import { NameDropDown } from './NameDropDown';
-import { Server } from '@prisma/client';
+import { Member, Server, User } from '@prisma/client';
+import { FaCircleUser } from 'react-icons/fa6';
 
 interface Props {
-  server:Server
+  server:Server & {
+    currentMember:Member & {
+      user:User
+    }
+  }
 }
 
 function Header({server}:Props) {
+  const member = server.currentMember;
   return (
     <>
  <div className="page_header">
@@ -28,11 +34,10 @@ function Header({server}:Props) {
         </div>
         <div className="etc">
             <div>
-                <div className="help_icon">
-                <BiSolidHelpCircle />
-                </div>
+                
             </div>
-            <Link href={'/profile'} className='prof_logo pr-5' style={{marginRight:"0.5rem"}}> <span><FaUserCircle/></span> Bikram 
+            <Link href={'/profile'} className='prof_logo pr-5' style={{marginRight:"0.5rem"}}> <span ><FaCircleUser className='text-[1.1rem]' /></span> 
+            {member.user.name} 
 
              </Link>
             <SocketBadge/>

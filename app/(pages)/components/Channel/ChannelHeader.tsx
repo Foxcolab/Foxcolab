@@ -21,8 +21,9 @@ interface HeaderProps {
     pinnedPosts:PinnedPost[]
     schemaType:string
     channel:Channel
+    currentMember:Member
 }
-function ChannelHeader({members, name, type, description, createdBy, createdAt, isAdmin, serverMembers, sendMsg, messages, managers, pinnedPosts, schemaType, channel}:HeaderProps) {
+function ChannelHeader({members, name, type, description, createdBy, createdAt, isAdmin, serverMembers, sendMsg, messages, managers, pinnedPosts, schemaType, channel, currentMember}:HeaderProps) {
   return (
 <>
 
@@ -33,7 +34,7 @@ function ChannelHeader({members, name, type, description, createdBy, createdAt, 
             messages={messages} startingState={"About"}
             managers={managers}
             channel={channel}
-            content={<button>{channel.type==="public" ? "#" : <FaLock/> } {name} <IoIosArrowDown/></button>}
+            content={<button>{channel.type==="public" ? "#" : <FaLock/> } {name} <span className='text-sm'><IoIosArrowDown/></span></button>}
  />
          </div>
          <div className='channel_memb_pin'>
@@ -43,7 +44,7 @@ function ChannelHeader({members, name, type, description, createdBy, createdAt, 
             managers={managers}
             content={<button className=''><FaUsers/> Members {members.length}</button> }
  />
-            <ChannelPin pinnedPosts={pinnedPosts} />
+            <ChannelPin pinnedPosts={pinnedPosts} currentMember={currentMember} />
          </div>
       </div>
       

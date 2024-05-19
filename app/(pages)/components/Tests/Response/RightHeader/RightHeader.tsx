@@ -44,7 +44,7 @@ function RightHeader({marks, time, testName, remainingTime, submitting, submitTe
                   <div className='time'>
                   {remainingTime }
                   </div>
-                  <div className='submit'><button onClick={submitTest}>Submit</button></div>
+                  <div className='submit bg-green-500 text-white hover:bg-green-600'><button onClick={submitTest}>Submit</button></div>
                    </> 
                   }
                

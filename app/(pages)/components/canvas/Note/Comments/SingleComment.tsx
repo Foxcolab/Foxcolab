@@ -1,4 +1,4 @@
-import { Member, NoteComment } from '@prisma/client'
+import { Member, NoteComment, UploadedFile } from '@prisma/client'
 import React, { useState } from 'react'
 import MsgFile from '../../../Chat/MsgFile'
 import { format } from 'date-fns'
@@ -10,6 +10,8 @@ import SingleThreeDot from './SingleThreeDot'
 interface Props {
     comment:NoteComment & {
       createdMember:Member
+    } & {
+      uploadedFiles:UploadedFile[]
     }
     memberId:string
 }
@@ -60,18 +62,19 @@ function SingleComment({comment, memberId}:Props) {
             <div className='single_c_content'>
             <div dangerouslySetInnerHTML={{__html:comment.content}} />
             </div>
-            <div className="single_c_files">
-            {fileUrl?.length!==0 && 
-              
-              fileUrl &&  fileUrl.map((file, i)=>(
-                 <>
-                 <MsgFile fileUrl={file} key={i} length={length} type="msgFile" />
- 
-                 </>
-               ))
-               
-               }
-            </div>
+            
+              {
+                comment.uploadedFiles.length>0 && 
+                <div>
+                  <div className="single_c_files">
+                <MsgFile files={comment.uploadedFiles} length={length} type="msgFile" />
+                  </div>
+
+                </div>
+                
+              }
+    
+           
         </div>
         
         {

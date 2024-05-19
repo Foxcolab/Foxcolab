@@ -54,6 +54,9 @@ export const POST =async(req:NextRequest)=>{
                     create:{
                         content,
                         fileUrl,
+                        uploadedFiles:{
+                            connect:fileUrl?.map((file:string)=>({id:file}))
+                        },
                         createdBy:server.Members[0].id as string,
                         serverId:serverId as string,
                         canvasId:canvasId as string

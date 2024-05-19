@@ -25,7 +25,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { useRouter } from 'next/navigation';
-
+import { useToast } from "@/components/ui/use-toast"
 interface Props {
   serverId:string,
   sectionId:string,
@@ -35,15 +35,28 @@ interface Props {
 function CreateTest({serverId, sectionId, testChannelId}:Props) {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('');
-    const [time, setTime] = useState('');
+    const [time, setTime] = useState('60');
     const [level, setLevel] = useState('easy');
     const [loading, setLoading] = useState(false);
     const [passmarks, setPassmarks] = useState('50');
     const [open, setOpen] = useState(false);
     const router = useRouter()
+    const { toast } = useToast();
+
+    const MakeToast =(message:string)=>{
+      toast({
+        title: message,
+      })
+    }
     const SubmitHandler =async()=>{
       try {
-        
+        if(name===""){
+          MakeToast("Please enter the test name.");
+          return;
+        }else if(description===""){
+          MakeToast("Please enter the test description.");
+          return;
+        }
         setLoading(true);
         await axios.post(`/api/test/new?serverId=${serverId}&sectionId=${sectionId}&testChannelId=${testChannelId}`, {passmarks, name, time, level, description });
         setLoading(false);
@@ -56,6 +69,16 @@ function CreateTest({serverId, sectionId, testChannelId}:Props) {
         
       }
     }
+
+    const CheckNumber = (val:any)=>{
+      if (!isNaN(val)) {
+        if(val>100 || val<0){
+          return;
+        }
+        setPassmarks(val);
+      }
+
+    }
   return (
     <>
     
@@ -64,35 +87,39 @@ function CreateTest({serverId, sectionId, testChannelId}:Props) {
       <DialogTrigger asChild>
       <button className='cnvs_cnote'><FaPlusCircle/> Create Test</button>
       </DialogTrigger>
-      <DialogContent className="" style={{zIndex:'10000 !important', height:"650px", maxWidth:"650px"}}>
+      <DialogContent className="" style={{zIndex:'10000 !important', height:"620px", maxWidth:"650px"}}>
+        <div className=''>
+
+       
         <DialogHeader>
           <DialogTitle>Create a Test</DialogTitle>
           <DialogDescription>
-          Please fill out the form below to create a new test.
+          Please fill out the fields below to create a new test.
+          
           </DialogDescription>
+          <hr />
         </DialogHeader>
-        <hr />
+    
 
-        <div className='tt_ss overflow-scroll px-4 py-0'>
+        <div className='tt_ss overflow-scroll px-4 py-4'>
         <div className="create_ss">
             <label className='font-semibold' htmlFor="">Name</label>
-            <Input id="username" placeholder={`Write the test name...`} className="col-span-3" onChange={e=>setName(e.target.value)}  />
+            <Input id="username" placeholder={`Write the test name...`} className="col-span-3" onChange={e=>setName(e.target.value)} autoComplete='off' />
 
         </div>
           <div className="create_ss">
             <label className='font-semibold' htmlFor="">Description</label>
-            <Textarea id="username" placeholder={`write the description about the topic`} className="col-span-3" onChange={e=>setDescription(e.target.value)} style={{resize:"none"}} />
+            <Textarea id="username" placeholder={`write the description about the topic`} className="col-span-3" onChange={e=>setDescription(e.target.value)} style={{resize:"none"}} autoComplete='off' />
 
         </div>
         <div className="create_ss">
             <label className='font-semibold' htmlFor="">Level</label>
             <Select onValueChange={e=>setLevel(e)}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select level--" />
+        <SelectValue placeholder="Select test level" />
       </SelectTrigger>
       <SelectContent >
         <SelectGroup >
-          <SelectLabel>Select level--</SelectLabel>
           <SelectItem value="easy">Easy</SelectItem>
           <SelectItem value="medium">Medium</SelectItem>
           <SelectItem value="hard">Hard</SelectItem>
@@ -103,25 +130,26 @@ function CreateTest({serverId, sectionId, testChannelId}:Props) {
         </div>
         <div className="create_ss">
             <label htmlFor="" className='font-semibold'>Time (Min)</label>
-            <div className='d-flex items-center w-full gap-2'><input type="range" id="volume" name="volume" min="0" max="120" onChange={e=>setTime(e.target.value)} className='w-full' /> <span className='text-sm text-slate-600'>{time}</span></div>
+            <div className='d-flex items-center w-full gap-2'><input type="range" id="volume" name="volume" min="0" max="120" onChange={e=>setTime(e.target.value)} defaultValue={time} className='w-full' /> <span className='text-sm font-semibold'>{time}</span></div>
           
         </div>
         <div className="create_ss">
             <label htmlFor="" className='font-semibold'>Pass Mark (%)</label>
             <div className='d-flex items-center w-full gap-2'>
-              <Input type="text" onChange={(e)=>setPassmarks(e.target.value)} defaultValue={passmarks} max={100} min={0} />
+              <Input type="text" onChange={(e)=>CheckNumber(e.target.value)} defaultValue={passmarks} max={100} min={0} autoComplete='off' value={passmarks} />
             </div>
           
         </div>
 
         </div>
-        <DialogFooter>
+        <DialogFooter className='mt-4'>
           {
             loading ? <Loader/> : 
           <Button type="submit" onClick={SubmitHandler}>Create</Button>
 
           }
         </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
     

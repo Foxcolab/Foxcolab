@@ -8,6 +8,7 @@ import SectionHeader from '@/app/(pages)/components/Header/SectionHeader';
 import { MdEditSquare } from 'react-icons/md';
 import { BsFillSendFill } from 'react-icons/bs';
 import DraftContainer from '@/app/(pages)/components/Draft/DraftContainer';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
 
 
 interface DraftProps {
@@ -31,7 +32,8 @@ async function DraftPage({params}:DraftProps) {
       }
     },
     include:{
-      channel:true
+      channel:true,
+      uploadedFiles:true
     }
   })
 
@@ -43,27 +45,26 @@ async function DraftPage({params}:DraftProps) {
       },
     },
     include:{
-      channel:true
+      channel:true,
+      uploadedFiles:true
     }
   })
 
   return (
    <>
    
-   <MainSidebar server={server}>
-    <div className="section_container">
+    <ServerHome server={server} user={profile}>
+    <div className="forum_msg_container">
         
-        <SectionHeader icon={<BsFillSendFill/>} name={"Draft & Sent"} />
-        <DraftContainer drafts={myDrafts} sents={messages} />
+    <SectionHeader icon={<BsFillSendFill/>} name={"Draft & Sent"} />
 
 
+    <div className="forum_messages">
+    <DraftContainer drafts={myDrafts} sents={messages} />
+    </div>
+       </div>
+    </ServerHome>
 
-
-
-
-      </div>
-    </MainSidebar>
-   
    </>
   )
 }

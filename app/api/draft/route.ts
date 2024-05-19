@@ -44,9 +44,14 @@ export const POST =async(req:NextRequest)=>{
                 serverId:serverId as string,
                 channelId:channelId as string,
                 sectionId:sectionId as string,
+                
 
+            },
+            include:{
+                createdMember:true
             }
         })
+        console.log(draft.createdMember);
 
         console.log("Saved Sucessfully");
 

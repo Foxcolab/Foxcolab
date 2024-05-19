@@ -114,7 +114,7 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
                 
             </div> */}
           
-           <Separator className="sidebar_separator" />
+           {/* <Separator className="sidebar_separator" /> */}
         <div className='sidecontent'>
         {
             SideContent.map((content:any, index:number)=>(
@@ -134,7 +134,7 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
         
         
         
-<Separator className='sidebar_separator'  />
+<Separator className='sidebar_separator mt-[0.3rem]'  />
 
         {
             hasPermission &&  <>
@@ -143,7 +143,7 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
             </div>
 
 
-           <Separator className='sidebar_separator' />
+           {/* <Separator className='sidebar_separator' /> */}
             </>
         }
 

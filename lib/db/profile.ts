@@ -22,36 +22,44 @@ export const myProfile = async()=>{
         const cookieStore = cookies();
         const token = cookieStore.get('token')?.value || '';
         const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
-
+        // console.log("Token", token);
+        
         let userId = ''
-       if(googleToken!==null && googleToken!==''){
+        if(token!=='' && token!==null){
+            userId = getUserIDFromToken(token);
+            // console.log("Token:", token);
+       }
+       if(googleToken!==null && googleToken!=='' && token===''){
             const session =await getUserSesssion();
             userId = session.id;
-       }else {
-          userId = getUserIDFromToken(token);
-           
+            // console.log("Google Token:", userId);
        }
+       
+    //    console.log("UserID:", userId);
        if(userId===''){return}
        
 
+        // const user = await db.user.findUnique({
+        //     where:{
+        //         id:userId
+        //     },
+        //     include:{
+        //         servers:{
+        //          where:{
+        //             Members:{
+        //                 some:{
+        //                     userId:userId
+        //                 }
+        //             }
+        //          }   
+        //         }
+        //     }
+        // });
         const user = await db.user.findUnique({
             where:{
-                id:userId
-            },
-            include:{
-                servers:{
-                 where:{
-                    Members:{
-                        some:{
-                            userId:userId
-                        }
-                    }
-                 }   
-                }
+                id:userId 
             }
         });
-        
-        
         return user;
                
     } catch (error) {
@@ -68,7 +76,7 @@ export const getMyserver = async()=>{
         const token = cookieStore.get('token')?.value || '';
         const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
         let userId = ''
-        if(googleToken!==null && googleToken!==''){
+        if(googleToken!==null && googleToken!=='' && token===''){
             const session =await getUserSesssion();
             userId = session.id;
        }else {

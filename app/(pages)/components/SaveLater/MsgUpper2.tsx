@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { AiFillDelete } from "react-icons/ai";
 import { RiInboxArchiveFill } from "react-icons/ri";
 import { PiHashFill } from "react-icons/pi";
-import { FaUserClock } from "react-icons/fa";
+import { FaHashtag, FaLock, FaUserClock } from "react-icons/fa";
 import { IoMdCheckboxOutline } from "react-icons/io";
 import axios from 'axios';
 import { ReloadIcon } from '@radix-ui/react-icons';
@@ -11,14 +11,15 @@ import { GoClockFill } from "react-icons/go";
 import { ActionTooltip } from '../tooolkit/Toolkit';
 import { useRouter } from 'next/navigation';
 interface MsgUpperProps {
-    name:String,
-    id:String,
-    serverId:String,
-    userId:String
+    name:string,
+    id:string,
+    serverId:string,
+    userId:string
     status:string
+    type:string
 }
 
-function MsgUpper2({name, id, serverId, status}:MsgUpperProps) {
+function MsgUpper2({name, id, serverId, status, type}:MsgUpperProps) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const RemovePinnedPost =async()=>{
@@ -69,7 +70,8 @@ function MsgUpper2({name, id, serverId, status}:MsgUpperProps) {
             : <>
     
     <div className='pinhddi'>
-            <h1># {name}</h1>
+                  <div className='flex items-center text-sm font-semibold italic'><span>{type==="public" ? <FaHashtag/>: <FaLock/>}</span> {name}</div>
+            {/* <h1># {name}</h1> */}
             <div>
 
             {
@@ -84,9 +86,9 @@ function MsgUpper2({name, id, serverId, status}:MsgUpperProps) {
                 <ActionTooltip label='Reminder' side='top' align='center'>
                 <button ><GoClockFill/></button>
                 </ActionTooltip>
-                <ActionTooltip label='Open in channel' side='top' align='center'>
+                {/* <ActionTooltip label='Open in channel' side='top' align='center'>
                 <button><PiHashFill/></button>
-                </ActionTooltip>
+                </ActionTooltip> */}
                 <ActionTooltip label='Delete' side='top' align='center'>
                 <button onClick={RemovePinnedPost} ><AiFillDelete/></button>
                 </ActionTooltip>

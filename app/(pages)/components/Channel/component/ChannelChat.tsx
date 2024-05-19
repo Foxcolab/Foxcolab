@@ -1,4 +1,4 @@
-import { Channel, ChannelManager, Later, Member, PinnedPost, Server } from '@prisma/client'
+import { Channel, ChannelManager, Draft, Later, Member, PinnedPost, Server } from '@prisma/client'
 import React from 'react'
 import ThreadComponents from '../../v1/Thread/ThreadComponents'
 import ChannelHeader from '../ChannelHeader'
@@ -65,8 +65,13 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
       createPolls = true;
     }
 
+    let drafts:Draft[] = []
+    for(let i=0; i<member?.Drafts?.length; i++){
+      if(member?.Drafts[i].ScheduledDate===null){
+        drafts.push(member?.Drafts[i]);
+      }
+    }
 
-  
   return (
     <>
     {/* <div className='channel_chats'>
@@ -85,6 +90,7 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
     schemaType={"Channel"}
     pinnedPosts={PinnedPosts}
     channel={channel}
+    currentMember={member}
     />
 
 
@@ -125,7 +131,7 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
     channels={myChannels}
     groups={server.groups}
     channelMember={channelMemberExceptMe}
-    drafts={member.Drafts}
+    drafts={drafts}
     uploadMedia={uploadMedia}
     sendMessage={sendMessage}
     />

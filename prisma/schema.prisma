@@ -100,6 +100,7 @@ model User {
   displayPic    UploadedFile[]
   email        String        @unique
   otp          Int?
+  otpGenerate  DateTime?
   role         Role           @default(user)
   googleId     String?
   appleId      String?
@@ -282,7 +283,8 @@ model ForumResponse {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content      String
   contentText  String?
-  fileUrl    String[]
+  fileUrl    String[] @db.ObjectId
+  uploadedFiles UploadedFile[] 
   repliedResponseId  String? @db.ObjectId
   repliedResponse    ForumResponse?  @relation("RepliedResponse", fields: [repliedResponseId], references: [id], onDelete:NoAction, onUpdate:NoAction)
   forwardedMessages   ForumResponse[] @relation("RepliedResponse")
@@ -469,7 +471,8 @@ model Note {
 model NoteComment {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content     String
-  fileUrl    String[]
+  fileUrl    String[] @db.ObjectId
+  uploadedFiles UploadedFile[] 
   noteId     String? @db.ObjectId
   note       Note? @relation(fields: [noteId], references: [id], onDelete:Cascade)
   canvasId     String? @db.ObjectId
@@ -659,7 +662,7 @@ model Threads {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content     String
   contentText  String?
-  fileUrl    String[]
+  fileUrl    String[] @db.ObjectId
   uploadedFiles UploadedFile[] 
   messageId    String? @db.ObjectId
   message      Message? @relation( fields: [messageId], references: [id], onDelete:Cascade)
@@ -1046,6 +1049,10 @@ model UploadedFile {
   convertedUrl  String?
   messageId     String? @db.ObjectId
   message       Message? @relation(fields: [messageId], references: [id])
+
+  forumResponseId     String? @db.ObjectId
+  forumResponse       ForumResponse? @relation(fields: [forumResponseId], references: [id])
+
   botResponseId String? @db.ObjectId
   botResponse   BotResponse? @relation(fields: [botResponseId], references: [id])
   directMessageId String? @db.ObjectId
@@ -1062,6 +1069,8 @@ model UploadedFile {
   rowComment   TableRowComments? @relation(fields: [rowCommentId], references: [id])
   tableRowDataId String? @db.ObjectId
   tableRowData   TableRowData? @relation(fields: [tableRowDataId], references: [id])
+  noteCommentId  String? @db.ObjectId
+  noteComment    NoteComment? @relation(fields: [noteCommentId], references: [id])
 
   userId   String? @db.ObjectId
   user     User? @relation(fields: [userId], references: [id])

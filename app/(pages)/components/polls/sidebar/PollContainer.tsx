@@ -35,13 +35,14 @@ function PollContainer({myVotes, Voted, pendingPoll, currentMember}:Props) {
     </div>
 
     {
-        state==="Created" ?
+        state==="Created" && myVotes.length>0 ?
         <> <CreatedPolls messages={myVotes} currentMember={currentMember}  /> </> :
-        state==="Voted" ?
+        state==="Voted" && Voted.length>0 ?
         <> <VotedPolls messages={myVotes} currentMember={currentMember} /> </> :
-        state==="Pending" ?
+        state==="Pending" && pendingPoll.length>0 ?
         <> <PendingPolls messages={pendingPoll} currentMember={currentMember} /> </> :
-        <CreatedPolls messages={myVotes} currentMember={currentMember} /> 
+        
+        <h1 className='nopinn'>No polls found!</h1>
 
     }
 

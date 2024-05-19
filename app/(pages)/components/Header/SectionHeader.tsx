@@ -11,8 +11,8 @@ function SectionHeader({icon, name}:Props) {
   
   return (
     <>
-    <div className='secHeader'>
-      {icon} {name}
+    <div className='chat_section items-center'>
+      <div className='channel_title flex items-center text-lg gap-2 font-semibold'><span>{icon}</span> {name}</div>
     </div>
 
     </>

@@ -22,7 +22,7 @@ import AdminServer from '@/lib/db/AdminServer';
 async function HomePage() {
 
   const user = await myProfile();
-  if(!user) redirect(`/home`)
+  if(!user) redirect(`/`)
 
 
   let servers = await AdminServer();

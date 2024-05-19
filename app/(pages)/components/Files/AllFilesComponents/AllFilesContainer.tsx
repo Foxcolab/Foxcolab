@@ -8,11 +8,9 @@ interface Props {
     MsgFiles:UploadedFile[]
     listStyle:string
 }
-const DATE_FORMAT = "d MMM yyyy";
 
 
 function AllFilesContainer({MsgFiles, listStyle}:Props) {
-    // console.log("MSGFIKES", MsgFiles)
 
   return (
     <>
@@ -24,8 +22,8 @@ function AllFilesContainer({MsgFiles, listStyle}:Props) {
             MsgFiles && MsgFiles.map((file, i)=>(
                 <>
                 {
-                    listStyle==="grid" ? <GridFile file={file} key={i}/> :
-                    <SingleMsgFile file={file} key={i}/>
+                    listStyle==="grid" ? <GridFile file={file} key={i} length={MsgFiles.length} /> :
+                    <SingleMsgFile file={file} key={i} length={MsgFiles.length} />
                 }
                 
                 </>
@@ -35,29 +33,6 @@ function AllFilesContainer({MsgFiles, listStyle}:Props) {
         </>
 
 
-   {/* {MsgFiles && MsgFiles.map((message, i)=>(
-        <>
-        {
-            listStyle==="list" ? <div key={i} className=''>
-            {
-                message && message.uploadedFiles.map((file)=>(
-                    <SingleMsgFile file={file}  />
-                ))
-            }
-            
-        </div> : <>
-        {
-                message && message.uploadedFiles.map((file)=>(
-                    <GridFile file={file}  />
-                ))
-            }
-      
-            
-         </>
-        }
-        
-        </>
-    ))} */}
    </div>
     
     

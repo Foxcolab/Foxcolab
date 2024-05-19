@@ -15,7 +15,7 @@ export const POST =async(req:NextRequest)=>{
         console.log(name, type, serverId, sectionId);
         if(!serverId || !sectionId) return NextResponse.json({error:"Semething went wrong"}, {status:409});
         
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const user = await db.user.findFirst({where:{id:userId}});
 
         const server = await db.server.findFirst({

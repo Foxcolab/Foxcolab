@@ -282,6 +282,7 @@ function FormDialog({open, setOpen}:Props) {
       });
       setLoading(false);
       router.refresh();
+      setOpen(false);
     } catch (error) {
       setLoading(false);
       
@@ -385,7 +386,7 @@ function FormDialog({open, setOpen}:Props) {
   const handleAddInput = (type:string) => {
     console.log(type)
     if(type==="shortAns" || type==="longAns"){
-      setInputFields([...inputFields,  { name:``, description:'', fileType:'', fileCount:0, type:"shortAns", options: [''], required:true, maxSize:0 }]);
+      setInputFields([...inputFields,  { name:``, description:'', fileType:'', fileCount:0, type:type, options: [''], required:true, maxSize:0 }]);
     }else if(type==="singleChoice" || type==="multipleChoice" || type==="select"){
       setInputFields([...inputFields,  { name:``, description:'', fileType:'', fileCount:0, type:type, options: ['Option 1', 'Option 2'], required:true, maxSize:0 }]);
     }
@@ -441,8 +442,8 @@ function FormDialog({open, setOpen}:Props) {
       {/* <span className="text-[1.2rem]"><CgPoll/></span>Create Polls */}
        
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[675px] sm:h-[650px] sm:max-h-[90vh] sm:min-h-0  overflow-hidden px-0" >
-        <div className='h-[85vh]'>
+      <DialogContent className="sm:max-w-[675px] sm:h-[650px] sm:max-h-[650px] sm:min-h-0  overflow-hidden px-0" >
+        <div className='h-[610px] '>
 
        
       <DialogHeader className='px-4'>
@@ -450,7 +451,7 @@ function FormDialog({open, setOpen}:Props) {
           <hr />
         </DialogHeader>
 
-        <div className='overflow-scroll px-8 pt-4 h-[95%] min-h-0'>     
+        <div className='overflow-scroll px-8 pt-4 h-[95%] min-h-0  new_from_slider'>     
             <div>
             <div className="mb-4">
                 <label htmlFor="" className='text-sm font-bold'>Form Title:</label>

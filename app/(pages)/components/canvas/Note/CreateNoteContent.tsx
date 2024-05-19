@@ -35,7 +35,7 @@ interface Props {
 }
 function CreateNoteContent({noteDialog, setNoteDialog, note}:Props) {
 
-  const [content, setContent] = useState<null | string>();
+  const [content, setContent] = useState<null | string>('');
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams();
@@ -94,7 +94,7 @@ function CreateNoteContent({noteDialog, setNoteDialog, note}:Props) {
 
             } */}
 
-<NoteTinyMce2 defaultValue={content as string} setTitle={setContent} />
+<NoteTinyMce2 setTitle={setContent} />
 
 
         </div>

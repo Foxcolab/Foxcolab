@@ -62,7 +62,9 @@ async function TestIdPage({params}:ParamsProps) {
     if(!member) redirect(`/servers/${params.id}/test-channel/${params.testChannelId}`);
     // console.log()
 
-    const isAdmin = test.createdBy ===member.id;
+    // const isAdmin = test.createdBy ===member.id;
+    const isAdmin = false;
+
 
   return (
     <>

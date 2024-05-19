@@ -54,7 +54,10 @@ export const PUT =async(req:NextRequest)=>{
             schemaType="whoCreateTestChannel";
           }else if(title==="Manage Bot Response"){
             schemaType="whoCreateBotResponse";
-          }else {
+          }else if(title==="Manage Spreadsheets"){
+            schemaType="whoCreateSpreadsheet";
+          }
+          else {
             return NextResponse.json({error:"Something went wrong"}, {status:409});
           }
 
@@ -166,6 +169,17 @@ export const PUT =async(req:NextRequest)=>{
                 },
                 data:{
                     whoCanInviteMember:schemaValue
+                }
+            });
+            await CreateActivityLog(serverId, member.id, "Updated", "Server", schemaType, schemaValue );
+            return NextResponse.json({success:true, server}, {status:200});
+        }else if(schemaType==="whoCreateSpreadsheet"){
+            const server = await db.server.update({
+                where:{
+                    id:serverId as string
+                },
+                data:{
+                    whoCreateSpreadsheet:schemaValue
                 }
             });
             await CreateActivityLog(serverId, member.id, "Updated", "Server", schemaType, schemaValue );

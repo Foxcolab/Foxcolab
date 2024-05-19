@@ -32,7 +32,7 @@ function Invite({serverName, inviteCode, userName}:Props) {
 ;  const SubmitHadler =async()=>{
     try {
     setLoading(true);
-    const link = `http://localhost:3000/invite/${serverName}/${inviteCode}`;
+    const link = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/invite/${serverName}/${inviteCode}`;
       
       const res = await axios.post('/api/sendmail', {to:email, name:serverName,link, userName });
       console.log(res);
@@ -47,7 +47,7 @@ function Invite({serverName, inviteCode, userName}:Props) {
   }
 
   const copyHandler =()=>{
-    const copyText = `http://localhost:3000/invite/${serverName}/${inviteCode}`;
+    const copyText = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/${serverName}/${inviteCode}`;
     navigator.clipboard.writeText(copyText);
     setInviteText("Copied");
   }
@@ -57,7 +57,7 @@ function Invite({serverName, inviteCode, userName}:Props) {
     <div className="sidecontent">
     <Dialog> 
       <DialogTrigger asChild>
-      <button className='invite'><IoMdPersonAdd/> Invite Other </button>
+      <button className='invite '><IoMdPersonAdd/> Invite Other </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px] " style={{zIndex:'10000 !important'}}>
         <DialogHeader>

@@ -84,7 +84,8 @@ async function CanvasPage({params}:Props) {
                 include:{
                   user:true
                 }
-              }
+              },
+              uploadedFiles:true
             }
           }
         
@@ -166,6 +167,7 @@ async function CanvasPage({params}:Props) {
     
     
     <ServerHome server={server} user={profile}>
+      <div className="forum_msg_container">
       <SchemaHeader
       name={canvas?.title as string}
       description={canvas?.description as string}
@@ -187,7 +189,10 @@ async function CanvasPage({params}:Props) {
     <div className="canvas_container">
       <CanvasSearch sectionId={canvas.sectionId} whoCanCreateNote={whoCanCreateNote}  />
     <div className='cnvs_sc'>
-        <div><b>All Canvases</b></div>
+      {
+        canvas.notes.length>0 &&  <div className='pb-4'><b>All Canvases</b></div>
+      }
+       
        </div>
     
     <CanvasContainer canvas={canvas} isAdmin={isAdmin} member={member} />
@@ -196,7 +201,7 @@ async function CanvasPage({params}:Props) {
 
 
 
-
+    </div>
     </ServerHome>
     
     </>

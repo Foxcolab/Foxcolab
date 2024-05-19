@@ -1,7 +1,7 @@
 "use client"
 import { Test } from '@prisma/client'
 import React, { useState } from 'react'
-import { PiHandsPrayingLight } from "react-icons/pi";
+import { PiExam, PiHandsPrayingLight } from "react-icons/pi";
 import { IoTime } from "react-icons/io5";
 import { FaCirclePause } from "react-icons/fa6";
 import { TiWiFi } from "react-icons/ti";
@@ -48,9 +48,9 @@ function ExamDetails({test}:{test:Test}) {
                 {test.description}
             </div>
         </div>
-        <div className='exam_con_right w-1/2'>
+        <div className='exam_con_right w-1/2 h-full flex flex-col'>
             
-            <div className='h-5/6 overflow-scroll ex_c_container'>
+            <div className=' flex-1 overflow-scroll ex_c_container'>
                 <p>INSTRUCTIONS</p>
                 <div className="single_ins">
                     <div className='ins_icon'><IoTime/></div>
@@ -81,14 +81,22 @@ function ExamDetails({test}:{test:Test}) {
                     </div>
                 </div>
                 <div className="single_ins">
+                    <div className='ins_icon'><PiExam/></div>
+                    <div>
+                        <div className='inst_head'>Result</div>
+                        <div className='inst_minor'>After submitting, the test results will be automatically generated with explantion.</div>
+                    </div>
+                </div>
+                <div className="single_ins">
                     <div className='ins_icon'><MdAdminPanelSettings/></div>
                     <div>
                         <div className='inst_head'>Test Admin: {test.createdUser.user.name}</div>
                         <div className='inst_minor'>Test is created by {test.createdUser.user.name}. You can start the test clicking the start button.</div>
                     </div>
                 </div>
+                
             </div>
-            <div className='h-1/6 ex_lower'>
+            <div className='flex-none ex_lower'>
                 {
                     loading ?
                     

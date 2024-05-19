@@ -1,39 +1,30 @@
 
 "use client";
-import {  Member, Note } from '@prisma/client'
+import {   Note } from '@prisma/client'
 import { format } from 'date-fns';
 import React, { useState } from 'react'
-import { FaNoteSticky } from "react-icons/fa6";
-import { IoIosCreate } from "react-icons/io";
-import { MdAdminPanelSettings, MdDelete } from "react-icons/md";
-import { FaComment, FaInfoCircle } from "react-icons/fa";
-import { ActionTooltip } from '../tooolkit/Toolkit';
-import Update from './Update';
+
 import axios from 'axios';
-import { SiSimplenote } from "react-icons/si";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
-  import { Button } from "@/components/ui/button"
-  import { CiCalendarDate } from "react-icons/ci";
-import CreateNoteContent from './Note/CreateNoteContent';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { useRouter } from 'next/navigation';
 import UpdateNoteContent from './Note/UpdateNoteContent';
+import { PiNotebookDuotone, PiNotepad } from 'react-icons/pi';
+import { Button } from '@/components/ui/button';
 
 interface Props {
     note:Note
     isAdmin:boolean,
     whoCanDeleteNote:boolean
     memberId:string
-    managerIds:string[] | []
+    managerIds:string[]
     memberIds:string[]
 
 }
@@ -46,6 +37,7 @@ function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, man
     const [loading, setLoading] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [editNote, setEditNote] = useState(false);
+    const [noteName, setNoteName] = useState('');
     const router = useRouter();
     const DeleteHandler =async()=>{
         try {
@@ -74,6 +66,7 @@ function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, man
 
   const canEdit = note.canEveryoneUpdate===true || creator;
   const canComment = note.commenting===true || creator;
+  
 
 
 
@@ -85,12 +78,12 @@ function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, man
 
 
             
-    <button className='w-full text-left'>
+    {/* <button className='w-full text-left'>
     <div className="single_forums w-full flex justify-between">
       <div className='forums_description w-full'>
       <div className='forums_title'>{note.title}</div>
         <div> <span className="forum_createdBy flex items-center"><MdAdminPanelSettings/> {note?.createdUser?.user?.name}</span>
-        {/* <span className='text-zinc-400'>{note?.comments?.length}</span> */}
+        
           </div>
        <div className='forum_Desc'>
         <span className='flex item-center gap-1'><FaComment/>:  {note?.comments?.length}</span>
@@ -107,28 +100,61 @@ function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, man
         <button onClick={()=>setEditNote(true)}>{canEdit ? <IoIosCreate/> : <FaComment/>}</button>
       </div>
       </div>
-    </button>
+    </button> */}
+
+      <div className='single_canvas border rounded-md p-3 shadow-md cursor-pointer hover:shadow-lg'>
+        <div className='pb-2'>
+          <div className='font-semibold text-[1.25rem] flex items-center gap-1 pb-2'><span><PiNotebookDuotone/></span>{note.title}</div>
+          <div className='tst_dpt pt-1'>
+           Created By: <span className='text-green-500'>{note.createdUser.user.name} </span>
+        </div>
+        <div className='tst_dpt pt-1'>Created At: <span className='text-gray-500 dark:text-gray-200'>{format(new Date(note.createdAt), DATE_FORMAT)}</span> </div>
+        <div className='tst_dpt pt-1'>Total Comment: <span className='text-gray-500 dark:text-gray-200'>{note?.comments.length || 0 }</span> </div>
+        <div className='tst_dpt pt-1'>Commenting: <span className='text-gray-500 dark:text-gray-200'>{note.commenting===true ?
+        <span className='text-green-500'>On</span> : <span className=''> Off </span>}</span> </div>
+        <div className='tst_dpt pt-1' >Edit Note: <span className='text-gray-500 dark:text-gray-200'>{note.canEveryoneUpdate===true ? <span className='text-green-500'>On</span> : <span className=''> Off </span> } </span> </div>
+        </div>
+        <hr className='pb-2' />
+        <div className='flex justify-between '>
+         
+          <button className='px-3 py-[0.3rem] border rounded hover:text-white hover:bg-blue-500' onClick={()=>setEditNote(true)}>View</button>
+          {
+            creator &&  
+          <button className='px-3 py-[0.3rem] border border-red-500 text-red-500 hover:text-white hover:bg-red-500 rounded' onClick={()=>{setNoteName(note.title);setDeleteDialog(true)}}>Delete</button>
+          }
+        </div>
+      </div>
+
+
 
       {
         editNote && <UpdateNoteContent noteDialog={editNote} setNoteDialog={setEditNote} note={note} canComment={canComment} canEdit={canEdit} memberId={memberId}  />
       }
     
-    <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
-      <AlertDialogTrigger asChild>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete this note.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className='bg-red-500 hover:bg-red-600 text-white'  onClick={DeleteHandler}>Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+  
+
+    <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
+      <DialogTrigger asChild>
+        {/* <Button variant="outline">Edit Profile</Button> */}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[525px]">
+        <DialogHeader>
+          <DialogTitle>Deleteing "{noteName}"</DialogTitle>
+          
+        </DialogHeader>
+        <div className='py-4'>
+        <div className='text-lg'>Are you absolutely sure to delete "{noteName}"? </div>
+        <div className='text-lg'>This action cannot be undone.</div>
+        </div>
+        <DialogFooter>
+
+        <Button className='border bg-tansparent text-black dark:text-white hover:bg-transparent' onClick={()=>setDeleteDialog(false)}>Cancel</Button>
+          <Button className='bg-red-500 hover:bg-red-600 text-white'  onClick={DeleteHandler}>Delete</Button>
+  
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
     
     </>
   )
