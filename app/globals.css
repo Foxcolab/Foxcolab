@@ -556,6 +556,7 @@
 .auth_card .login_card .login_heading {
   font-size: 2rem;
   font-weight: 700;
+  color: black;
 }
 .auth_card .login_card .light_text {
   color: #6c6c6c;
