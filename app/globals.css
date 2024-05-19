@@ -662,6 +662,11 @@
   overflow-y: scroll;
   /* border-right:1px solid  var(--headerBorderBottom); */
 }
+.server_sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+
 .bg-zinc {
   background-color: white;
 
@@ -6798,7 +6803,7 @@
   bottom: 0;
   right: 0; */
   /* height: 100%; */
-  height:calc(100vh - 3.3rem);
+  height:calc(100vh - 3.4rem);
   box-shadow: 0 4px #0000000d, 0 0 20px #0000001a;
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
