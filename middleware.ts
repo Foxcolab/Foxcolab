@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { NextResponse, NextRequest } from "next/server";
 
 
@@ -12,14 +13,19 @@ export const middleware=async(req:NextRequest)=>{
   console.log("Token", token);
   console.log("googleToken", googleToken)
   
+  // if(googleToken!==''){
+  //   const {status} = useSession();
+  //   console.log(status);
+  // }
+  // // console.log(isPublicPath && (token!=='' && googleToken!==''));
 
-  if(isPublicPath && (token!=='' && googleToken!=='')) {
-    return NextResponse.redirect(new URL('/home', req.nextUrl))
-  }
+  // if(isPublicPath && (token!=='' && googleToken!=='')) {
+  //   return NextResponse.redirect(new URL('/home', req.nextUrl))
+  // }
 
-  if (!isPublicPath && (token==='' && googleToken==='')) {
-    return NextResponse.redirect(new URL('/', req.nextUrl))
-  }
+  // if (!isPublicPath && (token==='' && googleToken==='')) {
+  //   return NextResponse.redirect(new URL('/', req.nextUrl))
+  // }
 
 // await connectDB();
 

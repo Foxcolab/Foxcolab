@@ -23,6 +23,7 @@ function LoginComponent() {
     const router = useRouter();
     const { toast } = useToast()
   const {data:session, status} = useSession();
+  console.log(session, status);
 
     if(status==="authenticated"){
         router.push("/home");
