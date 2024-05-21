@@ -6,16 +6,16 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
-import OtherSignin from './OtherSignin';
+import OtherSignin from '../Login/OtherSignin';
 import Loader from '../../Loaders/Loader';
 import { useToast } from "@/components/ui/use-toast"
 import Image from 'next/image';
-import AuthRight from './AuthRight';
+import AuthRight from '../Login/AuthRight';
 import {TfiEmail} from "react-icons/tfi"
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { ReloadIcon } from '@radix-ui/react-icons';
-function LoginComponent() {
+function ForgetComponents() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -42,10 +42,10 @@ function LoginComponent() {
         return;
       }
       setLoading(true);
-      const res =await axios.post('/api/login', { email, password});
+      const res =await axios.post('/api/forget-password', { email});
       console.log(res);
       if(res.status===200){
-        router.push('/home')
+        router.push(`./forget-password/verify/${res?.data?.userId}`);
         setLoading(false)
 
       }
@@ -59,18 +59,17 @@ function LoginComponent() {
       })
     }    
   }
-
   return (
     <>
     
-     <div className="main_container">
+    <div className="main_container">
         
         <div className="auth_card">
           <div className="login_card">
           <div className="login_heading">
-            Sign in
+            Forget Password
           </div>
-          <div className='light_text'>We suggest using the <b>email address you use at work</b>.</div>
+          <div className='light_text'>Enter your email id which you are registered.</div>
          <div className="input_sec">
           <div className="login_section">
             <label htmlFor="Username">Email Address <sup className='text-red-500'>*</sup> </label>
@@ -80,25 +79,10 @@ function LoginComponent() {
             </div>
             
           </div>
-          <div className="login_section">
-            <label htmlFor="Username">Password <sup className='text-red-500'>*</sup></label>
-            <div className="auth_input_box">
-              <span><RiLockPasswordFill/></span>
-              {
-                visible ? 
-              <input type="text" placeholder='Enter password' onChange={e=>setPassword(e.target.value)} value={password} /> :
-              <input type="password" placeholder='Enter password' onChange={e=>setPassword(e.target.value)} value={password} />
-
-            }
-              <button onClick={()=>setVisible(!visible)}>{visible ? <AiOutlineEye/>: <AiOutlineEyeInvisible/>   }  </button>
-            </div>
-          </div>
-          <div className="text-right text-sm">
-            <Link className='text-[#E04D6C] hover:underline' href={`/forget-password`}>Forgot password?</Link>
-          </div>
+          
           <div className="login_section">
             
-             <button className='auth_submit' onClick={SubmitHandler} disabled={loading}> {loading ? <span className='flex items-center justify-center'><ReloadIcon className='mr-2 h-4 w-4 animate-spin '/> Signing</span> : <span>Sign in</span>}  </button>
+             <button className='auth_submit' onClick={SubmitHandler} disabled={loading}> {loading ? <span className='flex items-center justify-center'><ReloadIcon className='mr-2 h-4 w-4 animate-spin '/> Wait</span> : <span>Continue</span>}  </button>
             
             
           </div>
@@ -116,9 +100,8 @@ function LoginComponent() {
       </div> 
     
     
-    
     </>
   )
 }
 
-export default LoginComponent
+export default ForgetComponents

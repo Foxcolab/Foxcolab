@@ -16,7 +16,7 @@ export const POST =async(req:NextRequest)=>{
         const user = await db.user.findFirst({
             where:{
                 email,
-                otp
+                otp:parseInt(otp)
             }
         });
         console.log("USER", user?.id);

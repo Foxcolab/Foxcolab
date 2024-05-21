@@ -23,6 +23,7 @@ export const POST =async(req:NextRequest)=>{
             }
         }
         
+        console.log(user, isFound, isSpecial)
 
         return NextResponse.json({
             success:true,

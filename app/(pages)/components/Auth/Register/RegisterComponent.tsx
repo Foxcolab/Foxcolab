@@ -9,7 +9,7 @@ import {signIn, useSession} from "next-auth/react";
 import Loader from "../../../components/Loaders/Loader"
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaUser } from 'react-icons/fa';
 import OtherSignin from '../Login/OtherSignin';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import AuthRight from '../Login/AuthRight';
@@ -79,7 +79,7 @@ function RegisterComponent() {
           <div className="login_section">
             <label htmlFor="Username">Full Name <sup className='text-red-500'>*</sup> </label>
             <div className='auth_input_box'>
-              <span><TfiEmail/></span>
+              <span><FaUser/></span>
               <input type="text" onChange={e=>setUsername(e.target.value)} placeholder='Enter your full name' />
             </div>
             

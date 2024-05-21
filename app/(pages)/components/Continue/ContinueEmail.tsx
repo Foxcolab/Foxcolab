@@ -3,26 +3,49 @@ import React, { useState } from 'react'
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { Button } from "@/components/ui/button"
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 function ContinueEmail() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const params = useParams();
+
     const router = useRouter();
+    const SendOtpHandler =async()=>{
+      try {
+        const res = await axios.post(`/api/sendOtp/Resend`, {email});
+        if(res.status===200){
+          router.push(`./${email}/verify`);
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     const HandlerSubmit =async()=>{
         try {
             setLoading(true);
             const res = await axios.post(`/api/find-user`, {email});
             console.log(res);
-            if(res.status==200){
+            if(res.status===200){
                 // await router.push(`./${email}/verify`);
-                if(res.data.isFound && res.data.isSpecial){
-                   router.push(`./${email}/verify`);
+                console.log(res.data.isFound, res.data.isSpecial);
+                if(res.data.isFound===true && res.data.isSpecial===true){
+                  console.log("Email/Verify");
+                  const res = await axios.post(`/api/sendOtp/Resend`, {email});
+                  console.log("Otp Send");
+                  router.push(`./${email}/verify`);
+                   return;
                 }
-                if(res.data.isFound && !res.data.isSpecial){
+                if(res.data.isFound===true && res.data.isSpecial===false){
+                  console.log("Email/emailId/Verify");
+                  // const res = await axios.post(`/api/sendOtp/Resend`, {email});
                   router.push(`./email/${email}/verify`);
+                  return;
                 }else {
+                  console.log("Email/emailId/New");
                   router.push(`./email/${email}/new`); 
+                  return;
                 }
                 // browserhs
                 setLoading(false);

@@ -102,7 +102,7 @@ function VerifyEmail({params, createdAt}:InviteCodePageProps) {
           setError('');
           if(value.length===6){
             setLoading(true);
-            const res = await axios.post('/api/join-server', {otp, email, inviteCode:params.inviteCode})
+            const res = await axios.post('/api/join-server', {otp:value, email, inviteCode:params.inviteCode})
 
             console.log(res);
             if(res.status==200){

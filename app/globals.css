@@ -564,6 +564,7 @@
 }
 .auth_card .login_card .input_sec .login_section {
   padding-top: 1rem;
+  color: black !important;
 }
 .auth_card .login_card .input_sec .login_section label{
   font-weight: 600;
@@ -591,11 +592,24 @@
   font-size: 0.9rem;
   background: transparent;
 }
+.auth_card .login_card .input_sec .login_section .auth_input_box input:-webkit-autofill {
+  -webkit-background-clip: text;
+}
+.auth_card .login_card .input_sec .login_section .auth_input_box input:-webkit-autofill,
+.auth_card .login_card .input_sec .login_section .auth_input_box input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+}
+.auth_card .login_card .input_sec .login_section .auth_input_box input[data-autocompleted] {
+    background-color: transparent !important;
+}
+
+
 .auth_card .login_card .input_sec .login_section .auth_input_box input:focus {
   outline:none;
   border:none;
   background: transparent;
 }
+
 .auth_card .login_card .input_sec .login_section .auth_input_box span{
   display: flex;
   align-items: center;
@@ -726,6 +740,10 @@
   background-color: var(--channelBg);
   overflow: scroll;
 }
+.serv_m_c .serv_c_body::-webkit-scrollbar {
+  display:none;
+}
+
 .serv_m_c .child_cbdoy {
   /* width: 100%; */
   /* background-color: red; */
@@ -1280,6 +1298,7 @@
   max-height: 100vh;
   overflow: scroll;
 }
+
 .user_message .content_body .rob_sec {
   display: flex;
   align-items: center;
@@ -1885,6 +1904,9 @@
   height: calc(100% - 8rem);
   overflow-y: scroll;
 }
+.channel_chats .channel_messages::-webkit-scrollbar {
+  display: none;
+}
 .msg_footer {
   position: relative;
   /* height:8rem; */
@@ -2391,12 +2413,12 @@
 
 }
 .dm_container .direct_message button {
-  color: rgb(209 209 209);
+  /* color: rgb(209 209 209); */
   font-size: 0.9rem;
 }
 .dm_container .direct_message button:hover {
-  background-color:#0f566e !important;
-  color: white;
+  /* background-color:#0f566e !important; */
+  /* color: white; */
 }
 .dm_container .direct_message button svg {
   font-size: 1.5rem;
@@ -3067,7 +3089,9 @@
 .saved_all_container {
   overflow: scroll;
 }
-
+.saved_all_container::-webkit-scrollbar {
+  display: none;
+}
 
 /* canvas  */
 
@@ -3075,6 +3099,9 @@
   padding: 1rem;
   height: 85vh;
   overflow: scroll;
+}
+.canvas_container::-webkit-scrollbar {
+  display: none;
 }
 
 .all_canvases {
@@ -7651,7 +7678,7 @@
 
 .hero_container .hero_title {
   font-size: 3.5rem;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
   padding-top: 5rem;
 }

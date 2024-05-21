@@ -9,27 +9,29 @@ import { cookies } from "next/headers";
 
 export const POST = async(req:NextRequest)=>{
     const reqBody = await req.json();
-    const {email, password} = reqBody;
-    console.log(email, password);
-    if(!email || !password) return NextResponse.json({error:"Please enter the fields"}, {status:409});
+    const {userId, password} = reqBody;
+    if(!userId || !password) return NextResponse.json({error:"Please enter the fields"}, {status:409});
     // const user = await User.findOne({email});
-    const user = await db.user.findFirst({where:{email:email}});
+    const user = await db.user.findFirst({where:{id:userId}});
     if(!user) {
         return NextResponse.json({
             error:"Please enter your registered email id",
            
         }, {status:401})
     }
-    if(user.password==null) return NextResponse.json({
-        error:"Incorrect email id or password",
-       
-    }, {status:401}) 
-    const validPassword = await bcrypt.compare(password, user.password);
-    if(!validPassword){
-        return NextResponse.json({
-            error:"Incorrect email id or password",
-        }, {status:401})
-    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const updateUser = await db.user.update({
+        where:{
+            id:userId as string
+        },
+        data:{
+            password:password
+        }
+    }) 
+   
+  
     const tokenData = {
         id:user.id,
         username:user.name,

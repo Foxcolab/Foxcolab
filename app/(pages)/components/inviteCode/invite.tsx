@@ -47,7 +47,7 @@ function Invite({serverName, inviteCode, userName}:Props) {
   }
 
   const copyHandler =()=>{
-    const copyText = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/${serverName}/${inviteCode}`;
+    const copyText = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/invite/${serverName}/${inviteCode}`;
     navigator.clipboard.writeText(copyText);
     setInviteText("Copied");
   }

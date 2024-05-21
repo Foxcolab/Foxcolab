@@ -17,7 +17,7 @@ interface Props {
 
 function TestChannelContainer({tests, sectionId, attemptedTests, whoCanCreateTest, memberId }:Props) {
     const params = useParams();
-    const [testsType, setTestsType] = useState('All Tests');
+    const [testsType, setTestsType] = useState('All Active Tests');
     const myTests = tests && tests.filter(test=>test.createdBy===memberId);
     const activatedTest = tests && tests.filter(test=>test.activated)
 

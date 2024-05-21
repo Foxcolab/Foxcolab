@@ -30,10 +30,10 @@ function ConfirmMail({params}:Props) {
       setValue(value);
       if(value.length===6){
         setLoading(true);
-        const res = await axios.post(`/api/register/verify`, {userId:params.userId, otp:parseInt(value)});
+        const res = await axios.post(`/api/forget-password/verify`, {userId:params.userId, otp:parseInt(value)});
         console.log(res);
         if(res.status===200){
-          router.push(`/home`);
+          router.push(`/new-password/${res.data.userId}`);
         }
         setLoading(false);
       }
@@ -50,7 +50,7 @@ function ConfirmMail({params}:Props) {
       <div className='text-[1.8rem] font-bold mb-8'>Foxcolab</div>
       <div className='text-[2.8rem] font-bold '>Check your email for a code</div>
       <div className='text-[1.1rem] text-center mt-4  text-gray-500 dark:text-gray-200'>We’ve sent a 6-character code to your entered email id. The code expires in 10 minutes, <br /> so please enter it soon.</div>
-  
+      
       <div className='my-8'>
       <InputOTP maxLength={6} onChange={(e)=>OnChangeHandler(e)} value={value}>
       <InputOTPGroup>

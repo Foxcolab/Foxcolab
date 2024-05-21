@@ -2,25 +2,27 @@
 import axios from 'axios';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
-import OtherSignin from './OtherSignin';
+import OtherSignin from '../Login/OtherSignin';
 import Loader from '../../Loaders/Loader';
 import { useToast } from "@/components/ui/use-toast"
 import Image from 'next/image';
-import AuthRight from './AuthRight';
+import AuthRight from '../Login/AuthRight';
 import {TfiEmail} from "react-icons/tfi"
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { ReloadIcon } from '@radix-ui/react-icons';
-function LoginComponent() {
-    const [email, setEmail] = useState('');
+function NewPassword() {
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [visible,setVisible] = useState(false);
+    const [visible2,setVisible2] = useState(false);
     const router = useRouter();
+    const params = useParams();
     const { toast } = useToast()
   const {data:session, status} = useSession();
 
@@ -28,24 +30,19 @@ function LoginComponent() {
         router.push("/home");
       }
 
-      const CheckEmail = (email:string)=>{
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; 
-        const isValid = emailPattern.test(email); 
-        return isValid;
-      }
   const SubmitHandler = async()=>{    
     try {
-      if(CheckEmail(email)===false){
+      if(password!==confirmPassword){
         toast({
-          title:"Please enter a valid email address",        
+          title:"Password does not match! Please enter correctly.",        
         })
         return;
       }
       setLoading(true);
-      const res =await axios.post('/api/login', { email, password});
+      const res =await axios.post('/api/new-password', {userId:params?.userId, password});
       console.log(res);
       if(res.status===200){
-        router.push('/home')
+        router.push(`/home`);
         setLoading(false)
 
       }
@@ -59,28 +56,19 @@ function LoginComponent() {
       })
     }    
   }
-
   return (
     <>
     
-     <div className="main_container">
+    <div className="main_container">
         
         <div className="auth_card">
           <div className="login_card">
           <div className="login_heading">
-            Sign in
+            Enter new password
           </div>
-          <div className='light_text'>We suggest using the <b>email address you use at work</b>.</div>
+          <div className='light_text'>Enter your new strong password.</div>
          <div className="input_sec">
-          <div className="login_section">
-            <label htmlFor="Username">Email Address <sup className='text-red-500'>*</sup> </label>
-            <div className='auth_input_box'>
-              <span><TfiEmail/></span>
-              <input type="email" onChange={e=>setEmail(e.target.value)} placeholder='Enter your email' />
-            </div>
-            
-          </div>
-          <div className="login_section">
+         <div className="login_section">
             <label htmlFor="Username">Password <sup className='text-red-500'>*</sup></label>
             <div className="auth_input_box">
               <span><RiLockPasswordFill/></span>
@@ -93,12 +81,23 @@ function LoginComponent() {
               <button onClick={()=>setVisible(!visible)}>{visible ? <AiOutlineEye/>: <AiOutlineEyeInvisible/>   }  </button>
             </div>
           </div>
-          <div className="text-right text-sm">
-            <Link className='text-[#E04D6C] hover:underline' href={`/forget-password`}>Forgot password?</Link>
+          <div className="login_section">
+            <label htmlFor="Username">Confirm Password <sup className='text-red-500'>*</sup></label>
+            <div className="auth_input_box">
+              <span><RiLockPasswordFill/></span>
+              {
+                visible2 ? 
+              <input type="text" placeholder='Enter confirm password' onChange={e=>setConfirmPassword(e.target.value)} value={confirmPassword} /> :
+              <input type="password" placeholder='Enter confirm password' onChange={e=>setConfirmPassword(e.target.value)} value={confirmPassword} />
+
+            }
+              <button onClick={()=>setVisible2(!visible2)}>{visible2 ? <AiOutlineEye/>: <AiOutlineEyeInvisible/>   }  </button>
+            </div>
           </div>
+          
           <div className="login_section">
             
-             <button className='auth_submit' onClick={SubmitHandler} disabled={loading}> {loading ? <span className='flex items-center justify-center'><ReloadIcon className='mr-2 h-4 w-4 animate-spin '/> Signing</span> : <span>Sign in</span>}  </button>
+             <button className='auth_submit' onClick={SubmitHandler} disabled={loading}> {loading ? <span className='flex items-center justify-center'><ReloadIcon className='mr-2 h-4 w-4 animate-spin '/> Wait</span> : <span>Continue</span>}  </button>
             
             
           </div>
@@ -116,9 +115,8 @@ function LoginComponent() {
       </div> 
     
     
-    
     </>
   )
 }
 
-export default LoginComponent
+export default NewPassword

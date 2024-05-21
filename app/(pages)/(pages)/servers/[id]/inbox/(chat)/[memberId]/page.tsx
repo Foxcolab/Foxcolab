@@ -67,7 +67,12 @@ async function ChatWithUser({params}:ChatProps) {
 
   return (
     <>
-    <ChatComponents server={server} >
+
+    <h1>Single Member</h1>
+
+
+    {/* <ChatComponents server={server} >
+
 
 
 
@@ -90,9 +95,9 @@ async function ChatWithUser({params}:ChatProps) {
             channel={null}
             setThreadMessage={null}
 
-          />
+          /> */}
 
-    <EditorFooter 
+    {/* <EditorFooter 
    name={otherMember.user?.name as string}
    type="conversation"
    apiUrl="/api/socket/direct-messages"
@@ -107,11 +112,11 @@ async function ChatWithUser({params}:ChatProps) {
    uploadMedia
    sendMessage
 
-    />
+    /> */}
 
     
 
-    </ChatComponents>
+    {/* </ChatComponents> */}
 
     
     </>
