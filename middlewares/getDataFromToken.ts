@@ -8,7 +8,8 @@ import { getUserSesssion } from "@/app/api/auth/[...nextauth]/session";
 export  const GetDataFromToken = async(req:NextRequest)=>{
     try {
         const token = req.cookies.get('token')?.value || ''; 
-        const googleToken = req.cookies.get('next-auth.csrf-token')?.value || '';
+        // const googleToken = req.cookies.get('next-auth.csrf-token')?.value || '';
+        const googleToken = req.cookies.get('next-auth.session-token')?.value || '';
 
         if(googleToken!==null && googleToken!=='' && token===''){
             const session =await getUserSesssion();

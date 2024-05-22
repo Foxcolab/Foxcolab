@@ -27,7 +27,7 @@ export const POST = async(req:NextRequest)=>{
             id:userId as string
         },
         data:{
-            password:password
+            password:hashedPassword
         }
     }) 
    

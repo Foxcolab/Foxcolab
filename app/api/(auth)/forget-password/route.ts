@@ -69,7 +69,7 @@ export const POST = async(req:NextRequest)=>{
  const EmailVerify = (to:string, otp:number)=>{
     try {
         
-        const subject = `Your Foxcolab regisration OTP is ${otp}`;
+        const subject = `Your Foxcolab OTP is ${otp}`;
         const message = `
 
         <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -189,7 +189,7 @@ export const POST = async(req:NextRequest)=>{
             <!-- End container for logo -->
   
             <!-- Hero image -->
-            <h1 style="font-size: 20px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none;color:#000000; ">  Finishing registration into Foxcolab</h1>
+            <h1 style="font-size: 20px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none;color:#000000; ">  Enter OTP to change your password</h1>
          
             <!-- Hero image -->
         
@@ -203,7 +203,7 @@ export const POST = async(req:NextRequest)=>{
                      
                       
                       <h1 style="font-size:24px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none; color: #4d467c;">
-                      Your OTP is ${otp}. Enter it in your browser and we'll get you signed in. 
+                      Your OTP is ${otp}. Enter it in your browser. 
                      </h1>
                       
          

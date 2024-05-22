@@ -5,17 +5,27 @@ import { NextApiRequest } from "next";
 
 export const GetAuth =async(req:NextApiRequest)=>{
      
-    const {token,'next-auth.csrf-token':csrfToken } = req.cookies;
-  
-     if(csrfToken && token===null){
+    // const {token,'next-auth.csrf-token':csrfToken } = req.cookies;
+    const {token,'next-auth.session-token':csrfToken } = req.cookies;
+    
+    if(token!==null && token!==''){
+        const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      
+        return decodeToken.id;
+    }else if(csrfToken){
         const session =await getUserSesssion();
         if(session!==undefined && session!==null && token===null){
          return session.id;
         }
-     }else {
-         const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      
-         return decodeToken.id;
      }
+
+    //  if(csrfToken && token===null){
+    //     const session =await getUserSesssion();
+    //     if(session!==undefined && session!==null && token===null){
+    //      return session.id;
+    //     }
+    //  }else {
+         
+    //  }
        
     
     // const token = req.cookies.token;

@@ -21,21 +21,21 @@ export const myProfile = async()=>{
     try {
         const cookieStore = cookies();
         const token = cookieStore.get('token')?.value || '';
-        const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
-        // console.log("Token", token);
-        
+        // const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
+        const googleToken = cookieStore.get('next-auth.session-token')?.value || '';
+        console.log("Token::",token);
         let userId = ''
         if(token!=='' && token!==null){
             userId = getUserIDFromToken(token);
             // console.log("Token:", token);
        }
-       if(googleToken!==null && googleToken!=='' && token===''){
+       else if(googleToken!==null && googleToken!==''){
             const session =await getUserSesssion();
+            console.log("Session:",session);
+            if(session===undefined) return;
             userId = session.id;
-            // console.log("Google Token:", userId);
        }
-       
-    //    console.log("UserID:", userId);
+
        if(userId===''){return}
        
 
@@ -60,6 +60,7 @@ export const myProfile = async()=>{
                 id:userId 
             }
         });
+        console.log(user);
         return user;
                
     } catch (error) {
@@ -74,7 +75,7 @@ export const getMyserver = async()=>{
     try {
         const cookieStore = cookies();
         const token = cookieStore.get('token')?.value || '';
-        const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
+        const googleToken = cookieStore.get('next-auth.session-token')?.value || '';
         let userId = ''
         if(googleToken!==null && googleToken!=='' && token===''){
             const session =await getUserSesssion();
