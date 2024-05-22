@@ -23,13 +23,15 @@ export const myProfile = async()=>{
         const token = cookieStore.get('token')?.value || '';
         // const googleToken = cookieStore.get('next-auth.csrf-token')?.value || '';
         const googleToken = cookieStore.get('next-auth.session-token')?.value || '';
+        const googleServerToken = cookieStore.get('__Secure-next-auth.session-token')?.value || '';
+
         console.log("Token::",token);
         let userId = ''
         if(token!=='' && token!==null){
             userId = getUserIDFromToken(token);
             // console.log("Token:", token);
        }
-       else if(googleToken!==null && googleToken!==''){
+       else if((googleToken!==null && googleToken!=='') || (googleServerToken!==null && googleServerToken!=='')){
             const session =await getUserSesssion();
             console.log("Session:",session);
             if(session===undefined) return;

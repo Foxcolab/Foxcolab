@@ -6,9 +6,9 @@ import { NextApiRequest } from "next";
 export const GetAuth =async(req:NextApiRequest)=>{
      
     // const {token,'next-auth.csrf-token':csrfToken } = req.cookies;
-    const {token,'next-auth.session-token':csrfToken } = req.cookies;
+    const {token,'next-auth.session-token':csrfToken, '__Secure-next-auth.session-token':serverCsrfToken } = req.cookies;
     
-    if(token!==null && token!==''){
+    if((token!==null && token!=='') || (serverCsrfToken!==null && serverCsrfToken!=='')){
         const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      
         return decodeToken.id;
     }else if(csrfToken){

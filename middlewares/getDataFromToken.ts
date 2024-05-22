@@ -10,8 +10,9 @@ export  const GetDataFromToken = async(req:NextRequest)=>{
         const token = req.cookies.get('token')?.value || ''; 
         // const googleToken = req.cookies.get('next-auth.csrf-token')?.value || '';
         const googleToken = req.cookies.get('next-auth.session-token')?.value || '';
+        const googleServerToken = req.cookies.get('__Secure-next-auth.session-token')?.value || '';
 
-        if(googleToken!==null && googleToken!=='' && token===''){
+        if((googleToken!==null && googleToken!=='') || (googleServerToken!==null && googleServerToken!=='')){
             const session =await getUserSesssion();
             return session.id;
         }else {
