@@ -5,7 +5,7 @@ import { db } from "@/prisma";
 import {session} from "./session"
  const authOption:NextAuthOptions = {
     session:{
-        strategy:"jwt"
+        strategy:"jwt",
     },
     providers:[
         GoogleProvider({
@@ -131,8 +131,22 @@ import {session} from "./session"
             }
             return token;
         }
+    },
+    cookies:{
+        sessionToken:{
+            name:'next-auth.session-token',
+            options: {
+                // Provide the required cookie options here
+                path: '/',
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+            }
+        },
+        
     }
 }
+ 
 
 const handler = nextAuth(authOption);
 export {handler as GET, handler as POST};

@@ -8,10 +8,10 @@ export const GetAuth =async(req:NextApiRequest)=>{
     // const {token,'next-auth.csrf-token':csrfToken } = req.cookies;
     const {token,'next-auth.session-token':csrfToken, '__Secure-next-auth.session-token':serverCsrfToken } = req.cookies;
     
-    if((token!==null && token!=='') || (serverCsrfToken!==null && serverCsrfToken!=='')){
+    if(token!==null && token!==''){
         const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      
         return decodeToken.id;
-    }else if(csrfToken){
+    }else if(csrfToken || serverCsrfToken){
         const session =await getUserSesssion();
         if(session!==undefined && session!==null && token===null){
          return session.id;
