@@ -14,7 +14,7 @@ export const PUT =async(req:NextRequest)=>{
         const memberId = req.nextUrl.searchParams.get('memberId');
         const forumChannelId = req.nextUrl.searchParams.get('forumChannelId');
        
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const member = await db.member.findFirst({
           where:{
             userId:userId as string,

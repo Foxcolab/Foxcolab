@@ -9,7 +9,7 @@ export const POST = async(req:NextRequest)=>{
         const {to,name, link, userName, serverAvatar} = reqBody;
         console.log(to, name);
         
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         console.log(userId);
         
         if(!userId) return NextResponse.json({success:false, message:"You are not authorized"}, {status:401});
@@ -38,7 +38,6 @@ export const POST = async(req:NextRequest)=>{
         <xml>
           <o:OfficeDocumentSettings>
             <o:AllowPNG/>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
           </o:OfficeDocumentSettings>
         </xml>
         

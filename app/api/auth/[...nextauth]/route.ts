@@ -132,19 +132,19 @@ import {session} from "./session"
             return token;
         }
     },
-    cookies:{
-        sessionToken:{
-            name:'next-auth.session-token',
-            options: {
-                // Provide the required cookie options here
-                path: '/',
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-            }
-        },
+    // cookies:{
+    //     sessionToken:{
+    //         name:'next-auth.session-token',
+    //         options: {
+    //             // Provide the required cookie options here
+    //             path: '/',
+    //             httpOnly: true,
+    //             secure: true,
+    //             sameSite: 'none',
+    //         }
+    //     },
         
-    }
+    // }
 }
  
 

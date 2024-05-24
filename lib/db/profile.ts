@@ -78,8 +78,10 @@ export const getMyserver = async()=>{
         const cookieStore = cookies();
         const token = cookieStore.get('token')?.value || '';
         const googleToken = cookieStore.get('next-auth.session-token')?.value || '';
+        const googleServerToken = cookieStore.get('__Secure-next-auth.session-token')?.value || '';
+
         let userId = ''
-        if(googleToken!==null && googleToken!=='' && token===''){
+        if(((googleToken!==null && googleToken!=='' )|| (googleServerToken!==null && googleServerToken!=='') ) && token===''){
             const session =await getUserSesssion();
             userId = session.id;
        }else {

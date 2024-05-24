@@ -15,7 +15,7 @@ export const PUT =async(req:NextRequest)=>{
         const testChannelId = req.nextUrl.searchParams.get('testChannelId');
 
        
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         if(!userId) return NextResponse.json({error:"User Id not found"}, {status:409});
 
         const testChannel = await db.testChannel.findFirst({

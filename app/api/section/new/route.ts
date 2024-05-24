@@ -12,7 +12,7 @@ export const POST =async(req:NextRequest)=>{
         // const serverId = req.nextUrl.searchParams.get('serverId');
         console.log(serverId);
 
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const server = await db.server.findFirst({
           where:{
               id:serverId as string,

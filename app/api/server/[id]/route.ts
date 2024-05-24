@@ -5,7 +5,7 @@ import { db } from "@/prisma";
 
 export const GET =async(req:NextRequest, params:{id:String})=>{
     try {
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const server = await db.server.findUnique({
             where:{
                 id:params.id as string

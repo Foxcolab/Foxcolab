@@ -12,7 +12,7 @@ export const POST =async(req:NextRequest)=>{
         const sectionId = req.nextUrl.searchParams.get('sectionId');
         if(!serverId || !sectionId) return NextResponse.json({error:"Semething went wrong"}, {status:409});
         
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const server = await db.server.findFirst({
           where:{
               id:serverId as string,
@@ -134,7 +134,7 @@ export const POST =async(req:NextRequest)=>{
 
 export const PUT = async(req:NextRequest)=>{
     try {
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const user = await db.user.findFirst({where:{id:userId}});
         const id = req.nextUrl.searchParams.get('id');
     } catch (error:any) {

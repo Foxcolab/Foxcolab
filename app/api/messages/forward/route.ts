@@ -15,7 +15,7 @@ export const POST =async(req:NextRequest)=>{
         const reqBody = await req.json();
         const { channelIds, content} = reqBody;
         if(!channelIds) return NextResponse.json({error:"Please enter the fields", success:false}, {status:409});
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const member = await db.member.findFirst({
             where:{
                 userId:userId,
