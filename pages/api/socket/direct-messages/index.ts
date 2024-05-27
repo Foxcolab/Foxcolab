@@ -22,8 +22,8 @@ export default async function handler(
         }
     })
 
-    const { content, fileUrl } = req.body;
-    const { conversationId } = req.query;
+    const { content, fileUrl, contentText } = req.body;
+    const { conversationId, serverId } = req.query;
     
     if (!profile) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -31,6 +31,9 @@ export default async function handler(
   
     if (!conversationId) {
       return res.status(400).json({ error: "Conversation ID missing" });
+    }
+    if (!serverId) {
+      return res.status(400).json({ error: "Server Id missing" });
     }
           
     if (!content) {
@@ -82,18 +85,21 @@ export default async function handler(
       data: {
         content,
         fileUrl,
+        contentText:contentText,
         uploadedFiles:{
           connect:fileUrl?.map((file:string)=>({id:file}))
         },
         conversationId: conversationId as string,
         memberId: member.id,
-      },
+        serverId:serverId as string,
+    },
       include: {
         member: {
           include: {
             user: true,
           }
-        }
+        },
+        uploadedFiles:true
       }
     });
 

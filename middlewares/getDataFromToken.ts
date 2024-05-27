@@ -14,6 +14,7 @@ export  const GetDataFromToken = async(req:NextRequest)=>{
 
         if((googleToken!==null && googleToken!=='') || (googleServerToken!==null && googleServerToken!=='')){
             const session =await getUserSesssion();
+            console.log(session);
             return session.id;
         }else {
             const decodeToken:any = jwt.verify(token, process.env.JWT_SECRET);      

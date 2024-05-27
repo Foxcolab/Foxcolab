@@ -1,3 +1,4 @@
+"use server";
 import { NextApiRequest } from "next";
 
 import { NextApiResponseServerIo } from "@/types";
@@ -12,7 +13,7 @@ import { BotResponse, Message } from "@prisma/client";
     try {
         const userId =await GetAuth(req);
         // console.log("cominggg....");
-        
+        console.log(userId);
       
       const { content, fileUrl, contentText } =  req.body;
       const { serverId, channelId, sectionId } = req.query;
@@ -107,7 +108,6 @@ import { BotResponse, Message } from "@prisma/client";
         serverId:serverId as string
       }
     });
-    console.log(allBotRespones);
 
     let fullResponse:BotResponse = null;
     let specificResponse:BotResponse = null;
@@ -123,9 +123,7 @@ import { BotResponse, Message } from "@prisma/client";
       }
     }
 
-    console.log("fullResponse", fullResponse);
-    console.log("SpecificResponse", specificResponse);
-    
+  
 
 
     const channelKey = `chat:${channelId}:messages`;

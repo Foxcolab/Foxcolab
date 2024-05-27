@@ -18,35 +18,22 @@ import { AiOutlineFullscreen } from "react-icons/ai"
 import { MdKeyboardArrowDown, MdOutlineLibraryBooks } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import { ReloadIcon } from "@radix-ui/react-icons"
-import React, { MutableRefObject, forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import React, {  useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
-import { Button } from "@/components/ui/button";
-import { FaLock, FaRegFilePdf, FaRegFileZipper } from "react-icons/fa6";
+import { FaRegFilePdf, FaRegFileZipper } from "react-icons/fa6";
 import { BsFiletypeDocx, BsFiletypeTxt, BsRecordCircleFill } from "react-icons/bs";
 import { GrDocumentCsv, GrPersonalComputer } from "react-icons/gr";
 import { BsFiletypeXlsx } from "react-icons/bs";
 import { BsFileEarmarkPptFill } from "react-icons/bs";
-import VoiceRecorder from "../Chat/Recorder/VoiceRecorder";
-import ScreenRecording from "../Chat/Recorder/ScreenRecording";
-import VideoRecorder from "../Chat/Recorder/VideoRecorder";
 // import VideoRecorder from "../Chat/Recorder/VideoRecorder";
 import MentionComponent from "./EditorFooter/MentionComponent";
 import { Channel, Draft, Group, Member } from "@prisma/client";
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import QuillMention from 'quill-mention'
 import 'quill-mention/dist/quill.mention.css';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
 import Schedule from "./schedule/Schedule";
-import dynamic from "next/dynamic";
 
-import { HiMiniComputerDesktop } from "react-icons/hi2";
-import { FaPollH } from "react-icons/fa";
 import { CgPoll } from "react-icons/cg";
 import PollDialog from "../polls/PollDialog";
 import FormDialog from "../forms/FormDialog";
@@ -61,16 +48,7 @@ interface ChatInputProps {
     apiUrl: string;
     query: Record<string, any>;
     name: string;
-    type: "conversation" | "channel";
-    groups:Group[]
-    channelType:"public" | "private" | null
-    channelMember:Member[]
-    channels:Channel[]
     drafts:Draft[]
-    uploadMedia:boolean
-    sendMessage:boolean
-    atValues:any
-    hashValues:any
   }
   const formSchema = z.object({
     content: z.string().optional(),
@@ -78,52 +56,14 @@ interface ChatInputProps {
     fileUrl: z.string().array().optional()
   });
 
-  const atValues = [
-    { id: 1, value: 'Fredrik Sundqvist' },
-    { id: 2, value: 'Patrik Sjölin' }
-  ];
-  const hashValues = [
-    { id: 3, value: 'Fredrik Sundqvist 2' },
-    { id: 4, value: 'Patrik Sjölin 2' }
-  ]
-
-  const mentionModule = {
-    allowedChars: /^[A-Za-z\s]*$/,
-    mentionDenotationChars: ["@", "#"],
-    source: function (searchTerm:string, renderList:any, mentionChar:string) {
-      let values;
-
-      if (mentionChar === "@") {
-        values = atValues;
-      } else {
-        values = hashValues;
-      }
-
-      if (searchTerm.length === 0) {
-        renderList(values, searchTerm);
-      } else {
-        const matches = [];
-        for (let i = 0; i < values.length; i++)
-          if (~values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())) matches.push(values[i]);
-        renderList(matches, searchTerm);
-      }
-    },
-  }
 
 
-const EditorFooter = ({apiUrl,
+
+const DirectEditor = ({apiUrl,
     query,
     name,
-    type,
-    groups,
-    channelType,
-    channelMember,
-    channels,
     drafts,
-    uploadMedia,
-    sendMessage,
-    atValues,
-    hashValues
+   
   }: ChatInputProps)=> {
 
     const reactQuillRef = useRef(null);
@@ -278,56 +218,22 @@ const EditorFooter = ({apiUrl,
     }
   }
 
-  const onGroupSelect =(e:string, onChangee:any)=>{
-    const quill = reactQuillRef?.current?.getEditor();
-    // let data = `${<span className="mention" data-index="0" data-denotation-char="@" data-id="1" data-value="Fredrik Sundqvist">&#xFEFF;<span contentEditable="false">@{e}</span>&#xFEFF;</span>}`
-    // e=`@${e}`;
-    const range = quill.getSelection(true);
-    // quill.insertText(range.index, data);
-    quill.insertEmbed(range.index, "mention", {
-      id: 1,
-      denotationChar: "@",
-      value: e,
-    });
-    onChangee(range.index, `@${e}`);
-  }
-
-
   
- function suggestPeople(searchTerm:string) {
-  // console.log(searchTerm)
-  const allPeople = [
-    {
-      id: 1,
-      handle: "Fredrik Sundqvist"
-    },
-    {
-      id: 2,
-      handle: "Patrik Sjölin"
-    }
-  ];
-    return allPeople.filter(group => group.handle.includes(searchTerm));
-  }
+
+
 
 
 
  
-
-const modules2 = {
-  toolbar: [
-    ['bold', 'italic', 'underline','strike'],
-    [{'list': 'ordered'}, {'list': 'bullet'}],
-    ['blockquote'],['code-block'],
-    ['clean']
-  ],
-
-  
-}
-
-  const toggleToolbar =()=>{
-    setToolBarToogle(!toolBarToogle);
+  const modules = {
+    toolbar:[
+      ['bold', 'italic', 'underline','strike'],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
+      ['blockquote'],['code-block'],
+      ['clean']
+    ],
+    // mention:mentionModule
   }
-
 
   const draft = ()=>{
     try {
@@ -450,44 +356,14 @@ const modules2 = {
 
 
 
-  const modules = {
-    toolbar:[
-      ['bold', 'italic', 'underline','strike'],
-      [{'list': 'ordered'}, {'list': 'bullet'}],
-      ['blockquote'],['code-block'],
-      ['clean']
-    ],
-    mention:  mentionModule
-    // mention:mentionModule
-  }
-
-  const handleRef = (ref:any) => {
-
-    if (ref) {
-      // Delay the assignment until the component is mounted
-      setTimeout(() => {
-        reactQuillRef.current = ref;
-      }, 0);
-    }
-  };
+ 
 
 
-  const handleQuillLoaded = (quill) => {
-    if (quillRef.current || !quill) return;
-    quillRef.current = quill.getEditor();
-  };
-
+ 
   return(
     <>
     
-
-    {
-      sendMessage===false ? <><div className="editor_not_permit_container">
-      <div>
-      You don't have permission to post in this channel.
-      </div>
-     </div>    </> :  <>
-     <Form {...form}>
+    <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
@@ -517,7 +393,7 @@ const modules2 = {
            // onKeyPress={()=>KeyPressHandler()}
            defaultValue={drafts && drafts[0]?.content}
            // placeholder={form.getValues("content")}
-            placeholder={`Message to ${(type==="channel" && channelType==="public") ? "#" :(type==="channel" && channelType==="private")? "#":""}${name}`} 
+            placeholder={`Message to ${name}`} 
            modules={
             modules
            }
@@ -814,77 +690,38 @@ files[i]?.name.endsWith(".ppt")?
          <div className="footer_action">
 
 
-          {
-            uploadMedia===false ? 
-            <HoverCard>
-            <HoverCardTrigger>
-            <button
-             disabled
-             type="button"
-             className=" h-[24px] w-[24px] channel_media_plus transition rounded-full p-1 flex items-center justify-center"
-           >
-     {/* <RiComputerFill /> Upload from local */}
-     
-     <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
-  
-             
-           </button>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              You don't have permission to upload media in this channel
-            </HoverCardContent>
-          </HoverCard> :
-           <>
+         <>
            
 
-
-
-<Popover open={plusDialog} onOpenChange={setPlusDialog}>
-      <PopoverTrigger asChild>
-        <button className="h-[24px] w-[24px]  transition rounded-full  flex items-center justify-center"><Plus className="text-white dark:text-[#29292a]" id="lucide_plus" /></button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px]">
-        <div>
-          <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] hover:text-white w-full p-[0.3rem] rounded" onClick={()=>{setFormOpen(true); setPlusDialog(false)}}><span className="text-[1.2rem]"><MdOutlineLibraryBooks/></span>Create Forms</button>
-          <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] hover:text-white w-full p-[0.3rem] rounded"  onClick={()=>{setPollOpen(true); setPlusDialog(false)}}>
-    <span className="text-[1.2rem]"><CgPoll/></span>Create Polls</button>
-        
-          <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] hover:text-white w-full p-[0.3rem] rounded"  >
-          <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
-          <span className="text-[1.2rem]"><GrPersonalComputer/></span> Upload From Local
-        <input type="file" id="file" onChange={handleChange} multiple
-        accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt, .svg, .mp3, .wav, .json "
-          />
-</label>
-          </button>
-        </div>
-      </PopoverContent>
-    </Popover>
-
-
-
-
-           {/* <button
-            type="button"
-            className=" h-[24px] w-[24px]  transition rounded-full p-1 flex items-center justify-center"
-          >
-             <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
-
-    
-    <Plus className="text-white dark:text-[#29292a]" id="lucide_plus" />
-
-<input type="file" id="file" onChange={handleChange} multiple
-accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt, .svg, .mp3, .wav, .json "
-/>
-</label>
-            
-          </button>  */}
-           
-           </>
-        
           
-          }
 
+           <Popover open={plusDialog} onOpenChange={setPlusDialog}>
+                 <PopoverTrigger asChild>
+                   <button className="h-[24px] w-[24px]  transition rounded-full  flex items-center justify-center"><Plus className="text-white dark:text-[#29292a]" id="lucide_plus" /></button>
+                 </PopoverTrigger>
+                 <PopoverContent className="w-[200px]">
+                   <div>
+                     <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] hover:text-white w-full p-[0.3rem] rounded" onClick={()=>{setFormOpen(true); setPlusDialog(false)}}><span className="text-[1.2rem]"><MdOutlineLibraryBooks/></span>Create Forms</button>
+                     <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] hover:text-white w-full p-[0.3rem] rounded"   onClick={()=>{setPollOpen(true); setPlusDialog(false)}}>
+               <span className="text-[1.2rem]"><CgPoll/></span>Create Polls</button>
+                   
+                     <button className="flex items-center gap-2 text-sm font-semibold hover:bg-[#222F3E] hover:text-white w-full p-[0.3rem] rounded"  >
+                     <label className="custum-file-upload flex items-center gap-1" htmlFor="file">
+                     <span className="text-[1.2rem]"><GrPersonalComputer/></span> Upload From Local
+                   <input type="file" id="file" onChange={handleChange} multiple
+                   accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/webm, application/pdf,application/vnd.ms-excel, application/zip, .doc,.docx, .xlsx, .txt, .csv, .ppt, .svg, .mp3, .wav, .json "
+                     />
+           </label>
+                     </button>
+                   </div>
+                 </PopoverContent>
+               </Popover>
+           
+           
+           
+           
+                      
+                      </>
 
 
         
@@ -907,18 +744,9 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
                    />
          </div>
          
-         {/* <button 
-         className=" h-[24px] w-[24px] transition rounded-full p-1 flex items-center justify-center"
-         ><GoMention /></button> */}
-         <MentionComponent open={mentionDialog} setOpen={setMentionDialog}  groups={groups} onSelectHandler={(e:any)=>onGroupSelect(e, field.onChange)}  />
-         <VideoRecorder setVideoName={setVideoName} setVideoUrl={setVideoUrl} />
-         <VoiceRecorder setAudioUrl={setAudioUrl} setAudioName={setaudioName} />
-         <ScreenRecording setScreenName={setScreenName} setScreenUrl={setScreenUrl}  />
+      
 
-         {/* <button
-         className=" h-[24px] w-[24px] transition rounded-full p-1 flex items-center justify-center"
-         ><FaMicrophone/>
-         </button> */}
+        
          </div>
 
          <div  className={(loading || ((form.getValues("content")==="" || form.getValues("contentText")==="" || form.getValues("content") === "<p><br></p>" )&& form.getValues("fileUrl")===undefined))?'send_msg':"send_msg ssdnBg"}  >
@@ -956,15 +784,12 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
     </Form> 
            
         {
-          pollOpen &&  <PollDialog open={pollOpen} setOpen={setPollOpen} schema="Channel"  /> 
+          pollOpen &&  <PollDialog open={pollOpen} setOpen={setPollOpen} /> 
         }
         {
-          formOpen && <FormDialog open={formOpen} setOpen={setFormOpen} schema="Channel" />
+          formOpen && <FormDialog open={formOpen} setOpen={setFormOpen} />
         }
 
-
-    </>
-    }
 
 
 
@@ -980,19 +805,7 @@ accept="image/jpeg,image/png,image/webp, image/svg, image/gif,video/mp4,video/we
 
 
 
-// const ReactQuill = dynamic(() => import('react-quill').then((mod) => {
-  
-//   const ReactQuillWithRef = forwardRef((props, ref) => {
-//     console.log('Component mounted');
-//     props.handleRef(ref);
-//     return <mod.default {...props} />;
-//   });
-//   ReactQuillWithRef.displayName = 'ReactQuill';
-//   return ReactQuillWithRef;
-// }), {
-//   loading: () => <p>Loading editor...</p>, // Fallback component while loading
-//   ssr: false, // Disable server-side rendering
-// });
 
 
-export default EditorFooter;
+
+export default DirectEditor;

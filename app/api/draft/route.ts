@@ -12,13 +12,12 @@ export const POST =async(req:NextRequest)=>{
         const serverId = req.nextUrl.searchParams.get('serverId');
         const channelId = req.nextUrl.searchParams.get('channelId');
         const  sectionId= req.nextUrl.searchParams.get('sectionId');
-        // console.log("Section Id", sectionId);
         if(!serverId) return NextResponse.json({error:"Channel Id missing."}, {status:409});
         const reqBody = await req.json();
         const {content, fileUrl,contentText, ScheduledAt } = reqBody;
-        console.log("FileUrl", fileUrl)
+
         if(!content && fileUrl.length===0) return NextResponse.json({error:"Content missing."}, {status:400});
-        console.log("Finding member")
+
         const member = await db.member.findFirst({
             where:{
                 userId:userId as string,
@@ -30,7 +29,7 @@ export const POST =async(req:NextRequest)=>{
 
 
         if(!member) return NextResponse.json({error:"You are not a member of this server"}, {status:404});
-        console.log("creating draft");
+  
         const draft = await db.draft.create({
             data:{
                 content:content as string,
@@ -51,9 +50,6 @@ export const POST =async(req:NextRequest)=>{
                 createdMember:true
             }
         })
-        console.log(draft.createdMember);
-
-        console.log("Saved Sucessfully");
 
         return NextResponse.json({
             success:true,
@@ -109,7 +105,6 @@ export const PUT =async(req:NextRequest)=>{
             }
         })
 
-        console.log("Update Sucessfully");
         return NextResponse.json({
             success:true,
             draft
@@ -129,7 +124,6 @@ export const DELETE =async(req:NextRequest)=>{
         const channelId = req.nextUrl.searchParams.get('channelId');
         const draftId = req.nextUrl.searchParams.get('draftId');
 
-        console.log(userId, serverId, channelId, draftId);
         const member = await db.member.findFirst({
             where:{
                 userId:userId as string,
@@ -139,9 +133,8 @@ export const DELETE =async(req:NextRequest)=>{
                 // }
             }
         });
-        console.log("Member", member?.userId)
         if(!member) return NextResponse.json({error:"You are not a member of this server"}, {status:404});
-        console.log("Member found");
+ 
         const Olddraft = await db.draft.findFirst({
             where:{
                 id:draftId as string,
@@ -151,7 +144,6 @@ export const DELETE =async(req:NextRequest)=>{
             }
         })
 
-        console.log("Old Draft: ", Olddraft?.id);
         if(!Olddraft) return NextResponse.json({error:"Draft not exists"}, {status:404});
 
          await db.draft.delete({
@@ -161,7 +153,6 @@ export const DELETE =async(req:NextRequest)=>{
             }
         });
 
-        console.log("Delete successfully");
         return NextResponse.json({
             success:true,
         }, {status:200});

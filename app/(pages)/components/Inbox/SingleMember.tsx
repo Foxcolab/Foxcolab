@@ -20,7 +20,7 @@ function SingleMember({member, serverId}:Props) {
   return (
     <>
 
-    <button onClick={onCick} key={member.id} className={pathname===path ? "active_user":""}><BiSolidUserCircle/> {member.user===null? "User" : member.user.name}</button>
+    <button onClick={onCick} key={member.id} className={pathname===path ? "active_user":""}><BiSolidUserCircle/> <span className='overflow_hidden'>{member.user===null? "User" : member.user.name}</span>  </button>
   
 
     </>

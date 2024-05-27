@@ -16,6 +16,7 @@ export const GET =async(req:NextRequest)=>{
     
         const cursor = searchParams.get("cursor");
         const conversationId = searchParams.get("conversationId");
+        // const serverId = searchParams.get("serverId");
     
         if (!profile) {
           return new NextResponse("Unauthorized", { status: 401 });
@@ -24,7 +25,9 @@ export const GET =async(req:NextRequest)=>{
         if (!conversationId) {
           return new NextResponse("Conversation ID missing", { status: 400 });
         }
-    
+        // if (!serverId) {
+        //   return new NextResponse("Server ID missing", { status: 400 });
+        // }
         let messages: DirectMessage[] = [];
     
         if (cursor) {
@@ -36,15 +39,60 @@ export const GET =async(req:NextRequest)=>{
             },
             where: {
               conversationId,
+              // serverId
             },
             include: {
+              uploadedFiles:true,
+              poll:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  votes:{
+                    include:{
+                      createdMember:{
+                        include:{
+                          user:true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              form:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  formFields:true,
+                  formResponses: {
+                    include:{
+                      formFieldResponses: {
+                        include:{
+                          files:true
+                        }
+                      },
+                      createdMember:{
+                        include:{
+                          user:true
+                        }
+                      }
+                    }
+                  }
+                },
+                
+              },
+            
               member: {
                 include: {
                   user: true,
                 }
               },
-              R:true,
-              forwardedMessage:{
+              threads:{
                 include:{
                   member:{
                     include:{
@@ -52,6 +100,18 @@ export const GET =async(req:NextRequest)=>{
                     }
                   }
                 }
+              },
+              Reactions:true,
+              forwardedMessage:{
+                include:{
+                  member:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  channel:true
+                },
+                
               }
             },
             orderBy: {
@@ -63,14 +123,62 @@ export const GET =async(req:NextRequest)=>{
             take: MESSAGES_BATCH,
             where: {
               conversationId,
+              // serverId
             },
             include: {
+              uploadedFiles:true,
+              poll:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  votes:{
+                    include:{
+                      createdMember:{
+                        include:{
+                          user:true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              form:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  formFields:true,
+                  formResponses: {
+                    include:{
+                      formFieldResponses: {
+                        include:{
+                          files:true
+                        }
+                      },
+                      createdMember:{
+                        include:{
+                          user:true
+                        }
+                      }
+                    }
+                  }
+                },
+                
+              },
+              
+              
+              
               member: {
                 include: {
                   user: true,
                 }
               },
-              forwardedDirectMessage:{
+              threads:{
                 include:{
                   member:{
                     include:{
@@ -79,14 +187,17 @@ export const GET =async(req:NextRequest)=>{
                   }
                 }
               },
+              Reactions:true,
               forwardedMessage:{
                 include:{
                   member:{
                     include:{
                       user:true
                     }
-                  }
-                }
+                  },
+                  channel:true
+                },
+                
               }
             },
             orderBy: {

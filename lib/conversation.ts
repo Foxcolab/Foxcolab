@@ -25,11 +25,15 @@ export const getOrCreateConversation = async (memberOneId: string, memberTwoId: 
           memberOne: {
             include: {
               user: true,
+              pinnedPost:true,
+              saveLater:true
             }
           },
           memberTwo: {
             include: {
               user: true,
+              pinnedPost:true,
+              saveLater:true
             }
           }
         }
@@ -50,11 +54,15 @@ export const getOrCreateConversation = async (memberOneId: string, memberTwoId: 
           memberOne: {
             include: {
               user: true,
+              pinnedPost:true,
+              saveLater:true
             }
           },
           memberTwo: {
             include: {
               user: true,
+              pinnedPost:true,
+              saveLater:true
             }
           }
         }

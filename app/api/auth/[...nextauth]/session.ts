@@ -1,3 +1,4 @@
+"use server";
 import {User, getServerSession} from "next-auth";
 
 
@@ -14,5 +15,7 @@ export const getUserSesssion = async():Promise<User> =>{
             session,
         },
     })
+    console.log("Auth User Session::", authUserSession.user);
+    
     return authUserSession?.user
 }

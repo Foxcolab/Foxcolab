@@ -11,11 +11,7 @@ export const middleware=async(req:NextRequest)=>{
   // const googleToken = req.cookies.get('next-auth.csrf-token')?.value || '';
   const googleToken = req.cookies.get('next-auth.session-token')?.value || '';
   const googleServerToken = req.cookies.get('__Secure-next-auth.session-token')?.value || '';
-  // console.log("Token", token);
-  // console.log("googleToken", googleToken)
   
-  // console.log(isPublicPath && (token!=='' && googleToken!==''))
-  // console.log(!isPublicPath && (token==='' && googleToken===''))
   if(isPublicPath && (token!=='' || googleToken!=='' || googleServerToken!=='')) {
     return NextResponse.redirect(new URL('/home', req.nextUrl))
   }
@@ -24,9 +20,7 @@ export const middleware=async(req:NextRequest)=>{
     return NextResponse.redirect(new URL('/', req.nextUrl))
   }
 
-// await connectDB();
 
-// console.log(token);
 
 
 // // const user = await User.findById(userId).select("-password");

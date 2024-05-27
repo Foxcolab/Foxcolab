@@ -52,15 +52,10 @@ import {session} from "./session"
     
                 return true;
             }else {
-                console.log("Executing...");
-                console.log("Profile:", profile);
-                console.log("Account:", account);
 
-                console.log(profile?.email);
                 if(!profile?.email){
                     throw new Error("No email");
                 }
-                console.log("Email::", profile.email);
                 await db.user.upsert({
                     where:{
                         email:profile.email

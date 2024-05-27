@@ -2424,7 +2424,10 @@
   font-size: 1.5rem;
 }
 .active_user {
-  background: #435e49;
+  background: var(--background2);
+  color: var(--sideActiveButton);
+
+  /* color: var(--); */
 }
 
 /* inbox userid  */
@@ -4543,7 +4546,7 @@
 }
 
 .preview_imsg {
-  background-color: var(--editorBg);
+  /* background-color: var(--editorBg); */
   display: flex;
   align-items: center;
   gap: 0.3rem;

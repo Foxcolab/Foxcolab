@@ -244,9 +244,10 @@ const FieldType = [
 interface Props {
   open:boolean
   setOpen:any
+  schema:"Channel" | "Forum" | "DirectMessage"
 }
 
-function FormDialog({open, setOpen}:Props) {
+function FormDialog({open, setOpen, schema}:Props) {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -277,9 +278,12 @@ function FormDialog({open, setOpen}:Props) {
       }
       console.log(inputFields);
       setLoading(true);
-      const res = await axios.post(`/api/socket/messages/forms/new?serverId=${params?.id}&channelId=${params?.channelId}`, {
-        title, description, questions:inputFields
-      });
+      if(schema==="Channel"){
+        const res = await axios.post(`/api/socket/messages/forms/new?serverId=${params?.id}&channelId=${params?.channelId}`, {
+          title, description, questions:inputFields
+        });
+      }
+      
       setLoading(false);
       router.refresh();
       setOpen(false);

@@ -10,7 +10,7 @@ function Conversation({otherName}:{otherName:string}) {
   return (
     <>
     
-    <div className="chat_section">
+    {/* <div className="chat_section">
         <div className="channel_title">
         <div className='channel_name'><button className='usericon'><span className=''><FaCircleUser/></span> {otherName}<IoIosArrowDown/></button></div>
          </div>
@@ -28,7 +28,20 @@ function Conversation({otherName}:{otherName:string}) {
     <Separator className="my-4"  />
     
     
+    </div> */}
+
+<div className="channel_desc">
+        <h1># {otherName}</h1>
+        <p><span className='chann_cb'>
+        This conversation is just between you and  <b>@{otherName}. Take a look at their profile to learn more about them.</b>
+          </span>
+         </p>
+    <button className=' border rounded px-3 py-[0.3rem] text-sm text-semibold my-4'>View Profile</button>
+
+        {/* <AddMember/> */}
+
     </div>
+
     
     </>
   )

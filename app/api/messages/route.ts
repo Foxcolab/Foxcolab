@@ -62,51 +62,6 @@ export async function GET(
               }
             }
           },
-          // form:{
-          //   include:{
-          //     createdMember:{
-          //       include:{
-          //         user:true
-          //       }
-          //     },
-          //     formFields:{
-          //       include:{
-          //         createdMember:{
-          //           include:{
-          //             user:true
-          //           }
-          //         },
-          //         // formFieldResponses:{
-          //         //   include:{
-          //         //     createdMember:{
-          //         //       include:{
-          //         //         user:true
-          //         //       }
-          //         //     }
-          //         //   }
-          //         // },
-          //       }
-          //     },
-          //     formResponses:{
-          //       include:{
-          //         createdMember:{
-          //           include:{
-          //             user:true
-          //           }
-          //         },
-          //         formFieldResponses:{
-          //           include:{
-          //             createdMember:{
-          //               include:{
-          //                 user:true
-          //               }
-          //             }
-          //           }
-          //         },
-          //       }
-          //     }
-          //   }
-          // },
           form:{
             include:{
               createdMember:{
@@ -114,24 +69,6 @@ export async function GET(
                   user:true
                 }
               },
-              // formResponses:{
-              //   include:{
-              //     createdMember:{
-              //       include:{
-              //         user:true
-              //       }
-              //     },
-              //     formFieldResponses:{
-              //       include:{
-              //         createdMember:{
-              //           include:{
-              //             user:true
-              //           }
-              //         }
-              //       }
-              //     }
-              //   }
-              // },
               formFields:true,
               formResponses: {
                 include:{

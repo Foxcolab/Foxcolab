@@ -20,16 +20,8 @@ import ChannelChat from './ChannelChat';
 function ChannelMsgComp({server, channel, currentMember, isAdmin, myChannels}:Props) {
     const [threadMessage, setThreadMessage] = useState<null | Message>(null);
   
-    const [open, setOpen] = useState(false);
+   
 
-
-  // useEffect(()=>{
-
-  // })
-
-    const leftDefault = (threadMessage===null || undefined )? 100 :70;
-    const rightDefault = threadMessage===null ? 0 : 30;
- 
 
   return (
     <>

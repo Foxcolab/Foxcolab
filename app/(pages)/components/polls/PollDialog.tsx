@@ -230,9 +230,11 @@ const times = [
 interface Props {
     open:boolean
     setOpen:any
+    schema:"Channel" | "Forum" | "DirectMessage"
+    
 }
 
-function PollDialog({open,setOpen}:Props) {
+function PollDialog({open,setOpen, schema}:Props) {
   const [inputFields, setInputFields] = useState(['']);
   const [type, setType] = useState('singleChoice');
   const [question, setQuestion] = useState('');
@@ -277,8 +279,10 @@ function PollDialog({open,setOpen}:Props) {
       }
       console.log(question, inputFields, type, anonymous, expiryDate);
       setLoading(true);
-      
-      const res = await axios.post(`/api/socket/messages/polls/new?serverId=${params?.id}&channelId=${params?.channelId}`, {question, options:inputFields, answerType:type, anonymous, expiryDate:expiryDate});
+      if(schema==="Channel"){
+        const res = await axios.post(`/api/socket/messages/polls/new?serverId=${params?.id}&channelId=${params?.channelId}`, {question, options:inputFields, answerType:type, anonymous, expiryDate:expiryDate});
+
+      }
       setLoading(false);
       router.refresh();
       setOpen(false);

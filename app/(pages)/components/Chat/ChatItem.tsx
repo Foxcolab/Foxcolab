@@ -261,9 +261,7 @@ mySavedPost && mySavedPost.forEach(p => {
     <>
 
     <div  className={isEditing? "relative group flex items-center py-2 px-4 my-2 transition w-full msg_cnbdy ": "relative group flex items-center p-2 mb-2  transition w-full msg_cnbdy"}
-    id={(isPinnedPost && isSavedPost)  ? "pinnedMsgBody": isSavedPost && !isPinnedPost ? "savedMsgBody" :  isPinnedPost && !isSavedPost ?"pinnedMsgBody":  ""}
-    
-    >
+    id={(isPinnedPost && isSavedPost)  ? "pinnedMsgBody": isSavedPost && !isPinnedPost ? "savedMsgBody" :  isPinnedPost && !isSavedPost ?"pinnedMsgBody":  ""} >
     <MessageHover message={message} currentMember={currentMember} socketUrl={socketUrl} socketQuery={socketQuery} setIsEditing={setIsEditing} isPinnedPost={isPinnedPost} isSavedPost={isSavedPost} pinnedPost={pinnedPost} savedPost={savedPost} myChannels={myChannels} allServerMember={allServerMember} setThreadMessage={setThreadMessage} schemaType={schemaType} whoCanPinnedPost={whoCanPinnedPost} whoCanDeleteMessage={whoCanDeleteMessage}  >
     
     <div className="w-full">
@@ -413,8 +411,10 @@ mySavedPost && mySavedPost.forEach(p => {
               </div>
               </div>
               <div className="">
-             
-             <MsgFile files={fileUrl} />
+             {
+              fileUrl.length>0 &&  <MsgFile files={fileUrl} />
+             }
+            
 
               
 
@@ -435,11 +435,15 @@ mySavedPost && mySavedPost.forEach(p => {
 
 
 
-
-            <div className="all_imgs">
+{
+              fileUrl.length>0 && 
+              
+              <div className="all_imgs">
              <MsgFile files={fileUrl}  />
               
-            </div>            
+            </div>  
+             }
+                      
             
             </>
 

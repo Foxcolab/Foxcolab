@@ -188,6 +188,7 @@ model Server {
   tables        Table[]
   spreadsheetManager SpreadSheetManager[]
   tableRows  TableRow[]
+  directMessages DirectMessage[]
 
 }
 model Section {
@@ -666,6 +667,8 @@ model Threads {
   uploadedFiles UploadedFile[] 
   messageId    String? @db.ObjectId
   message      Message? @relation( fields: [messageId], references: [id], onDelete:Cascade)
+  directMessageId  String? @db.ObjectId
+  directMessage DirectMessage? @relation(fields: [directMessageId], references: [id])
   channelId    String? @db.ObjectId
   channel Channel? @relation(fields: [channelId], references: [id], onDelete:Cascade)
   // forumsChannelId String? @db.ObjectId
@@ -704,13 +707,14 @@ model Conversation {
 }
 model DirectMessage {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
-  content String
+  content String?
   contentText  String?
   fileUrl String[]
   uploadedFiles UploadedFile[] 
   memberId String @db.ObjectId
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
-
+  serverId  String @db.ObjectId
+  server Server? @relation(fields: [serverId], references: [id])
   conversationId String @db.ObjectId
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
@@ -721,11 +725,22 @@ model DirectMessage {
   forwardedDirectMessage    DirectMessage?  @relation("ForwardedDirectMessages", fields: [forwardedDirectMessageId], references: [id], onDelete:NoAction, onUpdate:NoAction)
   forwardedMessages   DirectMessage[] @relation("ForwardedDirectMessages")
 
+
   deleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  pollId    String? @db.ObjectId
+  poll      Poll? @relation(fields: [pollId], references: [id])
+  formId    String? @db.ObjectId
+  form      Form? @relation(fields: [formId], references: [id])
+
+
+  pollVotes PollVote[]
+  pinnedPost  PinnedPost[]
+  saveLater  Later[]
+  threads    Threads[]   
   Reactions   Reaction[]
 
   @@index([memberId])
@@ -874,7 +889,8 @@ model PinnedPost {
   channel  Channel? @relation(fields: [channelId], references: [id],  onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
+  directMessageId  String? @db.ObjectId
+  directMessage DirectMessage? @relation(fields: [directMessageId], references: [id])
 
 }
 model Later {
@@ -888,6 +904,8 @@ model Later {
   section  Section? @relation(fields: [sectionId], references: [id],  onDelete: Cascade)
   messageId  String? @db.ObjectId
   message  Message? @relation(fields: [messageId], references: [id],  onDelete: Cascade)
+  directMessageId  String? @db.ObjectId
+  directMessage DirectMessage? @relation(fields: [directMessageId], references: [id])
   threadId  String? @db.ObjectId
   threads  Threads? @relation(fields: [threadId], references: [id],  onDelete: Cascade)
   channelId  String? @db.ObjectId
@@ -1096,7 +1114,7 @@ model Poll {
   // message       Message @relation(fields: [messageId], references: [id])
   // forumResponseId       String @db.ObjectId
   // forumId        ForumResponse @relation(fields: [forumResponseId], references: [id])
-
+  directMessage DirectMessage[]
   message Message[]
   forumResponse ForumResponse[]
   votes   PollVote[]
@@ -1112,6 +1130,8 @@ model PollVote {
   server        Server? @relation(fields: [serverId], references: [id])
   messageId     String? @db.ObjectId
   message       Message? @relation(fields: [messageId], references: [id])
+  directMessageId  String? @db.ObjectId
+  directMessage DirectMessage? @relation(fields: [directMessageId], references: [id])
   forumResonseId     String? @db.ObjectId
   forumResponse       ForumResponse? @relation(fields: [forumResonseId], references: [id])
 
@@ -1138,6 +1158,7 @@ model Form {
   updatedAt     DateTime @updatedAt
   formFields    FormField[]
   messages      Message[]
+  directMessage      DirectMessage[]
   formResponses formResponse[]
   formFieldResponse FormFieldResponse[]
 

@@ -10,6 +10,9 @@ import ChatMessages from '@/app/(pages)/components/Chat/ChatMessages';
 import EditorFooter from '@/app/(pages)/components/Editor/EditorFooter';
 import { getOrCreateConversation } from '@/lib/conversation';
 import { getServer } from '@/lib/db/ServerLib';
+import ServerHome from '@/app/(pages)/components/v1/ServerHome/ServerHome';
+import ConversationContainer from '@/app/(pages)/components/conversation/ConversationContainer';
+import { Draft } from '@prisma/client';
 
 interface ChatProps {
   params:{
@@ -64,11 +67,22 @@ async function ChatWithUser({params}:ChatProps) {
       redirect(`/server/${server.id}`);
     }
     
+    const drafts:Draft[] = []
 
   return (
     <>
 
-    <h1>Single Member</h1>
+   <ServerHome server={server} user={profile}>
+      <ConversationContainer  
+      name={otherMember.user?.name as string}   
+      conversationId={conversation.id} 
+      Drafts={drafts} 
+      currentMember={currentMember}
+      otherMember={otherMember}
+      />
+   </ServerHome>
+
+
 
 
     {/* <ChatComponents server={server} >
