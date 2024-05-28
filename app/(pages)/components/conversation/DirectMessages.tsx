@@ -9,6 +9,8 @@ import Dividor from '../Chat/Dividor';
 import { format } from 'date-fns';
 import { ChatItem } from '../Chat/ChatItem';
 import { useChatSocket } from '@/hooks/useChatSocket';
+import Polls from '../Chat/Polls/Polls';
+import ChannelForm from '../Chat/form/ChannelForm';
 
 interface Props {
     currentMember:Member & {
@@ -126,34 +128,38 @@ function DirectMessages({currentMember, otherMember, chatId, apiUrl, socketUrl, 
               <>
               {
                 message.pollId!==null && message.pollId!==undefined ? 
-                // <Polls
-                // id={message.id}
-                // currentMember={member}
-                // member={message.member}
-                // deleted={message.deleted}
-                // timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-                // poll={message.poll}
-                // socketUrl={socketUrl}
-                // socketQuery={socketQuery}
-                // message={message}
-                // managers={channel?.manager?.memberIds}
-                // mySavedPost = {mySavedPost}
-                // PinnedPosts = {PinnedPosts}
-                // myChannels={myChannels}
-                // allServerMember={allServerMember}
-                // setThreadMessage={setThreadMessage}
-                // schemaType="Channel"
-                // whoCanPinnedPost={whoCanPinnedPost}
-                // whoCanDeleteMessage={whoCanDeleteMessage}                
+                
+                <>
+                
+                <Polls
+                id={message.id}
+                currentMember={currentMember}
+                member={message.member}
+                deleted={message.deleted}
+                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                poll={message.poll}
+                socketUrl={socketUrl}
+                socketQuery={socketQuery}
+                message={message}
+                managers={[]}
+                mySavedPost = {mySavedPost}
+                PinnedPosts = {PinnedPosts}
+                myChannels={myChannels}
+                allServerMember={allServerMember}
+                setThreadMessage={setThreadMessage}
+                schemaType="DirectMessage"
+                whoCanPinnedPost={true}
+                whoCanDeleteMessage={currentMember.id===message.member.id}
+            
 
-                // />
-                <> </>
+                />
+                 </>
                 : 
                 message.formId!==null && message.formId!==undefined && message.form!==null && message.form!==undefined ? 
                 <>
-                {/* <ChannelForm
+                <ChannelForm
                 id={message.id}
-                currentMember={member}
+                currentMember={currentMember}
                 member={message.member}
                 deleted={message.deleted}
                 timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
@@ -161,19 +167,17 @@ function DirectMessages({currentMember, otherMember, chatId, apiUrl, socketUrl, 
                 socketUrl={socketUrl}
                 socketQuery={socketQuery}
                 message={message}
-                managers={channel?.manager?.memberIds}
                 mySavedPost = {mySavedPost}
                 PinnedPosts = {PinnedPosts}
                 myChannels={myChannels}
                 allServerMember={allServerMember}
                 setThreadMessage={setThreadMessage}
-                schemaType="Channel"
-                whoCanPinnedPost={whoCanPinnedPost}
-                whoCanDeleteMessage={whoCanDeleteMessage}  
-                
-                
-                
-                /> */}
+                schemaType="DirectMessage"
+                whoCanPinnedPost={true}
+                whoCanDeleteMessage={currentMember.id===message.member.id} 
+                managers={[]}
+    
+                />
                 </>
                 :
                 <>
@@ -195,7 +199,7 @@ function DirectMessages({currentMember, otherMember, chatId, apiUrl, socketUrl, 
           myChannels={myChannels}
           allServerMember={allServerMember}
           setThreadMessage={setThreadMessage}
-          schemaType="Threads"
+          schemaType="DirectMessage"
           whoCanPinnedPost={true}
           whoCanDeleteMessage={currentMember.id===message.member.id}
         /> 

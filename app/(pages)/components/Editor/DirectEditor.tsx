@@ -49,6 +49,7 @@ interface ChatInputProps {
     query: Record<string, any>;
     name: string;
     drafts:Draft[]
+    conversationId:string
   }
   const formSchema = z.object({
     content: z.string().optional(),
@@ -63,7 +64,7 @@ const DirectEditor = ({apiUrl,
     query,
     name,
     drafts,
-   
+   conversationId
   }: ChatInputProps)=> {
 
     const reactQuillRef = useRef(null);
@@ -784,10 +785,10 @@ files[i]?.name.endsWith(".ppt")?
     </Form> 
            
         {
-          pollOpen &&  <PollDialog open={pollOpen} setOpen={setPollOpen} /> 
+          pollOpen &&  <PollDialog open={pollOpen} setOpen={setPollOpen} schema="DirectMessage" conversationId={conversationId} /> 
         }
         {
-          formOpen && <FormDialog open={formOpen} setOpen={setFormOpen} />
+          formOpen && <FormDialog open={formOpen} setOpen={setFormOpen} schema="DirectMessage" conversationId={conversationId}  />
         }
 
 

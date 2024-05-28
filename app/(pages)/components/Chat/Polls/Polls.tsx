@@ -34,7 +34,7 @@ interface props {
     myChannels:Channel[]
     allServerMember:Member[]
     setThreadMessage:any
-    schemaType:"Channel" | "Threads"
+    schemaType:"Channel" | "Threads" | "DirectMessage"
     whoCanDeleteMessage:boolean
     whoCanPinnedPost:boolean
 
@@ -51,14 +51,19 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
     const [voteDialog, setVoteDialog] = useState(false);
     // const [votingPercentage, setVotingPercentage] = useState([]);
 
+  console.log(poll);
+
     useEffect(()=>{
         for(let i=0; i<poll?.votes.length; i++){
             if(poll?.votes[i].createdBy===currentMember.id){
                 setMyVotes(poll.votes[i].vote);
                 setVoteId(poll.votes[i].id);
+                console.log(myVotes);
             }
         }
     }, [poll])
+
+    console.log(myVotes)
 
     const VoteHandler =async()=>{
         try {
@@ -71,7 +76,8 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
                 votes.push(radio[i].value);
             }
           }
-        }else {
+        }
+        else {
           for(let i=0; i<checkbox.length; i++){
             if(checkbox[i].checked){
                 votes.push(checkbox[i].value);
@@ -80,7 +86,13 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
         }   
 
             setLoading(true);
+            if(schemaType==="DirectMessage"){
+              const res = await axios.post(`/api/socket/direct-messages/poll/vote/new?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}`, {votes});
+
+            }else {
             const res = await axios.post(`/api/socket/messages/polls/vote/new?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}`, {votes});
+
+            }
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -108,7 +120,12 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
         }   
 
             setLoading(true);
-            const res = await axios.put(`/api/socket/messages/polls/vote/update?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}&voteId=${voteId}`, {votes});
+            if(schemaType==="DirectMessage"){
+              const res = await axios.put(`/api/socket/direct-messages/polls/vote/update?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}&voteId=${voteId}`, {votes});
+            }else {
+              const res = await axios.put(`/api/socket/messages/polls/vote/update?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}&voteId=${voteId}`, {votes});
+
+            }
             setLoading(false);
             setIsEditing(false);
         } catch (error) {
@@ -184,6 +201,13 @@ PinnedPosts && PinnedPosts.forEach(p => {
       pinnedPost=p;
       // pinnedPostUser=p.user;
     }
+    else if(schemaType==="DirectMessage"){
+      if(p.directMessageId===id){
+        isPinnedPost=true;
+        pinnedPost=p;
+        // pinnedPostUser=p.createdUser?.user;
+      }
+    }
   }else {
     if(p.messageId===id){
       isPinnedPost=true;
@@ -203,7 +227,14 @@ mySavedPost && mySavedPost.forEach(p => {
       isSavedPost=true;
       savedPost=p;
     }
-  }else {
+  }
+  else if(schemaType==="DirectMessage"){
+    if(p.directMessageId===id){
+      isPinnedPost=true;
+      pinnedPost=p;
+    }
+  }
+  else {
     if(p.messageId===id){
       isSavedPost=true;
       savedPost=p;

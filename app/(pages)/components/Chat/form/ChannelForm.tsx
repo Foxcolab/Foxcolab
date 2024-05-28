@@ -50,7 +50,7 @@ interface Props {
   myChannels:Channel[]
   allServerMember:Member[]
   setThreadMessage:any
-  schemaType:"Channel" | "Threads"
+  schemaType:"Channel" | "Threads" | "DirectMessage"
   whoCanDeleteMessage:boolean
   whoCanPinnedPost:boolean
   
@@ -138,7 +138,15 @@ if(schemaType==="Threads"){
     pinnedPost=p;
     // pinnedPostUser=p.user;
   }
-}else {
+}
+else if(schemaType==="DirectMessage"){
+  if(p.directMessageId===id){
+    isPinnedPost=true;
+    pinnedPost=p;
+    // pinnedPostUser=p.createdUser?.user;
+  }
+}
+else {
   if(p.messageId===id){
     isPinnedPost=true;
     // pinnedPostUser=p?.createdUser?.user;
@@ -157,6 +165,11 @@ if(schemaType==="Threads"){
     isSavedPost=true;
     savedPost=p;
   }
+}else if(schemaType==="DirectMessage"){
+  if(p.directMessageId===id){
+    isSavedPost=true;
+    savedPost=p;
+  }
 }else {
   if(p.messageId===id){
     isSavedPost=true;
@@ -170,7 +183,12 @@ console.log(mySavedPost, id);
   const onSubmitHandler =async()=>{
     try {
       setLoading(true);
+      if(schemaType==="DirectMessage"){
+        const res = await axios.post(`/api/socket/direct-messages/forms/response/new?serverId=${params?.id}&formId=${form.id}&messageId=${id}`, {fieldResponses:formResponse});
+      }else {
       const res = await axios.post(`/api/socket/messages/forms/response/new?serverId=${params?.id}&formId=${form.id}&messageId=${id}`, {fieldResponses:formResponse});
+
+      }
       setLoading(false);
       router.refresh();
     } catch (error) {
@@ -191,7 +209,12 @@ console.log(mySavedPost, id);
     let radio = document.querySelectorAll('.radio');
 
     setLoading(true);
+    if(schemaType==="DirectMessage"){
+      const res = await axios.post(`/api/socket/direct-messages/forms/response/update?serverId=${params?.id}&formId=${form.id}&messageId=${id}&responseId=${formResponseId}`, {fieldResponses:formResponse});
+    }else {
     const res = await axios.post(`/api/socket/messages/forms/response/update?serverId=${params?.id}&formId=${form.id}&messageId=${id}&responseId=${formResponseId}`, {fieldResponses:formResponse});
+
+    }
     setLoading(false);
     router.refresh();
     } catch (error) {

@@ -68,6 +68,7 @@ function ConversationChat({name, conversationId, Drafts, currentMember, otherMem
     apiUrl='/api/socket/direct-messages'
     query={{conversationId:conversationId, serverId:params?.id as string}}
     drafts={Drafts}
+    conversationId={conversationId}
     />
 </div>
 </div>

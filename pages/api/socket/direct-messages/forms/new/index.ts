@@ -78,12 +78,28 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
         conversationId: conversationId as string,
         memberId: member.id,
         },
-        include: {
-          member: {
-            include: {
-              user: true,
+        include:{
+            form:{
+                include:{
+                    createdMember:{
+                        include:{
+                            user:true
+                        }
+                    },
+                    formResponses:{
+                        include:{
+                            formFieldResponses:true
+                            }
+                    },
+                    formFields:true
+                },
+                    
+            },
+            member:{
+                include:{
+                    user:true
+                }
             }
-          }
         }
       });
     console.log(message);

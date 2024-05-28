@@ -55,7 +55,7 @@ interface ChatItemProps {
   myChannels:Channel[]
   allServerMember:Member[]
   setThreadMessage:any
-  schemaType:"Channel" | "Threads"
+  schemaType:"Channel" | "Threads" | "DirectMessage"
   whoCanDeleteMessage:boolean
   whoCanPinnedPost:boolean
 
@@ -188,12 +188,17 @@ PinnedPosts && PinnedPosts.forEach(p => {
     if(p.threadId===id){
       isPinnedPost=true;
       pinnedPost=p;
-      // pinnedPostUser=p.user;
     }
-  }else {
+  }
+  else if(schemaType==="DirectMessage"){
+    if(p.directMessageId===id){
+      isPinnedPost = true;
+      pinnedPost = p;
+    }
+  }
+  else {
     if(p.messageId===message.id){
       isPinnedPost=true;
-      // pinnedPostUser=p?.createdUser?.user;
       pinnedPost=p;
     }
   }

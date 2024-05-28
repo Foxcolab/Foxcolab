@@ -245,9 +245,10 @@ interface Props {
   open:boolean
   setOpen:any
   schema:"Channel" | "Forum" | "DirectMessage"
+  conversationId:string | null
 }
 
-function FormDialog({open, setOpen, schema}:Props) {
+function FormDialog({open, setOpen, schema, conversationId}:Props) {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -280,6 +281,11 @@ function FormDialog({open, setOpen, schema}:Props) {
       setLoading(true);
       if(schema==="Channel"){
         const res = await axios.post(`/api/socket/messages/forms/new?serverId=${params?.id}&channelId=${params?.channelId}`, {
+          title, description, questions:inputFields
+        });
+      }
+      else if(schema==="DirectMessage"){
+        const res = await axios.post(`/api/socket/direct-messages/forms/new?serverId=${params?.id}&conversationId=${conversationId}`, {
           title, description, questions:inputFields
         });
       }
