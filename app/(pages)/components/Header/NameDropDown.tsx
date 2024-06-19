@@ -25,7 +25,11 @@ import CreateSection from "../Create/CreateSection";
 import { useParams } from "next/navigation";
 import { Server } from "@prisma/client";
 
-export function NameDropDown({server, createSection}:{server:Server, createSection:boolean}) {
+interface Props {
+  server:Server
+  createSection:boolean
+}
+export function NameDropDown({server, createSection}:Props) {
   const [state, setState] = useState("");
   const [open, setOpen] = useState(false);
   const [openSection, setOpenSection] = useState(false);
@@ -80,8 +84,11 @@ export function NameDropDown({server, createSection}:{server:Server, createSecti
     </DropdownMenu>
 
     <ServerContainer open={open} setOpen={setOpen} state={state} server={server} />
-    
-    <CreateSection serverId={params?.id as string} openDialog={openSection} setOpenDialog={setOpenSection}  />
+    {
+      openSection && 
+    <CreateSection serverId={params?.id as string} openDialog={openSection} setOpenDialog={setOpenSection} hasPermission={createSection} />
+
+    }
     
     </>
   )

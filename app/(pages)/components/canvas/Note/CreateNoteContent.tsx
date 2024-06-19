@@ -56,7 +56,6 @@ function CreateNoteContent({noteDialog, setNoteDialog, note}:Props) {
   }
   const isChanges = content!==note?.content;
 
-  console.log("Note Content::", note.title, note.content, content);
 
   return (
     <>

@@ -26,6 +26,7 @@ import Loader from '../../Loaders/Loader';
 import ViewForm from './ViewForm';
 import { TbPinnedFilled } from 'react-icons/tb';
 import { GoDotFill } from 'react-icons/go';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 
 interface Props {
@@ -178,12 +179,12 @@ if(schemaType==="Threads"){
 }
 });
 
-console.log(mySavedPost, id);
 
   const onSubmitHandler =async()=>{
     try {
       setLoading(true);
       if(schemaType==="DirectMessage"){
+
         const res = await axios.post(`/api/socket/direct-messages/forms/response/new?serverId=${params?.id}&formId=${form.id}&messageId=${id}`, {fieldResponses:formResponse});
       }else {
       const res = await axios.post(`/api/socket/messages/forms/response/new?serverId=${params?.id}&formId=${form.id}&messageId=${id}`, {fieldResponses:formResponse});
@@ -210,11 +211,14 @@ console.log(mySavedPost, id);
 
     setLoading(true);
     if(schemaType==="DirectMessage"){
+      // console.log("formResponse:",formResponse);
+      // return;
       const res = await axios.post(`/api/socket/direct-messages/forms/response/update?serverId=${params?.id}&formId=${form.id}&messageId=${id}&responseId=${formResponseId}`, {fieldResponses:formResponse});
     }else {
     const res = await axios.post(`/api/socket/messages/forms/response/update?serverId=${params?.id}&formId=${form.id}&messageId=${id}&responseId=${formResponseId}`, {fieldResponses:formResponse});
-
+    
     }
+    setEditing(false);
     setLoading(false);
     router.refresh();
     } catch (error) {
@@ -510,9 +514,17 @@ console.log(mySavedPost, id);
           ))
         }
           <div className='form_container_background flex justify-between items-center border rounded'>
-       <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold' onClick={()=>setEditing(false)}>Cancel</button>
+            {
+              loading ? 
+              <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold flex items-center gap-1' disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin " /> Saving</button>
+              
+              : <>
+              <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold' onClick={()=>setEditing(false)}>Cancel</button>
        <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold bg-green-500 text-white' onClick={UpdateHandler}>Save Changes</button>
-      </div>
+      
+              </>
+            }
+       </div>
       
        </> :
       <div>
@@ -1183,10 +1195,19 @@ console.log(mySavedPost, id);
             </div>
           ))
         }
-          <div className='form_container_background flex justify-between items-center border rounded'>
-       <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold' onClick={()=>setEditing(false)}>Cancel</button>
+       <div className='form_container_background flex justify-between items-center border rounded'>
+            {
+              loading ? 
+            
+            <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold flex items-center gap-1' disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin " /> Saving</button>
+              
+              : <>
+              <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold' onClick={()=>setEditing(false)}>Cancel</button>
        <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold bg-green-500 text-white' onClick={UpdateHandler}>Save Changes</button>
-      </div>
+      
+              </>
+            }
+       </div>
       
        </> :
       <div>

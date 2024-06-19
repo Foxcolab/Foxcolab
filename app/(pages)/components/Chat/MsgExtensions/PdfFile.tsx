@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React, { useState } from 'react'
 import { FaRegFilePdf } from 'react-icons/fa6';
 import {
   Dialog,
@@ -23,24 +23,21 @@ interface Props {
 
 function PdfFile({fileUrl, length, key, fileName, type}:Props) {
 
-
   
-  console.log("PDF Found", type, length, fileName, fileUrl);
-  console.log(length===1 && type!=="channelFile" && type!=="Grid" );
-  console.log(length!==1 && type!=="channelFile" && type!=="Grid");
-  console.log(type==="Grid")
-  console.log("Else , true")
+
+  const [open, setOpen] = useState(false);
+
   return (
     <>
     {/* {
       length===1 && type!=="ChannelFile" ?  */}
      
       
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
       {
         length===1 && type!=="channelFile" && type!=="Grid" ?  <div className='pdf_iframe'>
-        <div className="doc_thumbnail doc_thumbnail_impo w-full">
+        <div className="doc_thumbnail doc_thumbnail_impo w-full" onClick={()=>setOpen(true)}>
         <div className="doc_thum_icon">
         <FaRegFilePdf/> 
         </div>
@@ -59,7 +56,7 @@ function PdfFile({fileUrl, length, key, fileName, type}:Props) {
        </div> :
         length!==1 && type!=="channelFile" && type!=="Grid" ? 
         
-        <div className='pdf_container'>
+        <div className='pdf_container' onClick={()=>setOpen(true)}>
         <div className="doc_thumbnail">
         <div className="doc_thum_icon">
         <FaRegFilePdf/> 
@@ -75,12 +72,12 @@ function PdfFile({fileUrl, length, key, fileName, type}:Props) {
         type==="Grid" ?
 
         <>
-        <div className='file_Grid_lw_icon'>
+        <div className='file_Grid_lw_icon' onClick={()=>setOpen(true)}>
         <FaRegFilePdf/> 
      </div>
         </> :
 
-        <div className="doc_main_body">
+        <div className="doc_main_body" onClick={()=>setOpen(true)}>
         <button>
         <div className='doc_file_body'>
             <div className="doc_thumbnail doc_thum_imp">

@@ -13,13 +13,17 @@ import { ReactMediaRecorder, useReactMediaRecorder } from 'react-media-recorder'
 import axios from 'axios'
 import AudioPlayer from './AudioPlayer'
 import Loader from '../../Loaders/Loader'
+import { useParams } from 'next/navigation'
 
 function VoiceRecorder({setAudioUrl, setAudioName}:{setAudioUrl:any, setAudioName:any}) {
   const [audioBlob, setAudioBlob] = useState(null);
   const [blobUrl, setBlobUrl] = useState(null)
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
     const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true });
+
+    const params = useParams();
 
     const SendHandler=async()=>{
         try {
@@ -28,25 +32,26 @@ function VoiceRecorder({setAudioUrl, setAudioName}:{setAudioUrl:any, setAudioNam
             // console.log(formData.get(file));
 
             setLoading(true);
-            const res =await axios.post('/api/upload/audio', formData);
+            const res =await axios.post(`/api/upload/audio?serverId=${params?.id}`, formData);
             if(res.status===200){
               setAudioUrl(res.data.fileUrl);
               setAudioName(res.data.name)
             }
             setLoading(false);
+            setOpen(false);
         } catch (error) {
             setLoading(false);
             console.log(error);
         }
     }
 
-    const handleStop=(blobUrl, blob)=>{
+    const handleStop=(blobUrl:any, blob:any)=>{
       setAudioBlob(blob);
       setBlobUrl(blobUrl);
       console.log("Blob", blob);
       
     }
-    const StartHandler=(startRecording)=>{
+    const StartHandler=(startRecording:any)=>{
       document.getElementById('zoom_animation')?.classList.add("zoom_animation");
       document.getElementById('zoom_animation')?.classList.remove("bg-red-600");
       document.getElementById('zoom_animation')?.classList.add("bg-green-600");
@@ -67,7 +72,7 @@ function VoiceRecorder({setAudioUrl, setAudioName}:{setAudioUrl:any, setAudioNam
   return (
     <>
     
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className=" h-[24px] w-[24px] transition rounded-full p-1 flex items-center justify-center"><FaMicrophone/></Button>
       </DialogTrigger>

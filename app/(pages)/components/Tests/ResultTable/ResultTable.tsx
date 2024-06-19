@@ -26,21 +26,16 @@ const DATE_FORMAT = "d MMM yyyy";
 
 function ResultTable({results, testName, testId}:Props) {
   const router = useRouter();
-  // submitTime = new Date(submitTime);
-  // startingTime = new Date(startingTime);
-  // const gethhmm = startingTime.getHours() + ":" + startingTime.getMinutes();
-  // const endhhmm = submitTime.getHours() + ":" + submitTime.getMinutes();
   const GetTime =(date:Date)=>{
     date = new Date(date);
     return `${date.getHours()<10 ? '0' + date.getHours() : date.getHours()} : ${date.getMinutes()<10 ? '0' + date.getMinutes() : date.getMinutes()}` 
     }
     const pathName = usePathname();
-    console.log(pathName);
+  
 
 
     const HrefHandler=(id:string)=>{
-      console.log(id);
-      router.push(`${testId}/${id}/view`);
+      router.push(`${testId}/result/${id}/view`);
     }
 
   return (

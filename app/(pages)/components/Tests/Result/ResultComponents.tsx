@@ -51,7 +51,7 @@ function ResultComponents({result, testChannelName, user, test}:Props) {
     <>
 
     <div className='r_des_container'>
-      <Button color='r_bck_btn' onClick={()=>router.push(`/servers/${params?.id}/test-channel/${params?.testChannelId}`)}><FaAngleLeft/> Back</Button>
+      <Button className='r_bck_btn' onClick={()=>router.push(`/servers/${params?.id}/test-channel/${params?.testChannelId}`)}><FaAngleLeft/> Back</Button>
 
         <div className='r_des mt-4'><span>{testChannelName}</span> - {testName}</div>
         {/* <div className='r_des'>{} </div> */}
@@ -94,7 +94,7 @@ function ResultComponents({result, testChannelName, user, test}:Props) {
 
 
         <div className="all_re_q" >
-          <div className='flex justify-between pr-4'>
+          <div className='flex justify-between pr-4 py-4'>
           <label>QUESTIONS ({test.questions.length})</label>
           <button className='flex items-center text-sm' onClick={()=>setExpand(!expand)}>
             {
@@ -110,6 +110,7 @@ function ResultComponents({result, testChannelName, user, test}:Props) {
               <ResultQuestion key={response.id} response={response} index={i} expand={true}  />
             ))
           } */}
+          <hr />
           {
             expand && questions.map((question, i)=>(
 

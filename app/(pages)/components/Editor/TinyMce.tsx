@@ -7,10 +7,11 @@ interface Props {
     setTitle:Function,
     defaultValue:string
     ReadOnly:boolean
+    placeholder:string
 }
 
 
-const TinyMce = ({setTitle, defaultValue, ReadOnly}:Props)=> {
+const TinyMce = ({setTitle, defaultValue, ReadOnly, placeholder}:Props)=> {
   const cloudName =  process.env.REACT_APP_CLIENT_NAME
     const unsignedUploadPreset = process.env.REACT_APP_UPLOAD_PRESET
 
@@ -19,9 +20,7 @@ const TinyMce = ({setTitle, defaultValue, ReadOnly}:Props)=> {
 
     const content = defaultValue
     
-    // const editble = !ReadOnly
-
-    console.log(ReadOnly)
+    
     const {resolvedTheme} = useTheme();
 
     
@@ -38,6 +37,8 @@ const TinyMce = ({setTitle, defaultValue, ReadOnly}:Props)=> {
           menubar: false,
           selector: 'textarea',
           a_plugin_option: false,
+          placeholder: placeholder,
+
           statusbar:false,
           readonly:ReadOnly,
           editable_root:ReadOnly,

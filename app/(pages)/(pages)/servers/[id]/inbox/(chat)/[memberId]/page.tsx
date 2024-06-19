@@ -30,9 +30,51 @@ async function ChatWithUser({params}:ChatProps) {
     if(!server) redirect('/home');
     
     const currentMember = await db.member.findFirst({
-      where:{userId:profile.id},
+      where:{
+        userId:profile.id,
+        serverId:server.id,
+      },
       include:{
-        user:true
+        user:true,
+        pinnedPost:{
+          where:{
+            NOT:{
+              directMessage:null
+            }
+          },
+          include:{
+            directMessage:{
+              include:{
+                member:{
+                  include:{
+                    user:true
+                  }
+                },
+                uploadedFiles:true
+              }
+            }
+          }
+          
+        },
+        saveLater:{
+          where:{
+            NOT:{
+              directMessage:null
+            }
+          },
+          include:{
+            directMessage:{
+              include:{
+                member:{
+                  include:{
+                    user:true
+                  }
+                },
+                uploadedFiles:true
+              }
+            }
+          }
+        }
       }
     })
     
@@ -69,6 +111,18 @@ async function ChatWithUser({params}:ChatProps) {
     
     const drafts:Draft[] = []
 
+    const myChannels = await db.channel.findMany({
+      where:{
+        memberIds:{
+          hasSome:[currentMember.id]
+        }
+      }
+    })
+
+    let serverMember = server.Members.filter(mem=>mem.id!==(currentMember.id || otherMember.id));
+  
+
+
   return (
     <>
 
@@ -79,6 +133,8 @@ async function ChatWithUser({params}:ChatProps) {
       Drafts={drafts} 
       currentMember={currentMember}
       otherMember={otherMember}
+      allServerMember={serverMember}
+
       />
    </ServerHome>
 

@@ -25,13 +25,13 @@ function Options({option, rightAns, selectedAns}:Props) {
                     >
                         <span className=' p-1 mb-1'>
                         {
-                            (isAttempted && isRight) && <span className='text-green-500  text-xl'><IoCheckmarkCircleOutline/></span>
+                            (isAttempted && isRight) && <span className='text-green-500  text-[1.5rem]'><IoCheckmarkCircleOutline/></span>
                         }
                         {
-                            (isAttempted && !isRight) && <span className='text-red-500  text-xl'  ><RxCrossCircled/></span>
+                            (isAttempted && !isRight) && <span className='text-red-500  text-[1.4rem]'  ><RxCrossCircled/></span>
                         }
                         {
-                            !isAttempted &&  <span className=' text-xl'  ><VscBlank/></span> 
+                            !isAttempted &&  <span className=' text-[1.4rem]'  ><VscBlank/></span> 
                         }
                         </span>
                         
@@ -41,11 +41,11 @@ function Options({option, rightAns, selectedAns}:Props) {
 
                         <div 
                         // className='flex items-center gap-1'
-                        className={isRight && isAttempted ? "bg-green-800 text-white flex items-center gap-1 w-full p-1 rounded mb-1" : isAttempted && !isRight ?   "flex items-center gap-1 w-full p-1 bg-red-700 text-white rounded mb-1" : !isAttempted && isRight? "flex items-center gap-1 w-full p-1 mb-1 bg-green-300 dark:text-black rounded": "flex items-center gap-1 w-full p-1 mb-1 " }
+                        className={isRight && isAttempted ? "bg-[#d8ece4]  flex items-center gap-1 w-full p-1 rounded mb-1" : isAttempted && !isRight ?   "flex items-center gap-1 w-full p-1  rounded mb-1" : !isAttempted && isRight? "flex items-center gap-1 w-full p-1 mb-1 bg-[#d8ece4] dark:text-black rounded": "flex items-center gap-1 w-full p-1 mb-1 " }
                         >
-                        <span className='text-xl'>
+                        <span className='text-[1.5rem] text-[#b3cedd]'>
                         {
-                            isAttempted ? <IoMdRadioButtonOn /> :  <IoMdRadioButtonOff/>
+                            isAttempted ? <IoMdRadioButtonOn  /> :  <IoMdRadioButtonOff />
                         }
                         </span>
                             <div dangerouslySetInnerHTML={{__html: option}}/>

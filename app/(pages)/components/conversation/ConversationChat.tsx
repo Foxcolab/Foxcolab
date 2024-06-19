@@ -1,10 +1,10 @@
 import React from 'react'
-import SectionHeader from '../Header/SectionHeader'
 import { FaUserLarge } from 'react-icons/fa6'
 import DirectMessages from './DirectMessages'
 import DirectEditor from '../Editor/DirectEditor'
 import { Channel, Draft, Later, Member, PinnedPost, User } from '@prisma/client'
 import { useParams } from 'next/navigation'
+import ConversationHeader from './ConversationHeader'
 
 interface Props {
     name:string
@@ -25,7 +25,7 @@ interface Props {
     allServerMember:Member[]
 }
 function ConversationChat({name, conversationId, Drafts, currentMember, otherMember, setThreadMessage, myChannels, allServerMember}:Props) {
-
+    console.log(currentMember);
     const mySavedPosts = currentMember.saveLater;
     const PinnedPosts = currentMember.pinnedPost;
 
@@ -38,7 +38,7 @@ function ConversationChat({name, conversationId, Drafts, currentMember, otherMem
     
     <div className="forum_msg_container">
 
-    <SectionHeader icon={<FaUserLarge/>} name={name} />
+    <ConversationHeader icon={<FaUserLarge/>} name={name} pinnedPosts={PinnedPosts} currentMember={currentMember} />
     
 
 

@@ -61,7 +61,11 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
             for(let i=0; i<fieldResponses.length; i++){
                 const updateResponse = await db.formFieldResponse.update({
                     where:{
-                        id:fieldResponses[i].id as string,
+                        formFieldId_formResponseId_createdBy:{
+                            formFieldId:fieldResponses[i].formFieldId,
+                            formResponseId:formResponse?.id as string,
+                            createdBy:member.id as string
+                        },
                         formId:formId as string
                     },
                     data:{

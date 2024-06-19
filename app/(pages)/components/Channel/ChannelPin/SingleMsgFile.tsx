@@ -24,7 +24,7 @@ function SingleMsgFile({file}:MsgFileProps) {
     
     const fileType = file.type;
     const fileName = file.name;
-    const timeStamp = format(file.createdAt, 'dd-MMM-yyyy')
+    const timeStamp = format(new Date(file.createdAt), 'd MMM yyyy');
     const createdBy = file.createdMember.user.name;
     const [type, setType] = useState("");
     const [fileUrl, setFileUrl] = useState("");
@@ -35,10 +35,10 @@ function SingleMsgFile({file}:MsgFileProps) {
 const onClickHandler =(fileT:string, publicUrl:string)=>{
     if(fileT==="pdf" || fileT==="image" || fileT==="video"){
         setType(fileT);
-        setFileUrl(publicUrl);
+        setFileUrl(convertSpace(publicUrl));
         setOpen(true);
     }else {
-        window.open(publicUrl);
+        window.open(convertSpace(publicUrl));
 
     }
 }
@@ -52,6 +52,12 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
           const OpenNewTab = ()=>{
               window.open(fileUrl)
           }
+
+    const convertSpace = (fileUrl:string)=>{
+      return fileUrl.replace(/ /g,"%20");
+    }
+
+    console.log(file);
   return (
     <>
     {
@@ -59,7 +65,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
         <div className="doc_t_container">
             <div className=" single_msg_img cursor-pointer" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
                 
-            <Image src={file.publicUrl} alt="" height={10} width={10} unoptimized quality={100}  />
+            <Image src={convertSpace(file.publicUrl)} alt="" height={10} width={10} unoptimized quality={100}  />
             {/* <RiFolderImageLine/> */}
             </div>
             <div className="doc_list_desc">
@@ -72,7 +78,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
         : 
         
         fileType==="video" ?
-        <div className="doc_t_container">
+        <div className="doc_t_container" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
             <div className='doc_thumb_s bg-orange-500 cursor-pointer'>
                 <RiVideoFill/>
             </div>
@@ -86,7 +92,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
 
             : 
         fileType==="pdf" ? 
-        <div className="doc_t_container">
+        <div className="doc_t_container" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
             <div className='doc_thumb_s bg-red-500 cursor-pointer'>
                 <BsFileEarmarkPdfFill/>
             </div>
@@ -99,7 +105,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
         </div> 
             :
         fileType==="ppt" ? 
-         <div className="doc_t_container">
+         <div className="doc_t_container" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
             <div className='doc_thumb_s bg-green-500'>
                 <BsFillFileEarmarkPptFill/>
             </div>
@@ -113,7 +119,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
         :    
 
         fileType==="txt"? 
-         <div className="doc_t_container">
+         <div className="doc_t_container" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
             <div className='doc_thumb_s bg-gray-500'>
                 <BsFiletypeTxt/>
             </div>
@@ -126,7 +132,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
         </div> 
         :
         fileType==="docx"? 
-         <div className="doc_t_container">
+         <div className="doc_t_container" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
             <div className='doc_thumb_s bg-yellow-500'>
                 <BsFiletypeDocx/>
             </div>
@@ -139,7 +145,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
         </div> 
         :
         fileType==="xlsx"? 
-         <div className="doc_t_container">
+         <div className="doc_t_container" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
             <div className='doc_thumb_s bg-blue-500'>
                 <BsFiletypeXlsx/>
             </div>
@@ -152,7 +158,7 @@ const onClickHandler =(fileT:string, publicUrl:string)=>{
         </div> 
          :
         fileType==="csv" ? 
-         <div className="doc_t_container">
+         <div className="doc_t_container" onClick={()=>onClickHandler(fileType, file.publicUrl)}>
             <div className='doc_thumb_s bg-red-500'>
                 <BsFiletypeCsv/>
             </div>

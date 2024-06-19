@@ -147,6 +147,9 @@ import { BotResponse, Message } from "@prisma/client";
             content:fullResponse.responseText,
             contentText:fullResponse.responseText,
             fileUrl:fullResponse.responseFileUrl,
+            uploadedFiles:{
+              connect: fullResponse.responseFileUrl.map((fileId)=>({id:fileId}))
+            },
             memberId:bot?.id as string,
             serverId:serverId as string,
             channelId:channelId as string,
@@ -173,6 +176,9 @@ import { BotResponse, Message } from "@prisma/client";
             content:specificResponse.responseText,
             contentText:specificResponse.responseText,
             fileUrl:specificResponse.responseFileUrl,
+            uploadedFiles:{
+              connect: specificResponse.responseFileUrl.map((fileId)=>({id:fileId}))
+            },
             memberId:bot?.id as string,
             serverId:serverId as string,
             channelId:channelId as string,

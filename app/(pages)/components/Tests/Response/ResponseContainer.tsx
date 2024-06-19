@@ -6,68 +6,66 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 
 interface Props {
-    result:Result
+    result:Result & {
+        response:Response[]
+    }
     questions:Question[]
     test:Test
 }
 
 function ResponseContainer({result, questions, test}:Props) {
-    let testDuration = test.time*60;
-    let startTime = Math.floor(new Date(result.createdAt).getTime()/1000);
-    console.log("START",startTime, testDuration);
+    console.log("Result Id:", result.id);
     const [qIndex, setQindex] = useState(result.currentState);
     const [answered, setAnswered] = useState<null | Response[]>(result.response || []);
-    const [timeRemaining, setTimeRemaining] = useState(testDuration);
-    const [marked, setMarked] = useState([]);
+    // const [marked, setMarked] = useState([]);
     const [cleared, setCleared] = useState(false);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const params = useParams();
     const router = useRouter();
     
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if(timeRemaining<0) return;
-          const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-          const elapsedTime = currentTime - startTime;
-          const remainingTime = testDuration - elapsedTime;
-          console.log(elapsedTime, currentTime)
-          setTimeRemaining(remainingTime);
-        }, 1000);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         if(timeRemaining<0) return;
+    //       const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    //       const elapsedTime = currentTime - startTime;
+    //       const remainingTime = testDuration - elapsedTime;
+          
+    //       setTimeRemaining(remainingTime);
+    //     }, 1000);
     
-        return () => clearInterval(interval);
-      }, [startTime, testDuration]);
+    //     return () => clearInterval(interval);
+    //   }, [startTime, testDuration]);
 
-      useEffect(() => {
-        if (timeRemaining <= 0) {
-          SubmitTest(); // Call your function to submit the test automatically
-        }
-      }, [timeRemaining]);
+    //   useEffect(() => {
+    //     if (timeRemaining <= 0) {
+    //       SubmitTest(); // Call your function to submit the test automatically
+    //     }
+    //   }, [timeRemaining]);
     
 
-
+    //   console.log("Answered::",answered);
     const SavedToDataBase = async(currentState:number, questionId:string, answer:string[])=>{
         try {
             // console.log("SENDING DATA IS", answer);
-            let isFound = false;
-            if(answered){
-                for(let i=0; i<answered.length; i++){
-                    if(answered[i].questionId===questionId){
-                        isFound=true;
-                    }
-                }
-            }
-            // console.log(isFound);
-            if(answer.length==0 && !isFound) return;
+            // let isFound = false;
+            // if(answered){
+            //     for(let i=0; i<answered.length; i++){
+            //         if(answered[i].questionId===questionId){
+            //             isFound=true;
+            //         }
+            //     }
+            // }
+            // // console.log(isFound);
+            // if(answer.length==0 && !isFound) return;
+            console.log("Submitting Ans:", answer);
             setLoading(true);
             const res =await axios.post(`/api/test/result/response?serverId=${params?.id}&testId=${test.id}&resultId=${result.id}&questionId=${questionId}`, {currentState, answer});
-            // console.log(res);
-            console.log(res);
+            console.log("Save :", res);
             if(res.status===200){
-                // console.log("RES DATA", res.data.Responses);
                 setAnswered(res.data.Responses);
             }
-            setMarked([]);
+            // setMarked([]);
         
             setLoading(false);
         } catch (error) {
@@ -78,7 +76,7 @@ function ResponseContainer({result, questions, test}:Props) {
 
     const NextQuestion =async(questionId:string, answer:string[])=>{
         // saved to db
-        // console.log("ANS FROM nextQuestion:",answer);
+        console.log("ANS FROM nextQuestion:",answer);
         await SavedToDataBase(qIndex+1, questionId, answer);
         if(qIndex===questions.length-1){
             return;
@@ -87,8 +85,7 @@ function ResponseContainer({result, questions, test}:Props) {
         
     }
     const PrevQuestion =async(questionId:string, answer:string[])=>{
-        // saved to db
-        console.log("ANS FROM PrevQuestion:", answer);
+        
         await SavedToDataBase(qIndex+1, questionId, answer);
         if(qIndex===0){
             return;
@@ -106,10 +103,8 @@ function ResponseContainer({result, questions, test}:Props) {
 
     const SubmitTest =async()=>{
         try {
-            console.log("Test Submitted");
             setSubmitting(true);
             const res =await axios.put(`/api/test/result/submit?serverId=${params?.id}&testId=${test.id}&resultId=${result.id}`);
-            console.log(res);
             if(res.status===200){
                 router.push(`${result.id}/view`);
             }
@@ -126,20 +121,54 @@ function ResponseContainer({result, questions, test}:Props) {
         await SubmitTest();
     }
 
-    const formatTime = (seconds:number) => {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-      };
+    // useEffect(()=>{
+    //     if(answered!==null){
+    //         if(answered?.length!==0 && loading==false && cleared===false){
+    //             for(let i=0; i<answered?.length; i++){
+    //               if(answered[i].questionId===questions[qIndex].id){
+    //                 console.log("Match question::", answered[i])
+    //                 setMarked(answered[i]?.answer);
+    //                 // setAnswer(answered[i].answer);
+    //                 console.log("Checking..", i, answered.length);
+    //                 break;
+    //               }
+    //               console.log("Not Found!!!");
+    //             //   setAnswer([]);
+    //               setMarked([]);
+    //             }
+    //           }
+    //     }
+    //   }, [answered]);
+
+      
+
+    console.log("Container::", answered);
+
+
+
+
+   
 
   return (
     <>
     
-    <ResponseQuestion  question={questions[qIndex]} qIndex={qIndex} setQIndex={setQindex} test={test} NextQuestion={NextQuestion} PrevQuestion={PrevQuestion} ChangeQuestion={ChangeQuestion} length={questions.length} questions={questions} loading={loading} answered={answered} setMarked={setMarked} marked={marked} 
+    <ResponseQuestion  
+    question={questions[qIndex]}
+    qIndex={qIndex} 
+    setQIndex={setQindex} 
+    test={test} 
+    NextQuestion={NextQuestion} 
+    PrevQuestion={PrevQuestion} 
+    ChangeQuestion={ChangeQuestion} 
+    length={questions.length} 
+    questions={questions} 
+    loading={loading} 
+    // setMarked={setMarked} 
+    // marked={marked} 
+    answered={answered}
     cleared={cleared}
     setCleared={setCleared}
-    remainingTime={formatTime(timeRemaining)}
+    createdAt={result.createdAt}
     submitting={submitting}
     submitTest={SubmitTest}
     SubmitTestDBHandler={SubmitTestDBHandler}

@@ -145,8 +145,12 @@ function CreateTest({serverId, sectionId, testChannelId}:Props) {
         <DialogFooter className='mt-4'>
           {
             loading ? <Loader/> : 
-          <Button type="submit" onClick={SubmitHandler}>Create</Button>
-
+            <>
+          <Button onClick={()=>setOpen(false)}>Cancel</Button>
+          <Button type="submit" className="bg-green-500 text-white hover:bg-green-600" onClick={SubmitHandler}>Create</Button>
+            
+            
+            </>
           }
         </DialogFooter>
         </div>

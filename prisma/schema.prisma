@@ -699,8 +699,11 @@ model Conversation {
   memberTwoId String @db.ObjectId
   memberTwo Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
 
+
+
   directMessages DirectMessage[]
   Drafts   Draft[]
+  pinnedPosts PinnedPost[]
   @@index([memberTwoId])
 
   @@unique([memberOneId, memberTwoId])
@@ -712,11 +715,11 @@ model DirectMessage {
   fileUrl String[]
   uploadedFiles UploadedFile[] 
   memberId String @db.ObjectId
-  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  member Member? @relation(fields: [memberId], references: [id], onDelete: Cascade)
   serverId  String @db.ObjectId
   server Server? @relation(fields: [serverId], references: [id])
   conversationId String @db.ObjectId
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   forwardedMessageId  String? @db.ObjectId
   forwardedMessage  Message? @relation(fields: [forwardedMessageId], references: [id])
@@ -891,6 +894,8 @@ model PinnedPost {
   updatedAt   DateTime @updatedAt
   directMessageId  String? @db.ObjectId
   directMessage DirectMessage? @relation(fields: [directMessageId], references: [id])
+  conversationId  String? @db.ObjectId
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
 
 }
 model Later {
@@ -1211,6 +1216,8 @@ model FormFieldResponse {
   formResponse    formResponse? @relation(fields: [formResponseId], references: [id])
   createdBy       String @db.ObjectId
   createdMember   Member? @relation(fields: [createdBy], references: [id])
+
+  @@unique([formFieldId, formResponseId, createdBy], name: "formFieldId_formResponseId_createdBy")
 
 }
 

@@ -27,34 +27,35 @@ interface Props {
 function CreateSection({serverId, openDialog, setOpenDialog, hasPermission}:Props) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
-  const [open, setOpen] = useState(false);
+
+  const [open, setOpen] = useState(false || openDialog);
   const router = useRouter();
+
+
   const CreateHandler=async()=>{
     try {
       setLoading(true);
       const res = await axios.post(`/api/section/new`, {name, serverId});
-    
-      if(res.status===200){
         router.refresh();
         setOpen(false);
-      setLoading(false);
-      }else {
-      setLoading(false);
-      }
-
-      
-      
+        setOpenDialog(false);
+        setLoading(false);
     } catch (error) {
-      setLoading(false);
+        setOpenDialog(false);
+        setLoading(false);
       console.log(error);
     }
   }
 
 
+  const CancelHandler =()=>{
+    setOpen(false);
+    setOpenDialog(false);
+  }
 
   return (
     <>
-        <Dialog open={open || openDialog} onOpenChange={ (openDialog==true || openDialog===false) ? setOpenDialog : setOpen}> 
+        <Dialog open={open} onOpenChange={ setOpen}> 
       <DialogTrigger asChild>
         
         {
@@ -79,7 +80,11 @@ function CreateSection({serverId, openDialog, setOpenDialog, hasPermission}:Prop
         <DialogFooter>
           {
             loading ? <Loader/> : 
-          <Button type="submit" onClick={CreateHandler}>Create</Button>
+          <>
+          <Button type="submit" onClick={CancelHandler}>Cancel</Button>
+          <Button type="submit" className='bg-green-500 text-white hover:bg-green-600' onClick={CreateHandler}>Create</Button>
+          
+          </>
         }
         </DialogFooter>
       </DialogContent>

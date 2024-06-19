@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import axios from 'axios';
 import Loader from '../../Loaders/Loader';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 
 interface ScreenProps {
@@ -49,12 +49,13 @@ function ScreenRecording({setScreenUrl, setScreenName}:ScreenProps) {
     console.log(blobUrl);
     
   }
+  const params = useParams();
   const SubmitHandler =async()=>{
     try {
       setLoading(true);
       const formData = new FormData();
       formData.append('file', blob);
-      const res = await axios.post('/api/upload/video', formData);
+      const res = await axios.post(`/api/upload/video?serverId=${params?.id}`, formData);
       console.log(res);
   
       

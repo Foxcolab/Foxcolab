@@ -12,7 +12,7 @@ export const UserAvatar = ({
 }: UserAvatarProps) => {
   return (
     <Avatar className={cn(
-      "h-7 w-7 md:h-10 md:w-10",
+      "h-8 w-8 md:h-8 md:w-8",
       className
     )}>
       <AvatarImage src={src} />

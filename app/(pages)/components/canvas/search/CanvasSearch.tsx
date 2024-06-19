@@ -26,7 +26,6 @@ function CanvasSearch({sectionId, whoCanCreateNote}:Props) {
     const [search, setSearch] = useState(true);
     const [value, setValue] = useState('');
 
-    console.log("Serach", whoCanCreateNote)
   return (
     <>
     

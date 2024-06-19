@@ -94,11 +94,12 @@ function CreateNote({sectionId}:Props) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    
     {
       note && 
       <CreateNoteContent noteDialog={noteDialog} setNoteDialog={setNoteDialog} note={note}   />
-      // <UpdateNoteContent noteDialog={noteDialog} setNoteDialog={setNoteDialog} note={note} canComment={commenting} canEdit={canEveryoneUpdate} />
-    }
+      }
    
     
     </>

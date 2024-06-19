@@ -16,7 +16,7 @@ import { NextResponse } from "next/server";
 export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
     try {
         const userId =await GetAuth(req);
-        const { messageId, directMessageId, serverId } = req.query;
+        const { messageId, serverId } = req.query;
         const { content,  memberIds } = req.body;
         // console.log()
         if (!userId) {
@@ -56,8 +56,8 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
 
     let conversationIds:string[] = [];
     for(let i=0; i<memberIds.length;i++){
-        const conversationId:object = await getOrCreateConversation(member.id, memberIds[i]);
-
+        const conversationId:any = await getOrCreateConversation(member.id, memberIds[i]);
+        console.log("Conversation::", conversationId);
         console.log("Conversation ID", conversationId?.id);
         conversationIds.push(conversationId?.id);
     }
@@ -73,8 +73,9 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
               content,
               conversationId: conversationId as string,
               memberId: member.id,
+              serverId:serverId as string,
               forwardedMessageId: messageId as string,
-              forwardedDirectMessageId:directMessageId as string
+              // forwardedDirectMessageId:messageId as string
             },
             include: {
               member: {
@@ -82,6 +83,17 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                   user: true,
                 }
               },
+              forwardedMessage:{
+                include:{
+                  member:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  uploadedFiles:true,
+                  channel:true
+                }
+              }
             
             }
           });

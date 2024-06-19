@@ -26,7 +26,7 @@ interface ChatInputProps {
     apiUrl: string;
     query: Record<string, any>;
     name: string;
-    type: "conversation" | "channel" | "forum" | "thread";
+    schemaType: "conversation" | "forum" | "thread" | "Channel" | "DirectMessage";
     setisEditing:any
   }
   const formSchema = z.object({
@@ -36,7 +36,8 @@ interface ChatInputProps {
 const EditMessageEditor = ({apiUrl,
     query,
     name,
-    setisEditing
+    setisEditing,
+    schemaType
   }: ChatInputProps)=> {
     const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,15 +52,28 @@ const EditMessageEditor = ({apiUrl,
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       
-      // const res = await axios.post('/api/upload')
-      const url = qs.stringifyUrl({
-        url: apiUrl,
-        query,
-      });
-      console.log(url);
-      console.log(values)
-      const res = await axios.post(url, values);
-      console.log(res);
+      if(schemaType==="DirectMessage"){
+        const url = qs.stringifyUrl({
+          url: apiUrl,
+          query,
+        });
+        const res = await axios.post(url, values);
+        
+      }else if(schemaType==="Channel"){
+        const url = qs.stringifyUrl({
+          url: apiUrl,
+          query,
+        }); 
+        const res = await axios.post(url, values);
+
+      }else {
+        const url = qs.stringifyUrl({
+          url: apiUrl,
+          query,
+        });
+      }
+      
+  
       form.reset();
       router.refresh();
       setisEditing(false);

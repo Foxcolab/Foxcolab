@@ -248,7 +248,10 @@ const ChannelChat =async({params}:Props)=> {
             }
           }
         }
-      })
+      });
+
+      redirect(`/servers/${params.id}/channels/${channel.id}`)
+
     }
   }
 

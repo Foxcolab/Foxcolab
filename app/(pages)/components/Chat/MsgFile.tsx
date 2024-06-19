@@ -17,57 +17,7 @@ interface Props {
 }
 
 function MsgFile({files, type, length}:Props) {
-    // console.log(files);
-    // function getFileExtension(filename:string) {
-    //     // let data = filename.split('**').pop();
-    //     // // console.log(data);
-    //     // if(data?.includes('application')){
-    //     //     data = data?.slice( data.indexOf('/'));
-    //     // }
-    //     // else if(filename.split('.').pop()===".mp3"){
-    //     //     return "mp3";
-    //     // }
-    //     // else{
-    //     //     data = data?.slice(0, data.indexOf('/'));
-    //     // }
-    //     return filename;
-    // }
-
-    // const fileType = getFileExtension(fileUrl);
-    // console.log(fileType)
-    
-    // const getFileName =(file:string)=>{
-    //     // file = file.replace('https://foxcolab.s3.ap-south-1.amazonaws.com/','')
-    //     // file =file.substring(0, file.indexOf('.'))
-    //     // if(fileType==="image"){
-    //     //     return `${file}.jpg`
-    //     // }
-    //     // else if(fileType==="/pdf"){
-    //     //     return `${file}.pdf`
-    //     // }
-    //     // else if(fileType==="/vnd.ms-powerpoint" || fileUrl.includes('.ppt')){
-    //     //     return `${file}.ppt`
-    //     // }else if(fileType==="/vnd.ms-excel" || fileUrl.includes('.xls')){
-    //     //     return `${file}.xlsx`
-    //     // }else if(fileUrl.includes('.txt')){
-    //     //     return `${file}.txt`
-    //     // }else if(fileUrl.includes('.csv')){
-    //     //     return `${file}.csv`
-    //     // }else if(fileType==="/vnd.ms-word"|| fileType==='/msword'|| fileUrl.includes('docx')){
-    //     //     return `${file}.docx`
-    //     // }
-    //     // return file;
-    // }
-    // const getFileExtension2=(filename:string)=>{
-
-        
-    //     const extension = filename.split('.').pop();
-    //     return extension;
-    // }
-    // const fileType = file.fileType;
-    // const fileUrl:string = file.publicUrl as string;
-    // const fileName = file.name;
-    // console.log("FileUr;",file)
+  
 
     let media:UploadedFile[] = []
     let applications:UploadedFile[] = []
@@ -76,7 +26,9 @@ function MsgFile({files, type, length}:Props) {
         file.type==="image" || file.type==="video" ? 
         media.push(file) :file.type==="audio" ?  audio.push(file) :  applications.push(file)
     })
-
+    const convertSpace = (fileUrl:string)=>{
+        return fileUrl.replace(/ /g,"%20");
+      }
 
 
   return (
@@ -122,9 +74,9 @@ function MsgFile({files, type, length}:Props) {
                     {
           
                         file.type==="image" ? 
-                        <ImageFile fileUrl={file.publicUrl} type={type} fileName={file.name}  /> 
+                        <ImageFile fileUrl={convertSpace(file.publicUrl)} type={type} fileName={file.name}  /> 
                         : file.type==="video" ?
-                         <VideoFile fileUrl={file.publicUrl}  type={type} fileName={file.name} /> :''
+                         <VideoFile fileUrl={convertSpace(file.publicUrl)}  type={type} fileName={file.name} /> :''
                     }
     
                 </>
@@ -143,12 +95,12 @@ function MsgFile({files, type, length}:Props) {
                         //  file.type==="audio" ?
                         //  <Mp3File key={i} fileUrl={file.publicUrl} type={type} /> :
                          file.type==="pdf" ? 
-                        <Pdf fileUrl={file.publicUrl} key={i} length={length} fileName={file.name}  type={type}/>
+                        <Pdf fileUrl={convertSpace(file.publicUrl)} key={i} length={length} fileName={file.name}  type={type}/>
                         :    
                         file.type==="ppt" ? 
-                        <PptViewer fileUrl={file.publicUrl} key={i} length={length} fileName={file.name} type={type} />
+                        <PptViewer fileUrl={convertSpace(file.publicUrl)} key={i} length={length} fileName={file.name} type={type} />
                         :    
-                        <DocFile fileUrl={file.publicUrl} key={i}  fileName={file.name} type={type} fileType={file.type as string} />
+                        <DocFile fileUrl={convertSpace(file.publicUrl)} key={i}  fileName={file.name} type={type} fileType={file.type as string} />
                     }
     
                 </>
@@ -166,7 +118,7 @@ function MsgFile({files, type, length}:Props) {
                 <>
                     {
                          file.type==="audio" ?
-                         <Mp3File key={i} fileUrl={file.publicUrl} type={type} /> : ''
+                         <Mp3File key={i} fileUrl={convertSpace(file.publicUrl)} type={type} /> : ''
                     }
     
                 </>

@@ -281,19 +281,10 @@ function ForumEditor({placeholder, apiUrl, query, whoCanUploadMediaInComment, wh
             </div>
         
 </div>
-          
-            <div className="preview_imsg">
-            {/* {previewUrl && (
-                        <div>
-                            {files.type.startsWith("image/") ?
-                        <div>
-                            <Image  src={previewUrl} alt="upload" height={100} width={100} />
-                        </div> :
-                        <div></div>    
-                        
-                        }
-                        </div>
-                    )} */}
+
+          {
+            (previewUrl.length>0 || screenUrl || videoUrl || audioUrl) && <div className="preview_imsg">
+            
 
             {
               previewUrl.length!==0 && files.length!==0 && previewUrl.map((image, i)=>(
@@ -573,6 +564,9 @@ files[i]?.name.endsWith(".ppt")?
               </div> 
             }
             </div>        
+          }
+          
+            
                     <div className='editor_footer'>
 
           <div className="footer_action">

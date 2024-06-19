@@ -24,7 +24,7 @@ function ResultChart({totalTime, submitTime,startingTime, attempt,isPass, totalQ
     const pt2 = 100-percentage;
   const xValues = ["Obtain Mark", "Full Marks"];
   const yValues = [percentage, 100-percentage];
-  const barColors = ["#ff7100", "white"];
+  const barColors = ["#ff7100", "#f1f5f8"];
   const {resolvedTheme} = useTheme()
 
     useEffect(() => {
@@ -45,7 +45,8 @@ function ResultChart({totalTime, submitTime,startingTime, attempt,isPass, totalQ
                 const fontSize = 30;
                 const fontFamily = 'Arial';
 
-                const fontColor = resolvedTheme==="dark"?'rgb(203 213 225)' : "#484a4d";
+                // const fontColor = resolvedTheme==="dark"?'rgb(203 213 225)' : "#484a4d";
+                const fontColor ="#484a4d";
     
                 ctx.fillStyle = fontColor;
                 ctx.font = `${fontSize}px ${fontFamily}`;
@@ -58,7 +59,8 @@ function ResultChart({totalTime, submitTime,startingTime, attempt,isPass, totalQ
                 const text2 = `${totalRight}/${totalQuestion} p`;
                 const fontSize2 = 18;
                 const fontFamily2 = 'Arial';
-                const fontColor2 =resolvedTheme==="dark"? '#b7c3cc': "#808183";
+                const fontColor2 ="#808183";
+                // const fontColor2 =resolvedTheme==="dark"? '#b7c3cc': "#808183";
       
                 ctx.fillStyle = fontColor2;
                 ctx.font = `${fontSize2}px ${fontFamily2}`;
@@ -84,8 +86,15 @@ function ResultChart({totalTime, submitTime,startingTime, attempt,isPass, totalQ
 
     submitTime = new Date(submitTime);
     startingTime = new Date(startingTime);
+    const time = submitTime.getTime() - startingTime.getTime();
+    const time2 = time / (1000);
+    const taken = (time2/(totalTime*60))*100;
+    console.log(taken);
+
     const gethhmm = startingTime.getHours() + ":" + startingTime.getMinutes();
     const endhhmm = submitTime.getHours() + ":" + submitTime.getMinutes();
+
+
 
     // diference 
 
@@ -195,20 +204,20 @@ const formattedDate = `${formattedDay}-${formattedMonth}-${year}`;
         </div>
         <div className="respondent response_chart">
             <label htmlFor="">TIMER</label>
-            <div className='flex items-center font-bold text-xl gap-1 py-3 '><FaClock/>Total Time</div>
-            <div className='text-lg font-semibold'>{diff} / 
-            <span className='text-gray-400'> {convertMinutesToHoursMinutesSeconds(totalTime)}</span> </div>
+            <div className='flex items-center font-bold text-xl gap-1 py-3 text-[1.3rem]'><FaClock/>Total Time</div>
+            <div className='text-[1.3rem] font-semibold'>{diff} &nbsp;
+            <span className='text-[#808E9D] text-[1.3rem]'>/&nbsp;{convertMinutesToHoursMinutesSeconds(totalTime)}</span> </div>
             <div className='mt-4'>
-            <Progress color='red' className='progress_bar' value={33} />
+            <Progress  className='progress_bar' value={taken} />
             </div>
-            <div className='flex w-full mt-4'>
+            <div className='flex w-full mt-4 text-[15px]'>
             <div className='w-1/2'>
-                <div className='pb-2'>Start Time: {gethhmm}</div>
-                <div>End Time: {endhhmm}</div>
+                <div className='pb-2'><span className='text-[#808E9D]'>Start Time:</span> <span className='text-[#0F2830]'>{gethhmm}</span></div>
+                <div><span className='text-[#808E9D]'>End Time: </span><span className='text-[#0F2830]'>{endhhmm}</span></div>
             </div>
             <div className='w-1/2'>
-                <div className='pb-2'>Attempts: {attempt} </div>
-                <div>Date: {formattedDate}</div>
+                <div className='pb-2'><span className='text-[#808E9D]'>Attempts:</span> <span className='text-[#0F2830]'>{attempt}</span> </div>
+                <div><span className='text-[#808E9D]'>Date:</span> <span className='text-[#0F2830]'>{formattedDate}</span></div>
             </div>
             </div>
 

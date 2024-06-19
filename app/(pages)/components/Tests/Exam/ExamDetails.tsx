@@ -50,7 +50,7 @@ function ExamDetails({test}:{test:Test}) {
         </div>
         <div className='exam_con_right w-1/2 h-full flex flex-col'>
             
-            <div className=' flex-1 overflow-scroll ex_c_container'>
+            <div className=' flex-1  ex_c_container '>
                 <p>INSTRUCTIONS</p>
                 <div className="single_ins">
                     <div className='ins_icon'><IoTime/></div>

@@ -165,7 +165,8 @@ export const getServer =async(serverId:string, userId:string)=>{
                     include:{
                       user:true
                     }
-                  }
+                  },
+                  uploadedFiles:true
                 },
                 orderBy:{
                   updatedAt:"desc"

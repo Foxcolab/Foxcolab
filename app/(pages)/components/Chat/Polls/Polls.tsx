@@ -51,19 +51,18 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
     const [voteDialog, setVoteDialog] = useState(false);
     // const [votingPercentage, setVotingPercentage] = useState([]);
 
-  console.log(poll);
+  
 
     useEffect(()=>{
         for(let i=0; i<poll?.votes.length; i++){
             if(poll?.votes[i].createdBy===currentMember.id){
                 setMyVotes(poll.votes[i].vote);
                 setVoteId(poll.votes[i].id);
-                console.log(myVotes);
+                // console.log(myVotes);
             }
         }
-    }, [poll])
+    }, [poll, currentMember])
 
-    console.log(myVotes)
 
     const VoteHandler =async()=>{
         try {
@@ -121,7 +120,7 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
 
             setLoading(true);
             if(schemaType==="DirectMessage"){
-              const res = await axios.put(`/api/socket/direct-messages/polls/vote/update?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}&voteId=${voteId}`, {votes});
+              const res = await axios.put(`/api/socket/direct-messages/poll/vote/update?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}&voteId=${voteId}`, {votes});
             }else {
               const res = await axios.put(`/api/socket/messages/polls/vote/update?serverId=${poll.serverId}&pollId=${poll.id}&messageId=${id}&voteId=${voteId}`, {votes});
 
@@ -133,7 +132,8 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
             console.log(error);
         }
     }
-
+    
+    
     let isVoted = false;
     for(let i=0; i<poll?.votes.length; i++){
         if(poll?.votes[i].createdBy===currentMember.id){
@@ -160,6 +160,14 @@ function Polls({id, poll,member, timestamp, deleted, currentMember, socketQuery,
     for(let i=0; i<votingPercentage.length; i++){
         if(votingPercentage[i]!==0 && poll.votes.length!==0){
             votingPercentage[i] = (votingPercentage[i]/poll.votes.length)*100;
+            let removeDec = Math.trunc(votingPercentage[i]);
+            let diff = Number(votingPercentage[i] - removeDec).toFixed(2);
+            if(diff=='0.00' || diff=='0' || diff=='0.00'){
+               votingPercentage[i] = votingPercentage[i];
+            }else {
+              votingPercentage[i] = removeDec + Number(diff);
+            }
+
         }
         
     }
@@ -275,7 +283,7 @@ if(cp<0){
   return <span className="flex items-center"><GoDotFill/> Due in {text}</span>;
 }
 
-// console.log(mySavedPost, )
+
 
   return (
     <>

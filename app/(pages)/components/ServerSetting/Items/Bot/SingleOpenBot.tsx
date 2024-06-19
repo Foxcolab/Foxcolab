@@ -76,9 +76,10 @@ function SingleOpenBot({open, setOpen, botResponse}:Props) {
             </div>
             <div className="mt-4">
                 {
-                    botResponse.responseFileUrl.map((fileUrl, i)=>(
-                        <MsgFile fileUrl={fileUrl} key={i} length={botResponse.responseFileUrl.length} type="" />
-                    ))
+                  botResponse.uploadedFiles.length>0 && 
+                  <MsgFile files={botResponse.uploadedFiles}  length={botResponse.uploadedFiles.length} type="" />
+
+                  
                 }
             </div>
            </div>

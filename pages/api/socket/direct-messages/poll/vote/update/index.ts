@@ -42,7 +42,7 @@ export const PUT =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
         const PollVotes = await db.pollVote.findFirst({
             where:{
                 id:voteId as string,
-                messageId:messageId as string,
+                directMessageId:messageId as string,
                 pollId:pollId as string
                 
             }
@@ -62,7 +62,7 @@ export const PUT =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
             }
         });
         if(!message) return res.status(401).json({ error: "Message not found" }); 
-
+        // console.log("Direct Message", message);
         const updatedMessage = await db.directMessage.update({
             where:{
                 id:messageId as string,

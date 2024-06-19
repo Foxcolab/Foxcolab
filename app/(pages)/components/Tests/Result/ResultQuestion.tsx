@@ -24,9 +24,9 @@ function ResultQuestion({responses, index, expand, question}:Props) {
         <button onClick={()=>setExpand(!sexpand)}>
         <div className='qs_upper'>
             <div className='flex items-center gap-1'>
-            <span>q. {index+1} </span>
+            <span className='font-semibold flex items-center '><span>Q. </span> <span>{index+1} </span></span>
             {
-                !sexpand && <span className='text-left flex items-center gap-1 '>|<div dangerouslySetInnerHTML={{__html: question.title}}/></span>
+                !sexpand && <span className='text-left flex items-center gap-1 font-[400]'> <span className='text-[#e2ecf1]'>|</span> <div dangerouslySetInnerHTML={{__html: question.title}}/></span>
             }
             </div>
             <span className='d-flex gap-2'>
@@ -54,8 +54,8 @@ function ResultQuestion({responses, index, expand, question}:Props) {
                 ))}
             </div>
             <div className='p-2 my-4'>
-                <div className='font-semibold'>Explanation:</div>
-                <div className='pt-2'><div dangerouslySetInnerHTML={{__html: question.explanation as string}}/></div>
+                <div className='font-semibold text-[#204d68]'>Explanation:</div>
+                <div className='pt-2 text-[#6c828f]'><div dangerouslySetInnerHTML={{__html: question.explanation as string}}/></div>
             </div>
         </div>
         }

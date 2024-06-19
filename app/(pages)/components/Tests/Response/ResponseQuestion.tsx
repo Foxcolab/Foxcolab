@@ -17,32 +17,56 @@ interface Props {
     ChangeQuestion:any
     length: number
     questions:Question[]
-    setMarked:any
+    // marked:string[]
+    // setMarked:any
     loading:boolean 
-    answered:Response[]
-    marked:string[]
     cleared:boolean
     setCleared:any
-    remainingTime:any
+    createdAt:any
     submitting:boolean
     submitTest:any
     SubmitTestDBHandler:any
+    answered:any
+
 }
-function ResponseQuestion({question, qIndex, test, NextQuestion, PrevQuestion, ChangeQuestion, length, questions, setMarked, loading, answered, marked, cleared, setCleared, remainingTime, submitting, submitTest, SubmitTestDBHandler}:Props) {
+function ResponseQuestion({question, qIndex, test, NextQuestion, PrevQuestion, ChangeQuestion, length, questions, loading, cleared, setCleared, createdAt, submitting, submitTest, SubmitTestDBHandler, answered}:Props) {
   // setMarked(answered.find((ans)=>ans.questionId===question.id ? answ));
-  const [answer, setAnswer] = useState<string[]>([]);
+  // const [answer, setAnswer] = useState<any[]>(marked);
+    const [marked, setMarked] = useState([]);
 
-  useEffect(()=>{
-    if(answered.length!==0 && loading==false && cleared===false){
-      for(let i=0; i<answered.length; i++){
-        if(answered[i].questionId===question.id){
-          setMarked(answered[i].answer);
-          setAnswer(answered[i].answer);
+    useEffect(()=>{
+      if(answered!==null){
+            if(answered?.length!==0 && loading==false && cleared===false){
+                for(let i=0; i<answered?.length; i++){
+                  if(answered[i].questionId===questions[qIndex].id){
+                    setMarked(answered[i]?.answer);
+                    // setAnswer(answered[i].answer);
+                    break;
+                  }
+                //   setAnswer([]);
+                  setMarked([]);
+                }
+              }
         }
-      }
-    }
-  }, [NextQuestion, PrevQuestion, ChangeQuestion]);
+    },[question, answered])
 
+
+//   if(answered!==null){
+//     if(answered?.length!==0 && loading==false && cleared===false){
+//         for(let i=0; i<answered?.length; i++){
+//           if(answered[i].questionId===questions[qIndex].id){
+//             console.log("Match question::", answered[i])
+//             setMarked(answered[i]?.answer);
+//             // setAnswer(answered[i].answer);
+//             console.log("Checking..", i, answered.length);
+//             break;
+//           }
+//           console.log("Not Found!!!");
+//         //   setAnswer([]);
+//           setMarked([]);
+//         }
+//       }
+// }
   
   const SubmitHandler =()=>{}
  
@@ -55,7 +79,6 @@ function ResponseQuestion({question, qIndex, test, NextQuestion, PrevQuestion, C
       let cb = document.querySelector('.radio:checked');
       if(cb===null)return;
       setMarked([cb.value]);
-      setAnswer([cb.value]);
     }else {
       let cb = document.querySelectorAll('input[type="checkbox"]:checked');
       const chek = []
@@ -65,8 +88,12 @@ function ResponseQuestion({question, qIndex, test, NextQuestion, PrevQuestion, C
         }
       }
       setMarked(chek);
-      setAnswer(chek);
+      // setAnswer(chek);
     }
+
+
+
+
   }
 
   
@@ -75,17 +102,16 @@ function ResponseQuestion({question, qIndex, test, NextQuestion, PrevQuestion, C
 
 
   const isChecked =(value:string)=>{
-    return answer.includes(value);
+    return marked.includes(value);
   }
 
-  const SubmitTestHandler =async(ans:string[])=>{
-    await savedToDB();
-    await submitTest();
+ 
 
-
-  }
-
-
+  // console.log("Marked:", marked);
+  // console.log("Answer:", answer);
+  // console.log("Answered:", answered);
+  // console.log(question.id);
+  console.log(answered);
 
   return (
     <>
@@ -101,7 +127,7 @@ function ResponseQuestion({question, qIndex, test, NextQuestion, PrevQuestion, C
     questionId={question.id}
     title={question.title}
     time={test.time}
-    remainingTime={remainingTime}
+    createdAt={createdAt}
     options={question.options}
     OnChangeHandler={OnChangeHandler}
     isChecked={isChecked}
@@ -115,10 +141,8 @@ function ResponseQuestion({question, qIndex, test, NextQuestion, PrevQuestion, C
     loading={loading}
     questions={questions}
     marked={marked}
-    // setMarked={setMarked}
-    setAnswer={setAnswer}
-    answer={answer}
-    answered={answered}
+    // setAnswer={setAnswer}
+    // answer={answer}
     setCleared={setCleared}
     submitting={submitting}
     submitTest={submitTest}

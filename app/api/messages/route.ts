@@ -43,7 +43,15 @@ export async function GET(
           // }
         },
         include: {
-          uploadedFiles:true,
+          uploadedFiles:{
+            include:{
+              createdMember:{
+                include:{
+                  user:true
+                }
+              }
+            }
+          },
           poll:{
             include:{
               createdMember:{
@@ -112,7 +120,16 @@ export async function GET(
                   user:true
                 }
               },
-              channel:true
+              channel:true,
+              uploadedFiles:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
             },
             
           }
@@ -131,7 +148,15 @@ export async function GET(
           // }
         },
         include: {
-          uploadedFiles:true,
+          uploadedFiles:{
+            include:{
+              createdMember:{
+                include:{
+                  user:true
+                }
+              }
+            }
+          },
           poll:{
             include:{
               createdMember:{
@@ -208,7 +233,17 @@ export async function GET(
                   user:true
                 }
               },
-              channel:true
+              channel:true,
+              uploadedFiles:{
+                include:{
+                  createdMember:{
+                    include:{
+                      user:true
+                    }
+                  }
+                }
+              }
+
             }
           }
         },

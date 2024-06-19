@@ -22,7 +22,6 @@ function TestChannelContainer({tests, sectionId, attemptedTests, whoCanCreateTes
     const activatedTest = tests && tests.filter(test=>test.activated)
 
     const HandlerChange =(e:any)=>{
-      console.log(e)
       if(e===false){
         setTestsType("My Tests");
       }else {

@@ -12,10 +12,22 @@ export const POST = async(req:NextRequest)=>{
         const testId = req.nextUrl.searchParams.get('testId');
         const resultId = req.nextUrl.searchParams.get('resultId');
         const questionId = req.nextUrl.searchParams.get('questionId');
+
+        if(!serverId) return NextResponse.json({
+            error:"Server Id is missing"
+        }, {status:409});
+        if(!testId) return NextResponse.json({
+            error:"Test Id is missing"
+        }, {status:409});
+        if(!resultId) return NextResponse.json({
+            error:"Result Id is missing"
+        }, {status:409});
+        if(!questionId) return NextResponse.json({
+            error:"Question Id is missing"
+        }, {status:409});
+
         const reqBody = await req.json();
         const {answer, currentState} = reqBody;
-        console.log("ANSSSS", answer, currentState);
-        // console.log(questionId, serverId, testId, resultId)
         
         const member = await db.member.findFirst({
             where:{
@@ -166,18 +178,21 @@ export const POST = async(req:NextRequest)=>{
                         }
                     }
                 },
-                include:{
-                    response:true
-                }
             });
         }
 
 
-
+        const resultResponse = await db.response.findMany({
+            where:{
+                resultId:resultId,
+                createdBy:member.id
+            }
+        })
+        
 
         return NextResponse.json({
             success:true,
-            Responses:result.response
+            Responses:resultResponse
         }, {status:200});
 
     } catch (error) {

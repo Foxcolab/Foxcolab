@@ -55,6 +55,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import AutoLinks from 'quill-auto-links';
+
+Quill.register('modules/autoLinks', AutoLinks);
 
 
 interface ChatInputProps {
@@ -128,7 +131,7 @@ const EditorFooter = ({apiUrl,
 
     const reactQuillRef = useRef(null);
 
-    console.log("Drafts::", drafts);
+    
     
 
     const router = useRouter();
@@ -457,7 +460,8 @@ const modules2 = {
       ['blockquote'],['code-block'],
       ['clean']
     ],
-    mention:  mentionModule
+    mention:  mentionModule,
+    autoLinks: true
     // mention:mentionModule
   }
 
@@ -532,283 +536,291 @@ const modules2 = {
        
 </div>
          
-           <div className="preview_imsg">
+         {
+            (previewUrl.length>0 || audioUrl || screenUrl || videoUrl ) && 
+            <div className="preview_imsg">
           
 
-           {
-             previewUrl.length!==0 && files.length!==0 && previewUrl.map((image, i)=>(
-               <div key={i}>
-                 <div >
-                           {files[i]?.type.startsWith("image/") ?
+            {
+              previewUrl.length!==0 && 
+              
+              
+              
+              files.length!==0 && previewUrl.map((image, i)=>(
+                <div key={i}>
+                  <div >
+                            {files[i]?.type.startsWith("image/") ?
+                        <div className="upload_img">
+                         <div className="upld_img_opt">
+                          {
+                            uploading ? 
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
+                          
+                        </div>
+                          <div className="upload_img_container">
+                          <Image  src={image} alt="upload" height={100} width={100} />
+                          </div>
+ 
+                            
+                        </div> :
+                       files[i]?.type.startsWith("video/")?
                        <div className="upload_img">
-                        <div className="upld_img_opt">
-                         {
-                           uploading ? 
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
-                         
-                       </div>
-                         <div className="upload_img_container">
-                         <Image  src={image} alt="upload" height={100} width={100} />
+                        <div>
+                          {
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
+                          
+                        </div>
+                       
+                         <video  src={image} height={100} width={100} />
+                     </div>  : 
+                    files[i]?.type==="application/pdf" ?
+                     <div className="upload_application">
+                      <div className="application_cross">
+                      {
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
+                        </div>
+                        <div className="doc_thumbnail doc_thumbnail_width">
+                         <div className="doc_thum_icon">
+                         <FaRegFilePdf/> 
                          </div>
-
-                           
-                       </div> :
-                      files[i]?.type.startsWith("video/")?
-                      <div className="upload_img">
-                       <div>
-                         {
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
-                         
-                       </div>
-                      
-                        <video  src={image} height={100} width={100} />
-                    </div>  : 
-                   files[i]?.type==="application/pdf" ?
-                    <div className="upload_application">
+                         <div className="doc_thum_nm">
+                          <div className="extn">{files[i].name}</div>
+                          <div >PDF</div>
+                          
+                         </div>
+                        </div>
+                     </div> 
+                     
+                     : 
+ 
+                     files[i]?.type==="application/zip" ? 
+                    
+                     <div className="upload_application">
                      <div className="application_cross">
                      {
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
                        </div>
                        <div className="doc_thumbnail doc_thumbnail_width">
-                        <div className="doc_thum_icon">
-                        <FaRegFilePdf/> 
+                        <div className="doc_icon bg-yellow-500">
+                        <FaRegFileZipper/> 
                         </div>
                         <div className="doc_thum_nm">
                          <div className="extn">{files[i].name}</div>
-                         <div >PDF</div>
+                         <div >Zip</div>
                          
                         </div>
                        </div>
-                    </div> 
+                    </div>                      
+                     
+                     
+                     
+                     : 
+                     
+                     
+                     files[i]?.name.endsWith(".docx") || files[i]?.name.endsWith(".doc") ? 
                     
-                    : 
-
-                    files[i]?.type==="application/zip" ? 
-                   
-                    <div className="upload_application">
-                    <div className="application_cross">
-                    {
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
-                      </div>
-                      <div className="doc_thumbnail doc_thumbnail_width">
-                       <div className="doc_icon bg-yellow-500">
-                       <FaRegFileZipper/> 
+                     <div className="upload_application">
+                     <div className="application_cross">
+                     {
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
                        </div>
-                       <div className="doc_thum_nm">
-                        <div className="extn">{files[i].name}</div>
-                        <div >Zip</div>
-                        
+                       <div className="doc_thumbnail doc_thumbnail_width">
+                        <div className="doc_icon bg-green-700">
+                        <BsFiletypeDocx/> 
+                        </div>
+                        <div className="doc_thum_nm">
+                         <div className="extn">{files[i].name}</div>
+                         <div >Word</div>
+                         
+                        </div>
                        </div>
-                      </div>
-                   </div>                      
+                    </div>                      
+                     
+                     
+                     
+                     : 
+                     files[i]?.name.endsWith(".xls") || files[i]?.name.endsWith(".xlsx") ? 
                     
-                    
-                    
-                    : 
-                    
-                    
-                    files[i]?.name.endsWith(".docx") || files[i]?.name.endsWith(".doc") ? 
-                   
-                    <div className="upload_application">
-                    <div className="application_cross">
-                    {
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
-                      </div>
-                      <div className="doc_thumbnail doc_thumbnail_width">
-                       <div className="doc_icon bg-green-700">
-                       <BsFiletypeDocx/> 
+                     <div className="upload_application">
+                     <div className="application_cross">
+                     {
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
                        </div>
-                       <div className="doc_thum_nm">
-                        <div className="extn">{files[i].name}</div>
-                        <div >Word</div>
-                        
+                       <div className="doc_thumbnail doc_thumbnail_width">
+                        <div className="doc_icon bg-violet-700">
+                        <BsFiletypeXlsx/> 
+                        </div>
+                        <div className="doc_thum_nm">
+                         <div className="extn">{files[i].name}</div>
+                         <div >Excel</div>
+                         
+                        </div>
                        </div>
-                      </div>
-                   </div>                      
+                    </div> : 
+                          files[i]?.name.endsWith(".csv")? 
                     
-                    
-                    
-                    : 
-                    files[i]?.name.endsWith(".xls") || files[i]?.name.endsWith(".xlsx") ? 
-                   
-                    <div className="upload_application">
-                    <div className="application_cross">
-                    {
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
-                      </div>
-                      <div className="doc_thumbnail doc_thumbnail_width">
-                       <div className="doc_icon bg-violet-700">
-                       <BsFiletypeXlsx/> 
-                       </div>
-                       <div className="doc_thum_nm">
-                        <div className="extn">{files[i].name}</div>
-                        <div >Excel</div>
-                        
-                       </div>
-                      </div>
-                   </div> : 
-                         files[i]?.name.endsWith(".csv")? 
-                   
-                         <div className="upload_application">
-                         <div className="application_cross">
-                         {
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
-                           </div>
-                           <div className="doc_thumbnail doc_thumbnail_width">
-                            <div className="doc_icon bg-yellow-700">
-                            <GrDocumentCsv/> 
+                          <div className="upload_application">
+                          <div className="application_cross">
+                          {
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
                             </div>
-                            <div className="doc_thum_nm">
-                             <div className="extn">{files[i].name}</div>
-                             <div >CSV</div>
-                             
+                            <div className="doc_thumbnail doc_thumbnail_width">
+                             <div className="doc_icon bg-yellow-700">
+                             <GrDocumentCsv/> 
+                             </div>
+                             <div className="doc_thum_nm">
+                              <div className="extn">{files[i].name}</div>
+                              <div >CSV</div>
+                              
+                             </div>
                             </div>
-                           </div>
-                        </div> :
-                         files[i]?.name.endsWith(".txt")? 
-                   
-                         <div className="upload_application">
-                         <div className="application_cross">
-                         {
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
-                           </div>
-                           <div className="doc_thumbnail doc_thumbnail_width">
-                            <div className="doc_icon bg-pink-700">
-                            <BsFiletypeTxt/> 
+                         </div> :
+                          files[i]?.name.endsWith(".txt")? 
+                    
+                          <div className="upload_application">
+                          <div className="application_cross">
+                          {
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
                             </div>
-                            <div className="doc_thum_nm">
-                             <div className="extn">{files[i].name}</div>
-                             <div >txt</div>
-                             
+                            <div className="doc_thumbnail doc_thumbnail_width">
+                             <div className="doc_icon bg-pink-700">
+                             <BsFiletypeTxt/> 
+                             </div>
+                             <div className="doc_thum_nm">
+                              <div className="extn">{files[i].name}</div>
+                              <div >txt</div>
+                              
+                             </div>
                             </div>
-                           </div>
-                        </div> :
-
-files[i]?.name.endsWith(".ppt")? 
-                   
-<div className="upload_application">
-<div className="application_cross">
-{
-                           uploading ? 
-                           
-                           <button disabled className=''>
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
-                           </button> 
-                           : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
-                         }
- </div>
- <div className="doc_thumbnail doc_thumbnail_width">
-  <div className="doc_icon bg-orange-700">
-  <BsFileEarmarkPptFill/> 
+                         </div> :
+ 
+ files[i]?.name.endsWith(".ppt")? 
+                    
+ <div className="upload_application">
+ <div className="application_cross">
+ {
+                            uploading ? 
+                            
+                            <button disabled className=''>
+                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin " />
+                            </button> 
+                            : <button onClick={()=>RemoveImage(i)}><RxCross2  /></button>
+                          }
   </div>
-  <div className="doc_thum_nm">
-   <div className="extn">{files[i].name}</div>
-   <div >PPT</div>
-   
+  <div className="doc_thumbnail doc_thumbnail_width">
+   <div className="doc_icon bg-orange-700">
+   <BsFileEarmarkPptFill/> 
+   </div>
+   <div className="doc_thum_nm">
+    <div className="extn">{files[i].name}</div>
+    <div >PPT</div>
+    
+   </div>
+  </div>
+ </div> :
+ 
+ 
+                     ''
+ 
+                        
+                        }
+                        </div>
+                </div>
+              ))
+            }
+            {
+              audioUrl && 
+              <div className="upload_application">
+ <div className="application_cross">
+    
+    <button onClick={()=>setAudioUrl(null)} className="cross_btn"><RxCross2  /></button>
+  </div>
+  <div className="doc_thumbnail doc_thumbnail_width">
+   <div className="doc_icon bg-orange-700">
+   <BsRecordCircleFill/> 
+   </div>
+   <div className="doc_thum_nm">
+    <div className="extn">{audioName}</div>
+    <div >wav</div>
+    
+   </div>
   </div>
  </div>
-</div> :
-
-
-                    ''
-
-                       
-                       }
-                       </div>
+            }
+ 
+            {
+              screenUrl &&
+              <div className="upload_img">
+               <div>
+                   
+                   
+                 <button onClick={()=>setScreenUrl(null)}><RxCross2  /></button>
                </div>
-             ))
-           }
-           {
-             audioUrl && 
-             <div className="upload_application">
-<div className="application_cross">
-   
-   <button onClick={()=>setAudioUrl(null)} className="cross_btn"><RxCross2  /></button>
- </div>
- <div className="doc_thumbnail doc_thumbnail_width">
-  <div className="doc_icon bg-orange-700">
-  <BsRecordCircleFill/> 
-  </div>
-  <div className="doc_thum_nm">
-   <div className="extn">{audioName}</div>
-   <div >wav</div>
-   
-  </div>
- </div>
-</div>
-           }
-
-           {
-             screenUrl &&
-             <div className="upload_img">
-              <div>
-                  
-                  
-                <button onClick={()=>setScreenUrl(null)}><RxCross2  /></button>
-              </div>
-             
-               <video  src={screenUrl} height={100} width={100} />
-             </div> 
-           }
-     {
-             videoUrl &&
-             <div className="upload_img">
-              <div>
-                  
-                  
-                <button onClick={()=>setVideoUrl(null)}><RxCross2  /></button>
-              </div>
-             
-               <video  src={videoUrl} height={100} width={100} />
-             </div> 
-           }
-           </div>        
+              
+                <video  src={screenUrl} height={100} width={100} />
+              </div> 
+            }
+      {
+              videoUrl &&
+              <div className="upload_img">
+               <div>
+                   
+                   
+                 <button onClick={()=>setVideoUrl(null)}><RxCross2  /></button>
+               </div>
+              
+                <video  src={videoUrl} height={100} width={100} />
+              </div> 
+            }
+            </div> 
+         }
+                 
                    <div className='editor_footer'>
 
          <div className="footer_action">

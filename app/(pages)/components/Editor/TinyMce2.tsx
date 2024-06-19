@@ -28,13 +28,14 @@ const TinyMce2 = ({setTitle, defaultValue, placeholder}:Props)=> {
     <Editor
         
         onEditorChange={(e)=>setTitle(e)}
-        initialValue={content}
+        value={content}
         
         // value={content}
         apiKey='yyyncy8o4zxczahnhs5n0tz3ha0h7cvmrdg8jcap53vuu6wj'
          init={{
           menubar: false,
           selector: 'textarea',
+          directionality: "ltr",
           a_plugin_option: false,
           placeholder: placeholder,
           statusbar:false,

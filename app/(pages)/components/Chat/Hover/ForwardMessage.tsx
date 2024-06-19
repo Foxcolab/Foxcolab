@@ -37,37 +37,14 @@ const DATE_FORMAT = "d MMM yyyy, HH:mm";
 interface ForwardProps {
     open:boolean
     setOpen:any
-    apiUrl:string,
-    query:any,
-    type:string,    
     message:Message,
     myChannels:Channel[]
     allServerMember:Member[]
+    schemaType:"Channel" | "Threads" | "DirectMessage"
+
 }
 
-const frameworks = [
-    {
-      value: "next.js",
-      label: "Next.js",
-    },
-    {
-      value: "sveltekit",
-      label: "SvelteKit",
-    },
-    {
-      value: "nuxt.js",
-      label: "Nuxt.js",
-    },
-    {
-      value: "remix",
-      label: "Remix",
-    },
-    {
-      value: "astro",
-      label: "Astro",
-    },
-  ]
-function ForwardMessage({open, setOpen, message, myChannels, allServerMember}:ForwardProps) {
+function ForwardMessage({open, setOpen, message, myChannels, allServerMember, schemaType}:ForwardProps) {
     const [search, setSearch] = React.useState(false)
     const [selectedChannel, setSelectedChannel] = useState([]);
     const [selectedMember, setSelectedMember] = useState([]);
@@ -80,13 +57,19 @@ function ForwardMessage({open, setOpen, message, myChannels, allServerMember}:Fo
     const SubmitHandler =async()=>{
       try {
         setLoading(true);
-        // const res  = axios.post(`/api/socket/messages/forward?messageId=${message.id}&serverId=${params?.id}`, {content, channelIds:selectedChannel});
-        if(selectedChannel.length!==0){
-          await axios.post(`/api/socket/messages/forward?messageId=${message.id}&serverId=${params?.id}`, {content, channelIds:selectedChannel});
+        if(schemaType==="DirectMessage"){
+          if(selectedMember.length!==0){
+            await axios.post(`/api/socket/direct-messages/forward?messageId=${message.id}&serverId=${params?.id}`, {content, memberIds:selectedMember});
         }
-        if(selectedMember.length!==0){
-          await axios.post(`/api/socket/messages/forward/dm?messageId=${message.id}&serverId=${params?.id}`, {content, memberIds:selectedMember});
-      }
+        }else {
+          if(selectedChannel.length!==0){
+            await axios.post(`/api/socket/messages/forward?messageId=${message.id}&serverId=${params?.id}`, {content, channelIds:selectedChannel});
+          }
+          if(selectedMember.length!==0){
+            await axios.post(`/api/socket/messages/forward/dm?messageId=${message.id}&serverId=${params?.id}`, {content, memberIds:selectedMember});
+        }
+        }
+        
         router.refresh()
         setLoading(false);
       } catch (error) {
@@ -95,25 +78,24 @@ function ForwardMessage({open, setOpen, message, myChannels, allServerMember}:Fo
       }
     }
 
+    console.log("Checking Undefined:::", message.fileUrl, message.fileUrl.length);
+
   return (
     <>
     
-    <Dialog open={open} onOpenChange={setOpen}>
-      {/* <DialogTrigger asChild className='dpdn_it'>
-      <button className=''><RiShareForwardFill /> Forward</button>
-      </DialogTrigger> */}
+    {
+      message &&  <Dialog open={open} onOpenChange={setOpen}>
+      
       <DialogContent className="sm:max-w-[625px] my-4 py-4 forward_container">
         <DialogHeader className='mt-2'>
           <DialogTitle className='flex items-center gap-2'><RiShareForwardFill /> Forward Message</DialogTitle>
         </DialogHeader>
         <div className='my-4' style={{overflow:"scroll"}}>
            <div className='px-4 py-3 outline-none'>
-           {/* <Input className='bg-[#222f3e] text-white focus:outline-none focus:border' placeholder='Search of channel or person' /> */}
-
+          
            <Dialog open={search} onOpenChange={setSearch}>
             <div className='forward_input_div'>
             <DialogTrigger asChild className=''>
-          {/* <Input className='bg-[#222f3e] text-white focus:outline-none focus:border' placeholder='Search of channel or person' /> */}
           <button>
             {
               titles.length===0 && memberName.length===0 ? <>select a channel or person</> :
@@ -240,18 +222,21 @@ function ForwardMessage({open, setOpen, message, myChannels, allServerMember}:Fo
      
       
     <div className="w-full mt-2">
-              {message.fileUrl?.length!==0 && 
-              
-              message.fileUrl.map((file, i)=>(
-                <div key={i} className='px-4'>
-                {/* {file} */}
-                {/* <MsgFile fileUrl={file} key={i} length={pinned.message.fileUrl.length} type="msgFile" /> */}
-                <SingleMsgFile fileUrl={file} />
 
-                </div>
-              ))
-              
-              }
+               
+
+                
+                {
+                  message.uploadedFiles.length>0 &&
+                  <>
+                  {
+                   message.uploadedFiles &&  message.uploadedFiles.map((uploaded, i)=>(
+                      <SingleMsgFile key={i} file={uploaded} />
+                    ))
+                  }
+
+                  </> 
+                }
             </div>
             </div>
             </div>
@@ -269,13 +254,14 @@ function ForwardMessage({open, setOpen, message, myChannels, allServerMember}:Fo
         <DialogFooter className='mb-2'>
           {
             loading? <Loader/> : <>
-            <Button onClick={() => setOpen(false)} className='text-gray-700' variant={"outline"} autoFocus={false}>Cancel</Button>
+            <Button onClick={() => setOpen(false)} className='' variant={"outline"} autoFocus={false}>Cancel</Button>
           
-          <Button type="submit" className='bg-green-600 hover:bg-green-700 px-4' autoFocus={false} onClick={SubmitHandler}>Send </Button></>
+          <Button type="submit" className='bg-green-600 text-white hover:bg-green-700 px-4' autoFocus={false} onClick={SubmitHandler}>Send </Button></>
           }
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    }
     
     
     

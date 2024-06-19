@@ -207,20 +207,27 @@ PinnedPosts && PinnedPosts.forEach(p => {
 
 let isSavedPost=false;
 let savedPost;
-
 mySavedPost && mySavedPost.forEach(p => {
   if(schemaType==="Threads"){
     if(p.threadId===message.id){
       isSavedPost=true;
       savedPost=p;
     }
-  }else {
+  }else if(schemaType==="DirectMessage"){
+    if(p.directMessageId===message.id){
+      isSavedPost=true;
+      savedPost=p;
+    }
+  }
+  else {
     if(p.messageId===message.id){
       isSavedPost=true;
       savedPost=p;
     }
   }
   })
+
+
 
 
   const CalcTime =(dt:any)=>{
@@ -258,7 +265,7 @@ mySavedPost && mySavedPost.forEach(p => {
   }
 
 
-    
+    console.log("Message::", message);
 
 
   return (
@@ -318,7 +325,7 @@ mySavedPost && mySavedPost.forEach(p => {
             {
               schemaType==="Threads" ?<EditMessageEditor  
               name={content}
-              type="thread"
+              schemaType="thread"
               apiUrl={`/api/socket/threads/update/${message.id}`}
             
               query={{
@@ -328,10 +335,24 @@ mySavedPost && mySavedPost.forEach(p => {
               }}
               setisEditing={setIsEditing}
               
-              /> :
-              <EditMessageEditor  
+              />
+              
+
+              
+               :
+              schemaType==="DirectMessage" ? 
+            <EditMessageEditor  
             name={content}
-            type="channel"
+            schemaType={"DirectMessage"}
+            apiUrl={`/api/socket/direct-messages/update/${message.id}`}
+            query={socketQuery}
+            setisEditing={setIsEditing}
+            
+            />
+            :
+         <EditMessageEditor  
+            name={content}
+            schemaType={"Channel"}
             apiUrl={`/api/socket/messages/update/${message.id}`}
             query={{
               channelId: message.channelId,
@@ -364,6 +385,7 @@ mySavedPost && mySavedPost.forEach(p => {
               )}
             </p>
 
+              {/* Forwarded Message  */}
 
             {
               message.forwardedMessageId &&           
@@ -416,8 +438,13 @@ mySavedPost && mySavedPost.forEach(p => {
               </div>
               </div>
               <div className="">
-             {
-              fileUrl.length>0 &&  <MsgFile files={fileUrl} />
+                {
+              message?.forwardedMessage.uploadedFiles.length>0 && 
+              
+              <div className="all_imgs">
+             <MsgFile files={message?.forwardedMessage.uploadedFiles}  />
+              
+            </div>  
              }
             
 
@@ -426,7 +453,7 @@ mySavedPost && mySavedPost.forEach(p => {
 
             </div> 
             <div className="posted_tag_forw">
-              posted in {message?.forwardedMessage?.channel?.type==="public"? "#": <FaLock/>} {message?.forwardedMessage?.channel?.name} | 
+              posted in {message?.forwardedMessage?.channel?.type==="public"? "#": <FaLock/>} {message?.forwardedMessage?.channel?.name} |  
 
               {format(new Date(message.forwardedMessage.createdAt), DATE_FORMAT)}
               
@@ -434,7 +461,80 @@ mySavedPost && mySavedPost.forEach(p => {
               </div>
             }
 
+            {/* Forwarded Direct Message  */}
+            {
+              message?.forwardedDirectMessageId &&           
+                <div className="msg_main_forwarded_container">
+              <div className="forwarded_msg_body">
 
+            
+              <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
+  
+          {
+     (message?.forwardedDirectMessage.member===undefined || message?.forwardedDirectMessage.member.user===undefined || message?.forwardedDirectMessage?.member?.user?.profilePic===null) ? 
+           <LetteredAvatar 
+               name={(message?.forwardedDirectMessage?.member===undefined || message?.forwardedDirectMessage?.member?.user===undefined || member?.user?.name===undefined) ? 'Y': member.user.name }
+               size={40}
+               backgroundColors={arrayWithColors}
+           /> : 
+            <UserAvatar src={message?.forwardedDirectMessage?.member.user.profilePic} />
+  
+          }
+  
+  
+  
+  </div>
+  <div className="flex flex-col w-full">
+  <div className="flex items-center gap-x-2 ">
+    <div className="flex items-center">
+      <p onClick={onMemberClick} className=" chat_un">
+        {!message?.forwardedDirectMessage?.member?.user ? "User": message?.forwardedDirectMessage?.member?.user.name}
+      </p>
+      {/* <ActionTooltip label={member.role}>
+        {roleIconMap[member?.role] || "user"}
+      </ActionTooltip> */}
+    </div>
+    
+  </div>
+  
+  <p className={cn(
+                "text-sm text-zinc-200 dark:text-zinc-300",
+                deleted && "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+              )}>
+                {/* {content} */}
+                <div dangerouslySetInnerHTML={{__html:message?.forwardedDirectMessage?.content}} className="msg_contnt" />
+                {isUpdated && !deleted && (
+                  <span className="text-[12px] mx-0 text-zinc-400 ">
+                    (edited)
+                  </span>
+                )}
+              </p>
+  
+              </div>
+              </div>
+              <div className="">
+              {
+              message?.forwardedDirectMessage.uploadedFiles.length>0 && 
+              
+              <div className="all_imgs">
+             <MsgFile files={message?.forwardedDirectMessage.uploadedFiles}  />
+              
+            </div>  
+             }
+            
+
+              
+
+
+            </div> 
+            <div className="posted_tag_forw">
+              posted on 
+
+              <span>{format(new Date(message.forwardedDirectMessage.createdAt), DATE_FORMAT)}</span>
+              
+            </div>
+              </div>
+            }
 
 
 
@@ -526,7 +626,7 @@ mySavedPost && mySavedPost.forEach(p => {
           {reaction.content}
            </div>
         )}
-        <div className="show_emoji_picker"><EmojiPicker serverId={message.serverId as string} messageId={message.id} shemaType="channel" channelId={message.channelId}  /></div>
+        <div className="show_emoji_picker"><EmojiPicker messageId={message.id} schemaType={schemaType} conversationId={socketQuery.conversationId} channelId={message.channelId as string} type="hover"  /></div>
         </>
         
         : ''

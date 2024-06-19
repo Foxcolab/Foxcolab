@@ -24,10 +24,11 @@ import SinglePinForm from './SinglePinForm';
 interface PinnedProps {
     pinnedPosts:PinnedPost[]
     currentMember:Member
+    schemaType:"DirectMessage" | "Channel"
 }
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
-function ChannelPin({pinnedPosts, currentMember}:PinnedProps) {
+function ChannelPin({pinnedPosts, currentMember, schemaType}:PinnedProps) {
     
   const params = useParams();
 
@@ -41,7 +42,100 @@ function ChannelPin({pinnedPosts, currentMember}:PinnedProps) {
   <DialogContent className='forward_container channel_pincon max-w-[570px] '>
     <DialogHeader>
       <DialogTitle>Pinned Messages</DialogTitle>
-      <div className='channel_pin_container pb-8'>
+      {
+        schemaType==="DirectMessage" ? <>
+        <div className='channel_pin_container pb-8'>
+          {
+            pinnedPosts && pinnedPosts.map((pinned, i)=>(
+              <>
+               <div className="channel_single_pin" key={i}>
+                               <div className="relative group flex items-center flex-col p-4 transition w-full">
+      <div className="group flex gap-x-2 items-start w-full">
+        <div  className="cursor-pointer hover:drop-shadow-md transition">
+        {
+            pinned.directMessage?.member?.user?.profilePic!==null ? 
+            <UserAvatar src={pinned.directMessage.member?.user?.profilePic} /> :
+            <LetterAvatar 
+            name={pinned.directMessage?.member?.user.name===undefined ? 'Y': pinned.directMessage.member.user.name }
+           size={40}
+           radius={20}
+            /> 
+          }
+       
+        </div>
+        <div className="flex flex-col w-full">
+          <div className="flex items-center gap-x-2 ">
+            <div className="flex items-center">
+              <p  className=" chat_un">
+                {!pinned.directMessage.member?.user ? "User": pinned.directMessage.member?.user?.name}
+              </p>
+            </div>
+          
+            <span className=" timestamp">
+            {format(new Date(pinned.directMessage.createdAt), DATE_FORMAT)}
+            </span>
+          </div>
+          <p className={cn(
+              "text-sm text-zinc-200 dark:text-zinc-300",
+               " text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+            )}>
+              {/* {content} */}
+              <div dangerouslySetInnerHTML={{__html:pinned.directMessage.content}} className="msg_contnt" />
+            </p>
+       
+        </div>
+
+
+      </div>
+     
+      
+    <div className="w-full mt-2 channel_pin_msg">
+              {pinned.directMessage.uploadedFiles?.length!==0 && 
+              
+              pinned.directMessage.uploadedFiles.map((file)=>(
+                <div key={i} className='px-4'>
+                {/* {file} */}
+                {/* <MsgFile fileUrl={file} key={i} length={pinned.message.fileUrl.length} type="msgFile" /> */}
+                <SingleMsgFile file={file} />
+
+                </div>
+              ))
+              
+              }
+            </div>
+              {
+                pinned.directMessage.pollId!==null && <>
+                <div className='w-full'>
+                <SinglePinPoll poll={pinned.directMessage.poll} currentMember={currentMember} />
+
+                </div>
+                
+                </>
+              }
+              {
+                pinned.directMessage.formId!==null && <>
+                <div className='w-full'>
+                <SinglePinForm form={pinned.directMessage.form} currentMember={currentMember} />
+
+                </div>
+                
+                </>
+              }
+
+
+
+            </div>
+            </div>
+              
+              </>
+            ))
+          }
+
+
+        </div>
+     
+         </> : <>
+        <div className='channel_pin_container pb-8'>
         {
             pinnedPosts && pinnedPosts.map((pinned, i)=>(
            <>
@@ -211,6 +305,9 @@ pinned.thread.fileUrl.map((file, i)=>(
         }
             
       </div>
+         </>
+      }
+      
     </DialogHeader>
   </DialogContent>
 </Dialog>

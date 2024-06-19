@@ -174,7 +174,7 @@ interface HoverMessagePops {
   myChannels:Channel[]
   allServerMember:Member[]
   setThreadMessage:any
-  schemaType:string
+  schemaType:"Channel" | "Threads" | "DirectMessage"
   whoCanPinnedPost:boolean
   whoCanDeleteMessage:boolean
 }
@@ -204,13 +204,18 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
       // description: "Friday, February 10, 2023 at 5:57 PM"
     })
   }
+
   const PinnedMsg =async()=>{
     try {
       setLoadingText("Pinning a message");
       // setLoading(true);
       if(schemaType==="Threads"){
         const res = await axios.post(`/api/pinnedmessage/thread?threadId=${message.id}&serverId=${params?.id}`);
-      }else {
+      }
+      else if(schemaType==="DirectMessage"){
+        const res = await axios.post(`/api/pinnedmessage/dm?messageId=${message.id}&serverId=${params?.id}&conversationId=${socketQuery.conversationId}`);
+      }
+      else {
         const res = await axios.post(`/api/pinnedmessage?messageId=${message.id}&serverId=${params?.id}`);
       }
       
@@ -227,8 +232,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
       setLoadingText("Unpinning a message");
       // setLoading(true);
       if(schemaType=="Threads"){
-        const res = await axios.delete(`/api/pinnedmessage/thread?threadId=${message.id}&serverId=${params?.id}`);
-      }else {
+        const res = await axios.delete(`/api/pinnedmessage/thread?threadId=${message.id}&serverId=${params?.id}&pinnedId=${pinnedPost.id}`);
+      }
+      else if(schemaType==="DirectMessage"){
+        const res = await axios.delete(`/api/pinnedmessage/dm/remove?messageId=${message.id}&serverId=${params?.id}&pinnedId=${pinnedPost.id}`);
+      }
+      else {
         const res = await axios.delete(`/api/pinnedmessage?messageId=${message.id}&pinnedId=${pinnedPost.id}&serverId=${params?.id} `);
       }
       
@@ -270,7 +279,11 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
       }
       if(schemaType==="Threads"){
         const res = await axios.post(`/api/save-later/thread?threadId=${message.id}`, {time:newDate});
-      }else {
+      }
+      else if(schemaType==="DirectMessage"){
+        const res = await axios.post(`/api/save-later/dm?messageId=${message.id}`, {time:newDate});
+      }
+      else {
         const res = await axios.post(`/api/save-later?messageId=${message.id}`, {time:newDate});
       }
       
@@ -299,7 +312,11 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
       // setLoading(true);
       if(schemaType==="Threads"){
         const res = await axios.delete(`/api/save-later/thread?threadId=${message.id}&laterId=${savedPost.id}`);
-      }else {
+      }
+      else if(schemaType==="DirectMessage"){
+        const res = await axios.delete(`/api/save-later/dm?messageId=${message.id}&laterId=${savedPost.id}`);
+      }
+      else {
         const res = await axios.delete(`/api/save-later?messageId=${message.id}&laterId=${savedPost.id}`);
       }
       
@@ -322,8 +339,15 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   }
   const onChangeHandler=async(emoji:any)=>{
     try {
+      if(schemaType==="DirectMessage"){
+        const res = await axios.post(`/api/socket/direct-messages/reaction?serverId=${message.serverId}&messageId=${message.id}&conversationId=${socketQuery.conversationId}`, {content:emoji});
+      }else if(schemaType==="Threads"){
+        const res = await axios.post(`/api/socket/messages/reaction?serverId=${message.serverId}&messageId=${message.id}&channelId=${message.channelId}`, {content:emoji});
+      }
+      else {
+        const res = await axios.post(`/api/socket/messages/reaction?serverId=${message.serverId}&messageId=${message.id}&channelId=${message.channelId}`, {content:emoji});
+      }
       
-      const res = await axios.post(`/api/socket/messages/reaction?serverId=${message.serverId}&messageId=${message.id}&channelId=${message.channelId}`, {content:emoji});
       // setOpen(false)
       router.refresh();
     } catch (error) {
@@ -332,6 +356,7 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
     }
   }
 
+   
 
   const DeleteHandler =async()=>{
     try {
@@ -339,14 +364,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
       // /api/socket/messages?channelId=65e694aeb7822086cf43a59a&sectionId=658c21484a2dd36e8d345684&serverId=658c21484a2dd36e8d345683
       if(schemaType==="Threads"){
         const res = await axios.delete(`/api/socket/threads/delete/${message.id}?channelId=${message.channelId}&threadId=${message.id}&serverId=${message.serverId}`);
-
-
-      }else {
+      }
+      else {
         const url = qs.stringifyUrl({
           url: `${socketUrl}/delete/${message.id}`,
           query: socketQuery,
         });
-      console.log(url)
       await axios.delete(url)
 
 
@@ -387,12 +410,12 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
   const ThreadHandler =()=>{
     setThreadMessage(message);
     router.refresh();
-    console.log("Refreshed");
   }
 
 
     const isAdmin = message.memberId===currentMember.id;
 
+    
 
     return (
     <>
@@ -413,7 +436,7 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
    <ActionTooltip label='Find another reaction' side='top' align='center'>
     <EmojiPicker
                     messageId={message.id} channelId={message.channelId as string}
-                    type="hover" schemaType='channel' /></ActionTooltip> 
+                    type="hover" schemaType={schemaType} conversationId={socketQuery?.conversationId} /></ActionTooltip> 
   {/* <ActionTooltip label='Delete' side='top' align='center'><button onClick={()=>setOpen(true)}><AiFillDelete/></button></ActionTooltip> 
    <ActionTooltip label='Edit' side='top' align='center'><button onClick={e=>setIsEditing(true)}><FaEdit/></button></ActionTooltip>  */}
     {/* <ThreadCom
@@ -511,8 +534,10 @@ function HoverMessage({children, message, currentMember, socketUrl, socketQuery,
 
 </HoverCardContent>
     </HoverCard>
-
-    <ForwardMessage allServerMember={allServerMember} open={forward} setOpen={setForward} message={message} myChannels={myChannels}  />
+    {
+      message && forward && <ForwardMessage allServerMember={allServerMember} open={forward} setOpen={setForward} message={message} myChannels={myChannels} schemaType={schemaType}  />
+    }
+    
 
 
     <Dialog open={open} onOpenChange={setOpen}>

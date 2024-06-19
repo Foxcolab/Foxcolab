@@ -17,12 +17,14 @@ import { cn } from "@/lib/utils";
 interface EmojiPickerProps {
   messageId:string
   type:string
-  schemaType:"channel" | "forum" | "thread"
+  // schemaType:"channel" | "forum" | "thread"
+  schemaType:"Channel" | "Threads" | "DirectMessage" | "forum" | "thread"
+  conversationId: string | null | undefined
   channelId:string
 }
 
 export const EmojiPicker = ({
- messageId , type , schemaType, channelId
+ messageId , type , schemaType, channelId, conversationId
 }: EmojiPickerProps) => {
   const { resolvedTheme } = useTheme();
   const [open, setOpen] = useState(false);
@@ -47,8 +49,11 @@ export const EmojiPicker = ({
 
   const onChangeHandler=async(emoji:any)=>{
     try {
-      if(schemaType==="channel"){
+      console.log("Emoji::", emoji);
+      if(schemaType==="Channel"){
         const res = await axios.post(`/api/socket/messages/reaction?serverId=${params?.id}&messageId=${messageId}&channelId=${params?.channelId}`, {content:emoji});
+      }else if(schemaType==="DirectMessage"){
+        const res = await axios.post(`/api/socket/direct-messages/reaction?serverId=${params?.id}&messageId=${messageId}&conversationId=${conversationId}`, {content:emoji});
       }
       if(schemaType==="forum"){
         const res = await axios.post(`/api/socket/forum-response/reaction?serverId=${params?.id}&forumResponseId=${messageId}&forumId=${channelId}`, {content:emoji});
@@ -60,7 +65,6 @@ export const EmojiPicker = ({
       // console.log(res);
       router.refresh();
       setOpen(false);
-      console.log("REFRESH DONNNEEE")
     } catch (error) {
       // setOpen(false)
       console.log(error);

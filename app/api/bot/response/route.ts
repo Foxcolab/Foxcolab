@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST =async(req:NextRequest)=>{
     try {
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const serverId = req.nextUrl.searchParams.get('serverId');
         if(!userId || !serverId) return NextResponse.json({
             error:"UserId and ServerId not found"
@@ -93,7 +93,7 @@ export const POST =async(req:NextRequest)=>{
 
 export const PUT =async(req:NextRequest)=>{
     try {
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const serverId = req.nextUrl.searchParams.get('serverId');
         const botResponseId = req.nextUrl.searchParams.get('botResponseId');
         if(!userId || !serverId ||!botResponseId) return NextResponse.json({
@@ -174,7 +174,7 @@ export const PUT =async(req:NextRequest)=>{
 
 export const DELETE =async(req:NextRequest)=>{
     try {
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const serverId = req.nextUrl.searchParams.get('serverId');
         const botResponseId = req.nextUrl.searchParams.get('botResponseId');
         console.log(userId, serverId, botResponseId)

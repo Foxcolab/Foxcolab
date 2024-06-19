@@ -109,9 +109,20 @@ export const GET =async(req:NextRequest)=>{
                       user:true
                     }
                   },
+                  uploadedFiles:true,
                   channel:true
                 },
                 
+              },
+              forwardedDirectMessage:{
+                include:{
+                  member:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  uploadedFiles:true
+                },
               }
             },
             orderBy: {
@@ -195,9 +206,21 @@ export const GET =async(req:NextRequest)=>{
                       user:true
                     }
                   },
+                  uploadedFiles:true,
                   channel:true
                 },
                 
+              },
+              forwardedDirectMessage:{
+                include:{
+                  member:{
+                    include:{
+                      user:true
+                    }
+                  },
+                  uploadedFiles:true
+
+                },
               }
             },
             orderBy: {

@@ -25,15 +25,13 @@ export const myProfile = async()=>{
         const googleToken = cookieStore.get('next-auth.session-token')?.value || '';
         const googleServerToken = cookieStore.get('__Secure-next-auth.session-token')?.value || '';
 
-        console.log("Token::",token);
         let userId = ''
         if(token!=='' && token!==null){
             userId = getUserIDFromToken(token);
-            // console.log("Token:", token);
        }
        else if((googleToken!==null && googleToken!=='') || (googleServerToken!==null && googleServerToken!=='')){
             const session =await getUserSesssion();
-            console.log("Session:",session);
+            
             if(session===undefined) return;
             userId = session.id;
        }
@@ -62,7 +60,6 @@ export const myProfile = async()=>{
                 id:userId 
             }
         });
-        console.log(user);
         return user;
                
     } catch (error) {

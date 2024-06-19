@@ -41,6 +41,8 @@ import { BsFileEarmarkPptFill } from "react-icons/bs";
 import { RxCross2 } from 'react-icons/rx'
 import Image from 'next/image'
 import Loader from '../../../Loaders/Loader'
+import { useToast } from "@/components/ui/use-toast"
+
 
 interface Props {
     serverId:string
@@ -59,6 +61,8 @@ function CreateResponse({serverId}:Props) {
     const router = useRouter();
     const params = useParams();
     const [openDialog, setOpenDialog] = useState(false);
+
+    const { toast } = useToast();
 
     const onSubmit = async () => {
         try {
@@ -88,10 +92,14 @@ function CreateResponse({serverId}:Props) {
           setFiles([]);
           setPreviewUrl([]);
           setEmojiDialog(false);
-        } catch (error) {
+        } catch (error:any) {
         //   setOpenDialog(false);
           setLoading(false);
           console.log(error);
+          toast({
+            title: error.response.data.error ,
+            
+          })
         }
       }
 

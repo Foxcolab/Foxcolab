@@ -128,7 +128,9 @@ export const PUT =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                   channel:true
                 },
                 
-              }
+              },
+              uploadedFiles:true
+
             }
 
     
@@ -167,7 +169,9 @@ export const PUT =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                           channel:true
                         },
                         
-                      }
+                      },
+                      uploadedFiles:true
+
                     },
             
                    });
@@ -206,7 +210,8 @@ export const PUT =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                       channel:true
                     },
                     
-                  }
+                  },
+                  uploadedFiles:true
                 }
         
                })

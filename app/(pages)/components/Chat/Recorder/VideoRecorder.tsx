@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import axios from 'axios';
 import Loader from '../../Loaders/Loader';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Video } from 'lucide-react';
 
 interface ScreenProps {
@@ -26,7 +26,9 @@ function VideoRecorder({setVideoName, setVideoUrl}:ScreenProps) {
   const [blob, setBlob] = useState(null);
   const [open, setOpen] = useState(false);
 
- 
+  const params = useParams();
+
+
   const StartRecordingHandler =async(startRecording:any)=>{
     const res = await startRecording();
     console.log(res);
@@ -55,7 +57,7 @@ function VideoRecorder({setVideoName, setVideoUrl}:ScreenProps) {
       setLoading(true);
       const formData = new FormData();
       formData.append('file', blob);
-      const res = await axios.post('/api/upload/video', formData);
+      const res = await axios.post(`/api/upload/video?serverId=${params?.id}`, formData);
       console.log(res);
   
       
@@ -118,7 +120,7 @@ function VideoRecorder({setVideoName, setVideoUrl}:ScreenProps) {
         <DialogFooter className='screenFooter'>
           {
             loading ? <Loader/> : 
-            <Button type="submit" onClick={SubmitHandler} disabled>Upload</Button>
+            <Button type="submit" onClick={SubmitHandler} disabled={blob===null}>Upload</Button>
 
           }
         </DialogFooter>

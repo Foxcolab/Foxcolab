@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa'
 import {
     Dialog,
@@ -15,15 +15,47 @@ interface Props {
     marks: number
     time:number
     testName:string
-    remainingTime:any
     submitting:boolean
     submitTest:any
     length: number
+    createdAt:any
 }
 
 
-function RightHeader({marks, time, testName, remainingTime, submitting, submitTest, length}:Props) {
+function RightHeader({marks, time, testName,  submitting, submitTest, length, createdAt}:Props) {
     const [open, setOpen] = useState(false);
+    let testDuration = time*60;
+    const [timeRemaining, setTimeRemaining] = useState(testDuration);
+    let startTime = Math.floor(new Date(createdAt).getTime()/1000);
+
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+          if(timeRemaining<0) return;
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+        const elapsedTime = currentTime - startTime;
+        const remainingTime = testDuration - elapsedTime;
+        
+        setTimeRemaining(remainingTime);
+      }, 1000);
+  
+      return () => clearInterval(interval);
+    }, [startTime, testDuration]);
+
+    useEffect(() => {
+      if (timeRemaining <= 0) {
+        submitTest(); // Call your function to submit the test automatically
+      }
+    }, [timeRemaining]);
+
+    const formatTime = (seconds:number) => {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
+
+
   return (
     <>
     
@@ -42,7 +74,7 @@ function RightHeader({marks, time, testName, remainingTime, submitting, submitTe
                    : 
                   <>
                   <div className='time'>
-                  {remainingTime }
+                  {formatTime(timeRemaining)}
                   </div>
                   <div className='submit bg-green-500 text-white hover:bg-green-600'><button onClick={submitTest}>Submit</button></div>
                    </> 
