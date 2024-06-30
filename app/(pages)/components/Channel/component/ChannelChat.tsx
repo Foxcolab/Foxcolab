@@ -23,12 +23,13 @@ interface Props {
     isAdmin:boolean
     myChannels:Channel[]
     setThreadMessage:any
+    isThreadSelected:boolean
 }
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 
-function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMessage}:Props) {
+function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMessage, isThreadSelected}:Props) {
 
     const createdAt = format(new Date(channel.createdAt), DATE_FORMAT);
     let sendMsg = channel.sendMsg !==undefined && channel.sendMsg!==null ? channel.sendMsg : true;
@@ -77,7 +78,7 @@ function ChannelChat({server, channel, isAdmin, member, myChannels, setThreadMes
     {/* <div className='channel_chats'>
     <div className='channel_messages'> */}
 
-    <div className="forum_msg_container">
+    <div className="forum_msg_container" id={isThreadSelected ? "msg_container_no_border" : ""}>
 
     
     <ChannelHeader members={channel.Members} name={channel.name} type={channel.type} description={channel.description as string} createdBy={channel.createdMember?.user.name as string}

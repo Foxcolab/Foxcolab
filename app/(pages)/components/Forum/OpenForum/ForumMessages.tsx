@@ -106,14 +106,14 @@ function ForumMessages({
 
   return (
     <>
-    <div className="forum_messages">
-    <div ref={chatRef} className="flex-1 flex flex-col pt-4 pb-2 overflow-y-auto">
+    {/* <div className="forum_messages"> */}
+    <div ref={chatRef} className="flex-1 flex flex-col overflow-y-auto">
       {!hasNextPage ? <div className="flex-1" /> : '' }
 
-    {
+    {/* {
         !hasNextPage && 
         <ForumResponseHeader forums={forum} />
-    }
+    } */}
 
 
 
@@ -177,7 +177,7 @@ function ForumMessages({
       </div>
       <div ref={bottomRef} />
     </div>   
-    </div>
+    {/* </div> */}
     
     </>
   )

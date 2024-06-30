@@ -56,8 +56,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import AutoLinks from 'quill-auto-links';
+import MagicUrl from 'quill-magic-url';
+// import UrlMetaData from "url-metadata";
+import urlMetadata from "url-metadata";
+import { JsonValue } from "@prisma/client/runtime/library";
+
 
 Quill.register('modules/autoLinks', AutoLinks);
+
+Quill.register('modules/magicUrl', MagicUrl)
 
 
 interface ChatInputProps {
@@ -78,7 +85,8 @@ interface ChatInputProps {
   const formSchema = z.object({
     content: z.string().optional(),
     contentText:z.string().optional(),
-    fileUrl: z.string().array().optional()
+    fileUrl: z.string().array().optional(),
+    attachments:z.any().optional()
   });
 
   const atValues = [
@@ -152,6 +160,7 @@ const EditorFooter = ({apiUrl,
     const [pollOpen, setPollOpen] = useState(false);
     const [formOpen, setFormOpen] = useState(false);
     const [plusDialog, setPlusDialog] = useState(false);
+    // const [attachements, setAttachments] = useState<JsonValue | null>(null); 
     // const reactQuillRef = useRef(null);
     // const reactQuillRef: MutableRefObject<HTMLDivElement> = React.useRef(null);
 
@@ -213,6 +222,7 @@ const EditorFooter = ({apiUrl,
       }
       
       if(uploading) return;
+      console.log("values::", values);
       await axios.post(url, values);
       await deleteFromDatabase();
       setLoading(false);
@@ -277,7 +287,7 @@ const EditorFooter = ({apiUrl,
     if (id > -1) {
      files.splice(id, 1);
       previewUrl.splice(id,1);
-    
+      router.refresh();
     }
   }
 
@@ -296,49 +306,19 @@ const EditorFooter = ({apiUrl,
   }
 
 
-  
- function suggestPeople(searchTerm:string) {
-  // console.log(searchTerm)
-  const allPeople = [
-    {
-      id: 1,
-      handle: "Fredrik Sundqvist"
-    },
-    {
-      id: 2,
-      handle: "Patrik Sjölin"
-    }
-  ];
-    return allPeople.filter(group => group.handle.includes(searchTerm));
-  }
+
 
 
 
  
 
-const modules2 = {
-  toolbar: [
-    ['bold', 'italic', 'underline','strike'],
-    [{'list': 'ordered'}, {'list': 'bullet'}],
-    ['blockquote'],['code-block'],
-    ['clean']
-  ],
-
-  
-}
 
   const toggleToolbar =()=>{
     setToolBarToogle(!toolBarToogle);
   }
 
 
-  const draft = ()=>{
-    try {
-      
-    } catch (error) {
-      
-    }
-  }
+
 
   const [draftContent, setDraftContent] = useState('');
   const [typingTimer, setTypingTimer] = useState(null);
@@ -362,59 +342,60 @@ const modules2 = {
 
 
 
+  const FindMetaData =async(url:string)=>{
+    try {
+      console.log("finding meta data");
+      const res = await axios.post(`/api/etc/fetch-url`, {url});
+      if(res.status===200){
+        return res?.data?.attachments;
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  // useEffect(() => {
-  //   form.reset({
-  //     content: ,
-  //   })
-  // }, [form]);
+  function extractHref(anchorTag:string) {
+    let tempElement = document.createElement('div');
+    tempElement.innerHTML = anchorTag.trim();
+    let anchorElement = tempElement.querySelector('a');
+    if (anchorElement) {
+        let hrefValue = anchorElement.href;
+        return hrefValue;
+    } else {
+        console.error('Anchor element not found in the provided HTML');
+        return null;
+    }
+  }
 
-
-
-  // useEffect(()=>{
-  //   if(reactQuillRef.current){
-  //     const quill = reactQuillRef.current.editor;
-  //     quill.keyboard.addBinding({
-  //       key: 'S', // The key you want to use for the shortcut
-  //       ctrlKey: true, // Whether the Ctrl key should be pressed
-  //       handler: () => {
-  //         // console.log('Ctrl+S pressed'); // Perform any action you want here
-  //       }
-  //     });
-
-  //     quill.keyboard.addBinding({
-  //       key: 'Z',
-  //       ctrlKey: true,
-  //       handler: () => {
-  //         // console.log('Ctrl+Z pressed');
-  //       }
-  //     });
-  //     // quill.keyboard.addBinding({
-  //     //   key: 'Enter',
-  //     //   handler: (range: any, context: any) => {
-  //     //     if (!range) {
-  //     //       console.log('Enter pressed without selection');
-  //     //       return true;
-  //     //     }
-  //     //     return false; 
-  //     //   }
-  //     // });
-
-  //   }
-  // }, [])
-
-
-
-  const InputHandler = (event:any) => {
+  const InputHandler = async(event:any) => {
+    
+    
+    // await FindMetaData();
+    // console.log(event);
     form.setValue("content", event);
-    const editorRef = reactQuillRef.current.getEditor();
+    const editorRef = reactQuillRef?.current?.getEditor();
   
 
-    form.setValue("contentText", editorRef.getText())
-    const content = editorRef.getText()
+    form.setValue("contentText", editorRef?.getText())
+    const content = editorRef?.getText()
     // if(content.includes('@')){
     //   setMentionDialog(true);
     // }
+    const extractUrl = extractHref(event);
+ 
+    if(extractUrl!==null){
+      const attachement = await FindMetaData(extractUrl);
+      
+      if(attachement!==null){
+        form.setValue("attachments", attachement);
+      }else {
+        form.setValue("attachments", null);
+
+      }
+    }else {
+      form.setValue("attachments", null);
+    }
     
     setDraftContent(event);
     if (stripHtmlTags(event)==="") {
@@ -450,7 +431,7 @@ const modules2 = {
     return doc.body.textContent || "";
   };
 
-
+  console.log("Attachements",form.getValues("attachments"));
 
 
   const modules = {
@@ -461,25 +442,15 @@ const modules2 = {
       ['clean']
     ],
     mention:  mentionModule,
-    autoLinks: true
+    // autoLinks: true,
+    magicUrl: true,
     // mention:mentionModule
   }
 
-  const handleRef = (ref:any) => {
 
-    if (ref) {
-      // Delay the assignment until the component is mounted
-      setTimeout(() => {
-        reactQuillRef.current = ref;
-      }, 0);
-    }
-  };
-
-
-  const handleQuillLoaded = (quill) => {
-    if (quillRef.current || !quill) return;
-    quillRef.current = quill.getEditor();
-  };
+  const RemoveAttachment =()=>{
+    form.setValue("attachments", null);
+  }
 
   return(
     <>
@@ -537,9 +508,46 @@ const modules2 = {
 </div>
          
          {
-            (previewUrl.length>0 || audioUrl || screenUrl || videoUrl ) && 
+            (previewUrl.length>0 || audioUrl || screenUrl || videoUrl || form.getValues("attachments")!==null) && 
             <div className="preview_imsg">
           
+          {
+            form.getValues("attachments") &&
+            <div className="upload_application">
+            <div className="application_cross">
+            <button onClick={RemoveAttachment}><RxCross2  /></button>
+                 
+              </div>
+              <div className="doc_thumbnail doc_thumbnail_width overflow_hidden" >
+                <div className="flex flex-col max-w-full">
+
+                
+                <div className="flex items-center gap-1">
+                  <div className="attach_pre_icon flex-none">
+                  <Image src={form.getValues("attachments")?.thumbnailUrl} height={100} width={100} alt="" /> 
+                  </div>
+                  |
+                  <div className="max-w-[10.5rem]">
+                  <div className="font-semibold text-sm overflow_hidden">{form.getValues("attachments")?.serviceName}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 max-w-full overflow-hidden">
+                <div className="attach_title max-w-full flex-none"><span className="overflow_hidden">{form.getValues("attachments")?.title}</span></div> <span className="text-[0.8rem]">|</span>
+                <div className="attach_desc overflow_hidden"><span className="overflow_hidden">{form.getValues("attachments")?.description}</span></div>
+                </div>
+                
+               {/* <div className="doc_icon">
+               <Image src={form.getValues("attachments")?.thumbnailUrl} height={100} width={100} alt="" />
+               </div>
+               <div className="doc_thum_nm">
+                <div className="extn">{form.getValues("attachments")?.serviceName}</div>
+                <div >{form.getValues("attachments")?.title}</div>
+                
+               </div> */}
+              </div>
+              </div>
+           </div>  
+          }
 
             {
               previewUrl.length!==0 && 

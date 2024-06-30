@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 
   interface EmojiPickerProps {
     onChange: (value: string) => void;
-    emojiDialog:boolean
-    setEmojiDialog:any
+    emojiDialog?:boolean
+    setEmojiDialog?:any
     // editorType:string | null
   }
 function EditorEmoji({onChange, emojiDialog, setEmojiDialog}:EmojiPickerProps) {

@@ -44,7 +44,7 @@ function ChannelHeader({members, name, type, description, createdBy, createdAt, 
             managers={managers}
             content={<button className=''><FaUsers/> Members {members.length}</button> }
  />
-            <ChannelPin pinnedPosts={pinnedPosts} currentMember={currentMember} />
+            <ChannelPin pinnedPosts={pinnedPosts} currentMember={currentMember} schemaType="Channel" />
          </div>
       </div>
       

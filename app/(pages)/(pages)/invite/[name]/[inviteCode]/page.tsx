@@ -2,12 +2,18 @@ import { db } from '@/prisma';
 import React from 'react';
 import InviteComponent from '@/app/(pages)/components/inviteCode/InvitePage/InviteComponent';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
 // import { headers } from 'next/headers';
 interface InviteCodePageProps {
   params:{
     inviteCode:String,
     name:String
   }
+}
+
+export const metadata: Metadata = {
+  title: 'Invitation | Foxcolab',
+  description: "Accept the invitation to join the server.",
 }
 
 async function InviteCode({params}:InviteCodePageProps) {

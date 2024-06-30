@@ -13,7 +13,7 @@ import { RiSurveyFill } from "react-icons/ri";
 import { IoIosArrowDown, IoIosLock } from "react-icons/io";
 import { myProfile } from '@/lib/db/profile';
 import { NameDropDown } from '../Header/NameDropDown';
-import { Canvas, Channel, Forums, ForumsChannel, Member, Section, Server, Spreadsheets, TestChannel } from '@prisma/client';
+import { Canvas, Channel, Forums, ForumsChannel, Member, Section, Server, Spreadsheets, TestChannel, ShortUrl } from '@prisma/client';
 import { VscTable } from 'react-icons/vsc';
 import { PiExamFill } from 'react-icons/pi';
 import { BiSolidLeftArrow, BiSolidSpreadsheet } from 'react-icons/bi';
@@ -21,10 +21,13 @@ import SingleForums from './Components/SingleForums';
 import SingleTestChannel from './Components/SingleTestChannel';
 import SingleSpreadsheet from './Components/SingleSpreadsheet';
 import SingleCanvas from './Components/SingleCanvas';
+import Image from 'next/image';
 
 
 interface Props {
     server:Server & {
+        shortInvite:ShortUrl
+    } & {
         currentMember:Member
     } & {
         Members:Member[]
@@ -38,7 +41,7 @@ const ChannelSidebar =async({server}:Props) =>{
     // if(!user) redirect(`home`);
     // const server = await getMyserver
     const currentMember = server.currentMember;
-    const members = server.Members && server.Members.filter(member=>member.userId!==currentMember.userId);
+    const members = server.Members && server.Members.filter(member=>member.userId!==currentMember?.userId);
 
 
 
@@ -49,22 +52,22 @@ const ChannelSidebar =async({server}:Props) =>{
     let createSection = false;
     let createSpreadsheet = false;
 
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateChannel==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateChannel==="moderator") || (currentMember.role==="admin" && server.whoCreateChannel==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateChannel==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateChannel==="moderator") || (currentMember?.role==="admin" && server.whoCreateChannel==="admin")  ){
         createChannel = true;
     }
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="moderator") || (currentMember.role==="admin" && server.whoCreateForum==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateForum==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateForum==="moderator") || (currentMember?.role==="admin" && server.whoCreateForum==="admin")  ){
         createForum = true;
     }
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateCanvas==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateCanvas==="moderator") || (currentMember.role==="admin" && server.whoCreateCanvas==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateCanvas==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateCanvas==="moderator") || (currentMember?.role==="admin" && server.whoCreateCanvas==="admin")  ){
         createCanvas = true;
     }
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateForum==="moderator") || (currentMember.role==="admin" && server.whoCreateForum==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateForum==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateForum==="moderator") || (currentMember?.role==="admin" && server.whoCreateForum==="admin")  ){
         createTestChannel = true;
     }
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSection==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSection==="moderator") || (currentMember.role==="admin" && server.whoCreateSection==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateSection==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateSection==="moderator") || (currentMember?.role==="admin" && server.whoCreateSection==="admin")  ){
         createSection = true;
     }
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSpreadsheet==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && server.whoCreateSpreadsheet==="moderator") || (currentMember.role==="admin" && server.whoCreateSpreadsheet==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateSpreadsheet==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && server.whoCreateSpreadsheet==="moderator") || (currentMember?.role==="admin" && server.whoCreateSpreadsheet==="admin")  ){
         createSpreadsheet = true;
     }
 
@@ -83,7 +86,12 @@ const ChannelSidebar =async({server}:Props) =>{
              <div className="server_logo">
                 <div className="server_title">
                 <NameDropDown server={server} createSection={createSection} />
+                
+                
                 </div>
+                <div className="server_nm_cv">
+                <Image src={"https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/pexels-codioful-7130560+(1).jpg"} height={100} width={100} alt="" unoptimized />
+                 </div>
               
             </div>
             <div className="sideb_bg_scroll all_side_conents">
@@ -148,9 +156,9 @@ const ChannelSidebar =async({server}:Props) =>{
         <Inbox
          members={members}
          serverId={server.id}
-         inviteCode={server.inviteCode}
+         inviteCode={server?.shortInvite?.shortUrl}
          name={server.name}
-         userName={server.currentMember.user?.name}
+         userName={server.currentMember?.user?.name}
          />
 
         

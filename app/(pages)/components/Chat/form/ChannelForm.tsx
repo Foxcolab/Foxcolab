@@ -187,6 +187,7 @@ if(schemaType==="Threads"){
 
         const res = await axios.post(`/api/socket/direct-messages/forms/response/new?serverId=${params?.id}&formId=${form.id}&messageId=${id}`, {fieldResponses:formResponse});
       }else {
+        console.log("Form Field::", formResponse);
       const res = await axios.post(`/api/socket/messages/forms/response/new?serverId=${params?.id}&formId=${form.id}&messageId=${id}`, {fieldResponses:formResponse});
 
       }
@@ -354,6 +355,7 @@ if(schemaType==="Threads"){
 
 
   }
+
 
 
 

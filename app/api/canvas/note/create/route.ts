@@ -9,7 +9,10 @@ import SchemaActivity from "@/app/api/activityLog/schemaActivity/SchemaActivity"
 
 export const POST =async(req:NextRequest)=>{
     try {
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
+        if(!userId) return NextResponse.json({
+            error:"User Id missing"
+        }, {status:409});
         const reqBody = await req.json();
         const {title, commenting, canEveryoneUpdate} = reqBody;
         // console.log("CABBBVVVASSSS", title);
@@ -73,7 +76,7 @@ export const POST =async(req:NextRequest)=>{
                 title,
                 canEveryoneUpdate:canEveryoneUpdate,
                 commenting:commenting,
-                content:"",
+                content:[],
                 createdBy:member?.id as string,
                 serverId:serverId as string,
                 canvasId:canvasId as string,
@@ -102,9 +105,10 @@ export const PUT =async(req:NextRequest)=>{
         const canvasId = req.nextUrl.searchParams.get('canvasId');
         const noteId = req.nextUrl.searchParams.get('noteId');
 
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const reqBody = await req.json();
         const {content} = reqBody;
+        console.log("Content", content);
         if(!content) return NextResponse.json({error:"No content"}, {status:409});
         const server = await db.server.findFirst({
             where:{

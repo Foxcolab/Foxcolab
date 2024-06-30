@@ -1,12 +1,12 @@
 import { Separator } from '@/components/ui/separator'
 import React from 'react'
 import CommentEditor from '../../../Editor/Comment/CommentEditor'
-import { Note, NoteComment } from '@prisma/client'
+import { Note, NoteComment as NteCom } from '@prisma/client'
 import AllComments from './AllComments'
 
 interface Props {
     note:Note & {
-      comments: NoteComment[]
+      comments: NteCom[]
     }
     canComment:boolean
     memberId:string

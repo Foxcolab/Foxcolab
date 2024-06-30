@@ -10,10 +10,23 @@ interface DividorProps {
 
 function Dividor({timestamp}:DividorProps) {
     
-    // if(nextTime!==undefined){
-    //   console.log(time1,format(new Date(nextTime), DATE_FORMAT2), time1===format(new Date(nextTime), DATE_FORMAT2) )
+    
+    function checkDate(dateToCheck:any) {
+      let today = new Date();
+      let yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+  
+      let checkDate = new Date(dateToCheck);
+  
+      if (checkDate.toDateString() === today.toDateString()) {
+          return 'Today';
+      } else if (checkDate.toDateString() === yesterday.toDateString()) {
+          return 'Yesterday';
+      } else {
+          return format(new Date(checkDate), DATE_FORMAT2);
+      }
+  }
 
-    // }
   return (
     <>
     
@@ -21,7 +34,7 @@ function Dividor({timestamp}:DividorProps) {
                   <span >
                    
                   
-                    {format(new Date(timestamp), DATE_FORMAT2)}
+                    {checkDate(timestamp)}
                   </span>
                 </div>
     </>

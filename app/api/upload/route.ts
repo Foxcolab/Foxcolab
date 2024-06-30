@@ -119,6 +119,7 @@ export const POST =async(req:NextRequest)=>{
         //  
          if(!files) return NextResponse.json({error:"File not found"}, {status:400});
          let fileUrl=[];
+         let filePublicUrl = [];
          for(let i=0; i<files.length; i++){
             const buffer = Buffer.from(await files[i]?.arrayBuffer());
             console.log("Arary Buffer",buffer);
@@ -153,6 +154,7 @@ export const POST =async(req:NextRequest)=>{
             })
             console.log(file);
             fileUrl.push(file.id);
+            filePublicUrl.push(file.publicUrl);
             // fileUrl.push(`https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`);
          }
 
@@ -161,7 +163,7 @@ export const POST =async(req:NextRequest)=>{
          
          
           
-         return NextResponse.json({success:true, fileUrl:fileUrl}, {status:200});   
+         return NextResponse.json({success:true, fileUrl:fileUrl, publicUrl:filePublicUrl[0]}, {status:200});   
     } catch (error) {
         console.log(error);
         

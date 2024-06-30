@@ -14,12 +14,18 @@ import { PiMicrosoftOutlookLogo } from 'react-icons/pi';
 import { MdOutlineMarkEmailUnread } from 'react-icons/md';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Metadata } from 'next';
 
 
 interface Props {
   params:{
     userId:string
   }
+}
+
+export const metadata: Metadata = {
+  title: 'Verify OTP | Foxcolab',
+  description: "Enter your OTP to verify.",
 }
 function ConfirmMail({params}:Props) {
   const [value, setValue] = useState('');

@@ -54,7 +54,9 @@ interface ChatInputProps {
   const formSchema = z.object({
     content: z.string().optional(),
     contentText:z.string().optional(),
-    fileUrl: z.string().array().optional()
+    fileUrl: z.string().array().optional(),
+    attachments:z.any().optional()
+
   });
 
 
@@ -69,7 +71,7 @@ const DirectEditor = ({apiUrl,
 
     const reactQuillRef = useRef(null);
 
-    console.log("Drafts::", drafts);
+   
     
 
     const router = useRouter();
@@ -307,7 +309,31 @@ const DirectEditor = ({apiUrl,
   //   }
   // }, [])
 
+  const FindMetaData =async(url:string)=>{
+    try {
+      console.log("finding meta data");
+      const res = await axios.post(`/api/etc/fetch-url`, {url});
+      if(res.status===200){
+        return res?.data?.attachments;
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  function extractHref(anchorTag:string) {
+    let tempElement = document.createElement('div');
+    tempElement.innerHTML = anchorTag.trim();
+    let anchorElement = tempElement.querySelector('a');
+    if (anchorElement) {
+        let hrefValue = anchorElement.href;
+        return hrefValue;
+    } else {
+        console.error('Anchor element not found in the provided HTML');
+        return null;
+    }
+  }
 
   const InputHandler = (event:any) => {
     form.setValue("content", event);
@@ -316,9 +342,20 @@ const DirectEditor = ({apiUrl,
 
     form.setValue("contentText", editorRef.getText())
     const content = editorRef.getText()
-    // if(content.includes('@')){
-    //   setMentionDialog(true);
-    // }
+    const extractUrl = extractHref(event);
+ 
+    if(extractUrl!==null){
+      const attachement = await FindMetaData(extractUrl);
+      
+      if(attachement!==null){
+        form.setValue("attachments", attachement);
+      }else {
+        form.setValue("attachments", null);
+
+      }
+    }else {
+      form.setValue("attachments", null);
+    }
     
     setDraftContent(event);
     if (stripHtmlTags(event)==="") {

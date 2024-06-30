@@ -6,6 +6,7 @@ import { db } from "@/prisma";
 export const POST = async(req:NextRequest)=>{
     try {
         const reqBody =await req.json();
+        const serverId = await req.nextUrl.searchParams.get('serverId');
         const {to,name, link, userName, serverAvatar} = reqBody;
         console.log(to, name);
         
@@ -14,6 +15,29 @@ export const POST = async(req:NextRequest)=>{
         
         if(!userId) return NextResponse.json({success:false, message:"You are not authorized"}, {status:401});
         const user = await db.user.findFirst({where:{id:userId}});
+        if(!user) return NextResponse.json({
+          error:"User not found"
+        }, {status:409});
+
+        const server = await db.server.findFirst({
+          where:{
+            id:serverId as string,
+            Members:{
+              some:{
+                userId:userId
+              }
+            }
+          },
+          include:{
+            Members:{
+              include:{
+                user:true
+              },
+            },
+            displayPicture:true
+          }
+        })
+
         const subject = `${user?.name} has invited you to work with them in Foxcolab`;
         // const message = `
         
@@ -28,165 +52,309 @@ export const POST = async(req:NextRequest)=>{
               
         // `;
 
-      const message = `
+      const message = `<!DOCTYPE html>
 
-      <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-      <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
-      
+      <html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
       <head>
+      <title></title>
+      <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+      <meta content="width=device-width, initial-scale=1.0" name="viewport"/><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!--><!--<![endif]-->
+      <style>
+          * {
+            box-sizing: border-box;
+          }
       
-        <xml>
-          <o:OfficeDocumentSettings>
-            <o:AllowPNG/>
-          </o:OfficeDocumentSettings>
-        </xml>
-        
+          body {
+            margin: 0;
+            padding: 0;
+          }
       
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="x-apple-disable-message-reformatting">
-     
-          <title>Foxcolab Invitation Email</title>
-
-        <head>
-          <style> 
-            a,a[href],a:hover, a:link, a:visited {
-             text-decoration: none!important;
-              color: #f8921e; 
+          a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: inherit !important;
+          }
+      
+          #MessageViewBody a {
+            color: inherit;
+            text-decoration: none;
+          }
+      
+          p {
+            line-height: inherit
+          }
+      
+          .desktop_hide,
+          .desktop_hide table {
+            mso-hide: all;
+            display: none;
+            max-height: 0px;
+            overflow: hidden;
+          }
+      
+          .image_block img+div {
+            display: none;
+          }
+          .social_img img{
+            width: 2.2rem;
+              height: 2.2rem;
+          }
+      
+          @media (max-width:620px) {
+            .desktop_hide table.icons-inner {
+              display: inline-block !important;
             }
-            .link {
-              text-decoration: underline!important;
+      
+            .icons-inner {
+              text-align: center;
             }
-            p, p:visited {
-              /* Fallback paragraph style */
-              font-size:15px;
-              line-height:24px;
-              font-family:'Raleway',Raleway, sans-serif;
-              font-weight:300;
-              text-decoration:none;
-              color: #000000;
+      
+            .icons-inner td {
+              margin: 0 auto;
             }
-            h1 {
-              /* Fallback heading style */
-              font-size:22px;
-              line-height:24px;
-              font-family:'Raleway', Raleway, sans-serif;
-              font-weight:normal;
-              text-decoration:none;
-              color: #fb9000;
-              
+      
+            .mobile_hide {
+              display: none;
             }
-            .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;}
-            .ExternalClass {width: 100%;}
-            .fcc-btn {
-        background-color: #4f4480;
-        color: white;
-        padding: 15px 25px;
-        text-decoration: none;
-      }
-            /* Button Styleee
-      * 
-      */
-      button, button a, .button{
-        position:relative;
-        /* style|variant|weight|size/line-height|family */
-        font: 500 14px Raleway;
-        letter-spacing: 0.5px;
-        color:#fff !important;
-        border: 0;
-        border-radius: 5px;
-        cursor:pointer;
-        text-decoration:none;
-      }
       
-      button, .button{
-        min-width: 100px;
-        margin: 10px 5px;
-        padding:8px 10px;
-        background-color: #4f4680;/* for non linear-gradient browsers */
-        background: linear-gradient(to bottom, #9d7eb9 5%, #4f4680 100%) repeat scroll 0 0 #9d7eb9;
-      }
+            .row-content {
+              width: 100% !important;
+            }
       
-      .button{display:inline-block;min-width:80px;text-align:center;white-space:nowrap;}
+            .stack .column {
+              width: 100%;
+              display: block;
+            }
       
-      button:hover,a.button:hover{
-        background:linear-gradient(to bottom, #4f4680 5%, #9d7eb9 100%) repeat scroll 0 0 #9d7eb9;
-      }
-      button:active{top:1px;}
+            .mobile_hide {
+              min-height: 0;
+              max-height: 0;
+              max-width: 0;
+              overflow: hidden;
+              font-size: 0px;
+            }
       
-      
-      body{
-        background-color:#222; 
-      }
-      #buttonC{margin:0px auto;width:500px;}
-      
-      
-           
-          </style>
-        
-      
+            .desktop_hide,
+            .desktop_hide table {
+              display: table !important;
+              max-height: none !important;
+            }
+          }
+        </style>
       </head>
+      <body class="body" style="margin: 0; background-color: #ffffff; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
+      <table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;" width="100%">
+      <tbody>
+      <tr>
+      <td>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tbody>
+      <tr>
+      <td>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 600px; margin: 0 auto;" width="600">
+      <tbody>
+      <tr>
+      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+      <table border="0" cellpadding="10" cellspacing="0" class="heading_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tr>
+      <td class="pad">
+        <h1 style="margin: 0; color: #000000; direction: ltr; font-family: Arial, Helvetica, sans-serif; font-size: 36px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 43.199999999999996px;"><span class="tinyMce-placeholder" style="display: flex;border-radius: 0.25rem;overflow: hidden;"><span style="background-color: #E04D6C;padding: 0.2rem 0.5rem;border: 1px solid #E04D6C;color: white;">Fox</span> <span style="padding: 0.2rem 0.5rem;border: 1px solid hsl(97, 5%, 28%);border-left: none;border-top-right-radius: 0.25rem;border-bottom-right-radius: 0.25rem;">Colab</span></span></h1>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="10" cellspacing="0" class="heading_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tr>
+      <td class="pad">
+      <h1 style="margin: 0; color: #000000; direction: ltr; font-family: Arial, Helvetica, sans-serif; font-size: 35px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 42px;">Accept ${userName} invitation to ${name}</h1>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+      <tr>
+      <td class="pad">
+      <div style="color:#2c2e30;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:20px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:24px;">
+      <p style="margin: 0;"><strong>${user?.name}</strong> (<a href="mailto:${user?.email}" rel="noopener" style="text-decoration: underline; color: #7747FF;" target="_blank">${user?.email}</a>) has invited you to use Foxcolab with them, in a workspace called <strong>${name}</strong>.</p>
+      </div>
+      </td>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tbody>
+      <tr>
+      <td>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f5f5f7; border-radius: 0; color: #000000; width: 600px; margin: 0 auto;" width="600">
+      <tbody>
+      <tr>
+      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tr>
+      <td class="pad" style="width:100%;">
+      <div align="center" class="alignment" style="line-height:10px">
+      <div style="height: 4rem;width: 4rem;overflow: hidden;object-fit: cover;border-radius: 0.3rem;overflow: hidden;margin-top: 1rem;box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"><img height="auto" src="${server?.displayPicture?.publicUrl===null || server?.displayPicture?.publicUrl===undefined ? 'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/pexels-codioful-7130560+(1).jpg' : server?.displayPicture?.publicUrl }" style="display: block; height: 100%;
+      width: auto;" /></div>
+      </div>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="10" cellspacing="0" class="heading_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tr>
+      <td class="pad">
+      <h1 style="margin: 0; color: #7747FF; direction: ltr; font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 38.4px;"><strong>${name}</strong></h1>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+      <tr>
+      <td class="pad">
+      <div style="color:#101112;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:16.8px;">
+      <p style="margin: 0;"><span class="tinyMce-placeholder">${server?.description}.</span></p>
+      </div>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="10" cellspacing="0" class="button_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tr>
+      <td class="pad">
+      <div align="center" class="alignment"><!--[if mso]>
+      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:42px;width:105px;v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#7747FF">
+      <w:anchorlock/>
+      <v:textbox inset="0px,0px,0px,0px">
+      <center dir="false" style="color:#ffffff;font-family:Arial, sans-serif;font-size:16px">
+      <![endif]-->
+      <div style="background-color:#7747FF;border-bottom:0px solid transparent;border-left:0px solid transparent;border-radius:4px;border-right:0px solid transparent;border-top:0px solid transparent;color:#ffffff;display:inline-block;font-family:Arial, Helvetica, sans-serif;font-size:16px;font-weight:400;mso-border-alt:none;padding-bottom:5px;padding-top:5px;text-align:center;text-decoration:none;width:auto;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 32px;">Join Now</span></span></div><!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
+      </div>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+      <tr>
+      <td class="pad">
+      <div style="color:#101112;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:19.2px;">
+      <p style="margin: 0;">Join the conversation with <strong>${server?.Members[0].user?.name}</strong> and many more.</p>
+      </div>
+      </td>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tbody>
+      <tr>
+      <td>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px; margin: 0 auto;" width="600">
+      <tbody>
+      <tr>
+      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+      <tr>
+      <td class="pad" style="padding-bottom:30px;padding-left:10px;padding-right:10px;padding-top:30px;">
+      <div style="color:#585d62;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:19px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:22.8px;">
+      <p style="margin: 0;">Once you join, you can always get updates from workspace <strong>${name}.</strong></p>
+      </div>
+      </td>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tbody>
+      <tr>
+      <td>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px; margin: 0 auto;" width="600">
+      <tbody>
+      <tr>
+      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+      <tr>
+      <td class="pad" style="padding-bottom:5px;padding-left:10px;padding-right:10px;padding-top:30px;">
+      <div style="color:#020202;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:20px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:24px;">
+      <p style="margin: 0;"><strong>What is Foxcolab?</strong></p>
+      </div>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+      <tr>
+      <td class="pad" style="padding-bottom:30px;padding-left:10px;padding-right:10px;padding-top:10px;">
+      <div style="color:#8d8e90;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:17px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:20.4px;">
+      <p style="margin: 0;">Foxcolab is a collaborating app for teams, a place where you can collaborate on projects and organise conversations – so you can work together, no matter where you are.</p>
+      </div>
+      </td>
+      </tr>
+      </table>
+      <table border="0" cellpadding="10" cellspacing="0" class="heading_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tr>
+      <td class="pad">
+      <h1 style="margin: 0; color: #7747FF; direction: ltr; font-family: Arial, Helvetica, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 24px;"><a href="https://foxcolab.com" rel="noopener" style="text-decoration: underline; color: #7747FF;" target="_blank">Learn more about Foxcolab</a></h1>
+      </td>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-6" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;" width="100%">
+      <tbody>
+      <tr>
+      <td>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 600px; margin: 0 auto;" width="600">
+      <tbody>
+      <tr>
+      <td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0" class="icons_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: center;" width="100%">
+      <tr>
+      <td class="pad" style="vertical-align: middle; color: #1e0e4b; font-family: 'Inter', sans-serif; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;">
+      <table cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+      <tr>
+      <td class="alignment" style="vertical-align: middle; text-align: center;"><!--[if vml]><table align="center" cellpadding="0" cellspacing="0" role="presentation" style="display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><![endif]-->
+      <!--[if !vml]><!-->
       
-        <body style="text-align: center; margin: 0; padding-top: 10px; padding-bottom: 10px; padding-left: 0; padding-right: 0; -webkit-text-size-adjust: 100%;background-color: #ffffff; color: #000000" align="center">
-        
-        <div style="text-align: center;">
-      
-          
-          <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="596">
-            <tbody>
-              <tr>
-                <td style="width: 600px; vertical-align: top; padding-left: 0; padding-right: 0; padding-top: 0px; padding-bottom: 0px;" width="600; font-size:24px">
-                <h1 style="font-size: 26px; line-height: 20px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none; color:#000000;">Foxcolab</h1>
-                
-                  
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- End container for logo -->
-
-          <!-- Hero image -->
-          <h1 style="font-size: 20px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none;color:#000000; ">   Join your team on Foxcolab</h1>
-       
-          <!-- Hero image -->
-      
-          <!-- Start single column section -->
-          
-          <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
-              <tbody>
-                <tr>
-                  <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 30px; padding-bottom: 40px;" width="596">
-      
-                   
-                    
-                    <h1 style="font-size:24px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none; color: #4d467c;">
-                    ${userName} has invited you to use foxcolab in a workspace called <b>${name}</b>.</h1>
-                    
-       
-      
-                    <h1 style="font-size: 20px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none; color: #ed9520; text-align:left;">What is Foxcolab?</h1>
-                    
-                    
-                    <p style="font-size: 15px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 400; text-decoration: none; color: #919293;text-align: justify;">Foxcolab is a messaging app for teams, a place you can collaborate on projects and organize conversations — so you can work together, no matter where you are.</p> 
-                    
-                    
-                   <a class="button" href=${link} target="_blank">Join Now</a>
-                    
-                    
-                    <!-- button link with CSS start -->
-                    <!-- bigger
-      
-   
-                    
-     
-                </tr>
-              </tbody>
-            </table>
-          
-        </div>
-      
-        </body>
-      
+      </td>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      </td>
+      </tr>
+      </tbody>
+      </table><!-- End -->
+      </body>
       </html>`
 
 

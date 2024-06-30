@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import UpdateNoteContent from './Note/UpdateNoteContent';
 import { PiNotebookDuotone, PiNotepad } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
+import Loader from '../Loaders/Loader';
 
 interface Props {
     note:Note
@@ -57,12 +58,9 @@ function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, man
     }
     const creator = note.createdBy===memberId;
 
-    // let DeletePermission =false;
     const isManager = managerIds.includes(memberId);
     const isMember = memberIds.includes(memberId);
-  //   if(((isAdmin || isManager || isMember) && canvas?.whoCanDeleteNote==="member") || ((isManager || isAdmin) && canvas?.whoCanDeleteNote==="manager") || (isAdmin && canvas?.whoCanDeleteNote==="admin") ){
-  //       DeletePermission = true;
-  // } 
+  
 
   const canEdit = note.canEveryoneUpdate===true || creator;
   const canComment = note.commenting===true || creator;
@@ -73,34 +71,7 @@ function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, man
 
   return (
     <>
-    
-  
-
-
-            
-    {/* <button className='w-full text-left'>
-    <div className="single_forums w-full flex justify-between">
-      <div className='forums_description w-full'>
-      <div className='forums_title'>{note.title}</div>
-        <div> <span className="forum_createdBy flex items-center"><MdAdminPanelSettings/> {note?.createdUser?.user?.name}</span>
-        
-          </div>
-       <div className='forum_Desc'>
-        <span className='flex item-center gap-1'><FaComment/>:  {note?.comments?.length}</span>
-        <span>{format(new Date(note.createdAt), DATE_FORMAT)}</span>
-        </div>
-      </div>
-      <div className='w-1/12 canvas_operation'>
-        {
-       
-       (whoCanDeleteNote || creator) &&  <button onClick={()=>setDeleteDialog(true)}><MdDelete/></button>
-
-        }
-        
-        <button onClick={()=>setEditNote(true)}>{canEdit ? <IoIosCreate/> : <FaComment/>}</button>
-      </div>
-      </div>
-    </button> */}
+ 
 
       <div className='single_canvas border rounded-md p-3 shadow-md cursor-pointer hover:shadow-lg'>
         <div className='pb-2'>
@@ -147,10 +118,15 @@ function SingleCanvas({note, isAdmin, whoCanDeleteNote, memberId, memberIds, man
         <div className='text-lg'>This action cannot be undone.</div>
         </div>
         <DialogFooter>
-
-        <Button className='border bg-tansparent text-black dark:text-white hover:bg-transparent' onClick={()=>setDeleteDialog(false)}>Cancel</Button>
-          <Button className='bg-red-500 hover:bg-red-600 text-white'  onClick={DeleteHandler}>Delete</Button>
+          {
+            loading ? <Loader/> : 
+            <>
+            <Button className='border bg-tansparent text-black dark:text-white hover:bg-transparent' onClick={()=>setDeleteDialog(false)}>Cancel</Button>
+            <Button className='bg-red-500 hover:bg-red-600 text-white'  onClick={DeleteHandler}>Delete</Button>
   
+            </>
+          }
+        
         </DialogFooter>
       </DialogContent>
     </Dialog>

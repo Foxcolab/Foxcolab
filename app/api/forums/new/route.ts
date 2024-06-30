@@ -99,32 +99,3 @@ export const POST =async(req:NextRequest)=>{
     }
 }
 
-
-
-// export const POST =async(req:NextRequest)=>{
-//     try {
-//         const reqBody =await req.json();
-//         const {title, subTitle, sectionId, serverId } = reqBody;
-//         const userId = GetDataFromToken(req);
-//         if (!title ) return NextResponse.json({message:"Write something"}, {status:400});
-
-//         const forums = await db.forums.create({
-//             data:{
-//                 title,
-//                 subTitle,
-//                 sectionId,
-//                 serverId,
-//                 userId:userId
-//             }
-//         });
-
-//         return NextResponse.json({
-//             success:true,
-//             message:"Forums created successfully",
-//             forums
-//         })
-
-//     } catch (error) {
-        
-//     }
-// }

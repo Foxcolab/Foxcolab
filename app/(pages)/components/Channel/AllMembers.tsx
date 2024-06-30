@@ -65,6 +65,9 @@ function AllMembers({members, name, type, description, createdBy, createdAt, isA
   const [newName, setName] = useState(name);
   const [newDescription, setDescription] = useState(description);
 
+  const [openName, setOpenName] = useState(false);
+  const [openDescription, setOpenDescription] = useState(false);
+
 
   const router = useRouter();
   const params = useParams();
@@ -126,8 +129,10 @@ const changeNameHandler =async()=>{
     const res = await axios.put(`/api/channel/setting/name?serverId=${params?.id}&channelId=${params?.channelId}`, {name:newName});
     router.refresh();
     setNameLoading(false);
+    setOpenName(false);
 
   } catch (error) {
+    setOpenName(false);
     setNameLoading(false);
     console.log(error);
     
@@ -140,6 +145,7 @@ const DescriptionHandler =async()=>{
     const res = await axios.put(`/api/channel/setting/description?serverId=${params?.id}&channelId=${params?.channelId}`, {description:newDescription});
     router.refresh();
     setdescriptionLoading(false);
+    setOpenDescription(false);
   } catch (error) {
     setdescriptionLoading(false);
     console.log(error);
@@ -239,6 +245,10 @@ if(((isAdmin || isManager || isMember) && channel.whoCanMakePublicToPrivate==="m
             channelMember={members}
             schemaType="Channel"
             isAdmin={isAdmin}
+            openName={openName}
+            setOpenName={setOpenName}
+            openDescription={openDescription}
+            setOpenDescription={setOpenDescription}
              />
               
               </>

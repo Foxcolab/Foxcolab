@@ -37,10 +37,14 @@ interface AboutProps {
     schemaType:string
     whoCanManageManager:boolean
     isAdmin:boolean
+    openName:boolean
+    setOpenName:any
+    openDescription:boolean
+    setOpenDescription:any
 }
 
 
-function AboutChannel({hasPermission, nameLoading, changeNameHandler, setName, name, type, description, createdBy, descriptionLoading, DescriptionHandler, setDescription, createdAt, managers, channelMember, schemaType, whoCanManageManager, isAdmin}:AboutProps) {
+function AboutChannel({hasPermission, nameLoading, changeNameHandler, setName, name, type, description, createdBy, descriptionLoading, DescriptionHandler, setDescription, createdAt, managers, channelMember, schemaType, whoCanManageManager, isAdmin, openName, setOpenDescription, setOpenName, openDescription}:AboutProps) {
     const [loading, setLoading] = useState(false);
     const params = useParams();
     const router = useRouter();
@@ -93,7 +97,7 @@ function AboutChannel({hasPermission, nameLoading, changeNameHandler, setName, n
   <div className="sup_text d-flex text-center justify-between"><span>{schemaType} Name</span>
 {
 hasPermission ?
-<EditDailog title={`${schemaType} Name`} loading={nameLoading} submitHandler={changeNameHandler} setName={setName} type={"input"} description='Names must be lower case, without spaces or full stops, and can’t be longer than 80 characters.' defaultValue={name} />
+<EditDailog title={`${schemaType} Name`} loading={nameLoading} submitHandler={changeNameHandler} setName={setName} type={"input"} description='Names must be lower case, without spaces or full stops, and can’t be longer than 80 characters.' defaultValue={name} open={openName} setOpen={setOpenName} />
 :
 <ActionTooltip label={`You don't have permission to change this setting for this ${schemaType}`} side='top' align='center'>
 <button className=''><BsFillQuestionCircleFill/></button>
@@ -111,7 +115,7 @@ hasPermission ?
   <div className="sup_text d-flex text-center justify-between"><span>Description</span>
   {
 hasPermission ? 
-<EditDailog title='Description' submitHandler={DescriptionHandler} setName={setDescription} type={"textarea"} description={`Let people know what this ${schemaType} is for.` } loading={descriptionLoading} defaultValue={description} />
+<EditDailog title='Description' submitHandler={DescriptionHandler} setName={setDescription} type={"textarea"} description={`Let people know what this ${schemaType} is for.` } loading={descriptionLoading} defaultValue={description} open={openDescription} setOpen={setOpenDescription} />
 :
 <ActionTooltip label={`You don't have permission to change this setting for this ${schemaType}`} side='top' align='center'>
 <button className=''><BsFillQuestionCircleFill/></button>

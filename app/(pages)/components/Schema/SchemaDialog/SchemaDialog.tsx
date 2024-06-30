@@ -248,14 +248,13 @@ function SchemaDialog({member, name, members, serverMembers, type, description, 
     }
   }
 
-  console.log(member);
     let whoCanUpdateSchema = false;
     let whoCanManageManager = false;
     let whoCanManageMember = false;
     let whoCanMakePublicToPrivate = false;
     const isManager = managers.memberIds.includes(member.id);
     const isMember = schema.memberIds.includes(member.id);
-    console.log(schema.memberIds);
+    
     // canvas 
   if(schemaType==="Canvas"){
     if(((isAdmin || isManager || isMember) && schema?.whoCanUpdateCanvas==="member") || ((isManager || isAdmin) && schema?.whoCanUpdateCanvas==="manager") || (isAdmin && schema?.whoCanUpdateCanvas==="admin") ){

@@ -15,6 +15,7 @@ function HeroSection() {
     <div className="relative h-fit w-full bg-white"><div className="relative h-fit w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] hero_background ">
         <div className='hero_container'>
             <div className='flex flex-col justify-center items-center hero_content'>
+              
                   <div className='hero_title'>The Modern Workspace for</div>
                   <div className=" work_for_container">
                   <div className='work_for_item'>

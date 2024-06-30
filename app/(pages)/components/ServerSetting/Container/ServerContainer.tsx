@@ -53,24 +53,24 @@ function ServerContainer({open, setOpen, state, server}:Props) {
     let hasPermission = false;
     const whoCanUpdate = server.whoCanUpdateServer;
   
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && whoCanUpdate==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && whoCanUpdate==="moderator") || (currentMember.role==="admin" && whoCanUpdate==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && whoCanUpdate==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && whoCanUpdate==="moderator") || (currentMember?.role==="admin" && whoCanUpdate==="admin")  ){
 
         hasPermission = true;
     }
     let kickOutPermission = false;
     const whoCAnKick = server.whoCanKickMember;
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && whoCAnKick==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && whoCAnKick==="moderator") || (currentMember.role==="admin" && whoCAnKick==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && whoCAnKick==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && whoCAnKick==="moderator") || (currentMember?.role==="admin" && whoCAnKick==="admin")  ){
       kickOutPermission = true;
     }
 
     let botPermission = false;
     const createBot = server.whoCreateBotResponse;
-    if(((currentMember.role==="user" || currentMember.role==="moderator" || currentMember.role==="admin") && createBot==="user") || ((currentMember.role==="moderator" || currentMember.role==="admin") && createBot==="moderator") || (currentMember.role==="admin" && createBot==="admin")  ){
+    if(((currentMember?.role==="user" || currentMember?.role==="moderator" || currentMember?.role==="admin") && createBot==="user") || ((currentMember?.role==="moderator" || currentMember?.role==="admin") && createBot==="moderator") || (currentMember?.role==="admin" && createBot==="admin")  ){
       botPermission = true;
     }
 
     let isAdmin = false;
-    if(server.createdBy ===currentMember.userId){
+    if(server.createdBy ===currentMember?.userId){
       isAdmin = true;
     }
 

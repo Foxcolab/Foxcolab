@@ -24,8 +24,10 @@ interface EditDailogProps {
     loading:boolean
     defaultValue:string
     schemaType:string
+    open:boolean
+    setOpen:any
 }
-function EditDailog({title, type, setName, submitHandler, description, loading, defaultValue}:EditDailogProps) {
+function EditDailog({title, type, setName, submitHandler, description, loading, defaultValue, open, setOpen}:EditDailogProps) {
 
     const nameHandler =async(value:string)=>{
         try {
@@ -42,12 +44,11 @@ function EditDailog({title, type, setName, submitHandler, description, loading, 
         }
     }
 
-    console.log("Edit dialog loading", loading);
   return (
    <>
    
    
-   <Dialog>
+   <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
       <button className='text-blue-700 font-semibold hover:decoration-solid'>Edit</button>
       </DialogTrigger>

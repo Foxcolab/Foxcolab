@@ -10,7 +10,7 @@ import { NextApiRequest } from "next";
  const POST =async(req:NextApiRequest,res: NextApiResponseServerIo)=>{
   try {
         const userId = await GetAuth(req);
-        const { content, fileUrl } =  req.body;
+        const { content, fileUrl, attachments } =  req.body;
       const { serverId,   forumId,forumsChannelId } = req.query;
    
       
@@ -120,12 +120,13 @@ import { NextApiRequest } from "next";
         fileUrl,
         uploadedFiles:{
           connect:fileUrl?.map((file:string)=>({id:file}))
-      },
+        },
         serverId:serverId as string,
         sectionId:Sendmessage.sectionId as string,
         forumsId:forumId as string,
         forumsChannelId:forumsChannelId as string,
-        createdBy:member.id
+        createdBy:member.id,
+        attachments:attachments
       },
       include:{
         member:{

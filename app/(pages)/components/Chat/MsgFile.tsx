@@ -17,6 +17,7 @@ interface Props {
 }
 
 function MsgFile({files, type, length}:Props) {
+
   
 
     let media:UploadedFile[] = []

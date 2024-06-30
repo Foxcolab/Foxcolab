@@ -47,6 +47,7 @@ export async function GET(
               user: true,
             }
           },
+          uploadedFiles:true
         },
         orderBy: {
           createdAt: "desc",
@@ -63,7 +64,8 @@ export async function GET(
             include: {
               user: true,
             }
-          }
+          },
+          uploadedFiles:true
         },
         orderBy: {
           createdAt: "desc",

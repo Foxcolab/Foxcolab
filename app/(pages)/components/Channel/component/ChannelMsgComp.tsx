@@ -46,6 +46,7 @@ function ChannelMsgComp({server, channel, currentMember, isAdmin, myChannels}:Pr
                 isAdmin={isAdmin} 
                 myChannels={myChannels} 
                 setThreadMessage={setThreadMessage}
+                isThreadSelected={threadMessage===null ? false : true}
                 
                 />
 

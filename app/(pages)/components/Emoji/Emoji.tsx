@@ -19,7 +19,7 @@ interface EmojiPickerProps {
   type:string
   // schemaType:"channel" | "forum" | "thread"
   schemaType:"Channel" | "Threads" | "DirectMessage" | "forum" | "thread"
-  conversationId: string | null | undefined
+  conversationId?: string | null | undefined
   channelId:string
 }
 

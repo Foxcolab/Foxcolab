@@ -14,7 +14,7 @@ export const PUT =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
         const userId =await GetAuth(req);
         const { threadId, serverId, channelId } = req.query;
         console.log(threadId, serverId, channelId);
-        const { content } = req.body;
+        const { content, attachments } = req.body;
         console.log(threadId, serverId, channelId, content);
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized" });
@@ -103,6 +103,7 @@ export const PUT =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
         },
         data: {
           content: content,
+          attachments:attachments
         },
         include: {
           member: {

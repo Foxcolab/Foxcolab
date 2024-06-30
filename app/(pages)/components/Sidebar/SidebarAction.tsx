@@ -175,8 +175,10 @@ export const SidebarActions = ({user}:Props)=>{
     const [description, setDescription] = useState('');
     const [type, setType] = useState("public");
     const [file, setFile] = useState(null);
-    const [preview, setPreview] = useState(null);
-    const [dp, setDp] = useState(null);
+    const [preview, setPreview] = useState<null | any>(null);
+    const [coverPrev, setCoverPrev] = useState<null | any>(null);
+    const [dp, setDp] = useState<null | any>(null);
+    const [cover, setCover] = useState<null | any>(null);
     const [category, setCategory] = useState('');
     // const []
     const [loading, setLoading] = useState(false);
@@ -206,18 +208,24 @@ export const SidebarActions = ({user}:Props)=>{
     const submitHandler =async()=>{
         try {
             setLoading(true);
-            let fileUrl;
+            let fileUrl=null;
+            let coverUrl=null;
+            // let fileUrl="667674bdf64212900c4e10f2";
+            // let coverUrl="667674c0f64212900c4e10f3";
             if(preview){
-              const ffileUrl = await UploadImage();
+              const ffileUrl = await UploadImage(dp);
               fileUrl=ffileUrl;
             }
-            console.log("File URl", fileUrl);
-            const res = await axios.post('/api/server/new', {name, description, type, displayPic:fileUrl, serverType:category});
+            if(coverPrev){
+              const resr = await UploadImage(cover);
+              coverUrl=resr;
+            }
+            const res = await axios.post('/api/server/new', {name, description, type, displayPic:fileUrl, coverPic:coverUrl, serverType:category});
             console.log(res);
-            setOpenDialog(false);
             if(res.status===200){
                 router.push(`/servers/${res.data.server.id}`);
                 setLoading(false)
+                setOpenDialog(false);
         
               }
         } catch (error) {
@@ -228,10 +236,19 @@ export const SidebarActions = ({user}:Props)=>{
     }
 
 
-    const UploadImage  = async()=>{
+    const UploadImage  = async(file:any)=>{
       try {
+        
           const formData = new FormData();
-          formData.append('file', dp);
+          formData.append('file', file);
+
+          // if(dp){
+          //   formData.append('file', dp);
+          // }
+          // if(cover){
+          //   formData.append("file", cover);
+          // }
+          // formData.append('file', dp);
           // setupLoading(true);
           const res = await axios.post('/api/upload', formData);
           if(res.status===200){
@@ -254,6 +271,16 @@ export const SidebarActions = ({user}:Props)=>{
       setDp(files[0]);
       // setPreview(fileUrl);
   }
+  const ConverHandler =(e:React.ChangeEvent<HTMLInputElement>)=>{
+    console.log("AVATARRR");
+    const files = e.target.files;
+    if(!files) return;
+    console.log(files);
+    const fileUrl = URL.createObjectURL(files[0]);
+    setCoverPrev(fileUrl)
+    setCover(files[0]);
+    // setPreview(fileUrl);
+}
 
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -280,7 +307,7 @@ export const SidebarActions = ({user}:Props)=>{
         <ActionTooltip side="right" align="center" label="Add a server" >
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
-          <button className="group add_server"
+          <button className="group add_server text-black"
         // onClick={()=>onOpen("createServer")}
         >
             <div className="flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center add_server_plus border">
@@ -327,23 +354,35 @@ export const SidebarActions = ({user}:Props)=>{
                 <div className="text-gray-400 text-[0.9rem]">(Don't worry you can  change  this anytime)</div>
                
                     <div className="sever_profile_upload">
-                    <label htmlFor="fileInput">
-                    <div className="upload_logo">
+                    <label htmlFor="fileInput" className="">
+                    <div className="upload_logo border hover:shadow">
                       {
                         preview ? <Image src={preview} height={100} width={100} alt="" /> :  <> <div className="flex items-center justify-center flex-col"><span className="text-base"><FaCamera/></span> Upload logo</div>   </>
                       }
-                      
                       </div>
-                    
-                    {/* { previewc && !showOptc && <Image src={previewc} height={100} width={100} alt='image' /> } */}
-    </label>
-    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif" onChange={onChangeHandler} />
-                      {/* <label htmlFor="file">
-                        <div className="upload_logo">Upload logo</div>
-                        <input type="file" name="image" id="image" />
-                      </label> */}
+                  </label>
+                  <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif" onChange={onChangeHandler} />
                     </div>
-                    <div className="my-4 new_serv_sec">
+                    
+                    {/* <div className="mt-4 new_serv_sec">
+                      <label htmlFor="">Cover</label>
+                    </div> */}
+                    <div className="sever_profile_upload">
+                    
+                    <label htmlFor="file" className="">
+                    <div className="upload_cover_logo border hover:shadow">
+                      {
+                        coverPrev ? <Image src={coverPrev} height={100} width={100} alt="" /> :  <> <div className="flex items-center justify-center flex-col"><span className="text-base"><FaCamera/></span> Upload cover</div>   </>
+                      }
+                      </div>
+                  </label>
+                  <input type="file" id="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={ConverHandler} />
+                    </div>
+
+                      
+
+
+                    <div className="mb-4 mt-6 new_serv_sec">
                       <label htmlFor="">Server Name</label>
                       <Input type="text" className="serv_inputs" onChange={(e:any)=>setName(e.target.value)} />
                     </div>

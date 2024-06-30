@@ -89,163 +89,279 @@ export const POST = async(req:NextRequest)=>{
         
         const subject = `Your Foxcolab regisration OTP is ${otp}`;
         const message = `
+        <!DOCTYPE html>
 
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
+<html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+<title></title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!--><!--<![endif]-->
+<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		a[x-apple-data-detectors] {
+			color: inherit !important;
+			text-decoration: inherit !important;
+		}
+
+		#MessageViewBody a {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		p {
+			line-height: inherit
+		}
+
+		.desktop_hide,
+		.desktop_hide table {
+			mso-hide: all;
+			display: none;
+			max-height: 0px;
+			overflow: hidden;
+		}
+
+		.image_block img+div {
+			display: none;
+		}
+		.social_img img{
+			width: 2.2rem;
+    		height: 2.2rem;
+		}
+
+		@media (max-width:620px) {
+			.desktop_hide table.icons-inner {
+				display: inline-block !important;
+			}
+
+			.icons-inner {
+				text-align: center;
+			}
+
+			.icons-inner td {
+				margin: 0 auto;
+			}
+
+			.mobile_hide {
+				display: none;
+			}
+
+			.row-content {
+				width: 100% !important;
+			}
+
+			.stack .column {
+				width: 100%;
+				display: block;
+			}
+
+			.mobile_hide {
+				min-height: 0;
+				max-height: 0;
+				max-width: 0;
+				overflow: hidden;
+				font-size: 0px;
+			}
+
+			.desktop_hide,
+			.desktop_hide table {
+				display: table !important;
+				max-height: none !important;
+			}
+		}
+	</style>
+</head>
+<body class="body" style="margin: 0; background-color: #ffffff; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
+<table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 600px; margin: 0 auto;" width="600">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="10" cellspacing="0" class="heading_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+	
+<td class="pad " style="display: flex; align-items: center; gap: 0.5rem;">
+	<!-- <img src="https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Black+%26+White+Minimalist+Business+Logo.png" alt="" style="height: 3.0rem; width: auto;"> -->
+<h1 style="margin: 0; color: #000000; direction: ltr; font-family: Arial, Helvetica, sans-serif; font-size: 36px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 43.199999999999996px;"><span class="tinyMce-placeholder" style="display: flex;border-radius: 0.25rem;overflow: hidden;"><span style="background-color: #E04D6C;padding: 0.2rem 0.5rem;border: 1px solid #E04D6C;color: white;">Fox</span> <span style="padding: 0.2rem 0.5rem;border: 1px solid hsl(97, 5%, 28%);border-left: none;border-top-right-radius: 0.25rem;border-bottom-right-radius: 0.25rem;">Colab</span></span></h1>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="heading_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<h1 style="margin: 0; color: #000000; direction: ltr; font-family: Arial, Helvetica, sans-serif; font-size: 35px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 42px;"><span class="tinyMce-placeholder">Confirm your email address</span></h1>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad">
+<div style="color:#2c2e30;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:20px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:24px;">
+<p style="margin: 0;">Your confirmation code is below – enter it in your open browser window and we'll help you to sign in.I'm a new paragraph block.</p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f5f5f7; border-radius: 2px; color: #000000; width: 600px; margin: 0 auto;" width="600">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:30px;padding-left:10px;padding-right:10px;padding-top:30px;">
+<div style="color:#101112;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:35px;font-weight:400;letter-spacing:8px;line-height:200%;text-align:center;mso-line-height-alt:70px;">
+<p style="margin: 0;"><strong><span style="background-color: #f5f5f7;">${otp}</span></strong></p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px; margin: 0 auto;" width="600">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:30px;padding-left:10px;padding-right:10px;padding-top:30px;">
+<div style="color:#585d62;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:15px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:18px;">
+<p style="margin: 0;">If you haven’t requested this email, there’s nothing to worry about – you can safely ignore it.</p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px; margin: 0 auto;" width="600">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:15px;padding-left:10px;padding-right:10px;padding-top:20px;display: flex;
+align-items: center;justify-content: space-between;" >
+<!-- <div style="color:#585d62;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:24px;font-weight:400;letter-spacing:0px;line-height:150%;text-align:left;mso-line-height-alt:36px;">
+<p style="margin: 0;"><strong>Foxcolab</strong></p>
+</div> -->
+<h1 style="margin: 0; color: #000000; direction: ltr; font-family: Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 43.199999999999996px;"><span class="tinyMce-placeholder" style="display: flex;border-radius: 0.25rem;overflow: hidden;"><span style="background-color: #E04D6C;padding: 0.2rem 0.5rem;border: 1px solid #E04D6C;color: white;">Fox</span> <span style="padding: 0.2rem 0.5rem;border: 1px solid hsl(97, 5%, 28%);border-left: none;border-top-right-radius: 0.25rem;border-bottom-right-radius: 0.25rem;">Colab</span></span></h1>
+<div>
+	<a href=""  class="social_img"><img src="https://img.icons8.com/?size=100&id=118497&format=png&color=000000" alt=""></a>
+	<a href=""  class="social_img"><img src="https://img.icons8.com/?size=100&id=phOKFKYpe00C&format=png&color=000000" alt=""></a>
+	<a href=""  class="social_img"><img src="https://img.icons8.com/?size=100&id=xuvGCOXi8Wyg&format=png&color=000000" alt=""></a>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad" style="padding-bottom:20px;padding-left:10px;padding-right:10px;padding-top:10px;">
+<div style="color:#959ca3;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:16.8px; ">
+<p style="margin: 0; margin-bottom: 4px;"><a href="https://foxcolab.com" rel="noopener" style="text-decoration: underline; color: #959ca3;" target="_blank">Our blog</a> | <a href="https://foxcolab.com" rel="noopener" style="text-decoration: underline; color: #959ca3;" target="_blank">Policies</a> | <a href="https://foxcolab.com" rel="noopener" style="text-decoration: underline; color: #959ca3;" target="_blank">Help Center</a> | <a href="https://foxcolab.com" rel="noopener" style="text-decoration: underline; color: #959ca3;" target="_blank">Foxcolab Community</a></p>
+<p style="margin: 0; margin-bottom: 4px;"> </p>
+<p style="margin: 0; margin-bottom: 4px;">@2024 Foxcolab, 118 SN Bose, Durgapur ,713205</p>
+<p style="margin: 0;">All rights reserved.</p>
+</div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 600px; margin: 0 auto;" width="600">
+<tbody>
+<tr>
+<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="icons_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: center;" width="100%">
+<tr>
+<td class="pad" style="vertical-align: middle; color: #1e0e4b; font-family: 'Inter', sans-serif; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;">
+<table cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="alignment" style="vertical-align: middle; text-align: center;"><!--[if vml]><table align="center" cellpadding="0" cellspacing="0" role="presentation" style="display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><![endif]-->
+<!--[if !vml]><!-->
+<table cellpadding="0" cellspacing="0" class="icons-inner" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; margin-right: -4px; padding-left: 0px; padding-right: 0px;"><!--<![endif]-->
+<tr>
+
+
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table><!-- End -->
+</body>
+</html>
         
-        <head>
-        
-          <xml>
-            <o:OfficeDocumentSettings>
-              <o:AllowPNG/>
-              <o:PixelsPerInch>96</o:PixelsPerInch>
-            </o:OfficeDocumentSettings>
-          </xml>
-          
-        
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta name="x-apple-disable-message-reformatting">
-       
-            <title>Foxcolab registration OTP</title>
-  
-          <head>
-            <style> 
-              a,a[href],a:hover, a:link, a:visited {
-               text-decoration: none!important;
-                color: #f8921e; 
-              }
-              .link {
-                text-decoration: underline!important;
-              }
-              p, p:visited {
-                /* Fallback paragraph style */
-                font-size:15px;
-                line-height:24px;
-                font-family:'Raleway',Raleway, sans-serif;
-                font-weight:300;
-                text-decoration:none;
-                color: #000000;
-              }
-              h1 {
-                /* Fallback heading style */
-                font-size:22px;
-                line-height:24px;
-                font-family:'Raleway', Raleway, sans-serif;
-                font-weight:normal;
-                text-decoration:none;
-                color: #fb9000;
-                
-              }
-              .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;}
-              .ExternalClass {width: 100%;}
-              .fcc-btn {
-          background-color: #4f4480;
-          color: white;
-          padding: 15px 25px;
-          text-decoration: none;
-        }
-              /* Button Styleee
-        * 
-        */
-        button, button a, .button{
-          position:relative;
-          /* style|variant|weight|size/line-height|family */
-          font: 500 14px Raleway;
-          letter-spacing: 0.5px;
-          color:#fff !important;
-          border: 0;
-          border-radius: 5px;
-          cursor:pointer;
-          text-decoration:none;
-        }
-        
-        button, .button{
-          min-width: 100px;
-          margin: 10px 5px;
-          padding:8px 10px;
-          background-color: #4f4680;/* for non linear-gradient browsers */
-          background: linear-gradient(to bottom, #9d7eb9 5%, #4f4680 100%) repeat scroll 0 0 #9d7eb9;
-        }
-        
-        .button{display:inline-block;min-width:80px;text-align:center;white-space:nowrap;}
-        
-        button:hover,a.button:hover{
-          background:linear-gradient(to bottom, #4f4680 5%, #9d7eb9 100%) repeat scroll 0 0 #9d7eb9;
-        }
-        button:active{top:1px;}
-        
-        
-        body{
-          background-color:#222; 
-        }
-        #buttonC{margin:0px auto;width:500px;}
-        
-        
-             
-            </style>
-          
-        
-        </head>
-        
-          <body style="text-align: center; margin: 0; padding-top: 10px; padding-bottom: 10px; padding-left: 0; padding-right: 0; -webkit-text-size-adjust: 100%;background-color: #ffffff; color: #000000" align="center">
-          
-          <div style="text-align: center;">
-        
-            
-            <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="596">
-              <tbody>
-                <tr>
-                  <td style="width: 600px; vertical-align: top; padding-left: 0; padding-right: 0; padding-top: 0px; padding-bottom: 0px;" width="600; font-size:24px">
-                  <h1 style="font-size: 26px; line-height: 20px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none; color:#000000;">Foxcolab</h1>
-                  
-                    
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- End container for logo -->
-  
-            <!-- Hero image -->
-            <h1 style="font-size: 20px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none;color:#000000; ">  Finishing registration into Foxcolab</h1>
-         
-            <!-- Hero image -->
-        
-            <!-- Start single column section -->
-            
-            <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
-                <tbody>
-                  <tr>
-                    <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 30px; padding-bottom: 40px;" width="596">
-        
-                     
-                      
-                      <h1 style="font-size:24px; line-height: 24px; font-family: Releway, sans-serif; font-weight: 600; text-decoration: none; color: #4d467c;">
-                      Your OTP is ${otp}. Enter it in your browser and we'll get you signed in. 
-                     </h1>
-                      
-         
-        
-                     
-                      
-                      
-                      
-                      
-                      <!-- button link with CSS start -->
-                      <!-- bigger
-        
-     
-                      
-       
-                  </tr>
-                </tbody>
-              </table>
-            
-          </div>
-        
-          </body>
-        
-        </html>`
+        `;
+
         
         
         sendMail(to, subject, message);

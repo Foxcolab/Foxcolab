@@ -35,7 +35,6 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                 id:formId as string,
             }
         });
-        console.log("Polls Found:", form?.id)
         if(!form) return res.status(401).json({ error: "Form not found" }); 
 
         const message = await db.directMessage.findFirst({
@@ -61,31 +60,48 @@ export const POST =async(req:NextApiRequest, res:NextApiResponseServerIo)=>{
                 }
             });
             for(let i=0; i<fieldResponses.length; i++){
-                const updatedFormResponse = await db.formResponse.update({
-                    where:{
-                        id:formResponse.id as string,
-                        serverId:serverId as string
-                    },
-                    data:{
-                        formFieldResponses:{
-                            create:{
-                                formFieldId:fieldResponses[i].formFieldId as string,
-                                formId:formId as string,
-                                // formField:{
-                                //     connect: {
-                                //         id:fieldResponses[i]?.formFieldId as string,
-                                //     }
-                                // },
-                                fieldResponse:fieldResponses[i].response,
-                                formFieldType:fieldResponses[i].type,
-                                createdBy:member.id as string,
-                                files: {
-                                    connect:fieldResponses[i].files?.map((file:string)=>({id:file}))
-                                },
+                if(fieldResponses.type==="file"){
+                    const updatedFormResponse = await db.formResponse.update({
+                        where:{
+                            id:formResponse.id as string,
+                            serverId:serverId as string
+                        },
+                        data:{
+                            formFieldResponses:{
+                                create:{
+                                    formFieldId:fieldResponses[i].formFieldId as string,
+                                    formId:formId as string,
+                                    fieldResponse:fieldResponses[i].response,
+                                    formFieldType:fieldResponses[i].type,
+                                    createdBy:member.id as string,
+                                    files: {
+                                        connect:fieldResponses[i].response?.map((file:string)=>({id:file}))
+                                    },
+                                }
                             }
                         }
-                    }
-                })
+                    })
+                }else {
+                    const updatedFormResponse = await db.formResponse.update({
+                        where:{
+                            id:formResponse.id as string,
+                            serverId:serverId as string
+                        },
+                        data:{
+                            formFieldResponses:{
+                                create:{
+                                    formFieldId:fieldResponses[i].formFieldId as string,
+                                    formId:formId as string,
+                                    fieldResponse:fieldResponses[i].response,
+                                    formFieldType:fieldResponses[i].type,
+                                    createdBy:member.id as string,
+                                    
+                                }
+                            }
+                        }
+                    })
+                }
+                
             }
 
 

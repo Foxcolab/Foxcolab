@@ -14,7 +14,7 @@ export const PUT =async(req:NextRequest)=>{
         const memberId = req.nextUrl.searchParams.get('memberId');
         const canvasId = req.nextUrl.searchParams.get('canvasId');
        
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         // const user = await db.user.findFirst({where:{id:userId}});
 
         const canvas = await db.canvas.findFirst({

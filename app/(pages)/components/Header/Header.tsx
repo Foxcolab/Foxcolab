@@ -37,7 +37,7 @@ function Header({server}:Props) {
                 
             </div>
             <Link href={'/profile'} className='prof_logo pr-5' style={{marginRight:"0.5rem"}}> <span ><FaCircleUser className='text-[1.1rem]' /></span> 
-            {member.user.name} 
+            {member?.user?.name} 
 
              </Link>
             <SocketBadge/>

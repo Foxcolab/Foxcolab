@@ -32,7 +32,8 @@ export const POST = async(req:NextRequest)=>{
             if(!user) return NextResponse.json({
                 error:"Email id not found!"
             }, {status:409});
-     
+
+            if(user.otp===otp){
                 const update = await db.user.update({
                     where:{
                         id:userId
@@ -42,6 +43,13 @@ export const POST = async(req:NextRequest)=>{
                         otp:null,
                     }
                 });
+            } else {
+                return NextResponse.json({
+                    error:"Incorrect or expired OTP."
+                })
+            }
+     
+                
 
                 return NextResponse.json({success:true,userId:user.id}, {status:200});
             

@@ -16,8 +16,12 @@ import { myProfile } from '@/lib/db/profile';
 import { db } from '@/prisma';
 import { redirect } from 'next/navigation';
 import AdminServer from '@/lib/db/AdminServer';
+import { Metadata } from 'next';
 
-
+export const metadata: Metadata = {
+  title: 'Home | Foxcolab',
+  // description: "Select your servers.",
+}
 
 async function HomePage() {
 

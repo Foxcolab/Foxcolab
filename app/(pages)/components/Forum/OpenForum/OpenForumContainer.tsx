@@ -30,6 +30,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useParams, useRouter } from 'next/navigation'
 import axios from 'axios'
+import ForumEditor from '../../Editor/Forum/ForumEditor'
+import ForumMessages from './ForumMessages'
 
 
 interface Props {
@@ -85,7 +87,7 @@ function OpenForumContainer({setForum, forum, managerIds, whoCanComment, whoCanD
   return (
     <>
 
-  <div className='relative top-[1.6305rem]'>
+  {/* <div className='relative top-[1.6305rem]'>
   <div className="forum_msg_container">
   <div className="chat_section">
         <div className="channel_title">
@@ -115,13 +117,12 @@ function OpenForumContainer({setForum, forum, managerIds, whoCanComment, whoCanD
 
     </div>
 
-  </div>
+  </div> */}
 
 
-
-    {/* <div className="forum_msg_container ">
-      
-    <div className="chat_section">
+<div className="relative top-[1.6305rem]">
+<div className="forum_msg_container ">
+  <div className="chat_section">
         <div className="channel_title">
             {forum.title}
         </div>
@@ -145,9 +146,65 @@ function OpenForumContainer({setForum, forum, managerIds, whoCanComment, whoCanD
         </div>
     </div>
 
-        <ForumMessageContainer forum={forum} managerIds={managerIds} whoCanComment={whoCanComment} whoCanDelete={whoCanDelete} whoCanUploadMediaInComment={whoCanUploadMediaInComment} member={member}  />
- 
-    </div> */}
+    <div className="forum_messages">
+
+      <ForumMessages
+    member={member}
+    chatId={forum.id}
+    apiUrl='/api/messages/threads/forum'
+    socketUrl='/api/socket/threads/forum'
+    socketQuery={{
+      forumId:forum.id
+    }}
+    paramKey='forumId'
+    paramValue={forum.id}
+    forum={forum}
+    ManagerIds={managerIds}
+    
+    
+    />
+  </div>
+
+    <div className="forum_editor">
+    <ForumEditor
+     placeholder={`Send a message in ${forum.title}`}
+     apiUrl="/api/socket/forum-response"
+     query={{
+      forumId:forum.id,
+      forumsChannelId:forum.forumsChannelId,
+     serverId: forum?.serverId,
+     sectionId:forum?.sectionId
+      }} 
+      whoCanUploadMediaInComment={whoCanUploadMediaInComment} 
+      whoCanComment={whoCanComment}
+     
+     />
+    </div>
+
+
+
+
+    {/* <ForumMessageContainer forum={forum} managerIds={managerIds} whoCanComment={whoCanComment} whoCanDelete={whoCanDelete} whoCanUploadMediaInComment={whoCanUploadMediaInComment} member={member}  /> */}
+
+
+    </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
   <DialogTrigger></DialogTrigger>
@@ -167,7 +224,7 @@ function OpenForumContainer({setForum, forum, managerIds, whoCanComment, whoCanD
           {
             loading ? <Loader/> : <>
             <Button variant={"outline"} onClick={()=>setDeleteDialog(false)}>Cancel</Button>
-          <Button type="submit" className='bg-red-500 text-white' onClick={DeleteForumHandler}>Delete</Button>
+          <Button type="submit" className='bg-red-500 hover:bg-red-600 text-white' onClick={DeleteForumHandler}>Delete</Button>
           </>
           }
     </DialogFooter>

@@ -15,7 +15,8 @@ import { BotResponse, Message } from "@prisma/client";
         // console.log("cominggg....");
         console.log(userId);
       
-      const { content, fileUrl, contentText } =  req.body;
+      const { content, fileUrl, contentText, attachments } =  req.body;
+      console.log(attachments);
       const { serverId, channelId, sectionId } = req.query;
       // console.log("Time IS:", scheduleTime) 
         const user = await db.user.findUnique({
@@ -91,7 +92,8 @@ import { BotResponse, Message } from "@prisma/client";
         contentText,
         uploadedFiles:{
           connect:fileUrl?.map((file:string)=>({id:file}))
-        }
+        },
+        attachments:attachments
       },
       include: {
         member: {

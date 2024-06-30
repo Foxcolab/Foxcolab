@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const DELETE =async(req:NextRequest)=>{
     try {
         
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const serverId = req.nextUrl.searchParams.get('serverId');
         const canvasId = req.nextUrl.searchParams.get('canvasId');
         const noteId = req.nextUrl.searchParams.get('noteId');

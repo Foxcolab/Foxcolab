@@ -7,6 +7,11 @@ import Sidebar_item, { EtcItem } from './Sidebar_item';
 import { redirect, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { User } from '@prisma/client';
+import { ActionTooltip } from '../tooolkit/Toolkit';
+import { BiSolidUserCircle } from 'react-icons/bi';
+import { IoMdExit } from 'react-icons/io';
+import { MdLogout } from 'react-icons/md';
+import ServerPorfLog from './serverSidebar/ServerPorfLog';
 
 const imageUrl = "https://play-lh.googleusercontent.com/Rp_Sqi5hvV6unhH1ghqEiPBZc3BBRBH_lXKBKESRb5QzW3hZrd3vWWQx0JgHiB7ToPI"
 
@@ -34,9 +39,11 @@ const  Server_Sidebar =async ({home, user}:Props)=>{
     <div className={cn('server_sidebar', home ? "top-0" : "top-[2.95rem]")}  >
     <SidebarActions user={user} />
 
-    <hr className='hr' />
+    {/* <hr className='hr' /> */}
+    <Separator className="" />
+
  
-    <ScrollArea className='flex-1 w-full '>
+    <div className='flex-1 w-full scroll-m-0 servers_scrollbar '>
         {
             servers.map((server)=>(
                 <div key={server.id} className='sing_server'>
@@ -48,12 +55,16 @@ const  Server_Sidebar =async ({home, user}:Props)=>{
           {/* <Separator className="my-10" /> */}
           </div>
 
-          <div className='' style={{marginTop:'0.5rem'}}>
-          <Separator className="my-10" />
-          </div>
+          {
+            servers.length > 0 && <div className='' style={{marginTop:'0.5rem'}}>
+            <Separator className="my-4" />
+            </div>
+          }
 
         <EtcItem/>
-    </ScrollArea>
+    </div>
+
+    <ServerPorfLog user={user} home={home} />
 
 
     </div>

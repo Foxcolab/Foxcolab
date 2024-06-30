@@ -36,19 +36,7 @@ function ForumMessageContainer({forum, managerIds, whoCanComment, whoCanDelete, 
 
 
 
-    <ForumEditor
-     placeholder={`Send a message in ${forum.title}`}
-     apiUrl="/api/socket/forum-response"
-     query={{
-      forumId:forum.id,
-      forumsChannelId:forum.forumsChannelId,
-     serverId: forum?.serverId,
-     sectionId:forum?.sectionId
-      }} 
-      whoCanUploadMediaInComment={whoCanUploadMediaInComment} 
-      whoCanComment={whoCanComment}
-     
-     />
+    
 
 
 

@@ -1,6 +1,12 @@
 import VerifyEmail from "@/app/(pages)/components/inviteCode/InvitePage/VerifyEmail";
 import { db } from "@/prisma";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: 'Verify Email | Foxcolab',
+  description: "Verify your email to acccept the invitation.",
+}
 
 
 interface InviteCodePageProps {

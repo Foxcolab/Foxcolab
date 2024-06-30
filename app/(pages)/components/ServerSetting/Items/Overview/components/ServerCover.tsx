@@ -86,7 +86,7 @@ function ServerCover({coverPic, serverId, hasPermission}:Props) {
             
             {   showOptc && <span>Change Cover</span> }
             
-                    { previewc && !showOptc && <Image src={previewc} height={100} width={100} alt='image' /> }
+                    { previewc && !showOptc && <Image src={previewc} height={100} width={100} alt='image' unoptimized /> }
     </label>
     <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif" onChange={onCoverHandler} />
                     </div>

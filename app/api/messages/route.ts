@@ -109,7 +109,8 @@ export async function GET(
                 include:{
                   user:true
                 }
-              }
+              },
+              uploadedFiles:true
             }
           },
           Reactions:true,
@@ -224,7 +225,16 @@ export async function GET(
               user: true,
             }
           },
-          threads:true,
+          threads:{
+            include:{
+              member:{
+                include:{
+                  user:true
+                }
+              },
+              uploadedFiles:true
+            }
+          },
           Reactions:true,
           forwardedMessage:{
             include:{

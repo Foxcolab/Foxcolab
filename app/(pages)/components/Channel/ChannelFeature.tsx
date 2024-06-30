@@ -87,13 +87,13 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
 
     ]
     let SideContent:any = []
-    if(member.navigations===undefined || member.navigations.length===0){
+    if(member?.navigations===undefined || member?.navigations.length===0){
         SideContent = allNavs;
     }else {
         for(let i=0; i<allNavs.length; i++){
-            for(let j=0; j<member.navigations.length; j++){
+            for(let j=0; j<member?.navigations.length; j++){
 
-                if(allNavs[i].title===member.navigations[j]){
+                if(allNavs[i].title===member?.navigations[j]){
                     SideContent.push(allNavs[i]);
                 }
             }
@@ -101,7 +101,7 @@ function ChannelFeature({id, sections, member, whoCreateSection}:Props) {
     }
 
     let hasPermission = false;
-    if(((member.role==="user" || member.role==="moderator" || member.role==="admin") && whoCreateSection==="user") || ((member.role==="moderator" || member.role==="admin") && whoCreateSection==="moderator") || (member.role==="admin" && whoCreateSection==="admin")  ){
+    if(((member?.role==="user" || member?.role==="moderator" || member?.role==="admin") && whoCreateSection==="user") || ((member?.role==="moderator" || member?.role==="admin") && whoCreateSection==="moderator") || (member?.role==="admin" && whoCreateSection==="admin")  ){
         hasPermission = true;
     }
 

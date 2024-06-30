@@ -12,7 +12,7 @@ export const PUT =async(req:NextRequest)=>{
         const serverId = req.nextUrl.searchParams.get('serverId');
         const canvasId = req.nextUrl.searchParams.get('canvasId');
        
-        const userId = GetDataFromToken(req);
+        const userId =await GetDataFromToken(req);
         const user = await db.user.findFirst({where:{id:userId}});
 
         const member = await db.member.findFirst({

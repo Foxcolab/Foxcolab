@@ -56,40 +56,56 @@ function Solutions() {
         }
     </div>
     
+    <div className='text-center w-full flex items-center justify-center py-8 '>
+                <div className='text-[1.2rem] font-semibold w-[85s0px] text-gray-600 '>
+                    {
+                        state==="Education" ? "Enhance learning with interactive discussions, resource sharing, and collaborative projects for students and educators" :
+                        state==="Finance" ? "Streamline financial operations with secure communication, data sharing, and project management tools." :
+                        state==="Technology" ? "Boost innovation and efficiency in tech teams with real-time collaboration and project tracking." : 
+                        state==="Engineering" ? "Coordinate engineering projects with collaborative design, documentation, and task management features." : 
+                        state==="Health" ? "Ensure secure, compliant communication and data sharing among healthcare professionals and patients."  :
+                        
+                        state==="Marketing" ? "Collaborate on campaigns, share creative assets, and track project progress in real-time" :
+                         ""
+                    }
+                </div>
+            </div>
+
+                    <div className="flex items-center justify-center">
     {
                 state==="Education" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                <div className='channel_ui_container'>
+                <div className='useful_feat_list' id="home_feature_ui">
+                <div className='useful_feat_image'>
                 <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Education_Frontpage+(1).png'} height={100} width={100} alt='' unoptimized />
                 </div>
                 </div> :
                 state==="Finance" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list' id="home_feature_ui">
+                    <div className='useful_feat_image'>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Finance+Section_Poll.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                 state==="Technology" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list' id="home_feature_ui">
+                    <div className='useful_feat_image'>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                 state==="Engineering" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list' id="home_feature_ui">
+                    <div className='useful_feat_image'>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Engineering+Section_Test+(2).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                 state==="Health" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list' id="home_feature_ui">
+                    <div className='useful_feat_image'>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Health+Section_Channel.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                 state==="Marketing" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list' id="home_feature_ui">
+                    <div className='useful_feat_image'>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Sales+Section_Note.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
@@ -101,7 +117,7 @@ function Solutions() {
             }
 
 
-
+</div>
 
 
 

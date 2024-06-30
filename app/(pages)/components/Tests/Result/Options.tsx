@@ -14,7 +14,6 @@ interface Props {
 function Options({option, rightAns, selectedAns}:Props) {
     const isAttempted =selectedAns ?  selectedAns.includes(option) : false;
     const isRight = rightAns.includes(option);
-    console.log("Is Attempted", isAttempted, option, selectedAns)
 
   return (
     <>

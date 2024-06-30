@@ -10,7 +10,7 @@ import { NextApiRequest } from "next";
  const POST =async(req:NextApiRequest,res: NextApiResponseServerIo)=>{
   try {
         const userId = await GetAuth(req);
-        const { content, fileUrl } =  req.body;
+        const { content, fileUrl, attachments } =  req.body;
       const { serverId,   forumId,forumsChannelId } = req.query;
       console.log("Forumsss");
       console.log("SERVER",serverId,"Forum", forumId, "ForumChannel" ,forumsChannelId, "CONTENT" ,content);
@@ -22,7 +22,6 @@ import { NextApiRequest } from "next";
             id:userId
         }
     });
-    console.log("USER ID",user?.id);
     
     if (!user) {
         return res.status(401).json({ error: "Unauthorized" });

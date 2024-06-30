@@ -52,39 +52,37 @@ function ChannelSetting({isAdmin, publicToPrivate, updatePermission, type, name,
     }
     const saveChanges=async()=>{
         try {
-            
-            {
-              schemaType==="Forums" && 
-              setLoading(true);
-              axios.put(`/api/forums/setting?serverId=${params?.id}&forumChannelId=${params?.forumId}`,{type:newType, sendMsg:checked}).then(res=>{
-                setLoading(false);
-                router.refresh();
-              })
-            }
-            {
-              schemaType==="Canvas" && 
-              setLoading(true);
+
+          if(schemaType==="Forums"){
+            setLoading(true);
+            axios.put(`/api/forums/setting?serverId=${params?.id}&forumChannelId=${params?.forumId}`,{type:newType, sendMsg:checked}).then(res=>{
+              setLoading(false);
+              router.refresh();
+            })
+          }else if(schemaType==="Canvas"){
+            setLoading(true);
               axios.put(`/api/canvas/setting?serverId=${params?.id}&canvasId=${params?.canvasId}`,{type:newType, sendMsg:checked}).then(res=>{
                 setLoading(false);
                 router.refresh();
               })
-            }
-            {
-              schemaType==="Test Channel" && 
-              setLoading(true);
+          }else if(schemaType==="Test Channel") {
+            setLoading(true);
               axios.put(`/api/test/testChannel/setting?serverId=${params?.id}&testChannelId=${params?.testChannelId}`,{type:newType, sendMsg:checked}).then(res=>{
                 setLoading(false);
                 router.refresh();
               })
             }
-            {
-              schemaType==="Channel" && 
-              setLoading(true);
+          else if(schemaType==="Channel"){
+            setLoading(true);
               axios.put(`/api/channel/setting?serverId=${params?.id}&channelId=${params?.channelId}`, {type:newType, sendMsg:checked}).then(res=>{
                 setLoading(false);
                 router.refresh();
               })
-            }
+          }else {
+            return;
+          }
+            
+           
             setLoading(false);
 
         } catch (error) {

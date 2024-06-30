@@ -8,25 +8,20 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import CanvasEditor from '../../Editor/CanvasEditor'
-import CommentEditor from '../../Editor/Comment/CommentEditor'
 import { Note } from '@prisma/client'
-import TinyMce from '../../Editor/TinyMce'
-import { Checkbox } from '@/components/ui/checkbox'
 import axios from 'axios'
 import { useParams, useRouter } from 'next/navigation'
-import Loader from '../../Loaders/Loader'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import NoteTinyMce from '../../Editor/Canvas/Note/NoteTinyMce'
-import NoteTinyMce2 from '../../Editor/Canvas/Note/NoteTinyMce2'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import NoteComment from './Comments/NoteComment'
+import NoteEditor from '../../Editor/Canvas/NoteEditor'
+import { set } from 'date-fns'
+import { JsonValue } from '@prisma/client/runtime/library'
 
 interface Props {
     setNoteDialog:any,
@@ -35,7 +30,7 @@ interface Props {
 }
 function CreateNoteContent({noteDialog, setNoteDialog, note}:Props) {
 
-  const [content, setContent] = useState<null | string>('');
+  const [content, setContent] = useState<JsonValue[]>([]);
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams();
@@ -70,7 +65,6 @@ function CreateNoteContent({noteDialog, setNoteDialog, note}:Props) {
         <div className="create_note_header">
             <div className='note_title'>{note?.title}</div>
             <div className='note_head_ope'>
-              {/* <button className='flex items-center gap-1'><input type='checkbox' defaultChecked={checked} onChange={()=>setChecked(!checked)} /> Edit</button> */}
               {
                 loading ?
                  <button disabled className='flex items-center'>
@@ -85,15 +79,10 @@ function CreateNoteContent({noteDialog, setNoteDialog, note}:Props) {
         </div>
         <Separator orientation='horizontal' />
 
-        <div className="canvas_Editor">
-            {/* {
-              checked ? 
-              : 
-            <NoteTinyMce defaultValue={content as string} setTitle={setContent} />
+        <div className="canvas_Editor py-4 pl-2">
+            
+            <NoteEditor editable onChange={(e)=>setContent(e)} />
 
-            } */}
-
-<NoteTinyMce2 setTitle={setContent} />
 
 
         </div>

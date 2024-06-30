@@ -27,6 +27,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import NoteComment from './Comments/NoteComment'
+import NoteEditor from '../../Editor/Canvas/NoteEditor'
+import { JsonValue } from '@prisma/client/runtime/library'
 
 interface Props {
     setNoteDialog:any,
@@ -38,7 +40,7 @@ interface Props {
 }
 function UpdateNoteContent({noteDialog, setNoteDialog, note, canComment, canEdit, memberId}:Props) {
 
-  const [content, setContent] = useState<null | string>(note?.content);
+  const [content, setContent] = useState<JsonValue>(note?.content);
   
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,7 +80,7 @@ function UpdateNoteContent({noteDialog, setNoteDialog, note, canComment, canEdit
                     canEdit && 
               <>
               
-              <button className='flex items-center gap-1'><input type='checkbox' defaultChecked={checked} onChange={()=>setChecked(!checked)} /> Edit</button>
+              <button className='flex items-center gap-1'><input type='checkbox' className='h-[1.2rem] w-[1.2rem]' defaultChecked={checked} onChange={()=>setChecked(!checked)} /> Edit</button>
               {
                 loading ?
                  <button disabled className='flex items-center'>
@@ -86,7 +88,7 @@ function UpdateNoteContent({noteDialog, setNoteDialog, note, canComment, canEdit
                  Saving..
                </button> 
                   : 
-                <button className={isChanges ? "save": ""} onClick={onSubmitHandler}>Save</button>
+                <button className={isChanges ? "save": ""} onClick={onSubmitHandler}>Save Changes</button>
 
                 }
               
@@ -100,13 +102,14 @@ function UpdateNoteContent({noteDialog, setNoteDialog, note, canComment, canEdit
         </div>
         <Separator orientation='horizontal' />
 
-        <div className="canvas_Editor">
+        <div className="canvas_Editor py-4 pl-2">
             {
               checked && canEdit ? 
-              <NoteTinyMce2 defaultValue={content as string} setTitle={setContent} />
+              // <NoteTinyMce2 defaultValue={content as string} setTitle={setContent} />
+              <NoteEditor initialContent={content} onChange={(e)=>setContent(e)} editable />
               : 
-            <NoteTinyMce defaultValue={content as string} setTitle={setContent} />
-
+            // <NoteTinyMce defaultValue={content as string} setTitle={setContent} />
+              <NoteEditor initialContent={content} onChange={(e)=>setContent(e)} editable={false} />
             }
 
         </div>

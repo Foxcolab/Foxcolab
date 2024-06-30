@@ -95,14 +95,3 @@ export const POST =async(req:NextRequest)=>{
     }
 }
 
-export const PUT = async(req:NextRequest)=>{
-    try {
-        const userId = GetDataFromToken(req);
-        const user = await db.user.findFirst({where:{id:userId}});
-        const id = req.nextUrl.searchParams.get('id');
-    } catch (error:any) {
-        return NextResponse.json({
-            error:error.message
-        }, {status:500})
-    }
-}

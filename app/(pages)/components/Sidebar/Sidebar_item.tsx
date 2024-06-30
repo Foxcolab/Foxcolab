@@ -66,10 +66,10 @@ interface NavigationItemProps {
 
 export const EtcItem = ()=> {
   const params = useParams();
-  const id = params.id;
+  const id = params?.id;
   const router = useRouter();
   const onClick2 =()=>{
-    router.push(`/discover-server`);
+    router.push(`/home`);
   }
   const onClick3 =()=>{
     router.push(`/home`);

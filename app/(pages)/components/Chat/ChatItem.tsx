@@ -34,6 +34,7 @@ import { BsBookmarkFill } from "react-icons/bs";
 import { GoDotFill } from "react-icons/go";
 import { FaLock } from "react-icons/fa";
 import { format } from "date-fns";
+import Link from "next/link";
 
 interface ChatItemProps {
   id: string;
@@ -265,7 +266,7 @@ mySavedPost && mySavedPost.forEach(p => {
   }
 
 
-    console.log("Message::", message);
+  // console.log(message);
 
 
   return (
@@ -540,7 +541,7 @@ mySavedPost && mySavedPost.forEach(p => {
 
 
 
-{
+            {
               fileUrl.length>0 && 
               
               <div className="all_imgs">
@@ -548,6 +549,37 @@ mySavedPost && mySavedPost.forEach(p => {
               
             </div>  
              }
+
+
+             {
+               message.attachments!==undefined && message.attachments!==null  ? <> 
+               <div className="msg_main_forwarded_container">
+                <div className="forwarded_msg_body">
+                  <div className="flex flex-col">
+                  <div>{message.attachments?.serviceName}</div>
+                 
+                    <div>
+                    <Link href={message.attachments?.anchorLink} target="_blank" className="text-[#1d9bd1] underline">{message.attachments?.title}</Link>
+                    
+                    </div> 
+                    <div>
+                      {message.attachments?.description}
+                    </div>
+                  
+
+                  <div>
+                    <a href={message.attachments?.anchorLink} target="_blank" rel="noreferrer">
+                      <Image src={message.attachments?.thumbnailUrl} alt="" height={100} width={100} unoptimized className="attachement_image" />
+                    </a>
+                  </div>
+                  </div>
+                </div>
+              </div>
+               
+               </> : ''
+             }
+
+
                       
             
             </>

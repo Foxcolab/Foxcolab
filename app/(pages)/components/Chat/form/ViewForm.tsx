@@ -24,6 +24,7 @@ import { BsBodyText } from 'react-icons/bs'
 import { IoIosCheckbox, IoIosOptions, IoMdRadioButtonOn } from 'react-icons/io'
 import { FaCloudUploadAlt } from 'react-icons/fa'
 import { LucideText } from 'lucide-react'
+import { useParams, useRouter } from 'next/navigation'
   
 
 
@@ -36,6 +37,12 @@ interface Props {
 function ViewForm({open, setOpen, formResponse, formFields}:Props) {
 
     console.log(formResponse);
+
+    const router = useRouter();
+    const params = useParams();
+    const onHrefHandler =(id:string)=>{
+      router.push(`/servers/${params?.id}/${id}`);
+    }
 
 
   return (
@@ -89,7 +96,7 @@ function ViewForm({open, setOpen, formResponse, formFields}:Props) {
         <>
       
 
-    <TableRow key={i}>
+    <TableRow key={i} onClick={()=>onHrefHandler(response.id)} className='cursor-pointer'>
     <TableCell>{response.createdMember.user.name}</TableCell>
       <TableCell>{format(new Date(response.createdAt), 'dd MMM yyyy')}</TableCell>
       {
@@ -105,7 +112,16 @@ function ViewForm({open, setOpen, formResponse, formFields}:Props) {
                     </TableCell>
                 </>
       :
-      <TableCell className='border'>{fieldResponse.fieldResponse.map((field:any)=>(field))}</TableCell>
+      <TableCell className='border'>
+        {
+          fieldResponse?.fieldResponse?.length>0 && 
+          fieldResponse.fieldResponse.length>1 ?  
+          fieldResponse.fieldResponse.map((field:any,i:number)=>(<><span>{field}, </span></>)) :
+          fieldResponse.fieldResponse.map((field:any,i:number)=>(<><span>{field}</span></>))
+        }
+        {/* {fieldResponse.fieldResponse.map((field:any,i:number)=>(<><span>{field}</span>{i>0 && ','}</>))} */}
+        
+        </TableCell>
 
             }
 

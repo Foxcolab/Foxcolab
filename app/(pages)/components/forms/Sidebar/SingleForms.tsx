@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import ViewForm from '../../Chat/form/ViewForm'
+import { useParams, useRouter } from 'next/navigation'
 
 interface Props {
     Message:Message & {
@@ -24,28 +25,37 @@ interface Props {
 }
 function SingleForms({Message, type, currentMember}:Props) {
     const [viewDialog, setViewDialog] = useState(false);
+    // const [formResponseId, setFormResponse] = useState('');
     const member = Message.member;
     const form = Message.form;
     const formFields = form.formFields;
 
     let myFieldResponse = [];
+    let formResponseId:any;
     if(type==="submittedForm"){
         for(let i=0; i<form.formResponses.length;i++){
             if(form.formResponses[i].createdBy===currentMember.id){
                 console.log(form.formResponses[i])
+                formResponseId = form.formResponses[i].id;
                 myFieldResponse = form.formResponses[i].formFieldResponses;
             }
         }
     }
 
+    const router = useRouter();
+    const params = useParams();
 
-    console.log("Respose", form.formResponses, form.formResponses.length)
+    const onHrefHandler =(id:string)=>{
+      router.push(`/servers/${params?.id}/${id}`);
+    }
 
   return (
     <>
     {
         type==="submittedForm" ?
-         <div className='relative group flex items-center p-2 mb-4 mr-4  transition w-full single_poll_container rounded-md border'>
+         <>
+        <div className='single_poll_container rounded-md border p-2 mb-4 mr-4'>
+        <div className='relative group flex items-center   transition w-full  '>
         <div className="group flex gap-x-2 items-start w-full ">
         <div  className="cursor-pointer hover:drop-shadow-md transition">
         { (member===undefined || member.user===undefined || member?.user?.profilePic===null) ? 
@@ -78,7 +88,8 @@ function SingleForms({Message, type, currentMember}:Props) {
           </div>
           {formFields?.length!==0  &&       
             formFields.map((formField, i:number)=>(
-              <div key={formField.id}>           
+              <div key={formField.id}>      
+              <div>
               <div key={formField.id} className='border rounded text-sm form_container_background'>
                 {
                   formField.type==="shortAns" ?
@@ -162,8 +173,15 @@ function SingleForms({Message, type, currentMember}:Props) {
                   </> :
                   ''    
                 }   
-              </div>       
-              </div>         
+       
+
+
+              </div>  
+                   
+              </div>  
+              
+      </div>  
+
             ))     
           }
            
@@ -171,7 +189,25 @@ function SingleForms({Message, type, currentMember}:Props) {
       </div>
       </div>
     
-        </div> :
+       
+       
+       </div>
+      
+       <div className='pt-6 pb-4 px-12'>
+      <button className='border px-3 py-[0.35rem] rounded text-sm font-semibold bg-green-500 text-white' onClick={()=>onHrefHandler(formResponseId)}>View Details </button>
+      </div>   
+        </div>
+
+
+
+
+         </>
+        
+        
+        
+        
+        
+        :
 
         // type === submitted 
         <div className='relative group flex items-center p-2 mb-4 mr-4  transition w-full single_poll_container rounded-md border'>

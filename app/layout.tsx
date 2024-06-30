@@ -9,15 +9,13 @@ const inter = Inter({ subsets: ['latin'] })
 import { Toaster } from "@/components/ui/toaster"
 import { NextSeo } from 'next-seo';
 import AuthProvider from './(pages)/components/provider/AuthProvider'
-export const metadata: Metadata = {
-  title: 'Foxcolab',
-  description: 'Foxcolab - where community meets',
-}
+
+
 
 {/* <NextSeo
 title="Login - Foxcolab"
 description="Login in Foxcolab using Email or Google Account or Apple Account."
-/> */}
+/>  */}
 
 export default function RootLayout({
   children,
@@ -26,10 +24,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+     
       <body 
       className={cn(inter, "bg-white dark:bg-[#24272c]")} 
       >
-      <ThemeProvider attribute='class' defaultTheme='Dark'  enableSystem={true} storageKey='foxcolab-key'>
+      <ThemeProvider attribute='class' defaultTheme="white"  enableSystem={true} storageKey='foxcolab-key'>
       <AuthProvider>
       <SocketProvider>
       <QueryProvider>

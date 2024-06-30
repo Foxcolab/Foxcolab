@@ -37,13 +37,16 @@ function ForumHeader({sectionId, canCreateForum}:Props) {
         return URL.createObjectURL(file);
     }
 
+    console.log("Title:::", title);
+    console.log("MEssage::", message);
+
     const SubmitHandler =async()=>{
         try {
             setLoading(true);
             if(files.length!==0){
               await UploadFiles();
             }
-            await axios.post(`/api/forums/post?serverId=${params?.id}&forumId=${params?.forumId}&sectionId=${sectionId}`, {title, content:title, fileUrl});
+            await axios.post(`/api/forums/post?serverId=${params?.id}&forumId=${params?.forumId}&sectionId=${sectionId}`, {title, content:message, fileUrl});
             setLoading(false);
             router.refresh();
             setTitle('');
@@ -129,6 +132,14 @@ function ForumHeader({sectionId, canCreateForum}:Props) {
 
   }
 
+  const TitleHandler =(e:string)=>{
+    const len = e.length;
+    if(len>100){
+      return;
+    }
+    setTitle(e);
+
+  }
 
 
 
@@ -153,7 +164,7 @@ function ForumHeader({sectionId, canCreateForum}:Props) {
                     <button className='forums_cross' onClick={()=>setSearch(false)}><RxCrossCircled/></button>
                     <div className='forums_inputs'>
                         <div className="forum_input1">
-                            <textarea  placeholder='Title' maxLength={100} onChange={(e)=>setTitle(e.target.value)} defaultValue={title} rows={1} />
+                            <textarea  placeholder='Title'  onChange={(e)=>TitleHandler(e.target.value)} value={title} rows={1} />
                         </div>
                         <div className="forum_input2">
                             <textarea  placeholder='Enter a message...' onChange={e=>setMessage(e.target.value)} defaultValue={message} value={message} rows={1} />

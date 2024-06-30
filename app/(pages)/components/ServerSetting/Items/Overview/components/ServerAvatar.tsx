@@ -120,7 +120,7 @@ accept="image/jpeg,image/png,image/webp,image/gif" onChange={onChangeHandler}
                     <>
                     <div className='server_ndp' >
                     {
-                        preview && <Image src={preview} height={100} width={100} alt='image' />
+                        preview && <Image src={preview} height={100} width={100} alt='image' unoptimized />
                     }
                      
                     

@@ -37,58 +37,71 @@ function LandingFeatures() {
                 <button onClick={()=>setFeature("SpreadSheets")}  className={cn('sheet_ho_feature2', Feature==="SpreadSheets" ? "sheet_ho_feature" : "")}><span className=''><BiSolidSpreadsheet/></span> Table</button>
             </div>
 
-            {
+            <div className='text-center w-full flex items-center justify-center py-8'>
+                <div className='text-[1.2rem] font-semibold w-[85s0px] text-gray-600 '>
+                    {
+                        Feature==="Channel" ? "Dedicated spaces for team communication and collaboration on specific topics or projects." :
+                        Feature==="Forum" ? "Open discussion areas for engaging conversations and sharing ideas on various topics." :
+                        Feature==="Canvas" ? "Flexible workspaces for brainstorming, planning, and organizing projects visually." : Feature==="Bot" ? "Automated assistant providing updates, answering queries, and streamlining repetitive tasks." : 
+                        Feature==="Polls" ? "Quickly gather opinions and make decisions with interactive voting and real-time results." : 
+                        Feature==="Assessment" ? "Administer and take interactive assessments with instant results and detailed feedback." : Feature==="Spreadsheets" ? "Organize and manage data in spreadsheet-like tables for streamlined project management." : Feature==="Forms" ? "Create and distribute surveys or questionnaires to collect information and feedback efficiently." : "Securely share, store, and manage documents and media within your team."
+                    }
+                </div>
+            </div>
+
+         <div className='flex items-center justify-center'>
+         {
                 Feature==="Channel" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                <div className='useful_feat_image '>
                 <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Finance_Frontpage.png'} height={100} width={100} alt='' unoptimized />
                 </div>
                 </div> :
                 Feature==="Forum" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div>:
                 Feature==="Canvas" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(4).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="Bot" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(5).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="Polls" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(2).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="Assessment" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/2+(1).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="SpreadSheets" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={ChannelUiPic} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="Forms" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Form_Frontpage.png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
                 Feature==="File" ? 
-                <div className='secondary_hero' id="home_feature_ui">
-                    <div className='channel_ui_container'>
+                <div className='useful_feat_list ' id="home_feature_ui">
+                    <div className='useful_feat_image '>
                     <Image src={'https://foxcolab.s3.ap-south-1.amazonaws.com/Uploaded+Assests/Clean+Modern+Colorful+Blocks+Smart+Home+Dashboard+Desktop+Prototype+(6).png'} height={100} width={100} alt='' unoptimized />
                     </div>
                 </div> :
@@ -97,6 +110,7 @@ function LandingFeatures() {
 
 
             }
+         </div>
 
 
         </div>

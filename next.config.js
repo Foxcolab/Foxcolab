@@ -15,7 +15,13 @@ const nextConfig = {
       },
     images:{
         // domains: []
-        domains:["i.redd.it", "play-lh.googleusercontent.com", "foxcolab.s3.ap-south-1.amazonaws.com", "drive.google.com"]
+        remotePatterns: [
+          {
+            protocol: "https",
+            hostname: "**",
+          },
+        ],
+        // domains:["i.redd.it", "play-lh.googleusercontent.com", "foxcolab.s3.ap-south-1.amazonaws.com", "drive.google.com"]
     },
     // webpack: (config) => {
     //        config.resolve.alias.canvas = false;

@@ -47,7 +47,9 @@ import {
 
 const formSchema = z.object({
     content: z.string().optional(),
-    fileUrl: z.string().array().optional()
+    fileUrl: z.string().array().optional(),
+    attachments:z.any().optional()
+
   });
 
 
@@ -221,10 +223,46 @@ function ForumEditor({placeholder, apiUrl, query, whoCanUploadMediaInComment, wh
 
 
 
+  const FindMetaData =async(url:string)=>{
+    try {
+      console.log("finding meta data");
+      const res = await axios.post(`/api/etc/fetch-url`, {url});
+      if(res.status===200){
+        return res?.data?.attachments;
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  function extractHref(anchorTag:string) {
+    let tempElement = document.createElement('div');
+    tempElement.innerHTML = anchorTag.trim();
+    let anchorElement = tempElement.querySelector('a');
+    if (anchorElement) {
+        let hrefValue = anchorElement.href;
+        return hrefValue;
+    } else {
+        console.error('Anchor element not found in the provided HTML');
+        return null;
+    }
+  }
 
   const InputHandler = (event:any) => {
     form.setValue("content", event);
+
+    const extractUrl = extractHref(event);;
+    if(extractUrl!==null){
+      const attachement = await FindMetaData(extractUrl);
+      if(attachement!==null){
+        form.setValue("attachments", attachement);
+      }else {
+        form.setValue("attachments", null);
+      }
+    }else {
+      form.setValue("attachments", null);
+    }
     
   };
 
@@ -233,7 +271,7 @@ function ForumEditor({placeholder, apiUrl, query, whoCanUploadMediaInComment, wh
 
 
   return (
-    <div className='forum_editor'>
+    <div className='forum_editor w-full'>
       {
         whoCanComment===false ? <div className="editor_not_permit_container">
         <div>
@@ -659,8 +697,7 @@ accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm, applicat
              
               
               
-              </button><span>|</span>
-            <button disabled={isLoading} ><MdKeyboardArrowDown/></button>
+              </button>
           </div>
 
           

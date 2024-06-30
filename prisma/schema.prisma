@@ -13,6 +13,7 @@ enum Role {
   admin
   user
   bot
+  superAdmin
 }
 enum MemberRole {
   admin
@@ -115,6 +116,11 @@ model User {
   sections     Section[]
   // channels     Channel[]
   memebers     Member[]
+  blogs    Blog[]
+  news     News[]
+  helps    Help[]
+  helpCategory HelpCategory[]
+  releases    Release[]
   // canvases     Canvas[]
   // groups        Group[]
   // forums        ForumsChannel[]
@@ -135,6 +141,8 @@ model Server {
   createdBy   String  @db.ObjectId
   createdUser    User?    @relation(fields: [createdBy], references: [id], onDelete:Cascade)
   inviteCode String?
+  shortInviteId  String? @db.ObjectId
+  shortInvite   ShortUrl? @relation(fields: [shortInviteId], references: [id])
   defaultOpen String?
   defaultNotification String?
   serverType String?
@@ -189,8 +197,25 @@ model Server {
   spreadsheetManager SpreadSheetManager[]
   tableRows  TableRow[]
   directMessages DirectMessage[]
+  guides Guide[]
 
 }
+
+
+model Guide {
+  id             String      @id @default(auto()) @map("_id")  @db.ObjectId
+  title          String
+  content        Json[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  createdBy      String @db.ObjectId
+  createdMember  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
+  serverId       String @db.ObjectId
+  server         Server? @relation(fields: [serverId], references: [id],  onDelete: Cascade)
+
+}
+
+
 model Section {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   name        String
@@ -283,6 +308,7 @@ model Forums {
 model ForumResponse {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content      String
+  attachments   Json?
   contentText  String?
   fileUrl    String[] @db.ObjectId
   uploadedFiles UploadedFile[] 
@@ -454,7 +480,7 @@ model Canvas {
 model Note {
   id   String   @id @default(auto()) @map("_id")  @db.ObjectId
   title String
-  content String?
+  content Json[]
   createdBy  String @db.ObjectId
   createdUser  Member? @relation(fields: [createdBy], references: [id],  onDelete: Cascade)
   serverId  String @db.ObjectId
@@ -472,6 +498,7 @@ model Note {
 model NoteComment {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content     String
+  attachments   Json?
   fileUrl    String[] @db.ObjectId
   uploadedFiles UploadedFile[] 
   noteId     String? @db.ObjectId
@@ -591,6 +618,7 @@ model Member {
   tables    Table[]
   tableColumns TableColumn[]
   tableRowComment TableRowComments[]
+  guides Guide[]
   // tableRowData TableRowData[]
   // TestChanneƒls  TestChannel[]
   // NoteContent NoteContent[]
@@ -602,6 +630,7 @@ model Message {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content     String?
   contentText  String?
+  attachments   Json?
   // fileUrl    String[]
   fileUrl    String[] @db.ObjectId
   uploadedFiles UploadedFile[] 
@@ -661,8 +690,9 @@ model Reaction {
 }
 model Threads {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
-  content     String
+  content     String?
   contentText  String?
+  attachments   Json?
   fileUrl    String[] @db.ObjectId
   uploadedFiles UploadedFile[] 
   messageId    String? @db.ObjectId
@@ -712,6 +742,7 @@ model DirectMessage {
   id           String      @id @default(auto()) @map("_id")  @db.ObjectId
   content String?
   contentText  String?
+  attachments   Json?
   fileUrl String[]
   uploadedFiles UploadedFile[] 
   memberId String @db.ObjectId
@@ -958,6 +989,7 @@ model Draft {
   content     String
   contentText  String?
   fileUrl    String[]
+  attachments   Json?
   uploadedFiles UploadedFile[] 
   createdBy String @db.ObjectId
   createdMember Member? @relation(fields: [createdBy], references: [id], onDelete: Cascade)
@@ -1097,6 +1129,9 @@ model UploadedFile {
 
   userId   String? @db.ObjectId
   user     User? @relation(fields: [userId], references: [id])
+
+  contactUsId  String? @db.ObjectId
+  contact ContactUs? @relation(fields: [contactUsId], references: [id])
 
 
 }
@@ -1374,4 +1409,83 @@ model TableRowComments {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+}
+
+
+model ShortUrl {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  originalUrl  String
+  shortUrl  String
+  clicks  Int @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Servers  Server[]
+
+}
+
+
+model Blog { 
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  content      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    String @db.ObjectId
+  createdUser       User? @relation(fields: [createdBy], references: [id], onDelete:Cascade)
+}
+
+
+model News { 
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  content      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    String @db.ObjectId
+  createdUser       User? @relation(fields: [createdBy], references: [id], onDelete:Cascade)
+}
+
+model Help { 
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  categoryId     String @db.ObjectId
+  category       HelpCategory? @relation(fields: [categoryId], references: [id], onDelete:Cascade)
+  content      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    String @db.ObjectId
+  createdUser       User? @relation(fields: [createdBy], references: [id], onDelete:Cascade)
+}
+
+model  HelpCategory {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    String @db.ObjectId
+  createdUser       User? @relation(fields: [createdBy], references: [id], onDelete:Cascade)
+
+  helps Help[]
+}
+
+model ContactUs {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  name         String?
+  email        String
+  message      String
+  detailedMessage String?
+  files        UploadedFile[]
+  createdAt    DateTime @default(now())
+}
+
+model Release { 
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  content      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    String @db.ObjectId
+  createdUser       User? @relation(fields: [createdBy], references: [id], onDelete:Cascade)
 }

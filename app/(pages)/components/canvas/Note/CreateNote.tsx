@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -18,7 +17,6 @@ import { Separator } from '@/components/ui/separator'
 import Loader from '../../Loaders/Loader'
 import { Note } from '@prisma/client'
 import { Switch } from "@/components/ui/switch"
-import UpdateNoteContent from './UpdateNoteContent'
 interface Props {
   sectionId:string
 }
@@ -27,7 +25,7 @@ function CreateNote({sectionId}:Props) {
   const [noteDialog, setNoteDialog] = useState(false);
   const [title, setTitle] = useState('');
   const [canEveryoneUpdate, setCanEveryoneUpdate] = useState(false);
-  const [commenting, setCommenting] = useState(false);
+  const [commenting, setCommenting] = useState(true);
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState<null | Note>(null);
   const params = useParams();
@@ -73,13 +71,13 @@ function CreateNote({sectionId}:Props) {
         <div className="pb-2">
           <div className='flex items-center justify-between'>
             <label htmlFor="" className='' style={{color:"var(--color2)", fontWeight:"600"}}>Can Everyone Update</label>
-            <Switch id="airplane-mode" defaultChecked={false} onCheckedChange={e=>setCanEveryoneUpdate(e)} />
+            <Switch id="airplane-mode" defaultChecked={canEveryoneUpdate} onCheckedChange={e=>setCanEveryoneUpdate(e)} />
              </div>
         </div>
         <div className="pb-2">
           <div className='flex items-center justify-between'>
             <label htmlFor="" className='' style={{color:"var(--color2)", fontWeight:"600"}}>Can Everyone Comment</label>
-            <Switch id="airplane-mode" defaultChecked={true}  onCheckedChange={e=>setCommenting(e)} />
+            <Switch id="airplane-mode" defaultChecked={commenting}  onCheckedChange={e=>setCommenting(e)} />
             </div>
         </div>
         <hr />
@@ -96,11 +94,11 @@ function CreateNote({sectionId}:Props) {
     </Dialog>
 
     
-    {
+   
+      {
       note && 
       <CreateNoteContent noteDialog={noteDialog} setNoteDialog={setNoteDialog} note={note}   />
       }
-   
     
     </>
   )

@@ -11,7 +11,7 @@ import { NextResponse } from "next/server";
  const POST =async(req:NextApiRequest,res: NextApiResponseServerIo)=>{
   try {
         const userId = await GetAuth(req);
-        const { content, fileUrl } =  req.body;
+        const { content, fileUrl, attachments } =  req.body;
       const { serverId, channelId, sectionId, messageId } = req.query;
       
       
@@ -119,13 +119,15 @@ import { NextResponse } from "next/server";
         uploadedFiles:{
           connect:fileUrl?.map((file:string)=>({id:file}))
         },
+        attachments:attachments
       },
       include:{
         member:{
           include:{
             user:true
           }
-        }
+        },
+        uploadedFiles:true
       }
     })
 

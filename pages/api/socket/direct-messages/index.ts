@@ -22,7 +22,7 @@ export default async function handler(
         }
     })
 
-    const { content, fileUrl, contentText } = req.body;
+    const { content, fileUrl, contentText, attachments } = req.body;
     const { conversationId, serverId } = req.query;
     
     if (!profile) {
@@ -92,6 +92,7 @@ export default async function handler(
         conversationId: conversationId as string,
         memberId: member.id,
         serverId:serverId as string,
+        attachments:attachments
     },
       include: {
         member: {
